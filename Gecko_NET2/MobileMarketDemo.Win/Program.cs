@@ -16,7 +16,11 @@ namespace MobileMarketDemo.Win
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-			Xpcom.Initialize(GetXULRunnerLocation());
+            DlgLoading loadingForm = new DlgLoading();
+            DialogResult result = loadingForm.ShowDialog();
+            if (result != DialogResult.OK)
+                return;
+			//Xpcom.Initialize(GetXULRunnerLocation());
 
 			// Uncomment the follow line to enable CustomPrompt's
 			// GeckoPreferences.User["browser.xul.error_pages.enabled"] = false;

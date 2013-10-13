@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="SilverlightDataTable.Page"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:telerik="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.GridView">
+    <Grid x:Name="LayoutRoot" Background="White" Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Add new record" Width="200" Margin="5" Click="Button1_Click" />
+            <Button Content="Delete current record"  Width="200" Margin="5" Click="Button2_Click" />
+        </StackPanel>
+        <telerik:RadGridView x:Name="RadGridView1" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding}" Grid.Row="1" />
+    </Grid>
+</UserControl>

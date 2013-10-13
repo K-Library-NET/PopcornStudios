@@ -65,15 +65,19 @@ namespace AircraftDataAnalysisWinRT.DataModel
 
             if (result2 != null && result2.Count > 0)
             {
+                int i = 0;
                 foreach (var one in result2)
                 {
                     Telerik.UI.Xaml.Controls.Grid.DataGridColumn col
                         = new Telerik.UI.Xaml.Controls.Grid.DataGridTextColumn()
                         {
                             Name = one.ParameterID,
+                            PropertyName = "Values[" + i.ToString() + "]",
                             Header = one.Caption
                         };
+                    
                     this.ColumnCollection.Add(col);
+                    i++;
                 }
             }
 
@@ -97,6 +101,12 @@ namespace AircraftDataAnalysisWinRT.DataModel
         }
 
         private List<object> m_values = new List<object>();
+
+        public List<object> Values
+        {
+            get { return m_values; }
+            set { m_values = value; }
+        }
 
         internal void AddValue(object val)
         {
