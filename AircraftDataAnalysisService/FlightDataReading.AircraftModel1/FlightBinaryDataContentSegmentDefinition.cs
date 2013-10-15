@@ -25,5 +25,20 @@ namespace FlightDataReading.AircraftModel1
             get;
             set;
         }
+
+        public FlightBitDataContentSegmentDefinition[] BitsDefinition
+        {
+            get;
+            set;
+        }
+    }
+
+    public class FlightBitDataContentSegmentDefinition : FlightBinaryDataContentSegmentDefinition
+    {
+        public int BitsCount
+        {
+            get;
+            set;
+        }
     }
 }

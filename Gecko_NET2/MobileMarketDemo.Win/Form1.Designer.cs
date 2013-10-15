@@ -116,7 +116,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(248, 33);
             this.textBox1.TabIndex = 3;
-            this.textBox1.Text = "http://192.168.26.179/GeckoDemo.Web/";
+            this.textBox1.Text = "http://42.96.198.241/";
             // 
             // tabControl1
             // 

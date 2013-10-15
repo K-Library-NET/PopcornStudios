@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using FlightDataReading.AircraftModel1;
 using FlightDataEntitiesRT;
+using System.Collections;
+using FlightDataEntitiesRT.Decisions;
 
 namespace FlightDataReading.AircraftModel1
 {
@@ -61,6 +63,7 @@ namespace FlightDataReading.AircraftModel1
                                           DataTypeStr = DataTypeConverter.STRING, SegmentName = "EngineCareer"} 
                   }
                 },
+
                 FrameDefinition = new FlightBinaryDataContentFrameDefinition()
                 {
                     BytesCount = 1024,
@@ -127,11 +130,11 @@ namespace FlightDataReading.AircraftModel1
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
                                  SegmentName = "ID"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
-                                 SegmentName = "Dy"},
+                                 SegmentName = "Dz"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
                                  SegmentName = "ID"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
-                                 SegmentName = "Dz"},
+                                 SegmentName = "Dy"},
                                  //2行
 
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
@@ -161,11 +164,11 @@ namespace FlightDataReading.AircraftModel1
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
                                  SegmentName = "Fx1"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
-                                 SegmentName = "NHL"},
+                                 SegmentName = "NHR"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
                                  SegmentName = "Fy2"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
-                                 SegmentName = "NHR"},
+                                 SegmentName = "NHL"},
                                  //3行                                 
 
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
@@ -263,11 +266,11 @@ namespace FlightDataReading.AircraftModel1
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
                                  SegmentName = "ID"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
-                                 SegmentName = "Dy"},
+                                 SegmentName = "Dz"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
                                  SegmentName = "ID"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
-                                 SegmentName = "Dz"},
+                                 SegmentName = "Dy"},
                                  //6行
 
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
@@ -399,15 +402,34 @@ namespace FlightDataReading.AircraftModel1
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
                                  SegmentName = "ID"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
-                                 SegmentName = "Dy"},
+                                 SegmentName = "Dz"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
                                  SegmentName = "ID"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
-                                 SegmentName = "Dz"},
+                                 SegmentName = "Dy"},
                                  //10行
                                  
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
-                                 SegmentName = "KG1"},
+                                 SegmentName = "KG1", BitsDefinition = new FlightBitDataContentSegmentDefinition[] 
+                                 { 
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "(NULL)", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG15", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG14", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG13", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG12", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG11", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG10", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG9", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG8", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG7", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG6", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG5", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG4", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG3", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG2", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG1", DataTypeStr = "Int32"}
+                                 },
+                            },
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
                                  SegmentName = "ID"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
@@ -535,11 +557,11 @@ namespace FlightDataReading.AircraftModel1
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
                                  SegmentName = "ID"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
-                                 SegmentName = "Dy"},
+                                 SegmentName = "Dz"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
                                  SegmentName = "ID"},
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
-                                 SegmentName = "Dz"},
+                                 SegmentName = "Dy"},
                                  //14行
                                  
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
@@ -1100,6 +1122,10 @@ namespace FlightDataReading.AircraftModel1
             if (this.m_Reader.BaseStream.Position != startPos)
                 this.m_Reader.BaseStream.Position = startPos;
 
+            BitArray bitArray = new BitArray(this.m_Reader.ReadBytes(1024));
+
+            if (this.m_Reader.BaseStream.Position != startPos)
+                this.m_Reader.BaseStream.Position = startPos;//复位
 
             FlightDataReading.AircraftModel1.FlightDataContentFrame frame = new FlightDataContentFrame();
             long current = m_Reader.BaseStream.Position;
@@ -1110,45 +1136,20 @@ namespace FlightDataReading.AircraftModel1
                 if (seg == null)
                     continue;
 
-                if (string.IsNullOrEmpty(seg.SegmentName) ||
-                    seg.SegmentName.Equals("(NULL)"))
+                if ((string.IsNullOrEmpty(seg.SegmentName) ||
+                    seg.SegmentName.Equals("(NULL)") || seg.SegmentName.Equals("ID"))
+                    && (seg.BitsDefinition == null || seg.BitsDefinition.Length == 0))
                 {
                     m_Reader.BaseStream.Position += seg.BytesCount;
                     continue;
                 }
 
-                FlightDataContentSegment content = new FlightDataContentSegment()
+                if (seg.BitsDefinition != null && seg.BitsDefinition.Length > 0)
                 {
-                    DataTypeStr = seg.DataTypeStr,
-                    SegmentName = seg.SegmentName
-                };
-
-                if (seg.DataTypeStr == DataTypeConverter.FLOAT)
-                {
-                    float floatVal = m_Reader.ReadSingle();
-                    content.Value = floatVal.ToString();
-                }
-                else if (seg.DataTypeStr == DataTypeConverter.INT32)
-                {
-                    int intVal = m_Reader.ReadInt32();
-                    content.Value = intVal.ToString();
-                }
-                else if (seg.DataTypeStr == DataTypeConverter.LONG)
-                {
-                    long longVal = m_Reader.ReadInt64();
-                    content.Value = longVal.ToString();
-                }
-                else if (seg.DataTypeStr == DataTypeConverter.DATETIME)
-                {
-                    content.Value = string.Empty;
+                    this.ReadComplexSegment(segments, seg, bitArray);
                 }
                 else
-                {
-                    byte[] strs = m_Reader.ReadBytes(seg.BytesCount);
-                    content.Value = new string(System.Text.Encoding.GetEncoding("ASCII").GetChars(strs));
-                }
-
-                segments.Add(content);
+                    ReadSimpleSegment(segments, seg, bitArray);
             }
 
             var result = from se in segments
@@ -1168,11 +1169,135 @@ namespace FlightDataReading.AircraftModel1
             return result2.ToArray();
         }
 
+        private void ReadComplexSegment(List<FlightDataContentSegment> segments,
+            FlightBinaryDataContentSegmentDefinition seg, BitArray bitArray)
+        {
+            var readed = m_Reader.ReadBytes(4);//.ReadUInt32();
+            BitArray ba = new BitArray(readed);
+
+            for (int i = 0; i < seg.BitsDefinition.Length; i++)
+            {
+                var seg2 = seg.BitsDefinition[i];
+                FlightDataContentSegment resultSeg = new FlightDataContentSegment()
+                {
+                    DataTypeStr = seg2.DataTypeStr,
+                    SegmentName = seg2.SegmentName,
+                    Value = ba[i] ? "1" : "0"
+                };
+
+                //for (int j = 0; j < seg2.BitsCount; j++)
+                //{
+                //    if (ba[i * 4 + j] == false)
+                //    {
+                //        resultSeg.Value = "0";
+                //        break;
+                //    }
+                //}
+
+                segments.Add(resultSeg);
+            }
+        }
+
+        private void ReadSimpleSegment(List<FlightDataContentSegment> segments,
+            FlightBinaryDataContentSegmentDefinition seg, BitArray bitArray)
+        {
+            FlightDataContentSegment content = new FlightDataContentSegment()
+            {
+                DataTypeStr = seg.DataTypeStr,
+                SegmentName = seg.SegmentName
+            };
+
+            //每个Index长度是4（byteCount）
+
+            long currentPos = m_Reader.BaseStream.Position;
+            if (seg.DataTypeStr == DataTypeConverter.FLOAT)
+            {
+                float floatVal = m_Reader.ReadSingle();
+                if (currentPos + seg.BytesCount != m_Reader.BaseStream.Position)
+                    m_Reader.BaseStream.Position = currentPos + seg.BytesCount;
+                content.Value = floatVal.ToString();
+            }
+            else if (seg.DataTypeStr == DataTypeConverter.INT32)
+            {
+                int intVal = m_Reader.ReadInt32();
+                content.Value = intVal.ToString();
+                if (currentPos + seg.BytesCount != m_Reader.BaseStream.Position)
+                    m_Reader.BaseStream.Position = currentPos + seg.BytesCount;
+            }
+            else if (seg.DataTypeStr == DataTypeConverter.LONG)
+            {
+                long longVal = m_Reader.ReadInt64();
+                content.Value = longVal.ToString();
+                if (currentPos + seg.BytesCount != m_Reader.BaseStream.Position)
+                    m_Reader.BaseStream.Position = currentPos + seg.BytesCount;
+            }
+            else if (seg.DataTypeStr == DataTypeConverter.DATETIME)
+            {
+                content.Value = string.Empty;
+                if (currentPos + seg.BytesCount != m_Reader.BaseStream.Position)
+                    m_Reader.BaseStream.Position = currentPos + seg.BytesCount;
+            }
+            else
+            {
+                byte[] strs = m_Reader.ReadBytes(seg.BytesCount);
+                content.Value = new string(System.Text.Encoding.GetEncoding("ASCII").GetChars(strs));
+                if (currentPos + seg.BytesCount != m_Reader.BaseStream.Position)
+                    m_Reader.BaseStream.Position = currentPos + seg.BytesCount;
+            }
+
+            segments.Add(content);
+        }
+
 
         public void Close()
         {
             if (m_Reader != null)
                 this.m_Reader.Dispose();
+        }
+
+
+        public FlightDataEntitiesRT.Decisions.Decision[] GetFaultDecisions()
+        {
+            var decisions = new FlightDataEntitiesRT.Decisions.Decision[]{
+                //new FlightDataEntitiesRT.Decisions.Decision(){
+                //     LastTime = 1, Conditions = new FlightDataEntitiesRT.Decisions.SubCondition[]{
+                //         new FlightDataEntitiesRT.Decisions.CompareSubCondition(){ ParameterID = "T6R",
+                //              ParameterValue = 630 , Operator = FlightDataEntitiesRT.Decisions.CompareOperator.GreaterThan},
+                //              new FlightDataEntitiesRT.Decisions.CompareSubCondition(){ ParameterID = "KG14",
+                //              ParameterValue = 1 , Operator = FlightDataEntitiesRT.Decisions.CompareOperator.Equal},
+                //     }},
+                     new FlightDataEntitiesRT.Decisions.Decision(){
+                     LastTime = 10, Conditions = new FlightDataEntitiesRT.Decisions.SubCondition[]{
+                         new FlightDataEntitiesRT.Decisions.CompareSubCondition(){ ParameterID = "Vi",
+                              ParameterValue = 100 , Operator = FlightDataEntitiesRT.Decisions.CompareOperator.GreaterThan},
+                              new FlightDataEntitiesRT.Decisions.CompareSubCondition(){ ParameterID = "NHL",
+                              ParameterValue = 99 , Operator = FlightDataEntitiesRT.Decisions.CompareOperator.GreaterThan},
+                     }}
+            };
+
+            foreach (var decision in decisions)
+            {
+                Queue<SubCondition> conds = new Queue<SubCondition>();
+                foreach (var sub in decision.Conditions)
+                {
+                    conds.Enqueue(sub);
+                }
+                while (conds.Count > 0)
+                {
+                    var s = conds.Dequeue();
+                    s.RootDecision = decision;
+
+                    if (s.SubConditions != null)
+                    {
+                        foreach (var sub in s.SubConditions)
+                        {
+                            conds.Enqueue(sub);
+                        }
+                    }
+                }
+            }
+
+            return decisions;
         }
     }
 }

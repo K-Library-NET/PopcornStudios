@@ -100,14 +100,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BaseFunction.cs" />
+    <Compile Include="DataColumn.cs" />
     <Compile Include="DataPointReducer.cs" />
+    <Compile Include="DataRow.cs" />
+    <Compile Include="DataTable.cs" />
     <Compile Include="DataTypeConverter.cs" />
+    <Compile Include="Decisions\CompareOperator.cs" />
+    <Compile Include="Decisions\CompareSubCondition.cs" />
     <Compile Include="Decisions\ConditionRelation.cs" />
     <Compile Include="Decisions\Decision.cs" />
+    <Compile Include="Decisions\DecisionRecord.cs" />
+    <Compile Include="Decisions\DeltaRateSubCondition.cs" />
     <Compile Include="Decisions\IDecision.cs" />
     <Compile Include="Decisions\SubCondition.cs" />
     <Compile Include="ExtremumPointInfo.cs" />
     <Compile Include="FlightDataHeader.cs" />
+    <Compile Include="FlightParameter.cs" />
+    <Compile Include="FlightParameters.cs" />
     <Compile Include="IFlightRawDataExtractor.cs" />
     <Compile Include="Level1FlightRecord.cs" />
     <Compile Include="Level2FlightRecord.cs" />

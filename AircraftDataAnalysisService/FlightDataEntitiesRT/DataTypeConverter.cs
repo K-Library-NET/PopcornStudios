@@ -34,6 +34,20 @@ namespace FlightDataEntitiesRT
                 return STRING;
         }
 
+        public static Type GetType(string type)
+        {
+            if (type == INT32)
+                return TypeInt32;
+            else if (type == DATETIME)
+                return TypeDateTime;
+            else if (type == FLOAT)
+                return TypeFloat;
+            else if (type == LONG)
+                return TypeLong;
+            else
+                return TypeString;
+        }
+
         //public static MongoDB.Bson.BsonValue ToBsonType(string valueText, string typeStr)
         //{
         //    if (!string.IsNullOrEmpty(typeStr))

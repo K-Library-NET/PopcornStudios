@@ -11,6 +11,8 @@ using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
 using FlightDataReading;
 using System.Configuration;
+using System.Xml.Linq;
+using System.IO;
 
 namespace AircraftDataAnalysisWcfService
 {
@@ -327,7 +329,6 @@ namespace AircraftDataAnalysisWcfService
                             {
                                 pm.IsConcerned = fp.IsConcerned;
                                 pm.Caption = fp.Caption;
-                                pm.Frequence = fp.Frequence;
                                 pm.Index = fp.Index;
                                 pm.SubIndex = fp.SubIndex;
                                 pm.Unit = fp.Unit;
@@ -348,9 +349,93 @@ namespace AircraftDataAnalysisWcfService
                 AircraftMongoDb.DATABASE_COMMON, AircraftMongoDb.COLLECTION_FLIGHT_PARAMETER);
         }
 
-        public FlightParameter[] GetAllFlightParameters()
+        public FlightParameters GetAllFlightParameters()
         {
-            return this.GetAllFlightParameters(this.GetCurrentAircraftModel().ModelName);
+            string basePath = this.CombineFromBasePath("FlightParameters.xml");
+
+            if (!string.IsNullOrEmpty(basePath) && File.Exists(basePath))
+                using (StreamReader reader = new StreamReader(basePath))
+                {
+                    XElement element = XElement.Load(reader);
+                    if (element != null)
+                    {
+                        FlightParameters root = new FlightParameters();
+                        var bc = element.Attribute("BytesCount");
+                        if (bc != null)
+                        {
+                            root.BytesCount = Convert.ToInt32(bc.Value);
+                        }
+
+                        var parameters = element.Descendants("Parameter");
+                        if (parameters != null && parameters.Count() > 0)
+                        {
+                            try
+                            {
+                                List<FlightParameter> fps = new List<FlightParameter>();
+
+                                foreach (var one in parameters)
+                                {
+                                    FlightParameter ps = new FlightParameter()
+                                             {
+                                                 ParameterID = one.Attribute("ParameterID").Value,
+                                                 Caption = one.Attribute("Caption").Value,
+                                                 Index = Convert.ToInt32(one.Attribute("Index").Value),
+                                                 SubIndex = Convert.ToInt32(one.Attribute("SubIndex").Value),
+                                                 ParameterDataType = one.Attribute("ParameterDataType").Value
+                                             };
+                                    var eles = one.Elements("Byte");
+                                    if (eles != null && eles.Count() > 0)
+                                    {
+                                        List<ByteIndex> bis = new List<ByteIndex>();
+                                        foreach (var ele in eles)
+                                        {
+                                            ByteIndex bi = new ByteIndex() { Index = Convert.ToInt32(ele.Attribute("Index").Value) };
+
+                                            var eles2 = ele.Elements("Bit");
+                                            if (eles2 != null && eles2.Count() > 0)
+                                            {
+                                                List<BitIndex> bitIndex = new List<BitIndex>();
+                                                foreach (var ele2 in eles2)
+                                                {
+                                                    bitIndex.Add(
+                                                        new BitIndex() { SubIndex = Convert.ToInt32(ele2.Attribute("Index").Value) });
+                                                }
+                                                bi.SubIndexes = bitIndex.ToArray();
+                                            }
+
+                                            bis.Add(bi);
+                                        }
+
+                                        ps.ByteIndexes = bis.ToArray();
+                                    }
+
+                                    fps.Add(ps);
+                                }
+
+                                root.Parameters = fps.ToArray();
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e.Message);
+                            }
+                        }
+
+                        return root;
+                    }
+                }
+
+            return null;//this.GetAllFlightParameters(this.GetCurrentAircraftModel().ModelName);
+        }
+
+        private string CombineFromBasePath(string path)
+        {
+            string path2 = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path);
+            if (File.Exists(path2) || Directory.Exists(path2))
+                return path2;
+
+            string path1 = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin");
+
+            return Path.Combine(path1, path);
         }
 
         public FlightParameter[] GetAllFlightParameters(string modelName)

@@ -17,12 +17,57 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="FlightParameters", Namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities")]
+    public partial class FlightParameters : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private int BytesCountField;
+        
+        private System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.FlightParameter> ParametersField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int BytesCount {
+            get {
+                return this.BytesCountField;
+            }
+            set {
+                if ((this.BytesCountField.Equals(value) != true)) {
+                    this.BytesCountField = value;
+                    this.RaisePropertyChanged("BytesCount");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.FlightParameter> Parameters {
+            get {
+                return this.ParametersField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ParametersField, value) != true)) {
+                    this.ParametersField = value;
+                    this.RaisePropertyChanged("Parameters");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="FlightParameter", Namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities")]
     public partial class FlightParameter : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private string CaptionField;
+        private System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.ByteIndex> ByteIndexesField;
         
-        private int FrequenceField;
+        private string CaptionField;
         
         private int IndexField;
         
@@ -39,6 +84,19 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
         private string UnitField;
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.ByteIndex> ByteIndexes {
+            get {
+                return this.ByteIndexesField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ByteIndexesField, value) != true)) {
+                    this.ByteIndexesField = value;
+                    this.RaisePropertyChanged("ByteIndexes");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string Caption {
             get {
                 return this.CaptionField;
@@ -47,19 +105,6 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
                 if ((object.ReferenceEquals(this.CaptionField, value) != true)) {
                     this.CaptionField = value;
                     this.RaisePropertyChanged("Caption");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Frequence {
-            get {
-                return this.FrequenceField;
-            }
-            set {
-                if ((this.FrequenceField.Equals(value) != true)) {
-                    this.FrequenceField = value;
-                    this.RaisePropertyChanged("Frequence");
                 }
             }
         }
@@ -151,6 +196,81 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
                 if ((object.ReferenceEquals(this.UnitField, value) != true)) {
                     this.UnitField = value;
                     this.RaisePropertyChanged("Unit");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ByteIndex", Namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities")]
+    public partial class ByteIndex : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private int IndexField;
+        
+        private System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.BitIndex> SubIndexesField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Index {
+            get {
+                return this.IndexField;
+            }
+            set {
+                if ((this.IndexField.Equals(value) != true)) {
+                    this.IndexField = value;
+                    this.RaisePropertyChanged("Index");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.BitIndex> SubIndexes {
+            get {
+                return this.SubIndexesField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SubIndexesField, value) != true)) {
+                    this.SubIndexesField = value;
+                    this.RaisePropertyChanged("SubIndexes");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="BitIndex", Namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities")]
+    public partial class BitIndex : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private int SubIndexField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int SubIndex {
+            get {
+                return this.SubIndexField;
+            }
+            set {
+                if ((this.SubIndexField.Equals(value) != true)) {
+                    this.SubIndexField = value;
+                    this.RaisePropertyChanged("SubIndex");
                 }
             }
         }
@@ -578,7 +698,7 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
         System.Threading.Tasks.Task DoWorkAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IAircraftService/GetAllFlightParameters", ReplyAction="http://tempuri.org/IAircraftService/GetAllFlightParametersResponse")]
-        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.FlightParameter>> GetAllFlightParametersAsync();
+        System.Threading.Tasks.Task<AircraftDataAnalysisWinRT.AircraftService.FlightParameters> GetAllFlightParametersAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IAircraftService/InsertRawDataBatch", ReplyAction="http://tempuri.org/IAircraftService/InsertRawDataBatchResponse")]
         System.Threading.Tasks.Task<string> InsertRawDataBatchAsync(AircraftDataAnalysisWinRT.AircraftService.RawDataBatch batchData);
@@ -634,7 +754,7 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
             return base.Channel.DoWorkAsync();
         }
         
-        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.FlightParameter>> GetAllFlightParametersAsync() {
+        public System.Threading.Tasks.Task<AircraftDataAnalysisWinRT.AircraftService.FlightParameters> GetAllFlightParametersAsync() {
             return base.Channel.GetAllFlightParametersAsync();
         }
         

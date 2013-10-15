@@ -96,7 +96,7 @@ namespace ConsoleApplication1
                                  select new FlightDataEntities.FlightParameter()
                                  {
                                      IsConcerned = true,
-                                     Frequence = Convert.ToInt32(one.Attribute("Frequence").Value),
+                                     //Frequence = Convert.ToInt32(one.Attribute("Frequence").Value),
                                      Caption = one.Attribute("Caption").Value,
                                      ParameterID = modelName + "_" + one.Attribute("Index").Value + "_" + one.Attribute("SubIndex").Value,
                                      Index = Convert.ToInt32(one.Attribute("Index").Value),

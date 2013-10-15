@@ -1,4 +1,5 @@
 ﻿using AircraftDataAnalysisWinRT.DataModel;
+using FlightDataEntitiesRT;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -55,18 +56,52 @@ namespace AircraftDataAnalysisWinRT.Test
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            DataTable dt = new DataTable();
+            dt.Columns.Add(
+                new DataColumn() { ColumnName = "Second", Caption = "秒", DataType = typeof(int) });
+            dt.Columns.Add(
+                new DataColumn() { ColumnName = "1", Caption = "1 col", DataType = typeof(string) });
+            dt.Columns.Add(
+                new DataColumn() { ColumnName = "2", Caption = "2 列", DataType = typeof(string) });
+            dt.Columns.Add(
+                new DataColumn() { ColumnName = "3", Caption = "3 set", DataType = typeof(string) });
+            dt.Columns.Add(
+                new DataColumn() { ColumnName = "4", Caption = "4 collection", DataType = typeof(string) });
+
+            var row = dt.NewRow();
+            row.Add("Second", 1);
+            row.Add("1", "A"); row.Add("2", "B"); row.Add("3", "C"); row.Add("4", "D");
+            dt.Rows.Add(row);
+
+            row = dt.NewRow();
+            row.Add("Second", 2);
+            row.Add("2", "A"); row.Add("3", "B"); row.Add("4", "C"); row.Add("1", "D");
+            dt.Rows.Add(row);
+
+            row = dt.NewRow();
+            row.Add("Second", 3);
+            row.Add("3", "A"); row.Add("4", "B"); row.Add("1", "C"); row.Add("2", "D");
+            dt.Rows.Add(row);
+
+            row = dt.NewRow();
+            row.Add("Second", 4);
+            row.Add("4", "A"); row.Add("1", "B"); row.Add("2", "C"); row.Add("3", "D");
+            dt.Rows.Add(row);
+
+            
+
             List<RawDataRowViewModel> models = new List<RawDataRowViewModel>();
             ObservableCollection<IDictionary<string, Object>> dicList = new ObservableCollection<IDictionary<string, object>>();
 
             this.grid1.AutoGenerateColumns = false;
-            models.Add(
-                new RawDataRowViewModel() { Second = 1, Values = (new List<object>(new string[] { "A", "B", "C", "D" })) });
-            models.Add(
-                new RawDataRowViewModel() { Second = 2, Values = (new List<object>(new string[] { "B", "C", "D", "A" })) });
-            models.Add(
-                new RawDataRowViewModel() { Second = 3, Values = (new List<object>(new string[] { "C", "D", "A", "B" })) });
-            models.Add(
-                new RawDataRowViewModel() { Second = 4, Values = (new List<object>(new string[] { "D", "A", "B", "C" })) });
+            //models.Add(
+            //    new RawDataRowViewModel() { Second = 1, Values = (new List<object>(new string[] { "A", "B", "C", "D" })) });
+            //models.Add(
+            //    new RawDataRowViewModel() { Second = 2, Values = (new List<object>(new string[] { "B", "C", "D", "A" })) });
+            //models.Add(
+            //    new RawDataRowViewModel() { Second = 3, Values = (new List<object>(new string[] { "C", "D", "A", "B" })) });
+            //models.Add(
+            //    new RawDataRowViewModel() { Second = 4, Values = (new List<object>(new string[] { "D", "A", "B", "C" })) });
 
             var dic = new ExpandoObject() as IDictionary<string, object>;// new Dictionary<string, object>();
             dic.Add("Second", 1);
@@ -95,7 +130,7 @@ namespace AircraftDataAnalysisWinRT.Test
             this.grid1.Columns.Add(new DataGridTextColumn() { PropertyName = "3", Name = "colSecond3", Header = "3 set" });
             this.grid1.Columns.Add(new DataGridTextColumn() { PropertyName = "4", Name = "colSecond4", Header = "4 collection" });
 
-            this.grid1.ItemsSource = dicList;
+            this.grid1.ItemsSource = dt;// dicList;
         }
     }
 }

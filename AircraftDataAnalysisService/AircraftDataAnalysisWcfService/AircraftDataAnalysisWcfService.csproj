@@ -40,6 +40,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\MongoDB.Driver.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -64,7 +70,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AircraftService.svc" />
-    <Content Include="FlightParameters.xml" />
+    <Content Include="FlightParameters.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Service1.svc" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -84,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\Test1.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -99,14 +108,6 @@
     <ProjectReference Include="..\FlightDataReading\FlightDataReading.csproj">
       <Project>{0a0034b3-dd7d-449f-907f-df51d5c9d057}</Project>
       <Name>FlightDataReading</Name>
-    </ProjectReference>
-    <ProjectReference Include="C:\mongodb\mongo-csharp-driver-master\MongoDB.Bson\MongoDB.Bson.csproj">
-      <Project>{0e9a3a2a-49cd-4f6c-847c-dc79b4b65ce6}</Project>
-      <Name>MongoDB.Bson</Name>
-    </ProjectReference>
-    <ProjectReference Include="C:\mongodb\mongo-csharp-driver-master\MongoDB.Driver\MongoDB.Driver.csproj">
-      <Project>{ae5166cd-76b0-4911-bd80-ced9521f37a1}</Project>
-      <Name>MongoDB.Driver</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

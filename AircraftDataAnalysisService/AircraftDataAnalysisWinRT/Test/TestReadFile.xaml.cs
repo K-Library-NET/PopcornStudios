@@ -93,12 +93,14 @@ namespace AircraftDataAnalysisWinRT.Test
                 new Windows.UI.Core.DispatchedHandler(
                     delegate()
                     {
+                        this.gridData.AutoGenerateColumns = false;
+                        this.gridData.Columns.Clear();
                         var rawDataModel = this.ViewModel.GetRawDataModel();
                         foreach (var col in rawDataModel.ColumnCollection)
                         {
                             this.gridData.Columns.Add(col);
                         }
-                        this.gridData.ItemsSource = rawDataModel.Items;
+                        this.gridData.ItemsSource = rawDataModel.RawDataRowViewModel;
                     }));
         }
 

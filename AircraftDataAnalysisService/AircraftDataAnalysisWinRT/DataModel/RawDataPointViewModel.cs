@@ -1,8 +1,10 @@
-﻿using System;
+﻿using FlightDataEntitiesRT;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AircraftDataAnalysisWinRT.DataModel
 {
@@ -10,72 +12,53 @@ namespace AircraftDataAnalysisWinRT.DataModel
     {
         public RawDataPointViewModel()
         {
-            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
-            var result = client.GetAllFlightParametersAsync();
-            result.Wait();
+            var parameters = this.GetFlightParameters();
+            this.RawDataRowViewModel = new RawDataRowViewModel()
+            {
+                Columns = new ObservableCollection<FlightDataEntitiesRT.DataColumn>(
+                  from one in parameters
+                  where !string.IsNullOrEmpty(one.ParameterID) && one.ParameterID != "(NULL)"
+                  select new FlightDataEntitiesRT.DataColumn()
+                  {
+                      Caption = one.Caption,
+                      ColumnName = one.ParameterID,
+                      DataType = FlightDataEntitiesRT.DataTypeConverter.GetType(one.ParameterDataType)
+                  })
+            };
 
-            this.ParameterList = result.Result;
-            this.Items = new ObservableCollection<RawDataRowViewModel>();
+            if (this.RawDataRowViewModel.Columns.Count > 0)
+            {//DEBUG
+            }
         }
 
         public ObservableCollection<AircraftService.FlightParameter> ParameterList { get; set; }
 
         public ObservableCollection<Telerik.UI.Xaml.Controls.Grid.DataGridColumn> ColumnCollection { get; set; }
 
-        public ObservableCollection<RawDataRowViewModel> Items { get; set; }
-
-        /// <summary>
-        /// 创建RawDataRowViewModel作为一行
-        /// </summary>
-        /// <param name="i"></param>
-        /// <param name="datas"></param>
-        public void AddOneSecondValue(int i, FlightDataEntitiesRT.ParameterRawData[] datas)
+        internal void GenerateColumns()
         {
-            RawDataRowViewModel model = new RawDataRowViewModel() { Second = i };
-            model.AddValue(i);
-
-            foreach (var param in ParameterList)
-            {
-                var value = datas.Single(
-                     new Func<FlightDataEntitiesRT.ParameterRawData, bool>(
-                         delegate(FlightDataEntitiesRT.ParameterRawData data)
-                         {
-                             if (data != null && data.ParameterID == param.ParameterID)
-                                 return true;
-                             return false;
-                         }));
-
-                if (value != null)
-                {
-                    model.AddValue(value.Values[0]);
-                }
-                else { model.AddValue(string.Empty); }
-            }
-
-            this.Items.Add(model);
-        }
-
-        internal async void GenerateColumns()
-        {
-            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
-            var result = client.GetAllFlightParametersAsync();
-            var result2 = await result;
+            var result2 = GetFlightParameters();
 
             this.ColumnCollection = new ObservableCollection<Telerik.UI.Xaml.Controls.Grid.DataGridColumn>();
 
-            if (result2 != null && result2.Count > 0)
+            if (result2 != null && result2.Count() > 0)
             {
                 int i = 0;
                 foreach (var one in result2)
                 {
+                    //这里才是去掉NULL值
+                    if (one.ParameterID == "(NULL)")
+                        continue;
+
                     Telerik.UI.Xaml.Controls.Grid.DataGridColumn col
                         = new Telerik.UI.Xaml.Controls.Grid.DataGridTextColumn()
                         {
                             Name = one.ParameterID,
-                            PropertyName = "Values[" + i.ToString() + "]",
+                            PropertyName = one.ParameterID,//"Values[" + i.ToString() + "]",
+                            CanUserEdit = false,
                             Header = one.Caption
                         };
-                    
+
                     this.ColumnCollection.Add(col);
                     i++;
                 }
@@ -84,33 +67,96 @@ namespace AircraftDataAnalysisWinRT.DataModel
             this.ColumnCollection.Insert(0,
                 new Telerik.UI.Xaml.Controls.Grid.DataGridTextColumn()
                 {
+                    Name = "Second",
                     PropertyName = "Second",
                     Header = "秒值"
                 });
         }
+
+        private FlightDataEntitiesRT.FlightParameters m_currentFlightParameters = null;
+
+        public FlightDataEntitiesRT.FlightParameters CurrentFlightParameters
+        {
+            get { return m_currentFlightParameters; }
+            set { m_currentFlightParameters = value; }
+        }
+
+        public FlightDataEntitiesRT.FlightParameter[] GetFlightParameters()
+        {
+            if (m_currentFlightParameters != null)
+                return m_currentFlightParameters.Parameters;
+
+            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
+            var result = client.GetAllFlightParametersAsync();
+            result.Wait();
+            AircraftService.FlightParameters flightParameters = result.Result;
+
+            var result2 = from re in flightParameters.Parameters
+                          where !string.IsNullOrEmpty(re.ParameterID)//不能去掉（NULL）空值，因为可能还没数据解析
+                          orderby re.Index ascending, re.SubIndex ascending
+                          select new FlightDataEntitiesRT.FlightParameter()
+                          {
+                              Caption = re.Caption,
+                              Index = re.Index,
+                              ParameterDataType = re.ParameterDataType,
+                              ParameterID = re.ParameterID,
+                              SubIndex = re.SubIndex,
+                              ByteIndexes =
+                               (from one1 in re.ByteIndexes
+                                select new ByteIndex()
+                                {
+                                    Index = one1.Index,
+                                    SubIndexes = one1.SubIndexes == null ? new FlightDataEntitiesRT.BitIndex[] { } : (from one2 in one1.SubIndexes
+                                                                                                                      select new BitIndex() { SubIndex = one2.SubIndex }
+                                                   ).ToArray()
+                                }).ToArray()
+                          };
+
+            m_currentFlightParameters = new FlightParameters() { BytesCount = flightParameters.BytesCount, Parameters = result2.ToArray() };
+
+            return m_currentFlightParameters.Parameters;
+        }
+
+        public RawDataRowViewModel RawDataRowViewModel { get; set; }
     }
 
-    public class RawDataRowViewModel : AircraftDataAnalysisWinRT.Common.BindableBase
+    public class RawDataRowViewModel : FlightDataEntitiesRT.DataTable
     {
-        private int m_second = 0;
-
-        public int Second
+        internal void AddOneSecondValue(int i, FlightDataEntitiesRT.ParameterRawData[] datas)
         {
-            get { return m_second; }
-            set { this.SetProperty<int>(ref m_second, value); }
-        }
+            DataRow row = this.NewRow();
 
-        private List<object> m_values = new List<object>();
+            row["Second"] = i;
 
-        public List<object> Values
-        {
-            get { return m_values; }
-            set { m_values = value; }
-        }
+            foreach (var dt in datas)
+            {
+                row[dt.ParameterID] = Math.Round(dt.Values[0], 2);//写死用第一个值，并且两位小数保留
+            }
 
-        internal void AddValue(object val)
-        {
-            m_values.Add(val);
+            this.Rows.Add(row);
+
+            //RawDataRowViewModel model = new RawDataRowViewModel() { Second = i };
+            //model.AddValue(i);
+
+            //foreach (var param in ParameterList)
+            //{
+            //    var value = datas.Single(
+            //         new Func<FlightDataEntitiesRT.ParameterRawData, bool>(
+            //             delegate(FlightDataEntitiesRT.ParameterRawData data)
+            //             {
+            //                 if (data != null && data.ParameterID == param.ParameterID)
+            //                     return true;
+            //                 return false;
+            //             }));
+
+            //    if (value != null)
+            //    {
+            //        model.AddValue(value.Values[0]);
+            //    }
+            //    else { model.AddValue(string.Empty); }
+            //}
+
+            //this.Items.Add(model);
         }
     }
 }

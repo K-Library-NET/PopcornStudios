@@ -13,5 +13,7 @@ namespace FlightDataEntitiesRT
         void Close();
 
         ParameterRawData[] GetDataBySecond(int second);
+
+        Decisions.Decision[] GetFaultDecisions();
     }
 }

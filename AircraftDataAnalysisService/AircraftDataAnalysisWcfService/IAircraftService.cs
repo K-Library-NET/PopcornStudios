@@ -25,7 +25,7 @@ namespace AircraftDataAnalysisWcfService
         //string DeleteAircraft(string aircraftModel);
 
         [OperationContract]
-        FlightParameter[] GetAllFlightParameters();
+        FlightParameters GetAllFlightParameters();
 
         //[OperationContract]
         //FlightParameter[] GetAllFlightParameters(string modelName);

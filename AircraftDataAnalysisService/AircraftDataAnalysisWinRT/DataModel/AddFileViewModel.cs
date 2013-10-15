@@ -1,4 +1,5 @@
 ﻿using FlightDataEntitiesRT;
+using FlightDataEntitiesRT.Decisions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -48,7 +49,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
                     FlightDataEntitiesRT.IFlightRawDataExtractor extractor =
-                        this.CreateRawDataExtractorByAircraftModelName();
+                        this.CreateRawDataExtractorByAircraftModelName(null);
                     if (extractor != null)
                     {
                         this.Header = extractor.GetHeader();
@@ -57,27 +58,6 @@ namespace AircraftDataAnalysisWinRT.DataModel
                     else this.Header = null;
                 }
             }
-        }
-
-        private FlightDataEntitiesRT.IFlightRawDataExtractor CreateRawDataExtractorByAircraftModelName()
-        {
-            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
-            var modelTask = client.GetCurrentAircraftModelAsync();
-            modelTask.Wait();
-            var model = modelTask.Result;
-
-            if (model != null && !string.IsNullOrEmpty(model.ModelName))
-            {
-                if (model.ModelName == "F4D")
-                {
-                    var result = FlightDataReading.AircraftModel1.FlightRawDataExtractorFactory
-                        .CreateFlightRawDataExtractor(this.file);
-
-                    return result;
-                }
-            }
-
-            return null;
         }
 
         private string m_description = string.Empty;
@@ -311,16 +291,72 @@ namespace AircraftDataAnalysisWinRT.DataModel
 
             viewModel.GenerateColumns();
 
-            IFlightRawDataExtractor extractor = this.CreateRawDataExtractorByAircraftModelName();
+            IFlightRawDataExtractor extractor = this.CreateRawDataExtractorByAircraftModelName(
+                viewModel.CurrentFlightParameters);
+
+            var rowModel = viewModel.RawDataRowViewModel;
+
+            var decisions = extractor.GetFaultDecisions();
+
+            Dictionary<Decision, Decision> hasHappendMap = new Dictionary<Decision, Decision>();
+            List<DecisionRecord> decisionRecords = new List<DecisionRecord>();
 
             for (int i = 0; i < this.Header.FlightSeconds; i++)
             {
                 ParameterRawData[] datas = extractor.GetDataBySecond(i);
 
-                viewModel.AddOneSecondValue(i, datas);
+                rowModel.AddOneSecondValue(i, datas);
+
+                foreach (var de in decisions)
+                {
+                    de.AddOneSecondDatas(i, datas);
+                    if (de.HasHappened)
+                    {
+                        if (!hasHappendMap.ContainsKey(de))
+                            //添加一条准备记录
+                            hasHappendMap.Add(de, de);
+                    }
+                    else
+                    {
+                        if (hasHappendMap.ContainsKey(de))
+                        {//从发生到不发生，应该产生一条记录
+                            hasHappendMap.Remove(de);
+                            DecisionRecord record = new DecisionRecord()
+                            {
+                                StartSecond = de.ActiveStartSecond,
+                                EndSecond = de.ActiveEndSecond,
+                                DecisionID = de.DecisionID,
+                                DecisionName = de.DecisionName,
+                                DecisionDescription = de.ToString()
+                            };
+                            decisionRecords.Add(record);
+                        }
+                    }
+                }
             }
 
             return viewModel;
+        }
+
+        private IFlightRawDataExtractor CreateRawDataExtractorByAircraftModelName(FlightParameters flightParameter)
+        {
+            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
+            var modelTask = client.GetCurrentAircraftModelAsync();
+            modelTask.Wait();
+            var model = modelTask.Result;
+
+            if (model != null && !string.IsNullOrEmpty(model.ModelName))
+            {
+                if (model.ModelName == "F4D")
+                {
+                    var result = FlightDataReading.AircraftModel1.FlightRawDataExtractorFactory
+                        .CreateFlightRawDataExtractor(this.file, flightParameter);
+
+                    return result;
+                }
+            }
+
+            return null;
         }
     }
 }

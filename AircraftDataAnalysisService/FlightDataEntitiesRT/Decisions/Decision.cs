@@ -45,7 +45,10 @@ namespace FlightDataEntitiesRT.Decisions
         public bool HasHappened
         {
             get { return m_hasHappend; }
-            internal set { m_hasHappend = value; }
+            internal set
+            {
+                m_hasHappend = value;
+            }
         }
 
         private int m_happenedSecond = 0;
@@ -58,17 +61,20 @@ namespace FlightDataEntitiesRT.Decisions
 
         public void AddOneSecondDatas(int second, ParameterRawData[] rawDatas)
         {
-            foreach (var con in this.Conditions)
-                con.AddOneSecondDatas(second, rawDatas);
+            Dictionary<string, List<float>> rawDataDics = new Dictionary<string, List<float>>();
+            foreach (var raw in rawDatas)
+            {
+                if (!rawDataDics.ContainsKey(raw.ParameterID))
+                    rawDataDics.Add(raw.ParameterID, new List<float>());
 
-            if (AllConditionTrue() && this.LastTime > 0
-                && (second - this.ActiveStartSecond >= this.LastTime))
-            {//所有条件都发生，并且大于等于持续时间，则认为真正发生了
-                this.HappenedSecond = second;
-                HasHappened = true;
+                rawDataDics[raw.ParameterID].AddRange(raw.Values);
             }
-            else if (this.AllConditionTrue())//所有条件都满足但是持续时间还不够长
-            {//先设置为Active
+
+            foreach (var con in this.Conditions)
+                con.AddOneSecondDatas(second, rawDataDics);
+
+            if (AllConditionTrue())
+            {//先设置为Active，不管持续时间够不够长
                 if (this.IsActive == false)
                 {
                     this.ActiveStartSecond = second;
@@ -82,6 +88,23 @@ namespace FlightDataEntitiesRT.Decisions
                     this.IsActive = false;
                     this.ActiveEndSecond = second;
                 }
+            }
+
+            if (AllConditionTrue() && this.LastTime > 0
+                && (second - this.ActiveStartSecond >= this.LastTime))
+            {//所有条件都发生，并且大于等于持续时间，则认为真正发生了
+                if (HasHappened)
+                {
+                }
+                else
+                {
+                    this.HappenedSecond = second;
+                    HasHappened = true;
+                }
+            }
+            else
+            {
+                HasHappened = false;
             }
 
             //如果有子条件则自身不算
@@ -112,5 +135,9 @@ namespace FlightDataEntitiesRT.Decisions
             get;
             set;
         }
+
+        public string DecisionID { get; set; }
+
+        public string DecisionName { get; set; }
     }
 }
