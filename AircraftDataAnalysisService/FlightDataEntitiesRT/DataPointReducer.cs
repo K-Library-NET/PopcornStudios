@@ -12,7 +12,7 @@ namespace FlightDataEntitiesRT
     public class DataPointReducer
     {
         public Level1FlightRecord[] ReduceFlightRawDataPoints(string parameterID,
-            ParameterRawData[] points, int secondGap)
+            List<ParameterRawData> points, int secondGap)
         {
             //1. 每秒钟取一个点
             var wrapped = from one in points
@@ -23,7 +23,7 @@ namespace FlightDataEntitiesRT
             List<ParameterRawDataWrap> tempList = new List<ParameterRawDataWrap>();
 
             int startSec = 0;
-            int endSec = Math.Min(startSec + secondGap, points[points.Length - 1].Second);
+            int endSec = Math.Min(startSec + secondGap, points[points.Count - 1].Second);
             foreach (var one in wrapped)
             {
                 if (one.m_RawData.Second >= startSec
@@ -45,7 +45,7 @@ namespace FlightDataEntitiesRT
                     tempList.Clear();
 
                     startSec = endSec;
-                    endSec = Math.Min(endSec + secondGap, points[points.Length - 1].Second);
+                    endSec = Math.Min(endSec + secondGap, points[points.Count - 1].Second);
                 }
             }
 

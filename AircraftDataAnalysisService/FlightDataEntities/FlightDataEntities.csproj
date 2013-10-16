@@ -55,6 +55,8 @@
     <Compile Include="AircraftInstance.cs" />
     <Compile Include="AircraftModel.cs" />
     <Compile Include="AircraftMongoDb.cs" />
+    <Compile Include="Charts\ChartPanel.cs" />
+    <Compile Include="DecisionRecord.cs" />
     <Compile Include="Flight.cs" />
     <Compile Include="FlightParameter.cs" />
     <Compile Include="FlightRawData.cs" />

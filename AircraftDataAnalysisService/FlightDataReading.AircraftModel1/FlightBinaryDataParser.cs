@@ -56,7 +56,7 @@ namespace FlightDataReading.AircraftModel1
                         // FlightDataContentSegment ds = new FlightDataContentSegment();
                         ds.DataTypeStr = seg.DataTypeStr;
                         ds.SegmentName = seg.SegmentName;
-                        ds.Value = builder.ToString().Trim('\0');
+                        ds.Value = 0;//debug //builder.ToString().Trim('\0');
                     }
                     else
                     {
@@ -64,7 +64,7 @@ namespace FlightDataReading.AircraftModel1
                         builder.Append(v);
                         ds.DataTypeStr = seg.DataTypeStr;
                         ds.SegmentName = seg.SegmentName;
-                        ds.Value = builder.ToString().Trim('\0');
+                        ds.Value = 0;//debug builder.ToString().Trim('\0');
                     }
                     segments.Add(ds);
                 }

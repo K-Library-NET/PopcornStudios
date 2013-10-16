@@ -43,11 +43,11 @@ namespace AircraftDataAnalysisWinRT.DataModel
         {
             if (this.file != null)
             {
-                var readFile = await this.file.OpenReadAsync();
-                var stream = readFile.AsStreamForRead();
+                //var readFile = await this.file.OpenReadAsync();
+                //var stream = readFile.AsStreamForRead();
 
-                using (BinaryReader reader = new BinaryReader(stream))
-                {
+                //using (BinaryReader reader = new BinaryReader(stream))
+                //{
                     FlightDataEntitiesRT.IFlightRawDataExtractor extractor =
                         this.CreateRawDataExtractorByAircraftModelName(null);
                     if (extractor != null)
@@ -56,7 +56,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
                         extractor.Close();
                     }
                     else this.Header = null;
-                }
+                //}
             }
         }
 
@@ -293,7 +293,9 @@ namespace AircraftDataAnalysisWinRT.DataModel
 
             IFlightRawDataExtractor extractor = this.CreateRawDataExtractorByAircraftModelName(
                 viewModel.CurrentFlightParameters);
-
+            (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).TestSpan1 = new TimeSpan();
+            (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).TestSpan2 = new TimeSpan();
+            (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).TestSpan3 = new TimeSpan();
             var rowModel = viewModel.RawDataRowViewModel;
 
             var decisions = extractor.GetFaultDecisions();
@@ -301,15 +303,29 @@ namespace AircraftDataAnalysisWinRT.DataModel
             Dictionary<Decision, Decision> hasHappendMap = new Dictionary<Decision, Decision>();
             List<DecisionRecord> decisionRecords = new List<DecisionRecord>();
 
+            TimeSpan spanBinaryRead = new TimeSpan();
+            TimeSpan spanRead = new TimeSpan();
+            TimeSpan spanDecision = new TimeSpan();
+            DateTime start = DateTime.Now;
+
             for (int i = 0; i < this.Header.FlightSeconds; i++)
             {
+                var s3 = DateTime.Now;
                 ParameterRawData[] datas = extractor.GetDataBySecond(i);
+                var s4 = DateTime.Now;
+                spanBinaryRead += s4.Subtract(s3);
 
                 rowModel.AddOneSecondValue(i, datas);
+                var s5 = DateTime.Now;
+                spanRead += s5.Subtract(s4);
 
                 foreach (var de in decisions)
                 {
+                    var s1 = DateTime.Now;
                     de.AddOneSecondDatas(i, datas);
+                    var s2 = DateTime.Now;
+                    spanDecision += s2.Subtract(s1);
+
                     if (de.HasHappened)
                     {
                         if (!hasHappendMap.ContainsKey(de))
@@ -335,6 +351,9 @@ namespace AircraftDataAnalysisWinRT.DataModel
                 }
             }
 
+            var end = DateTime.Now;
+            TimeSpan totalSpan = end.Subtract(start);
+            
             return viewModel;
         }
 

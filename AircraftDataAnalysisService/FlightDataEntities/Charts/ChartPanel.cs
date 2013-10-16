@@ -6,13 +6,13 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlightDataEntities
+namespace FlightDataEntities.Charts
 {
     /// <summary>
-    /// 飞行参数源数据，未经处理
+    /// 数据面板
     /// </summary>
     [DataContract]
-    public class FlightRawData
+    public class ChartPanel
     {
         public ObjectId Id
         {
@@ -20,25 +20,31 @@ namespace FlightDataEntities
             set;
         }
 
+        /// <summary>
+        /// 面板ID
+        /// </summary>
         [DataMember]
-        public float[] Values
+        public string PanelID
         {
             get;
             set;
         }
 
         /// <summary>
-        /// 当前飞行秒（第几秒）
+        /// 面板名称
         /// </summary>
         [DataMember]
-        public int Second
+        public string PanelName
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 面板自有的参数ID
+        /// </summary>
         [DataMember]
-        public string ParameterID
+        public string[] ParameterIDs
         {
             get;
             set;

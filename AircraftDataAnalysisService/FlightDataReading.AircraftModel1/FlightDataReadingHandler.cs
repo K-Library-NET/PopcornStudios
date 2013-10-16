@@ -694,26 +694,26 @@ namespace FlightDataReading.AircraftModel1
                 if (seg.DataTypeStr == DataTypeConverter.FLOAT)
                 {
                     float floatVal = m_Reader.ReadSingle();
-                    content.Value = floatVal.ToString();
+                    content.Value = floatVal;// floatVal.ToString();
                 }
                 else if (seg.DataTypeStr == DataTypeConverter.INT32)
                 {
                     int intVal = m_Reader.ReadInt32();
-                    content.Value = intVal.ToString();
+                    content.Value = intVal;// intVal.ToString();
                 }
                 else if (seg.DataTypeStr == DataTypeConverter.LONG)
                 {
                     long longVal = m_Reader.ReadInt64();
-                    content.Value = longVal.ToString();
+                    content.Value = longVal;// longVal.ToString();
                 }
                 else if (seg.DataTypeStr == DataTypeConverter.DATETIME)
                 {
-                    content.Value = string.Empty;
+                    content.Value = 0;// string.Empty;
                 }
                 else
                 {
                     byte[] strs = m_Reader.ReadBytes(seg.BytesCount);
-                    content.Value = new string(System.Text.Encoding.GetEncoding("ASCII").GetChars(strs));
+                    content.Value = 0;// new string(System.Text.Encoding.GetEncoding("ASCII").GetChars(strs));
                 }
                 segments.Add(content);
             }
@@ -785,26 +785,26 @@ namespace FlightDataReading.AircraftModel1
                     if (seg.DataTypeStr == DataTypeConverter.FLOAT)
                     {
                         float floatVal = m_Reader.ReadSingle();
-                        content.Value = floatVal.ToString();
+                        content.Value = floatVal;// floatVal.ToString();
                     }
                     else if (seg.DataTypeStr == DataTypeConverter.INT32)
                     {
                         int intVal = m_Reader.ReadInt32();
-                        content.Value = intVal.ToString();
+                        content.Value = intVal;// intVal.ToString();
                     }
                     else if (seg.DataTypeStr == DataTypeConverter.LONG)
                     {
                         long longVal = m_Reader.ReadInt64();
-                        content.Value = longVal.ToString();
+                        content.Value = longVal;// longVal.ToString();
                     }
                     else if (seg.DataTypeStr == DataTypeConverter.DATETIME)
                     {
-                        content.Value = string.Empty;
+                        content.Value = 0;// string.Empty;
                     }
                     else
                     {
                         byte[] strs = m_Reader.ReadBytes(seg.BytesCount);
-                        content.Value = new string(System.Text.Encoding.GetEncoding("ASCII").GetChars(strs));
+                        content.Value = 0;// new string(System.Text.Encoding.GetEncoding("ASCII").GetChars(strs));
                     }
                     segments.Add(content);
                 }
@@ -1106,6 +1106,24 @@ namespace FlightDataReading.AircraftModel1
             };
         }
 
+        public TimeSpan TestSpan1
+        {
+            get;
+            set;
+        }
+
+        public TimeSpan TestSpan2
+        {
+            get;
+            set;
+        }
+
+        public TimeSpan TestSpan3
+        {
+            get;
+            set;
+        }
+
         public ParameterRawData[] GetDataBySecond(int second)
         {
             if (this.m_Reader == null || this.m_Reader.BaseStream.CanRead == false)
@@ -1149,9 +1167,10 @@ namespace FlightDataReading.AircraftModel1
                     this.ReadComplexSegment(segments, seg, bitArray);
                 }
                 else
+                {
                     ReadSimpleSegment(segments, seg, bitArray);
+                }
             }
-
             var result = from se in segments
                          group se by se.SegmentName into gse
                          select gse;
@@ -1165,7 +1184,6 @@ namespace FlightDataReading.AircraftModel1
                                   (from one in g
                                    select Convert.ToSingle(one.Value)).ToArray()
                           };
-
             return result2.ToArray();
         }
 
@@ -1182,7 +1200,7 @@ namespace FlightDataReading.AircraftModel1
                 {
                     DataTypeStr = seg2.DataTypeStr,
                     SegmentName = seg2.SegmentName,
-                    Value = ba[i] ? "1" : "0"
+                    Value = ba[i] ? 1.0F : 0.0F// ba[i] ? 1.0 : 0.0;
                 };
 
                 //for (int j = 0; j < seg2.BitsCount; j++)
@@ -1201,6 +1219,8 @@ namespace FlightDataReading.AircraftModel1
         private void ReadSimpleSegment(List<FlightDataContentSegment> segments,
             FlightBinaryDataContentSegmentDefinition seg, BitArray bitArray)
         {
+            var s3 = DateTime.Now;
+
             FlightDataContentSegment content = new FlightDataContentSegment()
             {
                 DataTypeStr = seg.DataTypeStr,
@@ -1208,42 +1228,47 @@ namespace FlightDataReading.AircraftModel1
             };
 
             //每个Index长度是4（byteCount）
-
             long currentPos = m_Reader.BaseStream.Position;
             if (seg.DataTypeStr == DataTypeConverter.FLOAT)
             {
+                var s1 = DateTime.Now;
                 float floatVal = m_Reader.ReadSingle();
+                var s2 = DateTime.Now;
+                TestSpan1 += s2.Subtract(s1);
                 if (currentPos + seg.BytesCount != m_Reader.BaseStream.Position)
                     m_Reader.BaseStream.Position = currentPos + seg.BytesCount;
-                content.Value = floatVal.ToString();
+                content.Value = floatVal;// floatVal.ToString();
+                TestSpan2 += DateTime.Now.Subtract(s2);
+
             }
             else if (seg.DataTypeStr == DataTypeConverter.INT32)
             {
                 int intVal = m_Reader.ReadInt32();
-                content.Value = intVal.ToString();
+                content.Value = intVal;// intVal.ToString();
                 if (currentPos + seg.BytesCount != m_Reader.BaseStream.Position)
                     m_Reader.BaseStream.Position = currentPos + seg.BytesCount;
             }
             else if (seg.DataTypeStr == DataTypeConverter.LONG)
             {
                 long longVal = m_Reader.ReadInt64();
-                content.Value = longVal.ToString();
+                content.Value = longVal;// longVal.ToString();
                 if (currentPos + seg.BytesCount != m_Reader.BaseStream.Position)
                     m_Reader.BaseStream.Position = currentPos + seg.BytesCount;
             }
             else if (seg.DataTypeStr == DataTypeConverter.DATETIME)
             {
-                content.Value = string.Empty;
+                content.Value = 0;// string.Empty;
                 if (currentPos + seg.BytesCount != m_Reader.BaseStream.Position)
                     m_Reader.BaseStream.Position = currentPos + seg.BytesCount;
             }
             else
             {
                 byte[] strs = m_Reader.ReadBytes(seg.BytesCount);
-                content.Value = new string(System.Text.Encoding.GetEncoding("ASCII").GetChars(strs));
+                content.Value = 0;// new string(System.Text.Encoding.GetEncoding("ASCII").GetChars(strs));
                 if (currentPos + seg.BytesCount != m_Reader.BaseStream.Position)
                     m_Reader.BaseStream.Position = currentPos + seg.BytesCount;
             }
+            TestSpan3 += DateTime.Now.Subtract(s3);
 
             segments.Add(content);
         }

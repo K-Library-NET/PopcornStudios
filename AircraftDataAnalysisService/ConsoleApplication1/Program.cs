@@ -19,7 +19,7 @@ namespace ConsoleApplication1
                 Console.WriteLine(re1);
             }
             AircraftDataAnalysisWcfService.AircraftService serv = new AircraftDataAnalysisWcfService.AircraftService();
-            serv.GetAllFlightParameters();
+            //serv.GetAllFlightParameters();
 
             //Program1.Main1(args);
             //Program1.Main2(args);

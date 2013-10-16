@@ -18,7 +18,16 @@ namespace FlightDataReading.AircraftModel1
 
             var readStreamTask = file.OpenStreamForReadAsync();
             readStreamTask.Wait();
-            BinaryReader reader = new BinaryReader(readStreamTask.Result);
+            MemoryStream stream = new MemoryStream(102400000);
+            byte[] bytes = new byte[readStreamTask.Result.Length];
+            readStreamTask.Result.Read(bytes, 0, Convert.ToInt32(readStreamTask.Result.Length));
+
+            stream.Write(bytes, 0, Convert.ToInt32(readStreamTask.Result.Length));
+
+            //Task temp1 = readStreamTask.AsTask();
+            //temp1.Wait();
+            //var temp2 = readStreamTask.GetResults();
+            BinaryReader reader = new BinaryReader(stream); //temp2.AsStreamForRead(1024000)); //readStreamTask.Result);
 
             var handler = new FlightDataReadingHandler(reader);
 
@@ -65,7 +74,7 @@ namespace FlightDataReading.AircraftModel1
             var temp2 = from k in tempList1
                         orderby k.Key ascending
                         select k;
-            
+
             foreach (var p in temp2)
             {
                 if (p.Value.Count < 2)

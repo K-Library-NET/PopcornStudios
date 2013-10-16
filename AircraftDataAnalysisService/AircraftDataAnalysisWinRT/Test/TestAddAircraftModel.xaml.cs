@@ -56,7 +56,8 @@ namespace AircraftDataAnalysisWinRT.Test
             //var models = await client.GetAllAircraftModelsAsync();
 
             //aircraftModels.ItemsSource = models;
-
+            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
+            
             //foreach (var one in models)
             //{
             //    one.ModelName

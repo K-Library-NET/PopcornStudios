@@ -105,10 +105,6 @@
       <Project>{784707c6-ec3e-42ea-96a6-849c7fc79e4e}</Project>
       <Name>FlightDataEntities</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FlightDataReading\FlightDataReading.csproj">
-      <Project>{0a0034b3-dd7d-449f-907f-df51d5c9d057}</Project>
-      <Name>FlightDataReading</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

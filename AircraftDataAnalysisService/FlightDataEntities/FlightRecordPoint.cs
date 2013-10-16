@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace FlightDataEntities
 {
+    [Obsolete("test")]
     /// <summary>
     /// 一个架次某一个参数的单点记录
     /// </summary>

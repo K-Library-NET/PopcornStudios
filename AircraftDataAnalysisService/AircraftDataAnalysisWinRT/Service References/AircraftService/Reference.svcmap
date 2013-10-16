@@ -24,6 +24,7 @@
     <MetadataSource Address="http://localhost:45240/AircraftService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
+    <MetadataFile FileName="AircraftService3.xsd" MetadataType="Schema" ID="937d73a9-af86-43d3-a91c-065b9c91fdc7" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd5" />
     <MetadataFile FileName="AircraftService.disco" MetadataType="Disco" ID="78d1668a-abb2-43ae-aa17-407bc63af092" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?disco" />
     <MetadataFile FileName="AircraftService1.xsd" MetadataType="Schema" ID="e379388c-1d5a-4a17-90ce-df4a3ad33cbd" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd1" />
     <MetadataFile FileName="AircraftService.xsd" MetadataType="Schema" ID="b8ede0d0-7fd7-439d-ba98-9e6cdf46190f" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd0" />

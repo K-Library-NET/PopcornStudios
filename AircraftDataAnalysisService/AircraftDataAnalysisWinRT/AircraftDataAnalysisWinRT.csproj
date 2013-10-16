@@ -138,6 +138,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Services\DataInputHelper.cs" />
+    <Compile Include="Services\DataReading.cs" />
+    <Compile Include="Services\ServerHelper.cs" />
     <Compile Include="Test\TestAddAircraftModel.xaml.cs">
       <DependentUpon>TestAddAircraftModel.xaml</DependentUpon>
     </Compile>
@@ -158,7 +161,16 @@
     <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.AircraftModel.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.ChartPanel.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.FlightParameters.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.FlightRawData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.LevelTopFlightRecord.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\AircraftService\AircraftService.wsdl" />
@@ -184,6 +196,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\AircraftService\AircraftService21.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\AircraftService\AircraftService3.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\AircraftService\Reference.svcmap">

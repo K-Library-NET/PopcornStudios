@@ -1,4 +1,5 @@
-﻿using FlightDataEntitiesRT;
+﻿using AircraftDataAnalysisWinRT.Services;
+using FlightDataEntitiesRT;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -86,33 +87,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
             if (m_currentFlightParameters != null)
                 return m_currentFlightParameters.Parameters;
 
-            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
-            var result = client.GetAllFlightParametersAsync();
-            result.Wait();
-            AircraftService.FlightParameters flightParameters = result.Result;
-
-            var result2 = from re in flightParameters.Parameters
-                          where !string.IsNullOrEmpty(re.ParameterID)//不能去掉（NULL）空值，因为可能还没数据解析
-                          orderby re.Index ascending, re.SubIndex ascending
-                          select new FlightDataEntitiesRT.FlightParameter()
-                          {
-                              Caption = re.Caption,
-                              Index = re.Index,
-                              ParameterDataType = re.ParameterDataType,
-                              ParameterID = re.ParameterID,
-                              SubIndex = re.SubIndex,
-                              ByteIndexes =
-                               (from one1 in re.ByteIndexes
-                                select new ByteIndex()
-                                {
-                                    Index = one1.Index,
-                                    SubIndexes = one1.SubIndexes == null ? new FlightDataEntitiesRT.BitIndex[] { } : (from one2 in one1.SubIndexes
-                                                                                                                      select new BitIndex() { SubIndex = one2.SubIndex }
-                                                   ).ToArray()
-                                }).ToArray()
-                          };
-
-            m_currentFlightParameters = new FlightParameters() { BytesCount = flightParameters.BytesCount, Parameters = result2.ToArray() };
+            m_currentFlightParameters = ServerHelper.GetFlightParameters(null);
 
             return m_currentFlightParameters.Parameters;
         }

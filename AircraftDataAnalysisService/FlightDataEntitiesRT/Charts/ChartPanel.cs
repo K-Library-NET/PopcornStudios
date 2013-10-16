@@ -4,35 +4,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlightDataEntitiesRT
+namespace FlightDataEntitiesRT.Charts
 {
     /// <summary>
-    /// 这种原始点先不要做任何精简，一秒钟有几个就生成几个值
+    /// 数据面板
     /// </summary>
-    public class ParameterRawData
+    public class ChartPanel
     {
         /// <summary>
-        /// 参数ID
+        /// 面板ID
         /// </summary>
-        public string ParameterID
+        public string PanelID
         {
             get;
             set;
         }
 
         /// <summary>
-        /// 一秒之内的值
+        /// 面板名称
         /// </summary>
-        public float[] Values
+        public string PanelName
         {
             get;
             set;
         }
 
         /// <summary>
-        /// 时间
+        /// 面板自有的参数ID，带有顺序
         /// </summary>
-        public int Second
+        public string[] ParameterIDs
         {
             get;
             set;

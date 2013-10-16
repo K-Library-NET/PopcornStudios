@@ -9,7 +9,6 @@ using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using MongoDB.Driver.Linq;
-using FlightDataReading;
 using System.Configuration;
 using System.Xml.Linq;
 using System.IO;
@@ -20,10 +19,29 @@ namespace AircraftDataAnalysisWcfService
     // 注意: 为了启动 WCF 测试客户端以测试此服务，请在解决方案资源管理器中选择 AircraftService.svc 或 AircraftService.svc.cs，然后开始调试。
     public class AircraftService : IAircraftService
     {
-        public void DoWork()
+        public FlightDataEntities.Charts.ChartPanel[] GetAllChartPanels(AircraftModel aircraftModel)
         {
-            System.Console.WriteLine("Hello world, DoWork.");
+            throw new NotImplementedException();
         }
+
+        public KeyValuePair<string, FlightDataEntities.FlightRawData[]>[] GetFlightData(Flight flight,
+            string[] parameterIds, int startSecond, int endSecond)
+        {
+            throw new NotImplementedException();
+        }
+
+        public FlightDataEntities.LevelTopFlightRecord[] GetLevelTopFlightRecords(
+            Flight flight, string[] parameterIds, bool withLevel1Data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string AddOrUpdateDecisionRecords(
+            Flight flight, FlightDataEntities.DecisionRecord[] records)
+        {
+            throw new NotImplementedException();
+        }
+
         private string m_mongoConnectionString = "mongodb://localhost/?w=1";
 
         [Obsolete]
@@ -349,7 +367,7 @@ namespace AircraftDataAnalysisWcfService
                 AircraftMongoDb.DATABASE_COMMON, AircraftMongoDb.COLLECTION_FLIGHT_PARAMETER);
         }
 
-        public FlightParameters GetAllFlightParameters()
+        public FlightParameters GetAllFlightParameters(AircraftModel model)
         {
             string basePath = this.CombineFromBasePath("FlightParameters.xml");
 
@@ -469,53 +487,39 @@ namespace AircraftDataAnalysisWcfService
                 AircraftMongoDb.DATABASE_COMMON, AircraftMongoDb.COLLECTION_FLIGHT_PARAMETER));
         }
 
-        public string InsertRawDataBatch(RawDataBatch batchData)
+        public string InsertRawDataBatch(Flight flight, Level1FlightRecord[] batchData)
         {
-            if (!this.IsValidAircraftInfo(batchData))
+            if (!this.IsValidAircraftInfo(flight))
                 return "缺少机型或架次信息。";
-            if (batchData.Datas == null || batchData.Datas.Length <= 0)
+            if (batchData == null || batchData.Length <= 0)
                 return "无数据输入。";
 
             MongoServer mongoServer = this.GetMongoServer();
             if (mongoServer != null)
             {
-                MongoDatabase database = mongoServer.GetDatabase(batchData.Flight.Aircraft.AircraftModel.ModelName);
+                MongoDatabase database = mongoServer.GetDatabase(flight.Aircraft.AircraftModel.ModelName);
                 if (database != null)
                 {
                     MongoCollection<Level1FlightRecord> modelCollection
                         = database.GetCollection<Level1FlightRecord>(
                         AircraftMongoDb.COLLECTION_FLIGHT_RECORD_LEVEL1 +
-                        batchData.Flight.FlightID);
+                        flight.FlightID);
+                    //数据精简由客户端完成
 
-                    List<Level1FlightRecord> level1Records = new List<Level1FlightRecord>();
-
-                    foreach (var one in batchData.Datas)
-                    {
-                        //数据精简
-                        FlightRawData entity = new FlightRawData()
-                        {
-                            ParameterID = one.ParameterID,
-                            Values = one.Values,
-                            Second = batchData.Second
-                        };
-                        //DEBUG
-                        //level1Records.Add(entity.ToLevel1FlightRecord());
-                    }
-
-                    modelCollection.InsertBatch(level1Records);
+                    modelCollection.InsertBatch(batchData);
                 }
             }
 
             return string.Empty;
         }
 
-        private bool IsValidAircraftInfo(RawDataBatch batchData)
-        {
-            if (batchData == null)
-                return false;
+        //private bool IsValidAircraftInfo(RawDataBatch batchData)
+        //{
+        //    if (batchData == null)
+        //        return false;
 
-            return IsValidAircraftInfo(batchData.Flight);
-        }
+        //    return IsValidAircraftInfo(batchData.Flight);
+        //}
 
         private bool IsValidAircraftInfo(Flight flight)
         {
@@ -576,5 +580,6 @@ namespace AircraftDataAnalysisWcfService
 
             m_currentAircraftModel = model;
         }
+
     }
 }

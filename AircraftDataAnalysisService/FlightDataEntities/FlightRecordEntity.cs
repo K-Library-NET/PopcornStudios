@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlightDataEntities
 {
+    [Obsolete("test")]
     /// <summary>
     /// 某一个飞行参数的单条记录，粒度为秒
     /// </summary>

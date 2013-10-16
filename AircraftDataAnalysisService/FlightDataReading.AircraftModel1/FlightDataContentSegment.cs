@@ -8,7 +8,7 @@ namespace FlightDataReading.AircraftModel1
 {
     public class FlightDataContentSegment
     {
-        public string Value
+        public float Value
         {
             get;
             set;

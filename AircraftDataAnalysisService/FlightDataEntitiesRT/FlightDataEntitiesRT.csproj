@@ -100,6 +100,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BaseFunction.cs" />
+    <Compile Include="Charts\ChartPanel.cs" />
     <Compile Include="DataColumn.cs" />
     <Compile Include="DataPointReducer.cs" />
     <Compile Include="DataRow.cs" />

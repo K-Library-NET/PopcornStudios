@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlightDataEntities
 {
+    [Obsolete("test")]
     public class RawDataBatch
     {
         public int Second
@@ -27,6 +28,7 @@ namespace FlightDataEntities
         }
     }
 
+    [Obsolete("test")]
     public class RawDataParamBatch
     {
         public string ParameterID
