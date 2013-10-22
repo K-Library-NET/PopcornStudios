@@ -15,7 +15,7 @@ namespace AircraftDataAnalysisWinRT.Services
     public class DataReading : IAsyncActionWithProgress<int>
     {
         public DataReading(IFlightRawDataExtractor rawDataExtractor,
-            AircraftDataAnalysisWinRT.AircraftService.Flight flight,
+            FlightDataEntitiesRT.Flight flight,
             FlightParameters parameters)
         {
             this.m_rawDataExtractor = rawDataExtractor;
@@ -42,9 +42,9 @@ namespace AircraftDataAnalysisWinRT.Services
             set { m_parameters = value; }
         }
 
-        private AircraftDataAnalysisWinRT.AircraftService.Flight m_flight = null;
+        private FlightDataEntitiesRT.Flight m_flight = null;
 
-        public AircraftDataAnalysisWinRT.AircraftService.Flight Flight
+        public FlightDataEntitiesRT.Flight Flight
         {
             get { return m_flight; }
             set { m_flight = value; }
@@ -135,7 +135,7 @@ namespace AircraftDataAnalysisWinRT.Services
 
         public void ReadHeader()
         {
-            this.m_rawDataExtractor.GetHeader();
+            this.Header = this.m_rawDataExtractor.GetHeader();
         }
 
         public Task ReadDataAsync()
@@ -152,17 +152,37 @@ namespace AircraftDataAnalysisWinRT.Services
         /// </summary>
         public void ReadData()
         {
-            DataInputHelper.DeleteExistsData(this.Flight);
-            var decisions = m_rawDataExtractor.GetFaultDecisions();
+            this.ReadData(0, this.Header.FlightSeconds, true, null);
+            return;
+        }
+
+        public void ReadData(int startSecond, int endSecond, bool putIntoServer,
+            AircraftDataAnalysisWinRT.DataModel.RawDataPointViewModel previewModel)
+        {
+            if (putIntoServer)
+                DataInputHelper.DeleteExistsData(this.Flight);
+            var decisions = ServerHelper.GetDecisions(ServerHelper.GetCurrentAircraftModel());
+            //m_rawDataExtractor.GetFaultDecisions();
             Dictionary<Decision, Decision> hasHappendMap = new Dictionary<Decision, Decision>();
             List<DecisionRecord> decisionRecords = new List<DecisionRecord>();
             Dictionary<string, List<ParameterRawData>> stepParameterList = this.InitializeStepDictionary();
+            Dictionary<string, List<Level2FlightRecord>> level2RecordMap = this.InitializeLevel2Dictionary();
             DataPointReducer reducer = new DataPointReducer();
 
+            //DEBUG
+            TimeSpan span0 = new TimeSpan();
+            TimeSpan span1 = new TimeSpan();
+            Dictionary<int, ParameterRawData[]> decisionHelperMap = new Dictionary<int, ParameterRawData[]>();
+
+            var st = DateTime.Now;
             int percentBase = 80;
-            for (int i = 0; i < this.Header.FlightSeconds; i++)
+            for (int i = startSecond; i < Math.Min(this.Header.FlightSeconds, endSecond); i++)
             {
                 ParameterRawData[] datas = m_rawDataExtractor.GetDataBySecond(i);
+                if (previewModel != null && previewModel.RawDataRowViewModel != null)
+                    previewModel.RawDataRowViewModel.AddOneSecondValue(i, datas);
+                //DEBUG
+                decisionHelperMap.Add(i, datas);
 
                 foreach (var d in datas)
                 {
@@ -172,37 +192,121 @@ namespace AircraftDataAnalysisWinRT.Services
                     }
                 }
 
-                DoDecisionWithinOneSecond(decisions, hasHappendMap, decisionRecords, i, datas);
+                var s1 = DateTime.Now;
+                //DoDecisionWithinOneSecond(decisions, hasHappendMap, decisionRecords, i, datas);
                 //TODO: DoTrendDecisionWithinOneSecond
+                span1 += DateTime.Now.Subtract(s1);
 
                 int percent = (i / this.Header.FlightSeconds) * percentBase;
                 if (this.Progress != null)
                     this.Progress(this, percent);
             }
+            //DEBUG
+            Task task = Task.Run(new Action(delegate()
+            {
+                Parallel.ForEach(decisions, new ParallelOptions() { MaxDegreeOfParallelism = 4 },
+                    new Action<Decision>(delegate(Decision de)
+                    {
+                        //foreach (var de in decisions)
+                        //{
+                        for (int j = startSecond; j < Math.Min(this.Header.FlightSeconds, endSecond); j++)
+                        {
+                            var dts = decisionHelperMap[j];
+                            de.AddOneSecondDatas(j, dts);
 
-            DataInputHelper.AddDecisionRecordsBatch(this.Flight, decisionRecords);
+                            if (de.HasHappened)
+                            {
+                                if (!hasHappendMap.ContainsKey(de))
+                                    //添加一条准备记录
+                                    hasHappendMap.Add(de, de);
+                            }
+                            else
+                            {
+                                if (hasHappendMap.ContainsKey(de))
+                                {//从发生到不发生，应该产生一条记录
+                                    hasHappendMap.Remove(de);
+                                    DecisionRecord record = new DecisionRecord()
+                                    {
+                                        StartSecond = de.ActiveStartSecond,
+                                        EndSecond = de.ActiveEndSecond,
+                                        DecisionID = de.DecisionID,
+                                        DecisionName = de.DecisionName,
+                                        DecisionDescription = de.ToString()
+                                    };
+                                    decisionRecords.Add(record);
+                                }
+                            }
+                        }
+                    }));
+
+                //var tmpKeyList = from oneKey in decisionHelperMap.Keys
+                //                 orderby oneKey
+                //                 select oneKey;
+                //foreach (var k in tmpKeyList)
+                //{
+                //    var dts = decisionHelperMap[k];
+                //    DoDecisionWithinOneSecond(decisions, hasHappendMap, decisionRecords, k, dts);
+                //}
+            }));
+
             if (this.Progress != null)
                 this.Progress(this, 90);
 
             foreach (string key in stepParameterList.Keys)
             {
                 Level1FlightRecord[] reducedRecords = reducer.ReduceFlightRawDataPoints(
-                    key, stepParameterList[key], this.DataReductionSecondGap);
-                Level2FlightRecord level2Record = reducer.GenerateLevel2FlightRecord(key, reducedRecords);
+                    key, this.Flight.FlightID, stepParameterList[key], startSecond, endSecond, this.DataReductionSecondGap);
+                Level2FlightRecord[] level2Records = reducer.GenerateLevel2FlightRecord(key, reducedRecords);
 
-                this.PutInServer(key, reducedRecords, level2Record);
+                if (putIntoServer)
+                    this.PutInServer(key, reducedRecords, level2Records);
+
+                List<Level2FlightRecord> lv2records = level2RecordMap[key];
+                lv2records.AddRange(level2Records);
             }
 
+            List<LevelTopFlightRecord> topRecords = reducer.GenerateLevelTopFlightRecord(
+                this.Flight.FlightID, level2RecordMap, 0, this.Header.FlightSeconds);
+
+            //Level2和LevelTop分别入库？还是只入库LevelTop？
+            if (putIntoServer)
+                this.PutInServer(topRecords, this.Flight, level2RecordMap);
+
+            task.Wait();
+            if (putIntoServer)
+                DataInputHelper.AddDecisionRecordsBatch(this.Flight, decisionRecords);
             if (this.Progress != null)
                 this.Progress(this, 98);
+            //DEBUG
+            span0 += DateTime.Now.Subtract(st);
 
             if (this.Completed != null)
                 this.Completed(this, AsyncStatus.Completed);
         }
 
-        private void PutInServer(string key, Level1FlightRecord[] reducedRecords, Level2FlightRecord level2Record)
+        private void PutInServer(List<LevelTopFlightRecord> topRecords, Flight flight,
+            Dictionary<string, List<Level2FlightRecord>> level2RecordMap)
+        {
+            //DataInputHelper.AddLevelTopFlightRecords(
+        }
+
+        private void PutInServer(string key, Level1FlightRecord[] reducedRecords, Level2FlightRecord[] level2Record)
         {
             DataInputHelper.AddOneParameterValue(this.Flight, key, reducedRecords, level2Record);
+        }
+
+        private Dictionary<string, List<Level2FlightRecord>> InitializeLevel2Dictionary()
+        {
+            var dic = new Dictionary<string, List<Level2FlightRecord>>();
+            if (this.Parameters != null && this.Parameters.Parameters != null)
+            {
+                foreach (var para in this.Parameters.Parameters)
+                {
+                    if (!dic.ContainsKey(para.ParameterID))
+                        dic.Add(para.ParameterID, new List<Level2FlightRecord>());
+                }
+            }
+            return dic;
         }
 
         private Dictionary<string, List<ParameterRawData>> InitializeStepDictionary()
@@ -223,33 +327,36 @@ namespace AircraftDataAnalysisWinRT.Services
             Dictionary<Decision, Decision> hasHappendMap, List<DecisionRecord> decisionRecords,
             int i, ParameterRawData[] datas)
         {
-            foreach (var de in decisions)
-            {
-                de.AddOneSecondDatas(i, datas);
+            Parallel.ForEach(decisions, new ParallelOptions() { MaxDegreeOfParallelism = 4 },
+                new Action<Decision>(delegate(Decision de)
+                    {
+                        //foreach (var de in decisions)
+                        //{
+                        de.AddOneSecondDatas(i, datas);
 
-                if (de.HasHappened)
-                {
-                    if (!hasHappendMap.ContainsKey(de))
-                        //添加一条准备记录
-                        hasHappendMap.Add(de, de);
-                }
-                else
-                {
-                    if (hasHappendMap.ContainsKey(de))
-                    {//从发生到不发生，应该产生一条记录
-                        hasHappendMap.Remove(de);
-                        DecisionRecord record = new DecisionRecord()
+                        if (de.HasHappened)
                         {
-                            StartSecond = de.ActiveStartSecond,
-                            EndSecond = de.ActiveEndSecond,
-                            DecisionID = de.DecisionID,
-                            DecisionName = de.DecisionName,
-                            DecisionDescription = de.ToString()
-                        };
-                        decisionRecords.Add(record);
-                    }
-                }
-            }
+                            if (!hasHappendMap.ContainsKey(de))
+                                //添加一条准备记录
+                                hasHappendMap.Add(de, de);
+                        }
+                        else
+                        {
+                            if (hasHappendMap.ContainsKey(de))
+                            {//从发生到不发生，应该产生一条记录
+                                hasHappendMap.Remove(de);
+                                DecisionRecord record = new DecisionRecord()
+                                {
+                                    StartSecond = de.ActiveStartSecond,
+                                    EndSecond = de.ActiveEndSecond,
+                                    DecisionID = de.DecisionID,
+                                    DecisionName = de.DecisionName,
+                                    DecisionDescription = de.ToString()
+                                };
+                                decisionRecords.Add(record);
+                            }
+                        }
+                    }));
         }
     }
 }

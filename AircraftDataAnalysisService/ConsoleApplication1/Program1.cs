@@ -10,10 +10,11 @@ namespace ConsoleApplication1
 {
     class Program1
     {
+        /*
         internal static void Main1(string[] args)
         {
-            AircraftDataAnalysisWcfService.AircraftService serv
-                = new AircraftDataAnalysisWcfService.AircraftService();
+            AircraftDataAnalysisWcfService.AircraftServiceBll serv
+                = new AircraftDataAnalysisWcfService.AircraftServiceBll();
             //serv.DeleteAircraft("F4D");
             serv.AddOrUpdateAircraftModel(
                 new FlightDataEntities.AircraftModel()
@@ -35,8 +36,8 @@ namespace ConsoleApplication1
 
         internal static void Main2(string[] args)
         {
-            AircraftDataAnalysisWcfService.AircraftService serv
-                = new AircraftDataAnalysisWcfService.AircraftService();
+            AircraftDataAnalysisWcfService.AircraftServiceBll serv
+                = new AircraftDataAnalysisWcfService.AircraftServiceBll();
             //serv.DeleteAircraft("F4D");
             serv.AddOrUpdateAircraftInstance(
                 new FlightDataEntities.AircraftInstance()
@@ -68,8 +69,8 @@ namespace ConsoleApplication1
         {
             FlightDataEntities.FlightParameter[] parameters = ReadXmlParameters("F4D", @"C:\Users\LibreK\SkyDrive\Coding\AircraftAnalysis\FlyParaPro\FlyParamBusiness\FlyParameter.xml");
 
-            AircraftDataAnalysisWcfService.AircraftService serv
-                = new AircraftDataAnalysisWcfService.AircraftService();
+            AircraftDataAnalysisWcfService.AircraftServiceBll serv
+                = new AircraftDataAnalysisWcfService.AircraftServiceBll();
 
             serv.AddOrUpdateFlyParameter(parameters);
 
@@ -96,7 +97,7 @@ namespace ConsoleApplication1
                                  select new FlightDataEntities.FlightParameter()
                                  {
                                      IsConcerned = true,
-                                     //Frequence = Convert.ToInt32(one.Attribute("Frequence").Value),
+                                    // Frequence = Convert.ToInt32(one.Attribute("Frequence").Value),
                                      Caption = one.Attribute("Caption").Value,
                                      ParameterID = modelName + "_" + one.Attribute("Index").Value + "_" + one.Attribute("SubIndex").Value,
                                      Index = Convert.ToInt32(one.Attribute("Index").Value),
@@ -109,6 +110,6 @@ namespace ConsoleApplication1
                 }
             }
             return new FlightDataEntities.FlightParameter[] { };
-        }
+        }*/
     }
 }

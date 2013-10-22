@@ -26,11 +26,12 @@ namespace FlightDataEntitiesRT
             set;
         }
 
-        public Level1FlightRecord[] Values
-        {
-            get;
-            set;
-        }
+        //不要持有Level1的记录了，实在对象太大了存不进去MongoDB
+        //public Level1FlightRecord[] Values
+        //{
+        //    get;
+        //    set;
+        //}
 
         /// <summary>
         /// 极值点，用于极值报表

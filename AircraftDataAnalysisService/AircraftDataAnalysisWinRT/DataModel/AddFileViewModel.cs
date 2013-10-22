@@ -1,4 +1,5 @@
-﻿using FlightDataEntitiesRT;
+﻿using AircraftDataAnalysisWinRT.Services;
+using FlightDataEntitiesRT;
 using FlightDataEntitiesRT.Decisions;
 using System;
 using System.Collections.Generic;
@@ -12,17 +13,50 @@ namespace AircraftDataAnalysisWinRT.DataModel
 {
     public class AddFileViewModel : DataCommon, IAsyncActionWithProgress<int>
     {
-        private Windows.Storage.StorageFile file;
-
-        public AddFileViewModel(Windows.Storage.StorageFile file)
+        public AddFileViewModel(Flight flight,
+            Windows.Storage.StorageFile file, IFlightRawDataExtractor extractor,
+            AircraftModel model, FlightParameters parameters)
             : base("addfile", "导入文件", "导入文件", string.Empty, "从磁盘选择一个文件导入")
         {
-            // TODO: Complete member initialization
+            this.flight = flight;
             this.file = file;
+            this.aircraftModel = model;
+            this.extractor = extractor;
+            this.parameters = parameters;
+        }
 
-            //this.CurrentFileName = this.file.Name;
-            //不在这里做，读取头是需要时间的，或者还需要有经纬度地图
-            //this.InitLoadHeader();
+        private Flight flight;
+
+        private AircraftModel aircraftModel;
+
+        public AircraftModel AircraftModel
+        {
+            get { return aircraftModel; }
+            set { aircraftModel = value; }
+        }
+
+        private IFlightRawDataExtractor extractor;
+
+        public IFlightRawDataExtractor Extractor
+        {
+            get { return extractor; }
+            set { extractor = value; }
+        }
+
+        private FlightParameters parameters;
+
+        public FlightParameters Parameters
+        {
+            get { return parameters; }
+            set { parameters = value; }
+        }
+
+        private Windows.Storage.StorageFile file;
+
+        public Windows.Storage.StorageFile File
+        {
+            get { return file; }
+            set { file = value; }
         }
 
         private FlightDataEntitiesRT.FlightDataHeader m_header = null;
@@ -39,191 +73,17 @@ namespace AircraftDataAnalysisWinRT.DataModel
             }
         }
 
-        public async void InitLoadHeader()
+        public void InitLoadHeader()
         {
             if (this.file != null)
             {
-                //var readFile = await this.file.OpenReadAsync();
-                //var stream = readFile.AsStreamForRead();
-
-                //using (BinaryReader reader = new BinaryReader(stream))
-                //{
-                    FlightDataEntitiesRT.IFlightRawDataExtractor extractor =
-                        this.CreateRawDataExtractorByAircraftModelName(null);
-                    if (extractor != null)
-                    {
-                        this.Header = extractor.GetHeader();
-                        extractor.Close();
-                    }
-                    else this.Header = null;
-                //}
-            }
-        }
-
-        private string m_description = string.Empty;
-
-        public string Description
-        {
-            get
-            {
+                DataReading read = new DataReading(this.extractor, flight, this.Parameters);
+                read.ReadHeader();
+                this.Header = read.Header;
                 if (this.Header != null)
-                    return this.Header.Description;
-                return string.Empty;
-            }
-            set
-            {
-                this.SetProperty<string>(ref m_description, value);
+                    this.flight.EndSecond = this.Header.FlightSeconds;
             }
         }
-
-        private Windows.UI.Xaml.Visibility m_importDataVisibility = Windows.UI.Xaml.Visibility.Collapsed;
-
-        public Windows.UI.Xaml.Visibility ImportDataVisibility
-        {
-            get { return m_importDataVisibility; }
-            set
-            {
-                this.SetProperty<Windows.UI.Xaml.Visibility>(ref m_importDataVisibility, value);
-            }
-        }
-
-        //private FlightDataEntitiesRT.PHYHeader m_header = null;
-
-        //private void BindHeader(FlightDataEntitiesRT.PHYHeader header)
-        //{
-        //    this.m_header = header;
-
-        //    if (m_header != null)
-        //    {
-        //        StringBuilder builder = new StringBuilder();
-        //        builder.AppendLine(m_header.AircrfName);
-        //        builder.AppendLine(m_header.AircrfNum);
-        //        builder.AppendLine(m_header.BTime.ToString());
-        //        builder.AppendLine(m_header.EndTime.ToString());
-        //        builder.AppendLine(m_header.FlyPlanAddr.ToString());
-        //        builder.AppendLine(m_header.FlySeconds.ToString());
-        //        builder.AppendLine(m_header.GPSEndTime.ToString());
-        //        builder.AppendLine(m_header.GPSStartTime.ToString());
-        //        builder.AppendLine(m_header.OPName);
-        //        builder.AppendLine(m_header.ParaListAddr.ToString());
-        //        builder.AppendLine(m_header.PhyValueAddr.ToString());
-        //        builder.AppendLine(m_header.PhyValueEndAddr.ToString());
-        //        builder.AppendLine(m_header.PNum.ToString());
-        //        builder.AppendLine(m_header.StartTime.ToString());
-        //        builder.AppendLine(m_header.SWNum.ToString());
-
-        //        this.Description = builder.ToString();
-
-        //        this.UniqueId = m_header.AircrfName + "/" + m_header.AircrfNum;
-        //        //Example: F4D/0004
-        //    }
-        //    else
-        //    {
-        //        this.UniqueId = string.Empty;
-        //    }
-
-        //    if (this.m_header != null)
-        //        this.ImportDataVisibility = Windows.UI.Xaml.Visibility.Visible;
-        //    else this.ImportDataVisibility = Windows.UI.Xaml.Visibility.Collapsed;
-        //}
-
-        //private string m_currentFileName = string.Empty;
-        //public string CurrentFileName
-        //{
-        //    get { return this.m_currentFileName; }
-        //    set { this.SetProperty(ref this.m_currentFileName, value); }
-        //}
-
-        //private Task m_task = null;
-
-        //internal void ImportData()
-        //{
-        //    this.Status = AsyncStatus.Started;
-        //    this.ErrorCode = null;
-        //    this.
-        //    m_task = new Task(new Action(delegate()
-        //    {
-        //        this.DoImportData();
-        //    }));
-        //    m_task.RunSynchronously();
-        //}
-
-        //private async void DoImportData()
-        //{
-        //    int seconds = FlightDataEntitiesRT.PHYHelper.GetFlyParamSeconds(m_header);
-        //    var openStreamTask = this.file.OpenStreamForReadAsync();
-        //    var getParamsTask = this.GetParametersAsync();
-
-        //    Stream stream = await openStreamTask;
-        //    IEnumerable<FlightDataEntitiesRT.FlyParameter> paramRTs = await getParamsTask;
-
-        //    using (BinaryReader reader = new BinaryReader(stream))
-        //    {
-        //        for (int current = 0; current <= seconds; current++)
-        //        {
-        //            this.ReadOneSecondAndImport(current, reader, this.m_header, paramRTs);
-
-        //            int progress = Convert.ToInt32(100.0 * (double)current / (double)seconds);
-
-        //            if (this.Progress != null)
-        //            {
-        //                this.Progress(this, progress);
-        //            }
-        //        }
-        //    }
-
-        //    if (this.Completed != null)
-        //    {
-        //        this.Completed(this, this.Status);
-        //    }
-        //}
-
-        //private Task<IEnumerable<FlightDataEntitiesRT.FlyParameter>> GetParametersAsync()
-        //{
-        //    Task<IEnumerable<FlightDataEntitiesRT.FlyParameter>> task
-        //        = new Task<IEnumerable<FlightDataEntitiesRT.FlyParameter>>(
-        //        new Func<IEnumerable<FlightDataEntitiesRT.FlyParameter>>(delegate()
-        //    {
-        //        //debug
-        //        AircraftService.AircraftModel model = new AircraftService.AircraftModel()
-        //        {
-        //            ModelName = "F4D",
-        //            Caption = "",
-        //            LastUsed = DateTime.Now
-        //        };
-
-        //        AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
-        //        var modelParamsTask = client.GetAllFlightParametersAsync(model.ModelName);
-        //        modelParamsTask.Wait();
-
-        //        var result = modelParamsTask.Result;
-        //        var resultRT = from one in result
-        //                       select new FlightDataEntitiesRT.FlyParameter()
-        //                       {
-        //                           Index = one.Index,
-        //                           SubIndex = one.SubIndex,
-        //                           Caption = one.Caption,
-        //                           Frequence = one.Frequence,
-        //                           Unit = one.Unit
-        //                       };
-
-        //        return resultRT;
-        //    }));
-
-        //    task.RunSynchronously();
-
-        //    return task;
-        //}
-
-        //private void ReadOneSecondAndImport(int current, BinaryReader reader, FlightDataEntitiesRT.PHYHeader header,
-        //    IEnumerable<FlightDataEntitiesRT.FlyParameter> paramList)
-        //{
-        //    foreach (FlightDataEntitiesRT.FlyParameter parameter in paramList)
-        //    {
-        //        float[] datas = FlightDataEntitiesRT.PHYHelper.ReadFlyParameter(reader, current, header, parameter);
-
-        //    }
-        //}
 
         public AsyncActionWithProgressCompletedHandler<int> Completed
         {
@@ -282,8 +142,98 @@ namespace AircraftDataAnalysisWinRT.DataModel
             }
         }
 
+        public RawDataPointViewModel GetPreviewRawDataModel(int startSecond, int endSecond)
+        {
+            if (this.Header == null || this.Header.FlightSeconds <= 0)
+                return null;
+
+            var parameters = ServerHelper.GetFlightParameters(ServerHelper.GetCurrentAircraftModel());
+
+            var extractor = FlightDataReading.AircraftModel1.FlightRawDataExtractorFactory
+                .CreateFlightRawDataExtractor(this.File, parameters);
+
+            DataReading reading = new DataReading(extractor, this.flight,
+                parameters);
+            reading.Header = this.Header;
+            RawDataPointViewModel viewModel = new RawDataPointViewModel();
+
+            viewModel.GenerateColumns();
+
+            reading.ReadData(startSecond, endSecond, false, viewModel);
+            //reading.ReadData();
+            return viewModel;
+            /*
+            IFlightRawDataExtractor extractor = this.CreateRawDataExtractorByAircraftModelName(
+                viewModel.CurrentFlightParameters);
+            (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).TestSpan1 = new TimeSpan();
+            (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).TestSpan2 = new TimeSpan();
+            (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).TestSpan3 = new TimeSpan();
+            var rowModel = viewModel.RawDataRowViewModel;
+
+            var decisions = ServerHelper.GetDecisions(ServerHelper.GetCurrentAircraftModel());
+            // extractor.GetFaultDecisions();
+
+            Dictionary<Decision, Decision> hasHappendMap = new Dictionary<Decision, Decision>();
+            List<DecisionRecord> decisionRecords = new List<DecisionRecord>();
+
+            TimeSpan spanBinaryRead = new TimeSpan();
+            TimeSpan spanRead = new TimeSpan();
+            TimeSpan spanDecision = new TimeSpan();
+            DateTime start = DateTime.Now;
+
+            for (int i = startSecond; i < Math.Min(endSecond, this.Header.FlightSeconds); i++)
+            {
+                var s3 = DateTime.Now;
+                ParameterRawData[] datas = extractor.GetDataBySecond(i);
+                var s4 = DateTime.Now;
+                spanBinaryRead += s4.Subtract(s3);
+
+                rowModel.AddOneSecondValue(i, datas);
+                var s5 = DateTime.Now;
+                spanRead += s5.Subtract(s4);
+
+                foreach (var de in decisions)
+                {
+                    var s1 = DateTime.Now;
+                    de.AddOneSecondDatas(i, datas);
+                    var s2 = DateTime.Now;
+                    spanDecision += s2.Subtract(s1);
+
+                    if (de.HasHappened)
+                    {
+                        if (!hasHappendMap.ContainsKey(de))
+                            //添加一条准备记录
+                            hasHappendMap.Add(de, de);
+                    }
+                    else
+                    {
+                        if (hasHappendMap.ContainsKey(de))
+                        {//从发生到不发生，应该产生一条记录
+                            hasHappendMap.Remove(de);
+                            DecisionRecord record = new DecisionRecord()
+                            {
+                                StartSecond = de.ActiveStartSecond,
+                                EndSecond = de.ActiveEndSecond,
+                                DecisionID = de.DecisionID,
+                                DecisionName = de.DecisionName,
+                                DecisionDescription = de.ToString()
+                            };
+                            decisionRecords.Add(record);
+                        }
+                    }
+                }
+            }
+
+            var end = DateTime.Now;
+            TimeSpan totalSpan = end.Subtract(start);
+
+            return viewModel;*/
+        }
+
         public RawDataPointViewModel GetRawDataModel()
         {
+            return this.GetPreviewRawDataModel(0, this.Header.FlightSeconds);
+
             if (this.Header == null || this.Header.FlightSeconds <= 0)
                 return null;
 
@@ -298,7 +248,8 @@ namespace AircraftDataAnalysisWinRT.DataModel
             (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).TestSpan3 = new TimeSpan();
             var rowModel = viewModel.RawDataRowViewModel;
 
-            var decisions = extractor.GetFaultDecisions();
+            var decisions = ServerHelper.GetDecisions(ServerHelper.GetCurrentAircraftModel());
+            // extractor.GetFaultDecisions();
 
             Dictionary<Decision, Decision> hasHappendMap = new Dictionary<Decision, Decision>();
             List<DecisionRecord> decisionRecords = new List<DecisionRecord>();
@@ -353,7 +304,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
 
             var end = DateTime.Now;
             TimeSpan totalSpan = end.Subtract(start);
-            
+
             return viewModel;
         }
 

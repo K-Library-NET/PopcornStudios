@@ -62,28 +62,63 @@
             <ProgressBar Height="10" Name="progressBar1" Visibility="Collapsed" Grid.ColumnSpan="2" VerticalAlignment="Top"/>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}"/>
-            <Button Content="Read Files" Click="Button_Click" Grid.Column="1" HorizontalAlignment="Left" Margin="1069,66,0,0" VerticalAlignment="Top"/>
+            <Button Content="Read Files" Click="Button_Click" Grid.Column="1" HorizontalAlignment="Left" Margin="448,66,0,0" VerticalAlignment="Top"/>
+            <Button Content="Preview Datas" Click="OnPreViewdataClicked" Grid.Column="1" HorizontalAlignment="Left" Margin="627,66,0,0" VerticalAlignment="Top"/>
+            <Button x:Name="readToDb" Content="导入数据库" Click="readToDb_Click" Grid.Column="1" Margin="816,66,0,36"/>
         </Grid>
         <Grid Margin="80,0" Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <TextBlock Text="{Binding Description}"/>
-            <StackPanel Grid.Row="1">
-                <Button x:Name="readToDb" Content="导入数据库" Click="readToDb_Click"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock FontSize="24" Text="架次："/>
+                <ListBox Grid.Row="1" Name="lbFlights" ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="5">
+                                <Border BorderBrush="AliceBlue"/>
+                                <StackPanel>
+                                    <TextBlock FontSize="18" Text="FlightID: "/>
+                                    <TextBlock FontSize="18" Text="{Binding Path=FlightID}"/>
+                                    <TextBlock FontSize="18" Text="FlightName: "/>
+                                    <TextBlock FontSize="18" Text="{Binding Path=FlightName}"/>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+            <StackPanel Name="flightHost" Grid.Row="1">
+                <TextBlock Text="CurrentFlight: " FontSize="24"/>
+                <StackPanel Margin="15,5">
+                    <TextBlock FontSize="18" Text="FlightID: "/>
+                    <TextBlock FontSize="18" Text="{Binding Path=FlightID}"/>
+                    <TextBlock FontSize="18" Text="FlightName: "/>
+                    <TextBlock FontSize="18" Text="{Binding Path=FlightName}"/>
+                </StackPanel>
+                <Button Content="Add Or Replace Flight" Click="AddOrReplaceFlightclicked"/>
+                <Border BorderThickness="10" BorderBrush="Azure"/>
+                <TextBlock Name="tbMessage" FontSize="24"/>
             </StackPanel>
             <Grid:RadDataGrid Grid.Column="1" AutoGenerateColumns="False" x:Name="gridData" 
-                              Grid.RowSpan="2" Margin="5" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              Grid.RowSpan="1" Margin="10" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                               ScrollViewer.VerticalScrollBarVisibility="Auto" UserGroupMode="Disabled"
                               UserFilterMode="Enabled" >
-                <Grid:RadDataGrid.Columns>
-
-                </Grid:RadDataGrid.Columns>
+            </Grid:RadDataGrid>
+            <Grid:RadDataGrid Margin="10" Grid.Column="1" Grid.Row="1" AutoGenerateColumns="True" x:Name="gridDecisionDatas" 
+                              Grid.RowSpan="1" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto" UserGroupMode="Disabled"
+                              UserFilterMode="Enabled" >
             </Grid:RadDataGrid>
         </Grid>
     </Grid>

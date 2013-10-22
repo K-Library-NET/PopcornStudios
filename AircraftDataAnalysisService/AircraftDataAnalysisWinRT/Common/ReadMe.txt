@@ -12,6 +12,12 @@ example, additional pages added to your project are written assuming that the or
 properties in Common classes are still present and that the names of the types have not changed.
 
 
+20131018 todo:
+1. 分离DataInput和Server两个Helper类的方法到两个服务，一个以读为主一个以写为主
+2. 测试Test.TestAddAircraftModel里面所有TODO Test方法
+3. 完成所有相关server接口编写（包括造基础数据，不包括写入数据，以Server为主）
+
+
 
 XAML Page：
 

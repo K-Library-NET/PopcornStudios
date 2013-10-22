@@ -17,24 +17,31 @@ namespace AircraftDataAnalysisWinRT.Services
         /// 取得当前的机型
         /// </summary>
         /// <returns></returns>
-        public static AircraftService.AircraftModel GetCurrentAircraftModel()
+        public static AircraftModel GetCurrentAircraftModel()
         {
             AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
             var result = client.GetCurrentAircraftModelAsync();
             result.Wait();
-            return result.Result;
+            return RTConverter.FromDataInput(result.Result);
         }
 
         /// <summary>
         /// 取得当前的机型（异步方法）
         /// </summary>
         /// <returns></returns>
-        public static Task<AircraftService.AircraftModel> GetCurrentAircraftModelAsync()
+        public static Task<AircraftModel> GetCurrentAircraftModelAsync()
         {
             AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
-            return client.GetCurrentAircraftModelAsync();
-            //result.Wait();
-            //return result.Result;
+            Task<AircraftService.AircraftModel> task = client.GetCurrentAircraftModelAsync();
+            Task<AircraftModel> task2 = task.ContinueWith<AircraftModel>(
+                new Func<Task, AircraftModel>(
+                    delegate(Task t)
+                    {
+                        t.Wait();
+                        return RTConverter.FromDataInput(task.Result);
+                    }));
+
+            return task2;
         }
 
         /// <summary>
@@ -42,9 +49,16 @@ namespace AircraftDataAnalysisWinRT.Services
         /// </summary>
         /// <param name="aircraftModel"></param>
         /// <returns></returns>
-        public static AircraftService.Flight[] GetAllFlights(AircraftService.AircraftModel aircraftModel)
+        public static Flight[] GetAllFlights(AircraftModel aircraftModel)
         {
-            throw new NotImplementedException();
+            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
+            var task = client.GetAllFlightsAsync(RTConverter.ToAircraftService(aircraftModel));
+            task.Wait();
+            var results = task.Result;
+
+            var result2 = from one in results
+                          select RTConverter.FromAircraftService(one);
+            return result2.ToArray();
         }
 
         /// <summary>
@@ -57,7 +71,7 @@ namespace AircraftDataAnalysisWinRT.Services
         /// <param name="startSecond"></param>
         /// <param name="endSecond"></param>
         /// <returns></returns>
-        public static FlightDataEntitiesRT.DataTable GetData(AircraftService.Flight flight,
+        public static FlightDataEntitiesRT.DataTable GetData(Flight flight,
             string[] parameterIds, int startSecond, int endSecond)
         {
             ObservableCollection<string> collection = null;
@@ -65,10 +79,12 @@ namespace AircraftDataAnalysisWinRT.Services
                 collection = new ObservableCollection<string>(parameterIds);
             AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
 
-            var task = client.GetFlightDataAsync(flight, collection, startSecond, endSecond);
+            var task = client.GetFlightDataAsync(RTConverter.ToAircraftService(flight),
+                collection, startSecond, endSecond);
             task.Wait();
 
-            ObservableCollection<KeyValuePair<string, ObservableCollection<AircraftService.FlightRawData>>>
+            ObservableCollection<KeyValuePair<string, ObservableCollection<
+                AircraftDataAnalysisWinRT.AircraftService.FlightRawData>>>
                 result = task.Result;
 
             DataTable dt = BuildDataTable(result);
@@ -82,8 +98,8 @@ namespace AircraftDataAnalysisWinRT.Services
         /// </summary>
         /// <param name="result"></param>
         /// <returns></returns>
-        private static DataTable BuildDataTable(
-            ObservableCollection<KeyValuePair<string, ObservableCollection<AircraftService.FlightRawData>>> result)
+        private static DataTable BuildDataTable(ObservableCollection<KeyValuePair<string,
+            ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.FlightRawData>>> result)
         {
             DataTable dt = new DataTable();
             //all column first
@@ -127,7 +143,7 @@ namespace AircraftDataAnalysisWinRT.Services
         /// </summary>
         /// <param name="flight"></param>
         /// <returns></returns>
-        public static FlightDataEntitiesRT.ExtremumPointInfo[] GetExtremumPointInfos(AircraftService.Flight flight)
+        public static FlightDataEntitiesRT.ExtremumPointInfo[] GetExtremumPointInfos(Flight flight)
         {
             throw new NotImplementedException();
         }
@@ -138,9 +154,14 @@ namespace AircraftDataAnalysisWinRT.Services
         /// <param name="aircraftModel">当前机型，可以通过AircraftService取得</param>
         /// <returns></returns>
         public static FlightDataEntitiesRT.Charts.ChartPanel[] GetChartPanels(
-            AircraftService.AircraftModel aircraftModel)
+            AircraftModel aircraftModel)
         {
-            throw new NotImplementedException();
+            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
+            var task = client.GetAllChartPanelsAsync(RTConverter.ToAircraftService(aircraftModel));
+            task.Wait();
+            var result = from one in task.Result
+                         select RTConverter.FromAircraftService(one);
+            return result.ToArray();
         }
 
         /// <summary>
@@ -148,17 +169,16 @@ namespace AircraftDataAnalysisWinRT.Services
         /// </summary>
         /// <param name="aircraftModel"></param>
         /// <returns></returns>
-        public static FlightDataEntitiesRT.FlightParameters GetFlightParameters(AircraftService.AircraftModel aircraftModel)
+        public static FlightDataEntitiesRT.FlightParameters GetFlightParameters(AircraftModel aircraftModel)
         {
             AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
-            var get = client.GetAllFlightParametersAsync(aircraftModel);
+            var get = client.GetAllFlightParametersAsync(RTConverter.ToAircraftService(aircraftModel));
             get.Wait();
             AircraftService.FlightParameters parameters = get.Result;
-
-            return ConvertToRTEntity(parameters);
+            return RTConverter.FromAircraftService(parameters);
         }
 
-        private static FlightParameters ConvertToRTEntity(AircraftService.FlightParameters parameters)
+        private static FlightParameters ConvertToRTEntity(FlightParameters parameters)
         {
 
             var result2 = from re in parameters.Parameters
@@ -192,9 +212,40 @@ namespace AircraftDataAnalysisWinRT.Services
         /// </summary>
         /// <param name="aircraftModel"></param>
         /// <returns></returns>
-        public static FlightDataEntitiesRT.Decisions.Decision[] GetDecisions(AircraftService.AircraftModel aircraftModel)
+        public static FlightDataEntitiesRT.Decisions.Decision[] GetDecisions(AircraftModel aircraftModel)
         {
-            throw new NotImplementedException();
+            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
+            var task =  client.GetAllDecisionsAsync(RTConverter.ToAircraftService(aircraftModel));
+            task.Wait();
+
+            var decisions = from one in task.Result
+                          select RTConverter.FromAircraftService(one);
+
+            foreach (var decision in decisions)
+            {
+                Queue<FlightDataEntitiesRT.Decisions.SubCondition> conds
+                    = new Queue<FlightDataEntitiesRT.Decisions.SubCondition>();
+                foreach (var sub in decision.Conditions)
+                {
+                    conds.Enqueue(sub);
+                }
+                while (conds.Count > 0)
+                {
+                    var s = conds.Dequeue();
+                    s.RootDecision = decision;
+
+                    if (s.SubConditions != null)
+                    {
+                        foreach (var sub in s.SubConditions)
+                        {
+                            conds.Enqueue(sub);
+                        }
+                    }
+                }
+            }
+
+            return decisions.ToArray();
+            //return result2.ToArray();
         }
 
         /// <summary>
@@ -202,7 +253,7 @@ namespace AircraftDataAnalysisWinRT.Services
         /// </summary>
         /// <param name="flight"></param>
         /// <returns></returns>
-        public static FlightDataEntitiesRT.Decisions.DecisionRecord[] GetDecisionRecords(AircraftService.Flight flight)
+        public static FlightDataEntitiesRT.Decisions.DecisionRecord[] GetDecisionRecords(Flight flight)
         {
             throw new NotImplementedException();
         }

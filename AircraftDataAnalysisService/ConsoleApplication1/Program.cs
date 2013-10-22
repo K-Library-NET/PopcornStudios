@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlightDataReading.AircraftModel1;
+using FlightDataReading;
 using System.Xml.Linq;
 using System.IO;
+using MongoDB.Driver;
 
 namespace ConsoleApplication1
 {
@@ -12,14 +15,16 @@ namespace ConsoleApplication1
     {
         static void Main(string[] args)
         {
-            ServiceReference1.AircraftServiceClient client = new ServiceReference1.AircraftServiceClient();
-            var result1 = client.GetAllFlightParameters();
-            foreach (var re1 in result1.Parameters)
-            {
-                Console.WriteLine(re1);
-            }
-            AircraftDataAnalysisWcfService.AircraftService serv = new AircraftDataAnalysisWcfService.AircraftService();
-            //serv.GetAllFlightParameters();
+            MongoServer server = MongoServer.Create("mongodb://sa:sa@42.96.198.241");
+
+            server.Connect();
+           var dbnames = server.GetDatabaseNames();
+           foreach (var db in dbnames)
+           {
+               Console.WriteLine(db);
+           }
+
+            server.Disconnect();
 
             //Program1.Main1(args);
             //Program1.Main2(args);

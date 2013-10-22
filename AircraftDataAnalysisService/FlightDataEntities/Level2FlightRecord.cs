@@ -24,6 +24,16 @@ namespace FlightDataEntities
         }
 
         /// <summary>
+        /// 架次ID，必须，用于批量删除
+        /// </summary>
+        [DataMember]
+        public string FlightID
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// 飞行参数ID，用作关联
         /// </summary>
         [DataMember]
@@ -95,11 +105,21 @@ namespace FlightDataEntities
             set;
         }
 
+        //不需要存放返回Level1数据，数据太大了
+        ///// <summary>
+        ///// 第一层飞行记录数据，经过一定处理，比如每秒钟只保留一个点
+        ///// </summary>
+        //public Level1FlightRecord[] Level1FlightRecords
+        //{
+        //    get;
+        //    set;
+        //}
+
         /// <summary>
-        /// 第一层飞行记录数据，经过一定处理，比如每秒钟只保留一个点
+        /// 极值点，用于极值报表
         /// </summary>
         [DataMember]
-        public Level1FlightRecord[] Level1FlightRecords
+        public ExtremumPointInfo ExtremumPointInfo
         {
             get;
             set;

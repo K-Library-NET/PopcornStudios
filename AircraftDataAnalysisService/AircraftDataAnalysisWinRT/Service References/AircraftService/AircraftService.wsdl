@@ -5,34 +5,23 @@
       <xsd:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
       <xsd:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities" />
-      <xsd:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities.Charts" />
-      <xsd:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd4" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
-      <xsd:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/System.Collections.Generic" />
+      <xsd:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/System.Collections.Generic" />
+      <xsd:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities.Charts" />
+      <xsd:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities.Decisions" />
     </xsd:schema>
   </wsdl:types>
-  <wsdl:message name="IAircraftService_GetAllChartPanels_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetAllChartPanels" />
+  <wsdl:message name="IAircraftService_GetCurrentAircraftModel_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCurrentAircraftModel" />
   </wsdl:message>
-  <wsdl:message name="IAircraftService_GetAllChartPanels_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetAllChartPanelsResponse" />
+  <wsdl:message name="IAircraftService_GetCurrentAircraftModel_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCurrentAircraftModelResponse" />
   </wsdl:message>
-  <wsdl:message name="IAircraftService_GetLevelTopFlightRecords_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetLevelTopFlightRecords" />
+  <wsdl:message name="IAircraftService_GetAllFlights_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllFlights" />
   </wsdl:message>
-  <wsdl:message name="IAircraftService_GetLevelTopFlightRecords_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetLevelTopFlightRecordsResponse" />
-  </wsdl:message>
-  <wsdl:message name="IAircraftService_AddOrUpdateDecisionRecords_InputMessage">
-    <wsdl:part name="parameters" element="tns:AddOrUpdateDecisionRecords" />
-  </wsdl:message>
-  <wsdl:message name="IAircraftService_AddOrUpdateDecisionRecords_OutputMessage">
-    <wsdl:part name="parameters" element="tns:AddOrUpdateDecisionRecordsResponse" />
-  </wsdl:message>
-  <wsdl:message name="IAircraftService_GetAllFlightParameters_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetAllFlightParameters" />
-  </wsdl:message>
-  <wsdl:message name="IAircraftService_GetAllFlightParameters_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetAllFlightParametersResponse" />
+  <wsdl:message name="IAircraftService_GetAllFlights_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllFlightsResponse" />
   </wsdl:message>
   <wsdl:message name="IAircraftService_GetFlightData_InputMessage">
     <wsdl:part name="parameters" element="tns:GetFlightData" />
@@ -40,52 +29,84 @@
   <wsdl:message name="IAircraftService_GetFlightData_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetFlightDataResponse" />
   </wsdl:message>
-  <wsdl:message name="IAircraftService_InsertRawDataBatch_InputMessage">
-    <wsdl:part name="parameters" element="tns:InsertRawDataBatch" />
+  <wsdl:message name="IAircraftService_GetExtremumPointInfos_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetExtremumPointInfos" />
   </wsdl:message>
-  <wsdl:message name="IAircraftService_InsertRawDataBatch_OutputMessage">
-    <wsdl:part name="parameters" element="tns:InsertRawDataBatchResponse" />
+  <wsdl:message name="IAircraftService_GetExtremumPointInfos_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetExtremumPointInfosResponse" />
   </wsdl:message>
-  <wsdl:message name="IAircraftService_GetCurrentAircraftModel_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetCurrentAircraftModel" />
+  <wsdl:message name="IAircraftService_GetAllChartPanels_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllChartPanels" />
   </wsdl:message>
-  <wsdl:message name="IAircraftService_GetCurrentAircraftModel_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetCurrentAircraftModelResponse" />
+  <wsdl:message name="IAircraftService_GetAllChartPanels_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllChartPanelsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetAllFlightParameters_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllFlightParameters" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetAllFlightParameters_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllFlightParametersResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetAllDecisions_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllDecisions" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetAllDecisions_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllDecisionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetLevelTopFlightRecords_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLevelTopFlightRecords" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetLevelTopFlightRecords_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLevelTopFlightRecordsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetDecisionRecords_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetDecisionRecords" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetDecisionRecords_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetDecisionRecordsResponse" />
   </wsdl:message>
   <wsdl:portType name="IAircraftService">
-    <wsdl:operation name="GetAllChartPanels">
-      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetAllChartPanels" message="tns:IAircraftService_GetAllChartPanels_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetAllChartPanelsResponse" message="tns:IAircraftService_GetAllChartPanels_OutputMessage" />
+    <wsdl:operation name="GetCurrentAircraftModel">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetCurrentAircraftModel" message="tns:IAircraftService_GetCurrentAircraftModel_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetCurrentAircraftModelResponse" message="tns:IAircraftService_GetCurrentAircraftModel_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="GetLevelTopFlightRecords">
-      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetLevelTopFlightRecords" message="tns:IAircraftService_GetLevelTopFlightRecords_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetLevelTopFlightRecordsResponse" message="tns:IAircraftService_GetLevelTopFlightRecords_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="AddOrUpdateDecisionRecords">
-      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/AddOrUpdateDecisionRecords" message="tns:IAircraftService_AddOrUpdateDecisionRecords_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/AddOrUpdateDecisionRecordsResponse" message="tns:IAircraftService_AddOrUpdateDecisionRecords_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="GetAllFlightParameters">
-      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetAllFlightParameters" message="tns:IAircraftService_GetAllFlightParameters_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetAllFlightParametersResponse" message="tns:IAircraftService_GetAllFlightParameters_OutputMessage" />
+    <wsdl:operation name="GetAllFlights">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetAllFlights" message="tns:IAircraftService_GetAllFlights_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetAllFlightsResponse" message="tns:IAircraftService_GetAllFlights_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="GetFlightData">
       <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetFlightData" message="tns:IAircraftService_GetFlightData_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetFlightDataResponse" message="tns:IAircraftService_GetFlightData_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="InsertRawDataBatch">
-      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/InsertRawDataBatch" message="tns:IAircraftService_InsertRawDataBatch_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/InsertRawDataBatchResponse" message="tns:IAircraftService_InsertRawDataBatch_OutputMessage" />
+    <wsdl:operation name="GetExtremumPointInfos">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetExtremumPointInfos" message="tns:IAircraftService_GetExtremumPointInfos_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetExtremumPointInfosResponse" message="tns:IAircraftService_GetExtremumPointInfos_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="GetCurrentAircraftModel">
-      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetCurrentAircraftModel" message="tns:IAircraftService_GetCurrentAircraftModel_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetCurrentAircraftModelResponse" message="tns:IAircraftService_GetCurrentAircraftModel_OutputMessage" />
+    <wsdl:operation name="GetAllChartPanels">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetAllChartPanels" message="tns:IAircraftService_GetAllChartPanels_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetAllChartPanelsResponse" message="tns:IAircraftService_GetAllChartPanels_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllFlightParameters">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetAllFlightParameters" message="tns:IAircraftService_GetAllFlightParameters_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetAllFlightParametersResponse" message="tns:IAircraftService_GetAllFlightParameters_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllDecisions">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetAllDecisions" message="tns:IAircraftService_GetAllDecisions_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetAllDecisionsResponse" message="tns:IAircraftService_GetAllDecisions_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLevelTopFlightRecords">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetLevelTopFlightRecords" message="tns:IAircraftService_GetLevelTopFlightRecords_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetLevelTopFlightRecordsResponse" message="tns:IAircraftService_GetLevelTopFlightRecords_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDecisionRecords">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetDecisionRecords" message="tns:IAircraftService_GetDecisionRecords_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetDecisionRecordsResponse" message="tns:IAircraftService_GetDecisionRecords_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IAircraftService" type="tns:IAircraftService">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="GetAllChartPanels">
-      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetAllChartPanels" style="document" />
+    <wsdl:operation name="GetCurrentAircraftModel">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetCurrentAircraftModel" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -93,26 +114,8 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetLevelTopFlightRecords">
-      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetLevelTopFlightRecords" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="AddOrUpdateDecisionRecords">
-      <soap:operation soapAction="http://tempuri.org/IAircraftService/AddOrUpdateDecisionRecords" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetAllFlightParameters">
-      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetAllFlightParameters" style="document" />
+    <wsdl:operation name="GetAllFlights">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetAllFlights" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -129,8 +132,8 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="InsertRawDataBatch">
-      <soap:operation soapAction="http://tempuri.org/IAircraftService/InsertRawDataBatch" style="document" />
+    <wsdl:operation name="GetExtremumPointInfos">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetExtremumPointInfos" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -138,8 +141,44 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="GetCurrentAircraftModel">
-      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetCurrentAircraftModel" style="document" />
+    <wsdl:operation name="GetAllChartPanels">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetAllChartPanels" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllFlightParameters">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetAllFlightParameters" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllDecisions">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetAllDecisions" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLevelTopFlightRecords">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetLevelTopFlightRecords" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDecisionRecords">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetDecisionRecords" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

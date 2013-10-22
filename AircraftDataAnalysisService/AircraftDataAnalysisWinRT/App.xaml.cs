@@ -85,6 +85,7 @@ namespace AircraftDataAnalysisWinRT
                 //test debug
                 //if (!rootFrame.Navigate(typeof(Test.TestBindDynamicColumn), "AllGroups"))
                 if (!rootFrame.Navigate(typeof(Test.TestReadFile), "AllGroups"))
+                //if (!rootFrame.Navigate(typeof(PStudio.WinApp.Aircraft.FDAPlatform.MainPage), "AllGroups"))
                 // if (!rootFrame.Navigate(typeof(Test.TestAddAircraftModel), "AllGroups"))
                 {
                     throw new Exception("Failed to create initial page");

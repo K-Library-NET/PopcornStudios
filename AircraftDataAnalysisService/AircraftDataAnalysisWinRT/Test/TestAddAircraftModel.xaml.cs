@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AircraftDataAnalysisWinRT.Services;
+using FlightDataEntitiesRT;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -49,34 +51,88 @@ namespace AircraftDataAnalysisWinRT.Test
         {
         }
 
-        private async void OnRefreshAircraftClicked(object sender, RoutedEventArgs e)
-        {
-            //AircraftService.AircraftServiceClient client =
-            //    new AircraftService.AircraftServiceClient();
-            //var models = await client.GetAllAircraftModelsAsync();
-
-            //aircraftModels.ItemsSource = models;
-            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
-            
-            //foreach (var one in models)
-            //{
-            //    one.ModelName
-            //}
+        /// <summary>
+        /// 用ServerHelper读取所有架次
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnRefreshAircraftClicked(object sender, RoutedEventArgs e)
+        {//TODO:
+            var flights = ServerHelper.GetAllFlights(ServerHelper.GetCurrentAircraftModel());
+            var flightViewModels = from one in flights
+                                   select new AircraftDataAnalysisWinRT.DataModel.FlightDataItem(one.FlightID,
+                                       one.FlightName, string.Empty, string.Empty, one.Aircraft.AircraftModel.Caption,
+                                       string.Format("{0} {1} {2} {3}",
+                                       one.FlightID, one.FlightName, one.EndSecond, one.Aircraft.AircraftModel.ModelName),
+                                       null);
+            this.viewModels.ItemsSource = flightViewModels;
         }
 
+        /// <summary>
+        /// 添加或更新一个架次
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnAddAircraftClicked(object sender, RoutedEventArgs e)
-        {
-            AircraftService.AircraftServiceClient client =
-                new AircraftService.AircraftServiceClient();
+        {//TODO:
+            var aircraftModel = ServerHelper.GetCurrentAircraftModel();
 
-            AircraftService.AircraftModel model = new AircraftService.AircraftModel()
+            Flight flight = new Flight()
             {
-                Caption = "Aircraft F4D",
-                ModelName = "F4D",
-                LastUsed = DateTime.Now
+                Aircraft = new AircraftInstance()
+                {
+                    AircraftModel = aircraftModel,
+                    AircraftNumber = "0004",
+                    LastUsed = DateTime.Now
+                },
+                FlightID = "04110325",
+                FlightName = "04110325.phy",
+                StartSecond = 0,
+                EndSecond = 2236,
             };
+            flight = Services.DataInputHelper.AddOrReplaceFlight(flight);
+        }
 
-            //client.AddOrUpdateAircraftModelAsync(model);
+        /// <summary>
+        /// 读取所有参数
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnReadParameters(object sender, RoutedEventArgs e)
+        {//TODO:
+            ServerHelper.GetFlightParameters(ServerHelper.GetCurrentAircraftModel());
+        }
+
+        /// <summary>
+        /// 读取所有判据
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnReadDecisions(object sender, RoutedEventArgs e)
+        {//TODO:
+            var decisions = ServerHelper.GetDecisions(ServerHelper.GetCurrentAircraftModel());
+        }
+
+        /// <summary>
+        /// 读取所有面板
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnChartPanelRead(object sender, RoutedEventArgs e)
+        {//TODO:
+            var chartPanels = ServerHelper.GetChartPanels(ServerHelper.GetCurrentAircraftModel());
+
+        }
+
+        /// <summary>
+        /// 不用在此添加，背后配置先写死
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [Obsolete]
+        private void OnCurrentAicraftModelChartsAdded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

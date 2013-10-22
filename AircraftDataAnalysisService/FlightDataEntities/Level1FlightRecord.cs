@@ -21,20 +21,20 @@ namespace FlightDataEntities
         }
 
         /// <summary>
-        /// 飞行参数ID
+        /// 架次ID，必须，用于批量删除
         /// </summary>
         [DataMember]
-        public string ParameterID
+        public string FlightID
         {
             get;
             set;
         }
 
         /// <summary>
-        /// 飞行秒数（当前是第几秒）
+        /// 飞行参数ID
         /// </summary>
         [DataMember]
-        public int FlightSecond
+        public string ParameterID
         {
             get;
             set;
@@ -51,43 +51,46 @@ namespace FlightDataEntities
         }
 
         [DataMember]
-        public decimal Sum
+        public int StartSecond
         {
             get;
             set;
         }
 
         [DataMember]
-        public float MinValue
+        public int EndSecond
         {
             get;
             set;
         }
 
-        [DataMember]
-        public float MaxValue
+        public IEnumerable<FlightRawData> ToRawDatas()
         {
-            get;
-            set;
-        }
+            if (this.StartSecond < this.EndSecond && this.Values != null && this.Values.Length > 0)
+            {
+                List<FlightRawData> dts = new List<FlightRawData>();
+                int factor = this.Values.Length / (this.EndSecond - this.StartSecond);
 
-        [DataMember]
-        public float AvgValue
-        {
-            get;
-            set;
-        }
+                for (int i = this.StartSecond; i < this.EndSecond; i++)
+                {
+                    FlightRawData rd = new FlightRawData() { ParameterID = this.ParameterID, Second = i };
+                    var values = this.Values.Skip(i * factor).Take(factor);
+                    rd.Values = values.ToArray();
+                    dts.Add(rd);
+                }
 
-        [DataMember]
-        public int ValueCount
-        {
-            get;
-            set;
+                return dts;
+            }
+            else
+            {
+                FlightRawData dt = new FlightRawData()
+                {
+                    ParameterID = this.ParameterID,
+                    Second = this.StartSecond,
+                    Values = this.Values
+                };
+                return new FlightRawData[] { dt };
+            }
         }
-
-        //public FlightRawData ToFlightRecordEntity()
-        //{
-        //    return FlightDataEntityTransform.FromLevel1FlightRecordToFlightRawData(this);
-        //}
     }
 }

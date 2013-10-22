@@ -19,7 +19,8 @@ namespace FlightDataReading
 
         private static IFlightDataEntityTransformStrategy GetStrategy()
         {
-            return new DefaultFlightDataEntityTransformStrategy();
+            return null;
+            //return new DefaultFlightDataEntityTransformStrategy();
         }
 
         public static Level1FlightRecord FromFlightRawDataToLevel1FlightRecord(FlightRawData entity)

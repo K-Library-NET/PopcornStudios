@@ -121,7 +121,7 @@ namespace FlightDataEntitiesRT.Decisions
                         return false;
                 }
             }
-            return true;
+            return false;
         }
 
         public SubCondition[] Conditions
@@ -139,5 +139,7 @@ namespace FlightDataEntitiesRT.Decisions
         public string DecisionID { get; set; }
 
         public string DecisionName { get; set; }
+
+        public string[] RelatedParameters { get; set; }
     }
 }

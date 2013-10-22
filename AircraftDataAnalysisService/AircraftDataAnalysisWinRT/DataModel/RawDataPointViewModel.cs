@@ -65,6 +65,8 @@ namespace AircraftDataAnalysisWinRT.DataModel
                 }
             }
 
+            this.RawDataRowViewModel.Columns.Insert(0, new DataColumn() { Caption = "秒值", ColumnName = "Second", DataType = typeof(int) });
+
             this.ColumnCollection.Insert(0,
                 new Telerik.UI.Xaml.Controls.Grid.DataGridTextColumn()
                 {
@@ -87,7 +89,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
             if (m_currentFlightParameters != null)
                 return m_currentFlightParameters.Parameters;
 
-            m_currentFlightParameters = ServerHelper.GetFlightParameters(null);
+            m_currentFlightParameters = ServerHelper.GetFlightParameters(ServerHelper.GetCurrentAircraftModel());
 
             return m_currentFlightParameters.Parameters;
         }
@@ -97,7 +99,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
 
     public class RawDataRowViewModel : FlightDataEntitiesRT.DataTable
     {
-        internal void AddOneSecondValue(int i, FlightDataEntitiesRT.ParameterRawData[] datas)
+        public void AddOneSecondValue(int i, FlightDataEntitiesRT.ParameterRawData[] datas)
         {
             DataRow row = this.NewRow();
 

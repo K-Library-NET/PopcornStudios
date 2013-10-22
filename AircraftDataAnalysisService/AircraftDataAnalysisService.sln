@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AircraftDataAnalysisService", "AircraftDataAnalysisService\AircraftDataAnalysisService.csproj", "{F99DEDDB-0D77-41D7-B021-97349509D5DD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{3AA41154-5756-4CA8-8FF7-5B32361C2F43}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AircraftDataAnalysisWcfService", "AircraftDataAnalysisWcfService\AircraftDataAnalysisWcfService.csproj", "{F8E6ED2E-6371-4AB2-B4BB-88FCFA164015}"
@@ -22,13 +20,59 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightDataReading.AircraftM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightDataReading.AircraftModel2", "FlightDataReading.AircraftModel2\FlightDataReading.AircraftModel2.csproj", "{DC34A198-CAFF-4797-AAA8-50F235A8B983}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{3184EE29-0195-43F8-9F82-83A84EBBC1B1}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{C4BFA2F1-D846-4AD4-B8F4-561000A6B686}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{17377586-93CA-4DAB-BABC-AFEE5206B2C9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hub", "Hub", "{7BAEC546-3952-4D89-845D-1042102CC3E7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{03234E98-6B8C-40BD-86AD-7FC8ED557473}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{2C0A61BA-A0F5-45D6-898A-48E8F641A6D6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{53ECF121-BB76-4767-B13D-B03AF4FF4D6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PStudio.WinApp.Aircraft.FDAPlatform", "PStudio.WinApp.Aircraft.FDAPlatform\PStudio.WinApp.Aircraft.FDAPlatform.csproj", "{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}"
 EndProject
 Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 10
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://42.96.198.241:8080/tfs/pstudio
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = ConsoleApplication1\\ConsoleApplication1.csproj
+		SccProjectTopLevelParentUniqueName1 = AircraftDataAnalysisService.sln
+		SccProjectName1 = ConsoleApplication1
+		SccLocalPath1 = ConsoleApplication1
+		SccProjectUniqueName2 = AircraftDataAnalysisWcfService\\AircraftDataAnalysisWcfService.csproj
+		SccProjectTopLevelParentUniqueName2 = AircraftDataAnalysisService.sln
+		SccProjectName2 = AircraftDataAnalysisWcfService
+		SccLocalPath2 = AircraftDataAnalysisWcfService
+		SccProjectUniqueName3 = FlightDataReading\\FlightDataReading.csproj
+		SccProjectTopLevelParentUniqueName3 = AircraftDataAnalysisService.sln
+		SccProjectName3 = FlightDataReading
+		SccLocalPath3 = FlightDataReading
+		SccProjectUniqueName4 = FlightDataEntities\\FlightDataEntities.csproj
+		SccProjectTopLevelParentUniqueName4 = AircraftDataAnalysisService.sln
+		SccProjectName4 = FlightDataEntities
+		SccLocalPath4 = FlightDataEntities
+		SccProjectUniqueName5 = AircraftDataAnalysisWinRT\\AircraftDataAnalysisWinRT.csproj
+		SccProjectTopLevelParentUniqueName5 = AircraftDataAnalysisService.sln
+		SccProjectName5 = AircraftDataAnalysisWinRT
+		SccLocalPath5 = AircraftDataAnalysisWinRT
+		SccProjectUniqueName6 = FlightDataEntitiesRT\\FlightDataEntitiesRT.csproj
+		SccProjectTopLevelParentUniqueName6 = AircraftDataAnalysisService.sln
+		SccProjectName6 = FlightDataEntitiesRT
+		SccLocalPath6 = FlightDataEntitiesRT
+		SccProjectUniqueName7 = FlightDataReading.AircraftModel1\\FlightDataReading.AircraftModel1.csproj
+		SccProjectTopLevelParentUniqueName7 = AircraftDataAnalysisService.sln
+		SccProjectName7 = FlightDataReading.AircraftModel1
+		SccLocalPath7 = FlightDataReading.AircraftModel1
+		SccProjectUniqueName8 = FlightDataReading.AircraftModel2\\FlightDataReading.AircraftModel2.csproj
+		SccProjectTopLevelParentUniqueName8 = AircraftDataAnalysisService.sln
+		SccProjectName8 = FlightDataReading.AircraftModel2
+		SccLocalPath8 = FlightDataReading.AircraftModel2
+		SccProjectUniqueName9 = PStudio.WinApp.Aircraft.FDAPlatform\\PStudio.WinApp.Aircraft.FDAPlatform.csproj
+		SccProjectTopLevelParentUniqueName9 = AircraftDataAnalysisService.sln
+		SccProjectName9 = PStudio.WinApp.Aircraft.FDAPlatform
+		SccLocalPath9 = PStudio.WinApp.Aircraft.FDAPlatform
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
@@ -40,16 +84,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F99DEDDB-0D77-41D7-B021-97349509D5DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F99DEDDB-0D77-41D7-B021-97349509D5DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F99DEDDB-0D77-41D7-B021-97349509D5DD}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{F99DEDDB-0D77-41D7-B021-97349509D5DD}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F99DEDDB-0D77-41D7-B021-97349509D5DD}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F99DEDDB-0D77-41D7-B021-97349509D5DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F99DEDDB-0D77-41D7-B021-97349509D5DD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F99DEDDB-0D77-41D7-B021-97349509D5DD}.Release|ARM.ActiveCfg = Release|Any CPU
-		{F99DEDDB-0D77-41D7-B021-97349509D5DD}.Release|x64.ActiveCfg = Release|Any CPU
-		{F99DEDDB-0D77-41D7-B021-97349509D5DD}.Release|x86.ActiveCfg = Release|Any CPU
 		{3AA41154-5756-4CA8-8FF7-5B32361C2F43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3AA41154-5756-4CA8-8FF7-5B32361C2F43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AA41154-5756-4CA8-8FF7-5B32361C2F43}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -162,19 +196,39 @@ Global
 		{DC34A198-CAFF-4797-AAA8-50F235A8B983}.Release|x64.Build.0 = Release|x64
 		{DC34A198-CAFF-4797-AAA8-50F235A8B983}.Release|x86.ActiveCfg = Release|x86
 		{DC34A198-CAFF-4797-AAA8-50F235A8B983}.Release|x86.Build.0 = Release|x86
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Debug|ARM.ActiveCfg = Debug|ARM
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Debug|ARM.Build.0 = Debug|ARM
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Debug|ARM.Deploy.0 = Debug|ARM
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Debug|x64.ActiveCfg = Debug|x64
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Debug|x64.Build.0 = Debug|x64
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Debug|x64.Deploy.0 = Debug|x64
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Debug|x86.ActiveCfg = Debug|x86
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Debug|x86.Build.0 = Debug|x86
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Debug|x86.Deploy.0 = Debug|x86
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Release|ARM.ActiveCfg = Release|ARM
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Release|ARM.Build.0 = Release|ARM
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Release|ARM.Deploy.0 = Release|ARM
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Release|x64.ActiveCfg = Release|x64
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Release|x64.Build.0 = Release|x64
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Release|x64.Deploy.0 = Release|x64
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Release|x86.ActiveCfg = Release|x86
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Release|x86.Build.0 = Release|x86
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{3AA41154-5756-4CA8-8FF7-5B32361C2F43} = {3184EE29-0195-43F8-9F82-83A84EBBC1B1}
-		{0A0034B3-DD7D-449F-907F-DF51D5C9D057} = {3184EE29-0195-43F8-9F82-83A84EBBC1B1}
-		{F99DEDDB-0D77-41D7-B021-97349509D5DD} = {3184EE29-0195-43F8-9F82-83A84EBBC1B1}
-		{6B8EDFD8-CB0D-4C0D-AEDB-93D4FC3F4DA1} = {17377586-93CA-4DAB-BABC-AFEE5206B2C9}
-		{FD796CD2-5869-446F-A92C-93EE311C0EED} = {17377586-93CA-4DAB-BABC-AFEE5206B2C9}
-		{246A5965-2ED4-40BC-840C-E67DFE2A7187} = {17377586-93CA-4DAB-BABC-AFEE5206B2C9}
-		{DC34A198-CAFF-4797-AAA8-50F235A8B983} = {17377586-93CA-4DAB-BABC-AFEE5206B2C9}
-		{F8E6ED2E-6371-4AB2-B4BB-88FCFA164015} = {03234E98-6B8C-40BD-86AD-7FC8ED557473}
-		{784707C6-EC3E-42EA-96A6-849C7FC79E4E} = {03234E98-6B8C-40BD-86AD-7FC8ED557473}
+		{3AA41154-5756-4CA8-8FF7-5B32361C2F43} = {53ECF121-BB76-4767-B13D-B03AF4FF4D6A}
+		{0A0034B3-DD7D-449F-907F-DF51D5C9D057} = {53ECF121-BB76-4767-B13D-B03AF4FF4D6A}
+		{F8E6ED2E-6371-4AB2-B4BB-88FCFA164015} = {7BAEC546-3952-4D89-845D-1042102CC3E7}
+		{784707C6-EC3E-42EA-96A6-849C7FC79E4E} = {C4BFA2F1-D846-4AD4-B8F4-561000A6B686}
+		{FD796CD2-5869-446F-A92C-93EE311C0EED} = {2C0A61BA-A0F5-45D6-898A-48E8F641A6D6}
+		{246A5965-2ED4-40BC-840C-E67DFE2A7187} = {2C0A61BA-A0F5-45D6-898A-48E8F641A6D6}
+		{DC34A198-CAFF-4797-AAA8-50F235A8B983} = {2C0A61BA-A0F5-45D6-898A-48E8F641A6D6}
+		{6B8EDFD8-CB0D-4C0D-AEDB-93D4FC3F4DA1} = {2C0A61BA-A0F5-45D6-898A-48E8F641A6D6}
+		{8EA7F6DC-6BC2-4CCA-A6D2-AFF0F2662815} = {2C0A61BA-A0F5-45D6-898A-48E8F641A6D6}
 	EndGlobalSection
 EndGlobal

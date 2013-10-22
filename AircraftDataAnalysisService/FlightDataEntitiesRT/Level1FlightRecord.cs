@@ -8,6 +8,18 @@ namespace FlightDataEntitiesRT
 {
     public class Level1FlightRecord
     {
+        /// <summary>
+        /// 架次ID，必须，用于批量删除
+        /// </summary>
+        public string FlightID
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 飞行参数ID
+        /// </summary>
         public string ParameterID
         {
             get;

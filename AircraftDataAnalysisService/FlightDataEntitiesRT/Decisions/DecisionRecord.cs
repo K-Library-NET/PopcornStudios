@@ -8,6 +8,8 @@ namespace FlightDataEntitiesRT.Decisions
 {
     public class DecisionRecord
     {
+        public string FlightID { get; set; }
+
         public int StartSecond { get; set; }
 
         public int EndSecond { get; set; }

@@ -30,7 +30,13 @@ namespace FlightDataReading.DataPointTransforms
             }
         }
 
-        public LevelTopFlightRecord[] FromLevel1RecordCollectionToLevelTopRecords(
+        /// <summary>
+        /// LevelTop只能有一个
+        /// </summary>
+        /// <param name="flight"></param>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public LevelTopFlightRecord FromLevel1RecordCollectionToLevelTopRecords(
             Flight flight, MongoCollection<Level1FlightRecord> collection)
         {
             FlightParameter[] parameters = this.GetParameters();
@@ -61,7 +67,8 @@ namespace FlightDataReading.DataPointTransforms
                 }
             }
 
-            return topRecords.ToArray();
+            return null;//DEBUG
+            //return topRecords.ToArray();
         }
 
         private Level2FlightRecord HandleOneStep(int currentSecond, int step, FlightParameter para,
@@ -77,25 +84,25 @@ namespace FlightDataReading.DataPointTransforms
             {
                 StartSecond = currentSecond,
                 EndSecond = Math.Min(flight.EndSecond, currentSecond + step),
-                Level1FlightRecords = flightRecord.ToArray(),
+                // Level1FlightRecords = flightRecord.ToArray(),
                 ParameterID = para.ParameterID,
             };
 
-            var sum = from one in level2.Level1FlightRecords
-                      select one.ValueCount;
-            level2.Count = sum.Sum();
+            //var sum = from one in level2.Level1FlightRecords
+            //          select one.ValueCount;
+            //level2.Count = sum.Sum();
 
-            var avg = from one in level2.Level1FlightRecords
-                      select one.AvgValue;
-            level2.AvgValue = avg.Sum() * level2.Count;
+            //var avg = from one in level2.Level1FlightRecords
+            //          select one.AvgValue;
+            //level2.AvgValue = avg.Sum() * level2.Count;
 
-            var min = from one in level2.Level1FlightRecords
-                      select one.MinValue;
-            level2.MinValue = min.Min();
+            //var min = from one in level2.Level1FlightRecords
+            //          select one.MinValue;
+            //level2.MinValue = min.Min();
 
-            var max = from one in level2.Level1FlightRecords
-                      select one.MaxValue;
-            level2.MaxValue = max.Max();
+            //var max = from one in level2.Level1FlightRecords
+            //          select one.MaxValue;
+            //level2.MaxValue = max.Max();
 
             return level2;
         }

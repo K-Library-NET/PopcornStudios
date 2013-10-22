@@ -42,11 +42,11 @@ namespace FlightDataEntities
 
         #region properties
 
-        /// <summary>
-        /// 是否默认关注的参数，如果为True则默认先展示
-        /// </summary>
-        [DataMember]
-        public bool IsConcerned { get; set; }
+        ///// <summary>
+        ///// 是否默认关注的参数，如果为True则默认先展示
+        ///// </summary>
+        //[DataMember]
+        //public bool IsConcerned { get; set; }
 
         /// <summary>
         /// 机型编号
@@ -79,6 +79,16 @@ namespace FlightDataEntities
         /// </summary>
         [DataMember]
         public string Unit
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 采样频率（？）
+        /// </summary>
+        [DataMember]
+        public int Frequence
         {
             get;
             set;

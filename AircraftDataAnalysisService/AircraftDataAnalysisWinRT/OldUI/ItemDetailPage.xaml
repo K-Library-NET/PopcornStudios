@@ -1,0 +1,138 @@
+﻿<common:LayoutAwarePage
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AircraftDataAnalysisWinRT"
+    xmlns:data="using:AircraftDataAnalysisWinRT.Data"
+    xmlns:common="using:AircraftDataAnalysisWinRT.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Chart="using:Telerik.UI.Xaml.Controls.Chart"
+    x:Name="pageRoot"
+    x:Class="AircraftDataAnalysisWinRT.ItemDetailPage"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Mode=Self}}"
+    mc:Ignorable="d">
+
+    <common:LayoutAwarePage.Resources>
+
+        <!-- 此页所显示的项集合-->
+        <CollectionViewSource
+            x:Name="itemsViewSource"
+            Source="{Binding Items}"
+            d:Source="{Binding AllGroups[0].Items, Source={d:DesignInstance IsDesignTimeCreatable=True, Type=data:SampleDataSource}}"/>
+    </common:LayoutAwarePage.Resources>
+
+    <!--
+        此网格用作定义以下两行的页的根面板:
+        * 第 0 行包含后退按钮和页标题
+        * 第 1 行包含页布局的其余部分
+    -->
+    <Grid
+		Style="{StaticResource LayoutRootStyle}"
+		DataContext="{Binding Group}"
+		d:DataContext="{Binding AllGroups[0], Source={d:DesignInstance IsDesignTimeCreatable=True, Type=data:SampleDataSource}}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <VisualStateManager.VisualStateGroups>
+
+            <!-- 视觉状态反映应用程序的视图状态-->
+            <VisualStateGroup x:Name="ApplicationViewStates">
+                <VisualState x:Name="FullScreenLandscape"/>
+                <VisualState x:Name="Filled"/>
+
+                <!-- 后退按钮将采用较窄的 100 像素页边距约定(纵向)-->
+                <VisualState x:Name="FullScreenPortrait">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+
+                <!-- 对齐后，后退按钮和标题的样式将有所不同-->
+                <VisualState x:Name="Snapped">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <!--
+            此页的其余部分是一个较大的 FlipView，用于一次显示一个项的详细信息，
+            并允许用户浏览所选组中的
+            所有项
+        -->
+        <FlipView
+			x:Name="flipView"
+			AutomationProperties.AutomationId="ItemsFlipView"
+			AutomationProperties.Name="Item Details"
+			TabIndex="1"
+			Grid.RowSpan="2"
+			ItemsSource="{Binding Source={StaticResource itemsViewSource}}">
+
+            <FlipView.ItemContainerStyle>
+                <Style TargetType="FlipViewItem">
+                    <Setter Property="Margin" Value="0,137,0,0"/>
+                </Style>
+            </FlipView.ItemContainerStyle>
+
+            <FlipView.ItemTemplate>
+                <DataTemplate>
+
+                    <!--
+                        选定 UserControl 作为模板项的原因是它支持视觉状态管理
+                        已加载/已卸载事件显式订阅该页中的视图状态更新
+                    -->
+                    <UserControl Loaded="StartLayoutUpdates" Unloaded="StopLayoutUpdates">
+                        <Grid Margin="120,0" Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <ScrollViewer VerticalScrollMode="Auto" HorizontalScrollMode="Disabled" ZoomMode="Disabled"
+								HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                <ListBox ItemsSource="{Binding ParameterSource}" Tapped="OnItemTapped" >
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Path=Caption}"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </ScrollViewer>
+                            <ScrollViewer Grid.Column="1">
+                                <ScrollViewer VerticalScrollMode="Auto" HorizontalScrollMode="Disabled" ZoomMode="Disabled"
+									HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                    <ListBox ItemsSource="{Binding CurrentParamChartModels}" >
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Chart:RadCartesianChart Height="{Binding Path=ChartHeight}" DoubleTapped="OnChartDoubleTapped"/>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </ScrollViewer>
+                            </ScrollViewer>
+                        </Grid>
+                    </UserControl>
+                </DataTemplate>
+            </FlipView.ItemTemplate>
+        </FlipView>
+
+        <!-- 后退按钮和页标题-->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
+            <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1" IsHitTestVisible="false"/>
+        </Grid>
+    </Grid>
+</common:LayoutAwarePage>

@@ -14,6 +14,10 @@
     <DefaultLanguage>zh-CN</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SccProjectName>%24/DWProject/AircraftDataAnalysisService/FlightDataEntitiesRT</SccProjectName>
+    <SccLocalPath>.</SccLocalPath>
+    <SccAuxPath>http://42.96.198.241:8080/tfs/pstudio</SccAuxPath>
+    <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -99,6 +103,8 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AircraftInstance.cs" />
+    <Compile Include="AircraftModel.cs" />
     <Compile Include="BaseFunction.cs" />
     <Compile Include="Charts\ChartPanel.cs" />
     <Compile Include="DataColumn.cs" />
@@ -115,12 +121,14 @@
     <Compile Include="Decisions\IDecision.cs" />
     <Compile Include="Decisions\SubCondition.cs" />
     <Compile Include="ExtremumPointInfo.cs" />
+    <Compile Include="Flight.cs" />
     <Compile Include="FlightDataHeader.cs" />
     <Compile Include="FlightParameter.cs" />
     <Compile Include="FlightParameters.cs" />
     <Compile Include="IFlightRawDataExtractor.cs" />
     <Compile Include="Level1FlightRecord.cs" />
     <Compile Include="Level2FlightRecord.cs" />
+    <Compile Include="LevelTopFlightRecord.cs" />
     <Compile Include="ParameterRawData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

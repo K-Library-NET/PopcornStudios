@@ -32,6 +32,7 @@
     <MetadataFile FileName="AircraftService11.xsd" MetadataType="Schema" ID="2e878645-5e53-4f28-b601-8f99b0fd3ceb" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd2" />
     <MetadataFile FileName="AircraftService21.xsd" MetadataType="Schema" ID="76f65a04-beac-4f43-bd5d-f6fcdb8c3b3c" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd4" />
     <MetadataFile FileName="AircraftService.wsdl" MetadataType="Wsdl" ID="37350a8b-e8a6-44e0-af9b-bd12f8371c9b" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?wsdl" />
+    <MetadataFile FileName="AircraftService4.xsd" MetadataType="Schema" ID="09a3f394-1ea4-47ea-b441-414593caf9f4" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd6" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
