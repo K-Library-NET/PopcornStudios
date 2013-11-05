@@ -26,6 +26,12 @@ namespace FlightDataEntitiesRT
             set;
         }
 
+        public string FlightID
+        {
+            get;
+            set;
+        }
+
         //不要持有Level1的记录了，实在对象太大了存不进去MongoDB
         //public Level1FlightRecord[] Values
         //{

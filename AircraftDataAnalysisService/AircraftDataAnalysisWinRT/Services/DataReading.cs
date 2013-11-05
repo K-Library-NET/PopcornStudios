@@ -156,13 +156,29 @@ namespace AircraftDataAnalysisWinRT.Services
             return;
         }
 
+        /// <summary>
+        /// 读取数据并入库
+        /// </summary>
+        /// <param name="startSecond"></param>
+        /// <param name="endSecond"></param>
+        /// <param name="putIntoServer">是否入库</param>
+        /// <param name="previewModel">如果需要返回预览模型则传入空Model，数据会直接写入此对象。传空则表示不需预览</param>
         public void ReadData(int startSecond, int endSecond, bool putIntoServer,
             AircraftDataAnalysisWinRT.DataModel.RawDataPointViewModel previewModel)
         {
             if (putIntoServer)
+            {
                 DataInputHelper.DeleteExistsData(this.Flight);
-            var decisions = ServerHelper.GetDecisions(ServerHelper.GetCurrentAircraftModel());
-            //m_rawDataExtractor.GetFaultDecisions();
+                DataInputHelper.AddOrReplaceFlightAsync(this.Flight);//需要先新增或者更新Flight
+            }
+            var decisions = ServerHelper.GetDecisions(ApplicationContext.Instance.CurrentAircraftModel);
+
+            foreach (var ds in decisions)
+            {
+                ds.ParameterObjects = ApplicationContext.Instance.GetFlightParameters(
+                    ApplicationContext.Instance.CurrentAircraftModel).Parameters;
+            }
+
             Dictionary<Decision, Decision> hasHappendMap = new Dictionary<Decision, Decision>();
             List<DecisionRecord> decisionRecords = new List<DecisionRecord>();
             Dictionary<string, List<ParameterRawData>> stepParameterList = this.InitializeStepDictionary();
@@ -175,7 +191,11 @@ namespace AircraftDataAnalysisWinRT.Services
             Dictionary<int, ParameterRawData[]> decisionHelperMap = new Dictionary<int, ParameterRawData[]>();
 
             var st = DateTime.Now;
-            int percentBase = 80;
+            int percentStart = 5;
+            int percentBase = 20;
+
+            this.PercentCurrent = 5;
+
             for (int i = startSecond; i < Math.Min(this.Header.FlightSeconds, endSecond); i++)
             {
                 ParameterRawData[] datas = m_rawDataExtractor.GetDataBySecond(i);
@@ -197,72 +217,100 @@ namespace AircraftDataAnalysisWinRT.Services
                 //TODO: DoTrendDecisionWithinOneSecond
                 span1 += DateTime.Now.Subtract(s1);
 
-                int percent = (i / this.Header.FlightSeconds) * percentBase;
+                this.PercentCurrent = (i / (double)this.Header.FlightSeconds) * (percentBase - percentStart);
                 if (this.Progress != null)
-                    this.Progress(this, percent);
+                    this.Progress(this, (int)this.PercentCurrent);
             }
+
+            percentStart = (int)this.PercentCurrent;
+            percentBase = 30;
+
             //DEBUG
             Task task = Task.Run(new Action(delegate()
             {
-                Parallel.ForEach(decisions, new ParallelOptions() { MaxDegreeOfParallelism = 4 },
-                    new Action<Decision>(delegate(Decision de)
-                    {
-                        //foreach (var de in decisions)
-                        //{
-                        for (int j = startSecond; j < Math.Min(this.Header.FlightSeconds, endSecond); j++)
-                        {
-                            var dts = decisionHelperMap[j];
-                            de.AddOneSecondDatas(j, dts);
+                if (decisions == null || decisions.Count() == 0)
+                    return;
 
-                            if (de.HasHappened)
-                            {
-                                if (!hasHappendMap.ContainsKey(de))
-                                    //添加一条准备记录
-                                    hasHappendMap.Add(de, de);
-                            }
-                            else
-                            {
-                                if (hasHappendMap.ContainsKey(de))
-                                {//从发生到不发生，应该产生一条记录
-                                    hasHappendMap.Remove(de);
-                                    DecisionRecord record = new DecisionRecord()
-                                    {
-                                        StartSecond = de.ActiveStartSecond,
-                                        EndSecond = de.ActiveEndSecond,
-                                        DecisionID = de.DecisionID,
-                                        DecisionName = de.DecisionName,
-                                        DecisionDescription = de.ToString()
-                                    };
-                                    decisionRecords.Add(record);
-                                }
+                int decisionCount = decisions.Count();
+
+                //Parallel.ForEach(decisions, new ParallelOptions() { MaxDegreeOfParallelism = 4 },
+                //    new Action<Decision>(delegate(Decision de)
+                //    {
+                foreach (Decision de in decisions)
+                {
+                    for (int j = startSecond; j < Math.Min(this.Header.FlightSeconds, endSecond); j++)
+                    {
+                        var dts = decisionHelperMap[j];
+                        //DEBUG: 写死出现判据
+                        //if (de.DecisionID == "050" && dts[18].Values[0] > 630)
+                        //    dts[48].Values[0] = 1.0F;
+                        //DEBUG
+                        de.AddOneSecondDatas(j, dts);
+
+                        if (de.HasHappened)
+                        {
+                            if (!hasHappendMap.ContainsKey(de))
+                                //添加一条准备记录
+                                hasHappendMap.Add(de, de);
+                        }
+                        else
+                        {
+                            if (hasHappendMap.ContainsKey(de))
+                            {//从发生到不发生，应该产生一条记录
+                                hasHappendMap.Remove(de);
+                                DecisionRecord record = new DecisionRecord()
+                                {
+                                    FlightID = Flight.FlightID,
+                                    EventLevel = de.EventLevel,
+                                    StartSecond = de.ActiveStartSecond,
+                                    EndSecond = de.ActiveEndSecond,
+                                    DecisionID = de.DecisionID,
+                                    DecisionName = de.DecisionName,
+                                };
+                                record.DecisionDescription = de.ToDecisionDescriptionString(record);
+                                decisionRecords.Add(record);
                             }
                         }
-                    }));
+                    }
 
-                //var tmpKeyList = from oneKey in decisionHelperMap.Keys
-                //                 orderby oneKey
-                //                 select oneKey;
-                //foreach (var k in tmpKeyList)
-                //{
-                //    var dts = decisionHelperMap[k];
-                //    DoDecisionWithinOneSecond(decisions, hasHappendMap, decisionRecords, k, dts);
-                //}
-            }));
+                    this.PercentCurrent += percentBase / (double)decisionCount;
+                    if (this.Progress != null)
+                        this.Progress(this, (int)this.PercentCurrent);
 
-            if (this.Progress != null)
-                this.Progress(this, 90);
-
-            foreach (string key in stepParameterList.Keys)
-            {
-                Level1FlightRecord[] reducedRecords = reducer.ReduceFlightRawDataPoints(
-                    key, this.Flight.FlightID, stepParameterList[key], startSecond, endSecond, this.DataReductionSecondGap);
-                Level2FlightRecord[] level2Records = reducer.GenerateLevel2FlightRecord(key, reducedRecords);
+                    if (this.Progress != null)
+                        this.Progress(this, (int)this.PercentCurrent);
+                }
 
                 if (putIntoServer)
-                    this.PutInServer(key, reducedRecords, level2Records);
+                    DataInputHelper.AddDecisionRecordsBatch(this.Flight, decisionRecords);
+                this.PercentCurrent += 5;
+            }));
 
-                List<Level2FlightRecord> lv2records = level2RecordMap[key];
-                lv2records.AddRange(level2Records);
+            var percentBase2 = 45;
+            if (stepParameterList.Keys.Count > 0)
+            {
+                //Parallel.ForEach(stepParameterList.Keys, new ParallelOptions() { MaxDegreeOfParallelism = 4 },
+                //    new Action<string>(delegate(string key)
+                foreach (string key in stepParameterList.Keys)
+                {
+                    Level1FlightRecord[] reducedRecords = reducer.ReduceFlightRawDataPoints(
+                        key, this.Flight.FlightID, stepParameterList[key], startSecond, endSecond, this.DataReductionSecondGap);
+                    Level2FlightRecord[] level2Records = reducer.GenerateLevel2FlightRecord(this.Flight.FlightID, key, reducedRecords);
+
+                    if (level2Records != null)
+                    {
+                        if (putIntoServer)
+                            this.PutInServer(key, reducedRecords);
+
+                        List<Level2FlightRecord> lv2records = level2RecordMap[key];
+                        lv2records.AddRange(level2Records);
+                    }
+
+                    this.PercentCurrent += percentBase2 / (double)stepParameterList.Keys.Count;
+                    if (this.Progress != null)
+                        this.Progress(this, (int)this.PercentCurrent);
+                }
+                //));
             }
 
             List<LevelTopFlightRecord> topRecords = reducer.GenerateLevelTopFlightRecord(
@@ -273,8 +321,8 @@ namespace AircraftDataAnalysisWinRT.Services
                 this.PutInServer(topRecords, this.Flight, level2RecordMap);
 
             task.Wait();
-            if (putIntoServer)
-                DataInputHelper.AddDecisionRecordsBatch(this.Flight, decisionRecords);
+            //if (putIntoServer)
+            //    DataInputHelper.AddDecisionRecordsBatch(this.Flight, decisionRecords);
             if (this.Progress != null)
                 this.Progress(this, 98);
             //DEBUG
@@ -287,12 +335,44 @@ namespace AircraftDataAnalysisWinRT.Services
         private void PutInServer(List<LevelTopFlightRecord> topRecords, Flight flight,
             Dictionary<string, List<Level2FlightRecord>> level2RecordMap)
         {
-            //DataInputHelper.AddLevelTopFlightRecords(
+            DataInputHelper.AddLevelTopFlightRecords(flight, topRecords);
         }
 
-        private void PutInServer(string key, Level1FlightRecord[] reducedRecords, Level2FlightRecord[] level2Record)
+        private void PutInServer(string key, Level1FlightRecord[] reducedRecords)
         {
-            DataInputHelper.AddOneParameterValue(this.Flight, key, reducedRecords, level2Record);
+            List<Task<string>> tasks = new List<Task<string>>();
+
+            int step = 8;//8个提交一次
+            List<Level1FlightRecord> tempList = new List<Level1FlightRecord>();
+            for (int i = 0; i < reducedRecords.Length; i++)
+            {
+                tempList.Add(reducedRecords[i]);
+                if (i >= step && i % step == 0)
+                {
+                    var task = DataInputHelper.AddOneParameterValueAsync(this.Flight, key, tempList.ToArray());
+                    task.Wait();
+                    if (!string.IsNullOrEmpty(task.Result))
+                    {
+                    }
+
+                    tempList.Clear();
+                    tasks.Add(task);
+                }
+            }
+
+            if (tempList.Count > 0)
+            {
+                var task2 = DataInputHelper.AddOneParameterValueAsync(this.Flight, key, tempList.ToArray());
+                task2.Wait();
+                if (!string.IsNullOrEmpty(task2.Result))
+                {
+                }
+
+                tempList.Clear();
+                tasks.Add(task2);
+            }
+
+            Task.WaitAll(tasks.ToArray());
         }
 
         private Dictionary<string, List<Level2FlightRecord>> InitializeLevel2Dictionary()
@@ -358,5 +438,7 @@ namespace AircraftDataAnalysisWinRT.Services
                         }
                     }));
         }
+
+        public double PercentCurrent { get; set; }
     }
 }

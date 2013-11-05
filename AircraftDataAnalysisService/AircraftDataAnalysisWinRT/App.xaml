@@ -19,6 +19,14 @@
             <!-- 应用程序特定的资源-->
 
             <x:String x:Key="AppName">飞行参数分析</x:String>
+            <SolidColorBrush x:Key="_RadGridBackgroup" Color="White"/>
+            <SolidColorBrush x:Key="RadGridForeground" Color="#CC000000"/>
+            <SolidColorBrush x:Key="RadGridAlternateRowBackGround" Color="#FFA1D4FF"/>
+            <LinearGradientBrush x:Key="AllBackgroundColor" EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF72B7FD"/>
+                <GradientStop Color="#FFDCEEFF" Offset="1"/>
+            </LinearGradientBrush>
+            <SolidColorBrush x:Key="AllBorderColor" Color="#FF6884FF"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

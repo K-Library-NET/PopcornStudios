@@ -410,24 +410,23 @@ namespace FlightDataReading.AircraftModel1
                                  //10行
                                  
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
-                                 SegmentName = "KG1", BitsDefinition = new FlightBitDataContentSegmentDefinition[] 
+                                 SegmentName = "KG15->1", BitsDefinition = new FlightBitDataContentSegmentDefinition[] 
                                  { 
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "(NULL)", DataTypeStr = "Int32"},
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG15", DataTypeStr = "Int32"},
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG14", DataTypeStr = "Int32"},
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG13", DataTypeStr = "Int32"},
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG12", DataTypeStr = "Int32"},
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG11", DataTypeStr = "Int32"},
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG10", DataTypeStr = "Int32"},
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG9", DataTypeStr = "Int32"},
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG8", DataTypeStr = "Int32"},
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG7", DataTypeStr = "Int32"},
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG6", DataTypeStr = "Int32"},
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG5", DataTypeStr = "Int32"},
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG4", DataTypeStr = "Int32"},
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG3", DataTypeStr = "Int32"},
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG2", DataTypeStr = "Int32"},
-                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 2, SegmentName = "KG1", DataTypeStr = "Int32"}
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 1, SegmentName = "KG1", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 1, SegmentName = "KG2", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 1, SegmentName = "KG3", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 1, SegmentName = "KG4", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 1, SegmentName = "KG5", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 1, SegmentName = "KG6", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 1, SegmentName = "KG7", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 1, SegmentName = "KG8", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 1, SegmentName = "KG9", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 1, SegmentName = "KG10", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 1, SegmentName = "KG11", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 1, SegmentName = "KG12", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 1, SegmentName = "KG13", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 1, SegmentName = "KG14", DataTypeStr = "Int32"},
+                                     new FlightBitDataContentSegmentDefinition(){ BitsCount = 1, SegmentName = "KG15", DataTypeStr = "Int32"},
                                  },
                             },
                             new FlightBinaryDataContentSegmentDefinition(){ BytesCount = 4, DataTypeStr = DataTypeConverter.FLOAT,
@@ -1097,13 +1096,56 @@ namespace FlightDataReading.AircraftModel1
             }
 
             var header = this.ReadHeader();
+
+            float[] ns = this.ForceReadContentParameterValues("NS");
+            float[] ew = this.ForceReadContentParameterValues("EW");
+
             //TODO: 转换赋值
             return new FlightDataEntitiesRT.FlightDataHeader()
             {
                 FlightDate = DateTime.Now,//debug
                 FlightSeconds = secondCount,
+                Latitudes = ew,
+                Longitudes = ns,
                 Description = header.ToString()
             };
+        }
+
+        private float[] ForceReadContentParameterValues(string parameterID)
+        {
+            List<float> resultValues = new List<float>();
+            DateTime start = DateTime.Now;
+            //复位
+            m_Reader.BaseStream.Position = this.Definition.HeaderDefinition.BytesCount;
+
+            int startPoint = 0;
+            FlightBinaryDataContentSegmentDefinition paramDef = null;
+            int startStep = this.Definition.FrameDefinition.BytesCount;
+
+            foreach (var preSeg in this.Definition.FrameDefinition.Segments)
+            {
+                if (preSeg.SegmentName != parameterID)
+                    startPoint += preSeg.BytesCount;
+                else
+                {
+                    paramDef = preSeg;
+                    break;
+                }
+            }
+
+            //用于移动到Start
+            m_Reader.BaseStream.Position += startPoint;
+
+            while (m_Reader.BaseStream.Length > m_Reader.BaseStream.Position + 1)
+            {
+                float val = m_Reader.ReadSingle();
+                resultValues.Add(val);
+                m_Reader.BaseStream.Position += (startStep - paramDef.BytesCount);//已经读了一个param，要位移就要去除它的位数
+            }
+
+            m_Reader.BaseStream.Position = this.Definition.HeaderDefinition.BytesCount;
+
+            return resultValues.ToArray();
         }
 
         public TimeSpan TestSpan1
@@ -1162,6 +1204,9 @@ namespace FlightDataReading.AircraftModel1
                     continue;
                 }
 
+                var testInt = m_Reader.ReadInt32();
+                m_Reader.BaseStream.Position -= 4;
+
                 if (seg.BitsDefinition != null && seg.BitsDefinition.Length > 0)
                 {
                     this.ReadComplexSegment(segments, seg, bitArray);
@@ -1190,28 +1235,29 @@ namespace FlightDataReading.AircraftModel1
         private void ReadComplexSegment(List<FlightDataContentSegment> segments,
             FlightBinaryDataContentSegmentDefinition seg, BitArray bitArray)
         {
-            var readed = m_Reader.ReadBytes(4);//.ReadUInt32();
-            BitArray ba = new BitArray(readed);
+            var single = m_Reader.ReadSingle();
+            var toInt = (int)single;
+            List<int> bitValues = new List<int>();
 
-            for (int i = 0; i < seg.BitsDefinition.Length; i++)
+            for (int i = 0; i < 16; i++)
             {
-                var seg2 = seg.BitsDefinition[i];
+                int bitValue = BaseFunction.GetBit(toInt, i);
+                bitValues.Add(bitValue);
+            }
+
+            for (int j = 0; j < Math.Min(seg.BitsDefinition.Length, bitValues.Count); j++)
+            {
+                var seg2 = seg.BitsDefinition[j];
                 FlightDataContentSegment resultSeg = new FlightDataContentSegment()
                 {
                     DataTypeStr = seg2.DataTypeStr,
                     SegmentName = seg2.SegmentName,
-                    Value = ba[i] ? 1.0F : 0.0F// ba[i] ? 1.0 : 0.0;
                 };
 
-                //for (int j = 0; j < seg2.BitsCount; j++)
-                //{
-                //    if (ba[i * 4 + j] == false)
-                //    {
-                //        resultSeg.Value = "0";
-                //        break;
-                //    }
-                //}
-
+                if (seg2.BitsCount == 1)
+                {
+                    resultSeg.Value = bitValues[j];
+                }
                 segments.Add(resultSeg);
             }
         }

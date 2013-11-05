@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -13,6 +14,12 @@ namespace FlightDataEntities.Decisions
     [DataContract]
     public class DecisionRecord
     {
+        public ObjectId Id
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// 架次ID，必须，用于批量删除
         /// </summary>
@@ -20,10 +27,22 @@ namespace FlightDataEntities.Decisions
         public string FlightID { get; set; }
 
         /// <summary>
+        /// 事件等级，不包含事件颜色，颜色是前端根据事件等级设定
+        /// </summary>
+        [DataMember]
+        public int EventLevel { get; set; }
+
+        /// <summary>
         /// 起始秒
         /// </summary>
         [DataMember]
         public int StartSecond { get; set; }
+
+        /// <summary>
+        /// 事件发生秒
+        /// </summary>
+        [DataMember]
+        public int HappenSecond { get; set; }
 
         /// <summary>
         /// 结束秒

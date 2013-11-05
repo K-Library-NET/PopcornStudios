@@ -19,10 +19,22 @@ namespace AircraftDataAnalysisWinRT.Services
         /// <returns></returns>
         public static AircraftModel GetCurrentAircraftModel()
         {
-            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
+            AircraftService.AircraftServiceClient client = GetClient();
             var result = client.GetCurrentAircraftModelAsync();
             result.Wait();
+            client.CloseAsync();
             return RTConverter.FromDataInput(result.Result);
+        }
+
+        private static AircraftService.AircraftServiceClient GetClient()
+        {
+            if (!string.IsNullOrEmpty(ApplicationContext.Instance.AircraftServiceURL))
+            {
+                return new AircraftService.AircraftServiceClient(
+                    AircraftService.AircraftServiceClient.EndpointConfiguration.BasicHttpBinding_IAircraftService,
+                    ApplicationContext.Instance.AircraftServiceURL);
+            }
+            return new AircraftService.AircraftServiceClient();
         }
 
         /// <summary>
@@ -31,7 +43,7 @@ namespace AircraftDataAnalysisWinRT.Services
         /// <returns></returns>
         public static Task<AircraftModel> GetCurrentAircraftModelAsync()
         {
-            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
+            AircraftService.AircraftServiceClient client = GetClient();
             Task<AircraftService.AircraftModel> task = client.GetCurrentAircraftModelAsync();
             Task<AircraftModel> task2 = task.ContinueWith<AircraftModel>(
                 new Func<Task, AircraftModel>(
@@ -40,7 +52,7 @@ namespace AircraftDataAnalysisWinRT.Services
                         t.Wait();
                         return RTConverter.FromDataInput(task.Result);
                     }));
-
+            client.CloseAsync();
             return task2;
         }
 
@@ -51,10 +63,14 @@ namespace AircraftDataAnalysisWinRT.Services
         /// <returns></returns>
         public static Flight[] GetAllFlights(AircraftModel aircraftModel)
         {
-            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
+            AircraftService.AircraftServiceClient client = GetClient();
             var task = client.GetAllFlightsAsync(RTConverter.ToAircraftService(aircraftModel));
             task.Wait();
             var results = task.Result;
+            client.CloseAsync();
+
+            if (results == null || results.Count() <= 0)
+                return new Flight[] { };
 
             var result2 = from one in results
                           select RTConverter.FromAircraftService(one);
@@ -71,18 +87,18 @@ namespace AircraftDataAnalysisWinRT.Services
         /// <param name="startSecond"></param>
         /// <param name="endSecond"></param>
         /// <returns></returns>
-        public static FlightDataEntitiesRT.DataTable GetData(Flight flight,
+        public static FlightDataEntitiesRT.DataTable GetDataTable(Flight flight,
             string[] parameterIds, int startSecond, int endSecond)
         {
             ObservableCollection<string> collection = null;
             if (parameterIds != null && parameterIds.Length > 0)
                 collection = new ObservableCollection<string>(parameterIds);
-            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
+            AircraftService.AircraftServiceClient client = GetClient();
 
             var task = client.GetFlightDataAsync(RTConverter.ToAircraftService(flight),
                 collection, startSecond, endSecond);
             task.Wait();
-
+            client.CloseAsync();
             ObservableCollection<KeyValuePair<string, ObservableCollection<
                 AircraftDataAnalysisWinRT.AircraftService.FlightRawData>>>
                 result = task.Result;
@@ -90,6 +106,30 @@ namespace AircraftDataAnalysisWinRT.Services
             DataTable dt = BuildDataTable(result);
 
             return dt;
+        }
+
+        public static ObservableCollection<KeyValuePair<string, 
+            ObservableCollection<FlightDataEntitiesRT.ParameterRawData>>> GetData(Flight flight,
+            string[] parameterIds, int startSecond, int endSecond)
+        {
+            ObservableCollection<string> collection = null;
+            if (parameterIds != null && parameterIds.Length > 0)
+                collection = new ObservableCollection<string>(parameterIds);
+            AircraftService.AircraftServiceClient client = GetClient();
+
+            var task = client.GetFlightDataAsync(RTConverter.ToAircraftService(flight),
+                collection, startSecond, endSecond);
+            task.Wait();
+            client.CloseAsync();
+            ObservableCollection<KeyValuePair<string, ObservableCollection<
+                AircraftDataAnalysisWinRT.AircraftService.FlightRawData>>>
+                result = task.Result;
+
+            return RTConverter.FromAircraftService(task.Result);
+
+            //DataTable dt = BuildDataTable(result);
+
+            //return dt;
         }
 
         /// <summary>
@@ -104,6 +144,9 @@ namespace AircraftDataAnalysisWinRT.Services
             DataTable dt = new DataTable();
             //all column first
             dt.Columns.Add(new DataColumn() { ColumnName = "Second", DataType = DataTypeConverter.TypeInt32, Caption = "秒" });
+
+            if (result == null || result.Count() == 0)
+                return dt;
 
             var temp1 = from one in result
                         select one.Key;
@@ -120,7 +163,9 @@ namespace AircraftDataAnalysisWinRT.Services
                 {
                     if (!dataRowMap.ContainsKey(data.Second))
                     {
-                        dataRowMap.Add(data.Second, dt.NewRow());
+                        DataRow dr = dt.NewRow();
+                        dr["Second"] = data.Second;
+                        dataRowMap.Add(data.Second, dr);
                     }
 
                     dataRowMap[data.Second][data.ParameterID] = data.Values[0];
@@ -138,6 +183,20 @@ namespace AircraftDataAnalysisWinRT.Services
             return dt;
         }
 
+        public static FlightDataEntitiesRT.LevelTopFlightRecord[] GetLevelTopFlightRecords(Flight flight, string[] parameterIDs)
+        {
+            AircraftService.AircraftServiceClient client = GetClient();
+            var taskInfos = client.GetLevelTopFlightRecordsAsync(RTConverter.ToAircraftService(flight),
+                (parameterIDs == null || parameterIDs.Length == 0) ? new ObservableCollection<string>() :
+                new ObservableCollection<string>(parameterIDs));
+            taskInfos.Wait();
+            client.CloseAsync();
+            var result = from one in taskInfos.Result
+                         select RTConverter.FromAircraftService(one);
+
+            return result.ToArray();
+        }
+
         /// <summary>
         /// 取得极值数据
         /// </summary>
@@ -145,7 +204,39 @@ namespace AircraftDataAnalysisWinRT.Services
         /// <returns></returns>
         public static FlightDataEntitiesRT.ExtremumPointInfo[] GetExtremumPointInfos(Flight flight)
         {
-            throw new NotImplementedException();
+            AircraftService.AircraftServiceClient client = GetClient();
+            var task = client.GetExtremumReportDefinitionAsync(flight.Aircraft.AircraftModel.ModelName);
+            var levelTopRecs = GetLevelTopFlightRecords(flight, null);
+
+            task.Wait();
+            client.CloseAsync();
+
+            var definition = task.Result;
+            var parames = from def in definition.Items
+                          orderby def.Number ascending
+                          select def.ParameterID;
+
+            Dictionary<string, int> dic = new Dictionary<string, int>();
+            foreach (var v in definition.Items)
+            {
+                dic.Add(v.ParameterID, v.Number);
+            }
+
+            List<ExtremumPointInfo> infs = new List<ExtremumPointInfo>();
+            foreach (var r in levelTopRecs)
+            {
+                if (parames.Contains(r.ExtremumPointInfo.ParameterID))
+                {
+                    r.ExtremumPointInfo.Number = dic[r.ExtremumPointInfo.ParameterID];
+                    infs.Add(r.ExtremumPointInfo);
+                }
+            }
+
+            var result = from one in infs
+                         orderby one.Number ascending
+                         select one;
+
+            return result.ToArray();
         }
 
         /// <summary>
@@ -156,9 +247,10 @@ namespace AircraftDataAnalysisWinRT.Services
         public static FlightDataEntitiesRT.Charts.ChartPanel[] GetChartPanels(
             AircraftModel aircraftModel)
         {
-            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
+            AircraftService.AircraftServiceClient client = GetClient();
             var task = client.GetAllChartPanelsAsync(RTConverter.ToAircraftService(aircraftModel));
             task.Wait();
+            client.CloseAsync();
             var result = from one in task.Result
                          select RTConverter.FromAircraftService(one);
             return result.ToArray();
@@ -171,9 +263,10 @@ namespace AircraftDataAnalysisWinRT.Services
         /// <returns></returns>
         public static FlightDataEntitiesRT.FlightParameters GetFlightParameters(AircraftModel aircraftModel)
         {
-            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
+            AircraftService.AircraftServiceClient client = GetClient();
             var get = client.GetAllFlightParametersAsync(RTConverter.ToAircraftService(aircraftModel));
             get.Wait();
+            client.CloseAsync();
             AircraftService.FlightParameters parameters = get.Result;
             return RTConverter.FromAircraftService(parameters);
         }
@@ -214,12 +307,14 @@ namespace AircraftDataAnalysisWinRT.Services
         /// <returns></returns>
         public static FlightDataEntitiesRT.Decisions.Decision[] GetDecisions(AircraftModel aircraftModel)
         {
-            AircraftService.AircraftServiceClient client = new AircraftService.AircraftServiceClient();
-            var task =  client.GetAllDecisionsAsync(RTConverter.ToAircraftService(aircraftModel));
+            AircraftService.AircraftServiceClient client = GetClient();
+            var task = client.GetAllDecisionsAsync(RTConverter.ToAircraftService(aircraftModel));
             task.Wait();
-
+            client.CloseAsync();
             var decisions = from one in task.Result
-                          select RTConverter.FromAircraftService(one);
+                            select RTConverter.FromAircraftService(one);
+
+            List<FlightDataEntitiesRT.Decisions.Decision> tDecs = new List<FlightDataEntitiesRT.Decisions.Decision>();
 
             foreach (var decision in decisions)
             {
@@ -242,9 +337,11 @@ namespace AircraftDataAnalysisWinRT.Services
                         }
                     }
                 }
+
+                tDecs.Add(decision);
             }
 
-            return decisions.ToArray();
+            return tDecs.ToArray();
             //return result2.ToArray();
         }
 
@@ -255,7 +352,15 @@ namespace AircraftDataAnalysisWinRT.Services
         /// <returns></returns>
         public static FlightDataEntitiesRT.Decisions.DecisionRecord[] GetDecisionRecords(Flight flight)
         {
-            throw new NotImplementedException();
+            AircraftService.AircraftServiceClient client = GetClient();
+            var task = client.GetDecisionRecordsAsync(RTConverter.ToAircraftService(flight));
+            task.Wait();
+
+            client.CloseAsync();
+            var decisionRecords = from one in task.Result
+                                  select RTConverter.FromAircraftService(one);
+
+            return decisionRecords.ToArray();
         }
     }
 }

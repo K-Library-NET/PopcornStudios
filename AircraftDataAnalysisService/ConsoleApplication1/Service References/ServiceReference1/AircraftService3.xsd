@@ -1,105 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/FlightDataEntities" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/FlightDataEntities" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
-  <xs:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/MongoDB.Bson" />
-  <xs:complexType name="FlightParameters">
+<xs:schema xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/Arrays" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="ArrayOfstring">
     <xs:sequence>
-      <xs:element minOccurs="0" name="BytesCount" type="xs:int" />
-      <xs:element minOccurs="0" name="Parameters" nillable="true" type="tns:ArrayOfFlightParameter" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="FlightParameters" nillable="true" type="tns:FlightParameters" />
-  <xs:complexType name="ArrayOfFlightParameter">
+  <xs:element name="ArrayOfstring" nillable="true" type="tns:ArrayOfstring" />
+  <xs:complexType name="ArrayOffloat">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="FlightParameter" nillable="true" type="tns:FlightParameter" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="float" type="xs:float" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ArrayOfFlightParameter" nillable="true" type="tns:ArrayOfFlightParameter" />
-  <xs:complexType name="FlightParameter">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="ByteIndexes" nillable="true" type="tns:ArrayOfByteIndex" />
-      <xs:element minOccurs="0" name="Caption" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Index" type="xs:int" />
-      <xs:element minOccurs="0" name="IsConcerned" type="xs:boolean" />
-      <xs:element minOccurs="0" name="ModelName" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="ParameterDataType" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="ParameterID" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="SubIndex" type="xs:int" />
-      <xs:element minOccurs="0" name="Unit" nillable="true" type="xs:string" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="FlightParameter" nillable="true" type="tns:FlightParameter" />
-  <xs:complexType name="ArrayOfByteIndex">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="ByteIndex" nillable="true" type="tns:ByteIndex" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfByteIndex" nillable="true" type="tns:ArrayOfByteIndex" />
-  <xs:complexType name="ByteIndex">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Index" type="xs:int" />
-      <xs:element minOccurs="0" name="SubIndexes" nillable="true" type="tns:ArrayOfBitIndex" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ByteIndex" nillable="true" type="tns:ByteIndex" />
-  <xs:complexType name="ArrayOfBitIndex">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="BitIndex" nillable="true" type="tns:BitIndex" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfBitIndex" nillable="true" type="tns:ArrayOfBitIndex" />
-  <xs:complexType name="BitIndex">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="SubIndex" type="xs:int" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="BitIndex" nillable="true" type="tns:BitIndex" />
-  <xs:complexType name="RawDataBatch">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Datas" nillable="true" type="tns:ArrayOfRawDataParamBatch" />
-      <xs:element minOccurs="0" name="Flight" nillable="true" type="tns:Flight" />
-      <xs:element minOccurs="0" name="Second" type="xs:int" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="RawDataBatch" nillable="true" type="tns:RawDataBatch" />
-  <xs:complexType name="ArrayOfRawDataParamBatch">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="RawDataParamBatch" nillable="true" type="tns:RawDataParamBatch" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfRawDataParamBatch" nillable="true" type="tns:ArrayOfRawDataParamBatch" />
-  <xs:complexType name="RawDataParamBatch">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="ParameterID" nillable="true" type="xs:string" />
-      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Values" nillable="true" type="q1:ArrayOffloat" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="RawDataParamBatch" nillable="true" type="tns:RawDataParamBatch" />
-  <xs:complexType name="Flight">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Aircraft" nillable="true" type="tns:AircraftInstance" />
-      <xs:element minOccurs="0" name="EndSecond" type="xs:int" />
-      <xs:element minOccurs="0" name="FlightID" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="FlightName" nillable="true" type="xs:string" />
-      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/MongoDB.Bson" minOccurs="0" name="Id" type="q2:ObjectId" />
-      <xs:element minOccurs="0" name="StartSecond" type="xs:int" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Flight" nillable="true" type="tns:Flight" />
-  <xs:complexType name="AircraftInstance">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="AircraftModel" nillable="true" type="tns:AircraftModel" />
-      <xs:element minOccurs="0" name="AircraftNumber" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="LastUsed" type="xs:dateTime" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="AircraftInstance" nillable="true" type="tns:AircraftInstance" />
-  <xs:complexType name="AircraftModel">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Caption" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="LastUsed" type="xs:dateTime" />
-      <xs:element minOccurs="0" name="ModelName" nillable="true" type="xs:string" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="AircraftModel" nillable="true" type="tns:AircraftModel" />
+  <xs:element name="ArrayOffloat" nillable="true" type="tns:ArrayOffloat" />
 </xs:schema>

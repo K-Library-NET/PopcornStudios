@@ -14,6 +14,9 @@ namespace FlightDataEntitiesRT
         public Level1FlightRecord[] ReduceFlightRawDataPoints(string parameterID, string flightID,
             List<ParameterRawData> points, int startSecond, int endSecond, int secondGap)
         {
+            if (points == null || points.Count == 0)
+                return new Level1FlightRecord[] { };
+
             //1. 每秒钟取一个点
             var wrapped = from one in points
                           select new ParameterRawDataWrap(one);
@@ -98,23 +101,31 @@ namespace FlightDataEntitiesRT
             }
         }
 
-        public Level2FlightRecord[] GenerateLevel2FlightRecord(string parameterID,
+        public Level2FlightRecord[] GenerateLevel2FlightRecord(string flightID, string parameterID,
             Level1FlightRecord[] level1Points)
         {
-            Level2FlightRecord level2Records = GenerateLevel2FlightRecordByOnlyOneResult(parameterID, level1Points);
+            Level2FlightRecord level2Records = GenerateLevel2FlightRecordByOnlyOneResult(flightID, parameterID, level1Points);
 
+            if (level2Records == null)
+                return null;
             return new Level2FlightRecord[] { level2Records };
         }
 
-        private static Level2FlightRecord GenerateLevel2FlightRecordByOnlyOneResult(string parameterID, Level1FlightRecord[] level1Points)
+        private static Level2FlightRecord GenerateLevel2FlightRecordByOnlyOneResult(string flightID,
+            string parameterID, Level1FlightRecord[] level1Points)
         {
+            if (level1Points == null || level1Points.Length == 0)
+                return null;
+
             Level2FlightRecord level2Records = new Level2FlightRecord()
             {
                 StartSecond = 0,
                 EndSecond = level1Points[level1Points.Length - 1].EndSecond,
                 ParameterID = parameterID,
+                FlightID = flightID,
                 ExtremumPointInfo = new ExtremumPointInfo()
                 {
+                    FlightID = flightID,
                     ParameterID = parameterID,
                     MaxValue =
                         (from one in level1Points
@@ -188,7 +199,7 @@ namespace FlightDataEntitiesRT
                     FlightID = flightID,
                     StartSecond = startSecond,
                     EndSecond = endSecond,
-                    ExtremumPointInfo = this.FindExtremumPointInfo(key, level2RecordMap[key]),
+                    ExtremumPointInfo = this.FindExtremumPointInfo(flightID, key, level2RecordMap[key]),
                     Level2FlightRecord = level2RecordMap[key].ToArray()
                 };
 
@@ -198,10 +209,11 @@ namespace FlightDataEntitiesRT
             return topRecords;
         }
 
-        private ExtremumPointInfo FindExtremumPointInfo(string parameterID, List<Level2FlightRecord> list)
+        private ExtremumPointInfo FindExtremumPointInfo(string flightID, string parameterID, List<Level2FlightRecord> list)
         {
             ExtremumPointInfo info = new ExtremumPointInfo()
             {
+                FlightID = flightID,
                 ParameterID = parameterID,
                 MaxValue = float.MinValue,
                 MinValue = float.MaxValue

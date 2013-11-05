@@ -59,34 +59,43 @@ namespace AircraftDataAnalysisWcfService
         private static Flight InsertOrUpdateByFlightID(
             FlightDataEntities.Flight flight, Flight flightResult, MongoCollection<Flight> modelCollection)
         {
-            IMongoQuery q1 = Query.EQ("FlightID", new MongoDB.Bson.BsonString(flight.FlightID));
-
-            var cursor = modelCollection.Find(q1);
-            //第一次查询，是判断是否需要UPDATE
-            if (cursor != null && cursor.Count() > 0)
+            try
             {
-                foreach (var value in cursor.AsEnumerable())
-                {
-                    value.FlightName = flight.FlightName;
-                    value.Aircraft = flight.Aircraft;
-                    value.EndSecond = flight.EndSecond;
-                    value.StartSecond = flight.StartSecond;
-                    modelCollection.Save(value);
+                IMongoQuery q1 = Query.EQ("FlightID", new MongoDB.Bson.BsonString(flight.FlightID));
 
-                    flightResult = value;
+                var cursor = modelCollection.Find(q1);
+                //第一次查询，是判断是否需要UPDATE
+                if (cursor != null && cursor.Count() > 0)
+                {
+                    foreach (var value in cursor.AsEnumerable())
+                    {
+                        value.FlightName = flight.FlightName;
+                        value.Aircraft = flight.Aircraft;
+                        value.EndSecond = flight.EndSecond;
+                        value.StartSecond = flight.StartSecond;
+                        modelCollection.Save(value);
+
+                        flightResult = value;
+                    }
+                }
+                else
+                {//如果INSERT，就必须插入之后才有ObjectId，需要返回带有ObjectId的对象（不单单只考虑WCF返回没带有ObjectId的情况）
+                    modelCollection.Insert(flight);
+
+                    var cursor2 = modelCollection.Find(q1);
+                    if (cursor2 != null && cursor2.Count() > 0)
+                    {
+                        flightResult = cursor2.First();
+                    }
+                    else flightResult = null;
                 }
             }
-            else
-            {//如果INSERT，就必须插入之后才有ObjectId，需要返回带有ObjectId的对象（不单单只考虑WCF返回没带有ObjectId的情况）
-                modelCollection.Insert(flight);
-
-                var cursor2 = modelCollection.Find(q1);
-                if (cursor2 != null && cursor2.Count() > 0)
-                {
-                    flightResult = cursor2.First();
-                }
-                else flightResult = null;
+            catch (Exception e)
+            {
+                LogHelper.Error("InsertOrUpdateByFlightID", e);
+                flightResult = null;
             }
+
             return flightResult;
         }
 
@@ -106,11 +115,12 @@ namespace AircraftDataAnalysisWcfService
                     MongoDatabase database = mongoServer.GetDatabase(AircraftMongoDb.DATABASE_COMMON);
                     if (database != null)
                     {
-                        MongoCollection<Flight> modelCollection
-                            = database.GetCollection<Flight>(AircraftMongoDb.COLLECTION_FLIGHT);
-                        //删除架次
+                        //不能删除架次
+                        //MongoCollection<Flight> modelCollection
+                        //    = database.GetCollection<Flight>(AircraftMongoDb.COLLECTION_FLIGHT);
+                        ////删除架次
                         IMongoQuery q1 = Query.EQ("FlightID", new MongoDB.Bson.BsonString(flight.FlightID));
-                        var writeResult = modelCollection.Remove(q1);
+                        //var writeResult = modelCollection.Remove(q1);
 
                         //TODO:删除相关记录
                         this.RemoveRelatedRecords(mongoServer, flight, dal, q1);
@@ -174,6 +184,9 @@ namespace AircraftDataAnalysisWcfService
         internal string AddDecisionRecordsBatch(FlightDataEntities.Flight flight,
             FlightDataEntities.Decisions.DecisionRecord[] records)
         {
+            if (flight == null || records == null || records.Length == 0)
+                return string.Empty;
+
             using (AircraftMongoDbDal dal = new AircraftMongoDbDal())
             {
                 MongoServer mongoServer = dal.GetMongoServer();
@@ -259,7 +272,7 @@ namespace AircraftDataAnalysisWcfService
                 }
                 catch (Exception e)
                 {
-                    LogHelper.Error("AddOneParameterValue", e);
+                    LogHelper.Error("AddLevelTopFlightRecords", e);
                     return e.Message;
                 }
             }

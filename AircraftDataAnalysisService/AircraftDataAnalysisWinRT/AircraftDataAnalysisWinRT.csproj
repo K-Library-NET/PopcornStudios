@@ -17,6 +17,7 @@
     <SccLocalPath>.</SccLocalPath>
     <SccAuxPath>http://42.96.198.241:8080/tfs/pstudio</SccAuxPath>
     <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -109,7 +110,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationContext.cs" />
+    <Compile Include="Common\DataPointToBrushConverter.cs" />
+    <Compile Include="Common\DecisionWrap.cs" />
+    <Compile Include="DataModel\ChartPanelViewModel.cs" />
+    <Compile Include="DataModel\DecisionRecordFlightAnalysisViewModel.cs" />
+    <Compile Include="DataModel\ExtremumInfoFlightAnalysisViewModel.cs" />
+    <Compile Include="DataModel\ExtremumReportViewModel.cs" />
+    <Compile Include="DataModel\FlightAnalysisViewModel.cs" />
+    <Compile Include="Domain\FlightAnalysisViewModel.cs" />
+    <Compile Include="Domain\ImportAircraftBatchConfirm.xaml.cs">
+      <DependentUpon>ImportAircraftBatchConfirm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Domain\ImportLoadConfirmPage.xaml.cs">
+      <DependentUpon>ImportLoadConfirmPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MyControl\FAChart.xaml.cs">
+      <DependentUpon>FAChart.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MyControl\FAGrid.xaml.cs">
+      <DependentUpon>FAGrid.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MyControl\IConfirmDialog.cs" />
+    <Compile Include="MyControl\SwitchChartPanelConfirmPage.xaml.cs">
+      <DependentUpon>SwitchChartPanelConfirmPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OldUI\AddFilePage.xaml.cs">
       <DependentUpon>AddFilePage.xaml</DependentUpon>
     </Compile>
@@ -120,7 +144,7 @@
     <Compile Include="DataModel\AircraftModelDataGroup.cs" />
     <Compile Include="DataModel\AircraftMongoDbDataSource.cs" />
     <Compile Include="DataModel\DataCommon.cs" />
-    <Compile Include="DataModel\FlightDataItem.cs" />
+    <Compile Include="DataModel\FaultDiagnosisViewModel.cs" />
     <Compile Include="DataModel\RawDataPointViewModel.cs" />
     <Compile Include="Domain\EngineMonitoring.xaml.cs">
       <DependentUpon>EngineMonitoring.xaml</DependentUpon>
@@ -152,8 +176,8 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MyControl\ImportAircraftConfirm.xaml.cs">
-      <DependentUpon>ImportAircraftConfirm.xaml</DependentUpon>
+    <Compile Include="MyControl\SwitchAircraftPanelConfirm.xaml.cs">
+      <DependentUpon>SwitchAircraftPanelConfirm.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataModel\SampleDataSource.cs" />
@@ -225,7 +249,7 @@
     <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.DecisionRecord.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.ExtremumPointInfo.datasource">
+    <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.ExtremumReportDefinition.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.Flight.datasource">
@@ -246,6 +270,25 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\1066419.png" />
+    <Content Include="Assets\566255.png" />
+    <Content Include="Assets\566256.png" />
+    <Content Include="Assets\566257.png" />
+    <Content Include="Assets\566258.png" />
+    <Content Include="Assets\566259.png" />
+    <Content Include="Assets\566260.png" />
+    <Content Include="Assets\566261.png" />
+    <Content Include="Assets\566262.png" />
+    <Content Include="Assets\566263.png" />
+    <Content Include="Assets\566264.png" />
+    <Content Include="Assets\566265.png" />
+    <Content Include="Assets\566266.png" />
+    <Content Include="Assets\566267.png" />
+    <Content Include="Assets\566268.png" />
+    <Content Include="Assets\566269.png" />
+    <Content Include="Assets\566270.png" />
+    <Content Include="Assets\566271.png" />
+    <Content Include="Assets\566272.png" />
     <Content Include="Assets\bg.jpg" />
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\SmallLogo.png" />
@@ -292,6 +335,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Domain\ImportAircraftBatchConfirm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Domain\ImportLoadConfirmPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MyControl\FAChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MyControl\FAGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MyControl\SwitchChartPanelConfirmPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="OldUI\AddFilePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -340,7 +403,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MyControl\ImportAircraftConfirm.xaml">
+    <Page Include="MyControl\SwitchAircraftPanelConfirm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -372,6 +435,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <SDKReference Include="NetAdvantage WinRT, Version=13.1">
+      <Name>NetAdvantage WinRT</Name>
+    </SDKReference>
     <SDKReference Include="RadControls for Windows 8, Version=2013.2.611">
       <Name>RadControls for Windows 8</Name>
     </SDKReference>

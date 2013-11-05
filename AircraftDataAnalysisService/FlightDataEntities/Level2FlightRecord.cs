@@ -63,47 +63,47 @@ namespace FlightDataEntities
             set;
         }
 
-        /// <summary>
-        /// 整个段中的平均值（精简前）
-        /// </summary>
-        [DataMember]
-        public float AvgValue
-        {
-            get;
-            set;
-        }
+        ///// <summary>
+        ///// 整个段中的平均值（精简前）
+        ///// </summary>
+        //[DataMember]
+        //public float AvgValue
+        //{
+        //    get;
+        //    set;
+        //}
 
-        /// <summary>
-        /// 整个段中的最小值（精简前）
-        /// </summary>
-        [DataMember]
-        public float MinValue
-        {
-            get;
-            set;
-        }
+        ///// <summary>
+        ///// 整个段中的最小值（精简前）
+        ///// </summary>
+        //[DataMember]
+        //public float MinValue
+        //{
+        //    get;
+        //    set;
+        //}
 
-        /// <summary>
-        /// 整个段中的最大值（精简前）
-        /// </summary>
-        [DataMember]
-        public float MaxValue
-        {
-            get;
-            set;
-        }
+        ///// <summary>
+        ///// 整个段中的最大值（精简前）
+        ///// </summary>
+        //[DataMember]
+        //public float MaxValue
+        //{
+        //    get;
+        //    set;
+        //}
 
-        /// <summary>
-        /// 整个段中的记录点个数（精简前）
-        /// 必须保留Count值，因为用于计算出SUM
-        /// SUM = count * AvgValue
-        /// </summary>
-        [DataMember]
-        public int Count
-        {
-            get;
-            set;
-        }
+        ///// <summary>
+        ///// 整个段中的记录点个数（精简前）
+        ///// 必须保留Count值，因为用于计算出SUM
+        ///// SUM = count * AvgValue
+        ///// </summary>
+        //[DataMember]
+        //public int Count
+        //{
+        //    get;
+        //    set;
+        //}
 
         //不需要存放返回Level1数据，数据太大了
         ///// <summary>

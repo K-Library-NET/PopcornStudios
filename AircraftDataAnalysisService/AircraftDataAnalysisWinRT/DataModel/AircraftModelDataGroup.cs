@@ -81,14 +81,14 @@ namespace AircraftDataAnalysisWinRT.DataModel
             }
         }
 
-        private ObservableCollection<FlightDataItem> _items = new ObservableCollection<FlightDataItem>();
-        public ObservableCollection<FlightDataItem> Items
+        private ObservableCollection<FaultDiagnosisViewModel> _items = new ObservableCollection<FaultDiagnosisViewModel>();
+        public ObservableCollection<FaultDiagnosisViewModel> Items
         {
             get { return this._items; }
         }
 
-        private ObservableCollection<FlightDataItem> _topItem = new ObservableCollection<FlightDataItem>();
-        public ObservableCollection<FlightDataItem> TopItems
+        private ObservableCollection<FaultDiagnosisViewModel> _topItem = new ObservableCollection<FaultDiagnosisViewModel>();
+        public ObservableCollection<FaultDiagnosisViewModel> TopItems
         {
             get { return this._topItem; }
         }

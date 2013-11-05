@@ -82,7 +82,7 @@
     <Byte Index="250"/>
   </Parameter>
   <Parameter ParameterID="KZB" ParameterDataType="Single" Index="18"
-             SubIndex="-1" Caption="622纵向状态标志"  Unit="">
+             SubIndex="-1" Caption="纵向状态标志"  Unit="">
     <Byte Index="3"/>
     <Byte Index="35"/>
     <Byte Index="67"/>
@@ -93,7 +93,7 @@
     <Byte Index="227"/>
   </Parameter>
   <Parameter ParameterID="KCB" ParameterDataType="Single" Index="19"
-             SubIndex="-1" Caption="622横向状态标志"  Unit="">
+             SubIndex="-1" Caption="横向状态标志"  Unit="">
     <Byte Index="5"/>
     <Byte Index="37"/>
     <Byte Index="69"/>

@@ -10,7 +10,14 @@ namespace FlightDataEntitiesRT.Decisions
     {
         public string FlightID { get; set; }
 
+        /// <summary>
+        /// 事件等级，不包含事件颜色，颜色是前端根据事件等级设定
+        /// </summary>
+        public int EventLevel { get; set; }
+
         public int StartSecond { get; set; }
+
+        public int HappenSecond { get; set; }
 
         public int EndSecond { get; set; }
 

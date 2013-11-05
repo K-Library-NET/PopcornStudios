@@ -11,6 +11,18 @@ namespace FlightDataEntitiesRT
     /// </summary>
     public class ExtremumPointInfo
     {
+        public int Number
+        {
+            get;
+            set;
+        }
+
+        public string FlightID
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// 参数ID
         /// </summary>

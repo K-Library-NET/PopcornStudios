@@ -287,96 +287,6 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ExtremumPointInfo", Namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities")]
-    public partial class ExtremumPointInfo : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private float MaxValueField;
-        
-        private float MaxValueSecondField;
-        
-        private float MinValueField;
-        
-        private float MinValueSecondField;
-        
-        private string ParameterIDField;
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public float MaxValue {
-            get {
-                return this.MaxValueField;
-            }
-            set {
-                if ((this.MaxValueField.Equals(value) != true)) {
-                    this.MaxValueField = value;
-                    this.RaisePropertyChanged("MaxValue");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public float MaxValueSecond {
-            get {
-                return this.MaxValueSecondField;
-            }
-            set {
-                if ((this.MaxValueSecondField.Equals(value) != true)) {
-                    this.MaxValueSecondField = value;
-                    this.RaisePropertyChanged("MaxValueSecond");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public float MinValue {
-            get {
-                return this.MinValueField;
-            }
-            set {
-                if ((this.MinValueField.Equals(value) != true)) {
-                    this.MinValueField = value;
-                    this.RaisePropertyChanged("MinValue");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public float MinValueSecond {
-            get {
-                return this.MinValueSecondField;
-            }
-            set {
-                if ((this.MinValueSecondField.Equals(value) != true)) {
-                    this.MinValueSecondField = value;
-                    this.RaisePropertyChanged("MinValueSecond");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string ParameterID {
-            get {
-                return this.ParameterIDField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ParameterIDField, value) != true)) {
-                    this.ParameterIDField = value;
-                    this.RaisePropertyChanged("ParameterID");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="ChartPanel", Namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities.Charts")]
     public partial class ChartPanel : object, System.ComponentModel.INotifyPropertyChanged {
         
@@ -712,6 +622,8 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
         
         private System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.SubCondition> ConditionsField;
         
+        private string DecisionDescriptionStringTemplateField;
+        
         private string DecisionIDField;
         
         private string DecisionNameField;
@@ -731,6 +643,19 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
                 if ((object.ReferenceEquals(this.ConditionsField, value) != true)) {
                     this.ConditionsField = value;
                     this.RaisePropertyChanged("Conditions");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string DecisionDescriptionStringTemplate {
+            get {
+                return this.DecisionDescriptionStringTemplateField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DecisionDescriptionStringTemplateField, value) != true)) {
+                    this.DecisionDescriptionStringTemplateField = value;
+                    this.RaisePropertyChanged("DecisionDescriptionStringTemplate");
                 }
             }
         }
@@ -1082,12 +1007,113 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ExtremumPointInfo", Namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities")]
+    public partial class ExtremumPointInfo : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string FlightIDField;
+        
+        private float MaxValueField;
+        
+        private float MaxValueSecondField;
+        
+        private float MinValueField;
+        
+        private float MinValueSecondField;
+        
+        private string ParameterIDField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string FlightID {
+            get {
+                return this.FlightIDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.FlightIDField, value) != true)) {
+                    this.FlightIDField = value;
+                    this.RaisePropertyChanged("FlightID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public float MaxValue {
+            get {
+                return this.MaxValueField;
+            }
+            set {
+                if ((this.MaxValueField.Equals(value) != true)) {
+                    this.MaxValueField = value;
+                    this.RaisePropertyChanged("MaxValue");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public float MaxValueSecond {
+            get {
+                return this.MaxValueSecondField;
+            }
+            set {
+                if ((this.MaxValueSecondField.Equals(value) != true)) {
+                    this.MaxValueSecondField = value;
+                    this.RaisePropertyChanged("MaxValueSecond");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public float MinValue {
+            get {
+                return this.MinValueField;
+            }
+            set {
+                if ((this.MinValueField.Equals(value) != true)) {
+                    this.MinValueField = value;
+                    this.RaisePropertyChanged("MinValue");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public float MinValueSecond {
+            get {
+                return this.MinValueSecondField;
+            }
+            set {
+                if ((this.MinValueSecondField.Equals(value) != true)) {
+                    this.MinValueSecondField = value;
+                    this.RaisePropertyChanged("MinValueSecond");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ParameterID {
+            get {
+                return this.ParameterIDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ParameterIDField, value) != true)) {
+                    this.ParameterIDField = value;
+                    this.RaisePropertyChanged("ParameterID");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Level2FlightRecord", Namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities")]
     public partial class Level2FlightRecord : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private float AvgValueField;
-        
-        private int CountField;
         
         private int EndSecondField;
         
@@ -1095,39 +1121,9 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
         
         private string FlightIDField;
         
-        private float MaxValueField;
-        
-        private float MinValueField;
-        
         private string ParameterIDField;
         
         private int StartSecondField;
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public float AvgValue {
-            get {
-                return this.AvgValueField;
-            }
-            set {
-                if ((this.AvgValueField.Equals(value) != true)) {
-                    this.AvgValueField = value;
-                    this.RaisePropertyChanged("AvgValue");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Count {
-            get {
-                return this.CountField;
-            }
-            set {
-                if ((this.CountField.Equals(value) != true)) {
-                    this.CountField = value;
-                    this.RaisePropertyChanged("Count");
-                }
-            }
-        }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
         public int EndSecond {
@@ -1164,32 +1160,6 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
                 if ((object.ReferenceEquals(this.FlightIDField, value) != true)) {
                     this.FlightIDField = value;
                     this.RaisePropertyChanged("FlightID");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public float MaxValue {
-            get {
-                return this.MaxValueField;
-            }
-            set {
-                if ((this.MaxValueField.Equals(value) != true)) {
-                    this.MaxValueField = value;
-                    this.RaisePropertyChanged("MaxValue");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public float MinValue {
-            get {
-                return this.MinValueField;
-            }
-            set {
-                if ((this.MinValueField.Equals(value) != true)) {
-                    this.MinValueField = value;
-                    this.RaisePropertyChanged("MinValue");
                 }
             }
         }
@@ -1243,7 +1213,11 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
         
         private int EndSecondField;
         
+        private int EventLevelField;
+        
         private string FlightIDField;
+        
+        private int HappenSecondField;
         
         private int StartSecondField;
         
@@ -1300,6 +1274,19 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public int EventLevel {
+            get {
+                return this.EventLevelField;
+            }
+            set {
+                if ((this.EventLevelField.Equals(value) != true)) {
+                    this.EventLevelField = value;
+                    this.RaisePropertyChanged("EventLevel");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string FlightID {
             get {
                 return this.FlightIDField;
@@ -1308,6 +1295,19 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
                 if ((object.ReferenceEquals(this.FlightIDField, value) != true)) {
                     this.FlightIDField = value;
                     this.RaisePropertyChanged("FlightID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int HappenSecond {
+            get {
+                return this.HappenSecondField;
+            }
+            set {
+                if ((this.HappenSecondField.Equals(value) != true)) {
+                    this.HappenSecondField = value;
+                    this.RaisePropertyChanged("HappenSecond");
                 }
             }
         }
@@ -1335,6 +1335,96 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ExtremumReportDefinition", Namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities")]
+    public partial class ExtremumReportDefinition : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string AircraftModelNameField;
+        
+        private System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.ExtremumReportItemDefinition> ItemsField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string AircraftModelName {
+            get {
+                return this.AircraftModelNameField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AircraftModelNameField, value) != true)) {
+                    this.AircraftModelNameField = value;
+                    this.RaisePropertyChanged("AircraftModelName");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.ExtremumReportItemDefinition> Items {
+            get {
+                return this.ItemsField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ItemsField, value) != true)) {
+                    this.ItemsField = value;
+                    this.RaisePropertyChanged("Items");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ExtremumReportItemDefinition", Namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities")]
+    public partial class ExtremumReportItemDefinition : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private int NumberField;
+        
+        private string ParameterIDField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Number {
+            get {
+                return this.NumberField;
+            }
+            set {
+                if ((this.NumberField.Equals(value) != true)) {
+                    this.NumberField = value;
+                    this.RaisePropertyChanged("Number");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ParameterID {
+            get {
+                return this.ParameterIDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ParameterIDField, value) != true)) {
+                    this.ParameterIDField = value;
+                    this.RaisePropertyChanged("ParameterID");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="AircraftService.IAircraftService")]
     public interface IAircraftService {
@@ -1348,9 +1438,6 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IAircraftService/GetFlightData", ReplyAction="http://tempuri.org/IAircraftService/GetFlightDataResponse")]
         System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<System.Collections.Generic.KeyValuePair<string, System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.FlightRawData>>>> GetFlightDataAsync(AircraftDataAnalysisWinRT.AircraftService.Flight flight, System.Collections.ObjectModel.ObservableCollection<string> parameterIds, int startSecond, int endSecond);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IAircraftService/GetExtremumPointInfos", ReplyAction="http://tempuri.org/IAircraftService/GetExtremumPointInfosResponse")]
-        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.ExtremumPointInfo>> GetExtremumPointInfosAsync(AircraftDataAnalysisWinRT.AircraftService.Flight flight);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IAircraftService/GetAllChartPanels", ReplyAction="http://tempuri.org/IAircraftService/GetAllChartPanelsResponse")]
         System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.ChartPanel>> GetAllChartPanelsAsync(AircraftDataAnalysisWinRT.AircraftService.AircraftModel aircraftModel);
         
@@ -1361,10 +1448,13 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
         System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.Decision>> GetAllDecisionsAsync(AircraftDataAnalysisWinRT.AircraftService.AircraftModel aircraftModel);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IAircraftService/GetLevelTopFlightRecords", ReplyAction="http://tempuri.org/IAircraftService/GetLevelTopFlightRecordsResponse")]
-        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.LevelTopFlightRecord>> GetLevelTopFlightRecordsAsync(AircraftDataAnalysisWinRT.AircraftService.Flight flight, System.Collections.ObjectModel.ObservableCollection<string> parameterIds, bool withLevel1Data);
+        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.LevelTopFlightRecord>> GetLevelTopFlightRecordsAsync(AircraftDataAnalysisWinRT.AircraftService.Flight flight, System.Collections.ObjectModel.ObservableCollection<string> parameterIds);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IAircraftService/GetDecisionRecords", ReplyAction="http://tempuri.org/IAircraftService/GetDecisionRecordsResponse")]
         System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.DecisionRecord>> GetDecisionRecordsAsync(AircraftDataAnalysisWinRT.AircraftService.Flight flight);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IAircraftService/GetExtremumReportDefinition", ReplyAction="http://tempuri.org/IAircraftService/GetExtremumReportDefinitionResponse")]
+        System.Threading.Tasks.Task<AircraftDataAnalysisWinRT.AircraftService.ExtremumReportDefinition> GetExtremumReportDefinitionAsync(string aircraftModelName);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -1422,10 +1512,6 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
             return base.Channel.GetFlightDataAsync(flight, parameterIds, startSecond, endSecond);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.ExtremumPointInfo>> GetExtremumPointInfosAsync(AircraftDataAnalysisWinRT.AircraftService.Flight flight) {
-            return base.Channel.GetExtremumPointInfosAsync(flight);
-        }
-        
         public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.ChartPanel>> GetAllChartPanelsAsync(AircraftDataAnalysisWinRT.AircraftService.AircraftModel aircraftModel) {
             return base.Channel.GetAllChartPanelsAsync(aircraftModel);
         }
@@ -1438,12 +1524,16 @@ namespace AircraftDataAnalysisWinRT.AircraftService {
             return base.Channel.GetAllDecisionsAsync(aircraftModel);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.LevelTopFlightRecord>> GetLevelTopFlightRecordsAsync(AircraftDataAnalysisWinRT.AircraftService.Flight flight, System.Collections.ObjectModel.ObservableCollection<string> parameterIds, bool withLevel1Data) {
-            return base.Channel.GetLevelTopFlightRecordsAsync(flight, parameterIds, withLevel1Data);
+        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.LevelTopFlightRecord>> GetLevelTopFlightRecordsAsync(AircraftDataAnalysisWinRT.AircraftService.Flight flight, System.Collections.ObjectModel.ObservableCollection<string> parameterIds) {
+            return base.Channel.GetLevelTopFlightRecordsAsync(flight, parameterIds);
         }
         
         public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisWinRT.AircraftService.DecisionRecord>> GetDecisionRecordsAsync(AircraftDataAnalysisWinRT.AircraftService.Flight flight) {
             return base.Channel.GetDecisionRecordsAsync(flight);
+        }
+        
+        public System.Threading.Tasks.Task<AircraftDataAnalysisWinRT.AircraftService.ExtremumReportDefinition> GetExtremumReportDefinitionAsync(string aircraftModelName) {
+            return base.Channel.GetExtremumReportDefinitionAsync(aircraftModelName);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync() {

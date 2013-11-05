@@ -22,6 +22,8 @@ namespace AircraftDataAnalysisWcfService
     {
         public AircraftModel GetCurrentAircraftModel()
         {
+            LogHelper.Info("AircraftService.GetCurrentAircraftModel Requested.", null);
+
             if (m_currentAircraftModel == null)
                 this.InitCurrentAircraftModel();
 
@@ -42,53 +44,125 @@ namespace AircraftDataAnalysisWcfService
 
         public FlightParameters GetAllFlightParameters(AircraftModel model)
         {
-            AircraftServiceBll bll = new AircraftServiceBll();
-            return bll.GetAllFlightParameters(model);
+            try
+            {
+                LogHelper.Info("AircraftService.GetAllFlightParameters Requested.", null);
+                AircraftServiceBll bll = new AircraftServiceBll();
+                return bll.GetAllFlightParameters(model);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("AircraftService.GetAllFlightParameters", e);
+                return null;
+            }
         }
 
         public FlightDataEntities.Charts.ChartPanel[] GetAllChartPanels(AircraftModel aircraftModel)
         {
-            AircraftServiceBll bll = new AircraftServiceBll();
-            return bll.GetAllChartPanels(aircraftModel);
+            try
+            {
+                LogHelper.Info("AircraftService.GetAllChartPanels Requested.", null);
+                AircraftServiceBll bll = new AircraftServiceBll();
+                return bll.GetAllChartPanels(aircraftModel);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("AircraftService.GetAllChartPanels", e);
+                return null;
+            }
         }
 
         public KeyValuePair<string, FlightDataEntities.FlightRawData[]>[] GetFlightData(Flight flight,
             string[] parameterIds, int startSecond, int endSecond)
         {
-            AircraftServiceBll bll = new AircraftServiceBll();
-            return bll.GetFlightData(flight, parameterIds, startSecond, endSecond);
+            try
+            {
+                LogHelper.Info("AircraftService.GetFlightData Requested.", null);
+                AircraftServiceBll bll = new AircraftServiceBll();
+                return bll.GetFlightData(flight, parameterIds, startSecond, endSecond);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("AircraftService.GetFlightData", e);
+                return null;
+            }
         }
 
         public FlightDataEntities.LevelTopFlightRecord[] GetLevelTopFlightRecords(
-            Flight flight, string[] parameterIds, bool withLevel1Data)
+            Flight flight, string[] parameterIds)
         {
-            AircraftServiceBll bll = new AircraftServiceBll();
-            return bll.GetLevelTopFlightRecords(flight, parameterIds, withLevel1Data);
+            try
+            {
+                LogHelper.Info("AircraftService.GetLevelTopFlightRecords Requested.", null);
+                AircraftServiceBll bll = new AircraftServiceBll();
+                return bll.GetLevelTopFlightRecords(flight, parameterIds);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("AircraftService.GetLevelTopFlightRecords", e);
+                return null;
+            }
         }
 
         public FlightDataEntities.Decisions.Decision[] GetAllDecisions(AircraftModel aircraftModel)
         {
-            AircraftServiceBll bll = new AircraftServiceBll();
-            return bll.GetAllDecisions(aircraftModel);
+            try
+            {
+                LogHelper.Info("AircraftService.GetAllDecisions Requested.", null);
+                AircraftServiceBll bll = new AircraftServiceBll();
+                return bll.GetAllDecisions(aircraftModel);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("AircraftService.GetAllDecisions", e);
+                return null;
+            }
         }
 
 
         public Flight[] GetAllFlights(AircraftModel model)
         {
-            AircraftServiceBll bll = new AircraftServiceBll();
-            return bll.GetAllFlights(model);
-        }
-
-        public ExtremumPointInfo[] GetExtremumPointInfos(Flight flight)
-        {
-            AircraftServiceBll bll = new AircraftServiceBll();
-            return bll.GetExtremumPointInfos(flight);
+            try
+            {
+                LogHelper.Info("AircraftService.GetAllFlights Requested.", null);
+                AircraftServiceBll bll = new AircraftServiceBll();
+                return bll.GetAllFlights(model);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("AircraftService.GetAllFlights", e);
+                return null;
+            }
         }
 
         public FlightDataEntities.Decisions.DecisionRecord[] GetDecisionRecords(Flight flight)
         {
-            AircraftServiceBll bll = new AircraftServiceBll();
-            return bll.GetDecisionRecords(flight);
+            try
+            {
+                LogHelper.Info("AircraftService.GetDecisionRecords Requested.", null);
+                AircraftServiceBll bll = new AircraftServiceBll();
+                return bll.GetDecisionRecords(flight);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("AircraftService.GetDecisionRecords", e);
+                return null;
+            }
+        }
+
+        public ExtremumReportDefinition GetExtremumReportDefinition(string aircraftModelName)
+        {
+            try
+            {
+                LogHelper.Info("AircraftService.GetExtremumReportDefinition Requested.", null);
+                AircraftServiceBll bll = new AircraftServiceBll();
+                return bll.GetExtremumReportDefinition(aircraftModelName);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("AircraftService.GetExtremumReportDefinition", e);
+                return null;
+            }
         }
     }
 }

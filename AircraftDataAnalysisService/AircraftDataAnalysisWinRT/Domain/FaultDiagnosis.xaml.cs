@@ -1,7 +1,15 @@
-﻿using System;
+﻿using AircraftDataAnalysisWinRT;
+using AircraftDataAnalysisWinRT.Common;
+using AircraftDataAnalysisWinRT.DataModel;
+using AircraftDataAnalysisWinRT.Services;
+using FlightDataEntitiesRT.Decisions;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -24,6 +32,41 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         public FaultDiagnosis()
         {
             this.InitializeComponent();
+
+            rdgList.SelectionChanged += rdgList_SelectionChanged;
+        }
+
+        private int selectCount = 0;
+
+        void rdgList_SelectionChanged(object sender, Telerik.UI.Xaml.Controls.Grid.DataGridSelectionChangedEventArgs e)
+        {
+            if (e.RemovedItems.Count() > 0 && e.AddedItems.Count() > 0)
+            {
+                if (e.AddedItems.First().Equals(e.RemovedItems.First()) && selectCount>0)
+                {
+                    NavigateToPanel();
+                    selectCount = 0;
+                }
+                else
+                {
+                    selectCount++;
+                }
+            }
+            else
+            {
+                selectCount++;
+            }
+        }
+
+
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            //base.OnNavigatedTo(e);
+
+            FaultDiagnosisViewModel viewModel = new FaultDiagnosisViewModel();
+
+            this.DataContext = viewModel;
         }
 
         /// <summary>
@@ -48,5 +91,46 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
         }
+
+        private void OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+        }
+
+        private void OnNavigateToPanelClick(object sender, RoutedEventArgs e)
+        {
+            NavigateToPanel();
+        }
+
+        private void NavigateToPanel()
+        {
+            if (this.rdgList.SelectedItem != null && this.rdgList.SelectedItem is DecisionWrap)
+            {
+                DecisionWrap wrap = this.rdgList.SelectedItem as DecisionWrap;
+                if (wrap.Record == null || wrap.Decision == null)
+                    return;
+
+                string parameterStr = this.ToParameters(wrap.Decision.RelatedParameters);
+                string seconds = string.Format("second={0}_{1}", wrap.Record.StartSecond, wrap.Record.EndSecond);
+                string urlParameters = "?type=custom&" + parameterStr + "&" + seconds;
+                //  this.Frame.Navigate(typeof(FlightAnalysis), urlParameters);
+                this.Frame.Navigate(typeof(FlightAnalysis), wrap);
+            }
+        }
+
+        private string ToParameters(string[] parameterIds)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (string p1 in parameterIds)
+            {
+                if (builder.Length == 0)
+                    builder.Append("paramids=");
+                else
+                    builder.Append(',');
+
+                builder.Append(p1);
+            }
+            return builder.ToString();
+        }
+        
     }
 }

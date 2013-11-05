@@ -17,7 +17,7 @@ namespace FlightDataEntities
         /// <summary>
         /// 记录ID，用作关联、定位
         /// </summary>
-        public ObjectId ID
+        public ObjectId Id
         {
             get;
             set;

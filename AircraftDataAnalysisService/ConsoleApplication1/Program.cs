@@ -8,6 +8,7 @@ using FlightDataReading;
 using System.Xml.Linq;
 using System.IO;
 using MongoDB.Driver;
+using FlightDataEntities;
 
 namespace ConsoleApplication1
 {
@@ -15,16 +16,94 @@ namespace ConsoleApplication1
     {
         static void Main(string[] args)
         {
+            Program1.Main1(args);
+
+
+
+            ServiceReference1.AircraftServiceClient client =
+                new ServiceReference1.AircraftServiceClient();
+            var model = client.GetCurrentAircraftModel();
+
+            var test2 = client.GetFlightData(
+                new Flight()
+                {
+                    FlightID = "781102221",
+                    Aircraft = new AircraftInstance() { AircraftModel = model, AircraftNumber = "0004", LastUsed = DateTime.Now },
+                },
+                    new string[] { "Et" }, 0, 100);
+
+            LogHelper.Info("OK,good", null);
+
+            log4net.ILog log = log4net.LogManager.GetLogger("AircraftDataAnalysis");
+            //System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+            log4net.ThreadContext.Properties["session"] = 21;
+
+
+            // Log an info level message
+            if (log.IsInfoEnabled) log.Info("Application [ConsoleApp] Start");
+
+            // Log a debug message. Test if debug is enabled before
+            // attempting to log the message. This is not required but
+            // can make running without logging faster.
+            if (log.IsDebugEnabled) log.Debug("This is a debug message");
+
+            log.Error("Hey this is an error!");
+
+            // Log an info level message
+            if (log.IsInfoEnabled) log.Info("Application [ConsoleApp] End");
+
+            Console.Write("Press Enter to exit...");
+            Console.ReadLine();
+
+            log4net.ILog logger = log4net.LogManager.GetLogger("FlightDataAnalysis");
+
+            logger.Info("OK");
+
+            logger = log4net.LogManager.GetLogger(typeof(Program));
+
             MongoServer server = MongoServer.Create("mongodb://sa:sa@42.96.198.241");
 
             server.Connect();
-           var dbnames = server.GetDatabaseNames();
-           foreach (var db in dbnames)
-           {
-               Console.WriteLine(db);
-           }
+            var dbnames = server.GetDatabaseNames();
+            foreach (var db in dbnames)
+            {
+                Console.WriteLine(db);
+            }
 
             server.Disconnect();
+            AircraftDataAnalysisWcfService.AircraftService serv = new AircraftDataAnalysisWcfService.AircraftService();
+
+            serv.GetFlightData(new FlightDataEntities.Flight()
+                {
+                    FlightID = "781102221",
+                    Aircraft =
+                        new FlightDataEntities.AircraftInstance()
+                        {
+                            AircraftModel = serv.GetCurrentAircraftModel(),
+                            AircraftNumber = "0004"
+                        },
+                    EndSecond = 7374,
+                    FlightName = "781102221-1.phy"
+                }, new string[] { "Et", "Hp" }, 0, 200);
+
+            AircraftDataAnalysisWcfService.DataInputService service = new AircraftDataAnalysisWcfService.DataInputService();
+            service.AddOneParameterValue(
+                new FlightDataEntities.Flight()
+                {
+                    FlightID = "781102221",
+                    Aircraft =
+                        new FlightDataEntities.AircraftInstance()
+                        {
+                            AircraftModel = serv.GetCurrentAircraftModel(),
+                            AircraftNumber = "0004"
+                        },
+                    EndSecond = 7374,
+                    FlightName = "781102221-1.phy"
+                },
+                         "Vi", new FlightDataEntities.Level1FlightRecord[] { 
+                             new FlightDataEntities.Level1FlightRecord(){ FlightID = "781102221",
+                                 EndSecond = 8, ParameterID = "Vi", StartSecond = 0, Values = new float[]{1,2,3,4,5,6,7,8}}});
 
             //Program1.Main1(args);
             //Program1.Main2(args);

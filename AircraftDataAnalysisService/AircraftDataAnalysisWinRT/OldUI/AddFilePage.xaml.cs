@@ -36,7 +36,7 @@ namespace AircraftDataAnalysisWinRT
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
+            //base.OnNavigatedTo(e);
 
             // Create the picker object and set options
             var openPicker = new Windows.Storage.Pickers.FileOpenPicker();

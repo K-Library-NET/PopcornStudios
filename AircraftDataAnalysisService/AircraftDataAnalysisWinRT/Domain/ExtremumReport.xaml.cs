@@ -1,4 +1,7 @@
-﻿using System;
+﻿using AircraftDataAnalysisWinRT;
+using AircraftDataAnalysisWinRT.DataModel;
+using AircraftDataAnalysisWinRT.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,6 +30,22 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         }
 
         /// <summary>
+        /// 读取当前架次的极值信息
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            //base.OnNavigatedTo(e);
+
+            AircraftDataAnalysisWinRT.DataModel.ExtremumReportViewModel viewModel =
+                new AircraftDataAnalysisWinRT.DataModel.ExtremumReportViewModel();
+            this.DataContext = viewModel;
+
+            //var extremumInfos = ServerHelper.GetExtremumPointInfos(ApplicationContext.Instance.CurrentFlight); 
+            //this.rdgList.ItemsSource = extremumInfos;
+        }
+
+        /// <summary>
         /// 使用在导航过程中传递的内容填充页。在从以前的会话
         /// 重新创建页时，也会提供任何已保存状态。
         /// </summary>
@@ -47,6 +66,14 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         /// <param name="pageState">要使用可序列化状态填充的空字典。</param>
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
+        }
+
+        private void OnNavToPanel(object sender, RoutedEventArgs e)
+        {
+            if (this.rdgList.SelectedItem != null && this.rdgList.SelectedItem is ExtremumReportItemWrap)
+            {
+                this.Frame.Navigate(typeof(FlightAnalysis), this.rdgList.SelectedItem as ExtremumReportItemWrap);
+            }
         }
     }
 }

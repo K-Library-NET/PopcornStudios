@@ -71,8 +71,8 @@
     <Compile Include="Flight.cs" />
     <Compile Include="FlightParameter.cs" />
     <Compile Include="FlightRawData.cs" />
-    <Compile Include="FlightRecordEntity.cs" />
-    <Compile Include="FlightRecordPoint.cs" />
+    <Compile Include="ExtremumReportDefinition.cs" />
+    <Compile Include="ExtremumReportItemDefinition.cs" />
     <Compile Include="Level1FlightRecord.cs" />
     <Compile Include="Level2FlightRecord.cs" />
     <Compile Include="LevelTopFlightRecord.cs" />

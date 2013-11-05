@@ -71,10 +71,11 @@ namespace AircraftDataAnalysisWcfService.DALs
         /// <returns></returns>
         internal MongoDatabase GetMongoDatabaseByAircraftModel(MongoServer mongoServer, AircraftModel aircraftModel)
         {
-            if (aircraftModel != null && !string.IsNullOrEmpty(aircraftModel.ModelName))
-            {
-                return mongoServer.GetDatabase(AircraftMongoDb.COLLECTION_AIRCRAFT_INSTANCE + "_" + aircraftModel.ModelName);
-            }
+            //DEBUG
+            //if (aircraftModel != null && !string.IsNullOrEmpty(aircraftModel.ModelName))
+            //{
+            //    return mongoServer.GetDatabase(AircraftMongoDb.COLLECTION_AIRCRAFT_INSTANCE + "_" + aircraftModel.ModelName);
+            //}
 
             return mongoServer.GetDatabase(AircraftMongoDb.DATABASE_COMMON);
         }

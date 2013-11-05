@@ -1,4 +1,5 @@
 ﻿using AircraftDataAnalysisWinRT.DataModel;
+using AircraftDataAnalysisWinRT.Services;
 using FlightDataEntitiesRT;
 using System;
 using System.Collections.Generic;
@@ -88,7 +89,7 @@ namespace AircraftDataAnalysisWinRT.Test
             row.Add("4", "A"); row.Add("1", "B"); row.Add("2", "C"); row.Add("3", "D");
             dt.Rows.Add(row);
 
-            
+
 
             List<RawDataRowViewModel> models = new List<RawDataRowViewModel>();
             ObservableCollection<IDictionary<string, Object>> dicList = new ObservableCollection<IDictionary<string, object>>();
@@ -131,6 +132,28 @@ namespace AircraftDataAnalysisWinRT.Test
             this.grid1.Columns.Add(new DataGridTextColumn() { PropertyName = "4", Name = "colSecond4", Header = "4 collection" });
 
             this.grid1.ItemsSource = dt;// dicList;
+        }
+
+        private void ExtremumValuebindClick(object sender, RoutedEventArgs e)
+        {
+            var extremumPointInfos = ServerHelper.GetExtremumPointInfos(new Flight()
+            {
+                FlightID = "12110222",
+                FlightName = "12110222-4.phy",
+                Aircraft = new AircraftInstance()
+                {
+                    AircraftModel = ServerHelper.GetCurrentAircraftModel(),
+                    AircraftNumber = "0004",
+                    LastUsed = DateTime.Now
+                },
+                StartSecond = 0,
+                EndSecond = 4430
+            });
+
+            foreach (var ex in extremumPointInfos)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
         }
     }
 }

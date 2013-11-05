@@ -71,12 +71,12 @@ namespace AircraftDataAnalysisWinRT.DataModel
             return null;
         }
 
-        public static FlightDataItem GetItem(string uniqueId)
-        {
-            // 对于小型数据集可接受简单线性搜索
-            var matches = m_rootSource.AllGroups.SelectMany(group => group.Items).Where((item) => item.UniqueId.Equals(uniqueId));
-            if (matches.Count() == 1) return matches.First();
-            return null;
-        }
+        //public static FaultDiagnosisViewModel GetItem(string uniqueId)
+        //{
+        //    // 对于小型数据集可接受简单线性搜索
+        //    var matches = m_rootSource.AllGroups.SelectMany(group => group.Items).Where((item) => item.UniqueId.Equals(uniqueId));
+        //    if (matches.Count() == 1) return matches.First();
+        //    return null;
+        //}
     }
 }

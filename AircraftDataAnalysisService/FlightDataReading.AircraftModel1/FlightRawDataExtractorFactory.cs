@@ -18,7 +18,7 @@ namespace FlightDataReading.AircraftModel1
 
             var readStreamTask = file.OpenStreamForReadAsync();
             readStreamTask.Wait();
-            MemoryStream stream = new MemoryStream(102400000);
+            MemoryStream stream = new MemoryStream(102400);
             byte[] bytes = new byte[readStreamTask.Result.Length];
             readStreamTask.Result.Read(bytes, 0, Convert.ToInt32(readStreamTask.Result.Length));
 

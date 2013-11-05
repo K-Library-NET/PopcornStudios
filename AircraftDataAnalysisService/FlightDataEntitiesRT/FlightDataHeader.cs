@@ -28,5 +28,23 @@ namespace FlightDataEntitiesRT
             get;
             set;
         }
+
+        /// <summary>
+        /// 纬度值（用于经纬度地图）
+        /// </summary>
+        public float[] Latitudes
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 经度值（用于经纬度地图）
+        /// </summary>
+        public float[] Longitudes
+        {
+            get;
+            set;
+        }
     }
 }

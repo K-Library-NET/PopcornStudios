@@ -68,6 +68,8 @@
             <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}"/>
             <Button Content="Button" Grid.Column="1" Click="Button_Click"
                     HorizontalAlignment="Left" Margin="914,64,0,0" VerticalAlignment="Top"/>
+            <Button Content="Button" Grid.Column="1" HorizontalAlignment="Left"
+                    Click="ExtremumValuebindClick" Margin="421,66,0,0" VerticalAlignment="Top" Width="136"/>
         </Grid>
 
         <Grid:RadDataGrid x:Name="grid1" HorizontalAlignment="Left" Margin="95,46,0,0" Grid.Row="1" VerticalAlignment="Top" Height="506" Width="1200"/>

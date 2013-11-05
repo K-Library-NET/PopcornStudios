@@ -1,20 +1,21 @@
 ﻿<common:LayoutAwarePage
-    x:Name="pageRoot"
-    x:Class="AircraftDataAnalysisWinRT.Test.TestAddAircraftModel"
-    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AircraftDataAnalysisWinRT.Test"
     xmlns:common="using:AircraftDataAnalysisWinRT.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Grid="using:Telerik.UI.Xaml.Controls.Grid"
+    x:Name="pageRoot"
+    x:Class="AircraftDataAnalysisWinRT.Test.TestAddAircraftModel"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Mode=Self}}"
     mc:Ignorable="d">
 
-    <Page.Resources>
+    <common:LayoutAwarePage.Resources>
 
         <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
         <x:String x:Key="AppName">My Application</x:String>
-    </Page.Resources>
+    </common:LayoutAwarePage.Resources>
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
@@ -26,40 +27,6 @@
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
-        <!-- Back button and page title -->
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}"/>
-
-            <Button Content="Add F4D AircraftModel" x:Name="btnAddAircraftModel"
-                Click="OnAddAircraftClicked" Grid.Column="1" Margin="415,66,0,36" />
-            <Button x:Name="btnRefreshListbox" Click="OnRefreshAircraftClicked"
-                    Content="Read and Refresh ListBox" Grid.Column="1" HorizontalAlignment="Left" Margin="642,66,0,0" VerticalAlignment="Top"/>
-            <Button Content="Read Parameters" Grid.Column="1" Click="OnReadParameters"
-                    HorizontalAlignment="Left" Margin="887,66,0,0" VerticalAlignment="Top"/>
-            <Button Content="Read Decision" Grid.Column="1" HorizontalAlignment="Left"
-                    Click="OnReadDecisions" Margin="1066,66,0,0" VerticalAlignment="Top"/>
-        </Grid>
-        <ListBox HorizontalAlignment="Left" Height="480" x:Name="viewModels"
-                 Margin="122,61,0,0" Grid.Row="1" VerticalAlignment="Top" Width="554">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="10">
-                        <TextBlock Foreground="Azure" Text="{Binding Path=ModelName}"/>
-                        <TextBlock Foreground="Red" Text="{Binding Path=Caption}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <Button Content="读取所有面板" HorizontalAlignment="Right" Grid.Row="1" 
-                Click="OnChartPanelRead" VerticalAlignment="Top" Margin="0,42,58,0"/>
-        <Button Content="添加当前机型的面板" HorizontalAlignment="Right"
-                Click="OnCurrentAicraftModelChartsAdded" Margin="0,42,220,0" Grid.Row="1" VerticalAlignment="Top"/>
 
         <VisualStateManager.VisualStateGroups>
 
@@ -90,5 +57,46 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+
+        <!-- Back button and page title -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}"/>
+
+            <Button Content="Add F4D AircraftModel" x:Name="btnAddAircraftModel"
+				Click="OnAddAircraftClicked" Grid.Column="1" Margin="415,66,0,36" />
+            <Button x:Name="btnRefreshListbox" Click="OnRefreshAircraftClicked"
+				Content="Read and Refresh ListBox" Grid.Column="1" HorizontalAlignment="Left" Margin="642,66,0,0" VerticalAlignment="Top"/>
+            <Button Content="Read Parameters" Grid.Column="1" Click="OnReadParameters"
+				HorizontalAlignment="Left" Margin="887,66,0,0" VerticalAlignment="Top"/>
+            <Button Content="Read Decision" Grid.Column="1" HorizontalAlignment="Left"
+				Click="OnReadDecisions" Margin="1066,66,0,0" VerticalAlignment="Top"/>
+        </Grid>
+        <ListBox HorizontalAlignment="Left" Height="480" x:Name="viewModels"
+			Margin="122,61,0,0" Grid.Row="1" VerticalAlignment="Top" Width="554">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="10">
+                        <TextBlock Foreground="Azure" Text="{Binding ModelName}"/>
+                        <TextBlock Foreground="Red" Text="{Binding Caption}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Content="读取所有面板" HorizontalAlignment="Right" Grid.Row="1" 
+			Click="OnChartPanelRead" VerticalAlignment="Top" Margin="0,42,58,0"/>
+        <Button Content="添加当前机型的面板" HorizontalAlignment="Right"
+			Click="OnCurrentAicraftModelChartsAdded" Margin="0,42,220,0" Grid.Row="1" VerticalAlignment="Top"/>
+        <Button Content="ReadAircraft" HorizontalAlignment="Left" Margin="980,123,0,0"
+			Click="OnReadAircraftClicked" Grid.Row="1" VerticalAlignment="Top" Width="166"/>
+        <Button Content="ReadLevelTop" HorizontalAlignment="Left" Margin="980,189,0,0" Grid.Row="1" 
+			Click="OnReadLevelTopClicked" VerticalAlignment="Top" Width="166"/>
+
+        <Grid:RadDataGrid HorizontalAlignment="Left" x:Name="grdView" 
+                          Margin="710,260,0,0" Grid.Row="1" VerticalAlignment="Top" Height="345" Width="621"/>
     </Grid>
 </common:LayoutAwarePage>

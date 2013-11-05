@@ -70,11 +70,11 @@ namespace FlightDataEntities
             {
                 List<FlightRawData> dts = new List<FlightRawData>();
                 int factor = this.Values.Length / (this.EndSecond - this.StartSecond);
-
+                
                 for (int i = this.StartSecond; i < this.EndSecond; i++)
                 {
                     FlightRawData rd = new FlightRawData() { ParameterID = this.ParameterID, Second = i };
-                    var values = this.Values.Skip(i * factor).Take(factor);
+                    var values = this.Values.Skip((i - this.StartSecond) * factor).Take(factor);
                     rd.Values = values.ToArray();
                     dts.Add(rd);
                 }

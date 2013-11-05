@@ -21,6 +21,16 @@ namespace FlightDataEntities
         }
 
         /// <summary>
+        /// 架次ID
+        /// </summary>
+        [DataMember]
+        public string FlightID
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// 最大值
         /// </summary>
         [DataMember]

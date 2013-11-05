@@ -25,7 +25,49 @@ namespace AircraftDataAnalysisWinRT.DataModel
             this.parameters = parameters;
         }
 
+        public string FlightID
+        {
+            get
+            {
+                if (this.Flight != null)
+                {
+                    return this.flight.FlightID;
+                }
+                return string.Empty;
+            }
+        }
+
+        private string m_flightName = string.Empty;
+
+        public string FlightName
+        {
+            get { return this.Flight.FlightName; }
+            set
+            {
+                this.SetProperty<string>(ref m_flightName, value);
+                this.flight.FlightName = value;
+            }
+        }
+
+        private int m_endSecond = 0;
+
+        public int EndSecond
+        {
+            get { return this.Flight.EndSecond; }
+            set
+            {
+                this.SetProperty<int>(ref this.m_endSecond, value);
+                this.flight.EndSecond = value;
+            }
+        }
+
         private Flight flight;
+
+        public Flight Flight
+        {
+            get { return flight; }
+            set { flight = value; }
+        }
 
         private AircraftModel aircraftModel;
 
@@ -73,6 +115,24 @@ namespace AircraftDataAnalysisWinRT.DataModel
             }
         }
 
+        public void InitLoadHeaderAsync()
+        {
+            Task.Run(new Action(async () =>
+            {
+                if (this.file != null)
+                {
+                    DataReading read = new DataReading(this.extractor, flight, this.Parameters);
+                    await read.ReadDataAsync();
+                    this.Header = read.Header;
+                    if (this.Header != null)
+                    {
+                        this.flight.EndSecond = this.Header.FlightSeconds;
+                        this.EndSecond = this.flight.EndSecond;
+                    }
+                }
+            }));
+        }
+
         public void InitLoadHeader()
         {
             if (this.file != null)
@@ -81,7 +141,10 @@ namespace AircraftDataAnalysisWinRT.DataModel
                 read.ReadHeader();
                 this.Header = read.Header;
                 if (this.Header != null)
+                {
                     this.flight.EndSecond = this.Header.FlightSeconds;
+                    this.EndSecond = this.flight.EndSecond;
+                }
             }
         }
 
@@ -291,6 +354,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
                             DecisionRecord record = new DecisionRecord()
                             {
                                 StartSecond = de.ActiveStartSecond,
+                                HappenSecond = de.HappenedSecond,
                                 EndSecond = de.ActiveEndSecond,
                                 DecisionID = de.DecisionID,
                                 DecisionName = de.DecisionName,

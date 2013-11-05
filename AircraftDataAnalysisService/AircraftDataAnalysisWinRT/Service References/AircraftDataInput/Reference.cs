@@ -238,7 +238,11 @@ namespace AircraftDataAnalysisWinRT.AircraftDataInput {
         
         private int EndSecondField;
         
+        private int EventLevelField;
+        
         private string FlightIDField;
+        
+        private int HappenSecondField;
         
         private int StartSecondField;
         
@@ -295,6 +299,19 @@ namespace AircraftDataAnalysisWinRT.AircraftDataInput {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public int EventLevel {
+            get {
+                return this.EventLevelField;
+            }
+            set {
+                if ((this.EventLevelField.Equals(value) != true)) {
+                    this.EventLevelField = value;
+                    this.RaisePropertyChanged("EventLevel");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string FlightID {
             get {
                 return this.FlightIDField;
@@ -303,6 +320,19 @@ namespace AircraftDataAnalysisWinRT.AircraftDataInput {
                 if ((object.ReferenceEquals(this.FlightIDField, value) != true)) {
                     this.FlightIDField = value;
                     this.RaisePropertyChanged("FlightID");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int HappenSecond {
+            get {
+                return this.HappenSecondField;
+            }
+            set {
+                if ((this.HappenSecondField.Equals(value) != true)) {
+                    this.HappenSecondField = value;
+                    this.RaisePropertyChanged("HappenSecond");
                 }
             }
         }
@@ -530,6 +560,8 @@ namespace AircraftDataAnalysisWinRT.AircraftDataInput {
     [System.Runtime.Serialization.DataContractAttribute(Name="ExtremumPointInfo", Namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities")]
     public partial class ExtremumPointInfo : object, System.ComponentModel.INotifyPropertyChanged {
         
+        private string FlightIDField;
+        
         private float MaxValueField;
         
         private float MaxValueSecondField;
@@ -539,6 +571,19 @@ namespace AircraftDataAnalysisWinRT.AircraftDataInput {
         private float MinValueSecondField;
         
         private string ParameterIDField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string FlightID {
+            get {
+                return this.FlightIDField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.FlightIDField, value) != true)) {
+                    this.FlightIDField = value;
+                    this.RaisePropertyChanged("FlightID");
+                }
+            }
+        }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
         public float MaxValue {
@@ -620,49 +665,15 @@ namespace AircraftDataAnalysisWinRT.AircraftDataInput {
     [System.Runtime.Serialization.DataContractAttribute(Name="Level2FlightRecord", Namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities")]
     public partial class Level2FlightRecord : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private float AvgValueField;
-        
-        private int CountField;
-        
         private int EndSecondField;
         
         private AircraftDataAnalysisWinRT.AircraftDataInput.ExtremumPointInfo ExtremumPointInfoField;
         
         private string FlightIDField;
         
-        private float MaxValueField;
-        
-        private float MinValueField;
-        
         private string ParameterIDField;
         
         private int StartSecondField;
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public float AvgValue {
-            get {
-                return this.AvgValueField;
-            }
-            set {
-                if ((this.AvgValueField.Equals(value) != true)) {
-                    this.AvgValueField = value;
-                    this.RaisePropertyChanged("AvgValue");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Count {
-            get {
-                return this.CountField;
-            }
-            set {
-                if ((this.CountField.Equals(value) != true)) {
-                    this.CountField = value;
-                    this.RaisePropertyChanged("Count");
-                }
-            }
-        }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
         public int EndSecond {
@@ -699,32 +710,6 @@ namespace AircraftDataAnalysisWinRT.AircraftDataInput {
                 if ((object.ReferenceEquals(this.FlightIDField, value) != true)) {
                     this.FlightIDField = value;
                     this.RaisePropertyChanged("FlightID");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public float MaxValue {
-            get {
-                return this.MaxValueField;
-            }
-            set {
-                if ((this.MaxValueField.Equals(value) != true)) {
-                    this.MaxValueField = value;
-                    this.RaisePropertyChanged("MaxValue");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public float MinValue {
-            get {
-                return this.MinValueField;
-            }
-            set {
-                if ((this.MinValueField.Equals(value) != true)) {
-                    this.MinValueField = value;
-                    this.RaisePropertyChanged("MinValue");
                 }
             }
         }

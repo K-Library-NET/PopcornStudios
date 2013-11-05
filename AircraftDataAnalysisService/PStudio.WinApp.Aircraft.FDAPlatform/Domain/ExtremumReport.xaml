@@ -1,20 +1,21 @@
 ﻿<common:LayoutAwarePage
-    x:Name="pageRoot"
-    x:Class="PStudio.WinApp.Aircraft.FDAPlatform.Domain.ExtremumReport"
-    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:PStudio.WinApp.Aircraft.FDAPlatform.Domain"
     xmlns:common="using:PStudio.WinApp.Aircraft.FDAPlatform.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Grid="using:Telerik.UI.Xaml.Controls.Grid"
+    x:Name="pageRoot"
+    x:Class="PStudio.WinApp.Aircraft.FDAPlatform.Domain.ExtremumReport"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Mode=Self}}"
     mc:Ignorable="d">
 
-    <Page.Resources>
+    <common:LayoutAwarePage.Resources>
 
         <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
         <x:String x:Key="AppName">My Application</x:String>
-    </Page.Resources>
+    </common:LayoutAwarePage.Resources>
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
@@ -26,19 +27,6 @@
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
-        <!-- Back button and page title -->
-        <Image x:Name="bg" HorizontalAlignment="Stretch"  Margin="0" Grid.Row="0" VerticalAlignment="Stretch" Source="ms-appx:///Assets/bg.jpg" Stretch="Fill" Grid.RowSpan="2" />
-
-        <!-- Back button and page title -->
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="极值报表" Style="{StaticResource PageHeaderTextStyle}"/>
-        </Grid>
 
         <VisualStateManager.VisualStateGroups>
 
@@ -69,5 +57,31 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+        <!-- Back button and page title -->
+        <Image x:Name="bg" HorizontalAlignment="Stretch"  Margin="0" Grid.Row="0" VerticalAlignment="Stretch" Source="ms-appx:///Assets/bg.jpg" Stretch="Fill" Grid.RowSpan="2" />
+
+        <!-- Back button and page title -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="极值报表" Style="{StaticResource PageHeaderTextStyle}"/>
+        </Grid>
+
+        <Grid:RadDataGrid HorizontalAlignment="Left" Margin="82,88,0,0" Grid.Row="1" VerticalAlignment="Top" Height="478" Width="700">
+            <Grid:RadDataGrid.Columns>
+                <Grid:DataGridTextColumn CanUserEdit="False" Header="序号"  PropertyName="Number" >
+                </Grid:DataGridTextColumn>
+                <Grid:DataGridTextColumn CanUserEdit="False" Header="参数名称" PropertyName="ParameterCaption" />
+                <Grid:DataGridNumericalColumn CanUserEdit="False" Header="极大值" PropertyName="MaxValue" />
+                <Grid:DataGridNumericalColumn CanUserEdit="False" Header="秒值" PropertyName="MaxValueSecond" />
+                <Grid:DataGridTextColumn CanUserEdit="False" Header="时间" PropertyName="MaxValueTimeSpan" />
+                <Grid:DataGridNumericalColumn CanUserEdit="False" Header="极小值" PropertyName="MinValue" />
+                <Grid:DataGridNumericalColumn CanUserEdit="False" Header="秒值" PropertyName="MinValueSecond" />
+                <Grid:DataGridTextColumn CanUserEdit="False" Header="时间" PropertyName="MinValueTimeSpan" />
+            </Grid:RadDataGrid.Columns>
+        </Grid:RadDataGrid>
     </Grid>
 </common:LayoutAwarePage>

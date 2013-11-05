@@ -120,6 +120,8 @@ namespace FlightDataEntitiesRT.Decisions
                     if (con.ConditionTrue == false)
                         return false;
                 }
+
+                return true;
             }
             return false;
         }
@@ -140,6 +142,75 @@ namespace FlightDataEntitiesRT.Decisions
 
         public string DecisionName { get; set; }
 
+        /// <summary>
+        /// 事件等级，不包含事件颜色，颜色是前端根据事件等级设定
+        /// </summary>
+        public int EventLevel { get; set; }
+
         public string[] RelatedParameters { get; set; }
+
+        public string ToDecisionDescriptionString(DecisionRecord record)
+        {
+            //   "左发排气温度=000℃>630℃，dT=00s≥1s"
+            string template = this.DecisionDescriptionStringTemplate;// "@@T6L#=##T6L@℃>630℃，dT=##dT@s≥1s";
+            if (string.IsNullOrEmpty(template))
+                return record.ToString();
+            //暂时只做单层算了
+            foreach (var sub in this.Conditions)
+            {
+                string paramChar = string.Format("@@{0}#", sub.ParameterID);
+                string paramValueChar = string.Format("##{0}@", sub.ParameterID);
+                if (template.Contains(paramChar) && template.Contains(paramValueChar))
+                {
+                    template = template.Replace(paramChar, this.GetParameterCaption(sub.ParameterID));
+                    template = template.Replace(paramValueChar, this.GetParameterValue(sub.ParameterValue));
+                }
+            }
+            if (template.Contains("##dT@"))
+                template = template.Replace("##dT@", Convert.ToString(record.EndSecond - record.StartSecond));
+
+            return template;
+        }
+
+        public IEnumerable<FlightParameter> ParameterObjects
+        {
+            get;
+            set;
+        }
+
+        private string GetParameterCaption(string parameterID)
+        {
+            if (ParameterObjects != null || ParameterObjects.Count() > 0)
+            {
+                var par = ParameterObjects.Single(
+                     new Func<FlightParameter, bool>(delegate(FlightParameter fp)
+                 {
+                     if (fp != null && fp.ParameterID == parameterID)
+                         return true;
+                     return false;
+                 }));
+
+                if (par != null)
+                    return par.Caption;
+            }
+            return parameterID;
+        }
+
+        /// <summary>
+        /// 通常保留两位小数
+        /// </summary>
+        /// <param name="pValue"></param>
+        /// <returns></returns>
+        private string GetParameterValue(float pValue)
+        {
+            var values = Math.Round(pValue);
+            return values.ToString();
+        }
+
+        public string DecisionDescriptionStringTemplate
+        {
+            get;
+            set;
+        }
     }
 }

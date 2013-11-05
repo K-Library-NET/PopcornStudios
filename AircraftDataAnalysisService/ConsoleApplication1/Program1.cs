@@ -111,5 +111,29 @@ namespace ConsoleApplication1
             }
             return new FlightDataEntities.FlightParameter[] { };
         }*/
+
+        internal static void Main1(string[] args)
+        {
+            string path = @"C:\Users\LibreK\SkyDrive\Coding\AircraftAnalysis\机型1\故障架次\18090505-1左防冰灯亮.phy";
+
+            using (BinaryReader reader = new BinaryReader(new FileStream(path, FileMode.Open)))
+            {
+                reader.BaseStream.Position = 128;
+
+                List<float> fls = new List<float>();
+                for (int i = 0; i < 256; i++)
+                {
+                    fls.Add(reader.ReadSingle());
+                }
+
+                byte[] bts = new byte[256];
+                reader.BaseStream.Read(bts, 0, 256);
+
+                byte[] bts2 = new byte[256];
+                reader.BaseStream.Read(bts2, 0, 256);
+
+            }
+
+        }
     }
 }

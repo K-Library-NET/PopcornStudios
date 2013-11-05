@@ -17,6 +17,7 @@ namespace AircraftDataAnalysisWcfService
         {
             try
             {
+                LogHelper.Info("DataInputService.AddOrReplaceFlight Requested.", null);
                 DataInputServiceBll bll = new DataInputServiceBll();
                 return bll.AddOrReplaceFlight(flight);
             }
@@ -31,6 +32,7 @@ namespace AircraftDataAnalysisWcfService
         {
             try
             {
+                LogHelper.Info("DataInputService.DeleteExistsData Requested.", null);
                 DataInputServiceBll bll = new DataInputServiceBll();
                 return bll.DeleteExistsData(flight);
             }
@@ -45,6 +47,7 @@ namespace AircraftDataAnalysisWcfService
         {
             try
             {
+                LogHelper.Info("DataInputService.AddDecisionRecordsBatch Requested.", null);
                 DataInputServiceBll bll = new DataInputServiceBll();
                 return bll.AddDecisionRecordsBatch(flight, records);
             }
@@ -60,6 +63,7 @@ namespace AircraftDataAnalysisWcfService
         {
             try
             {
+                LogHelper.Info("DataInputService.AddOneParameterValue Requested.", null);
                 DataInputServiceBll bll = new DataInputServiceBll();
                 return bll.AddOneParameterValue(flight, parameterID, reducedRecords);
             }
@@ -75,6 +79,7 @@ namespace AircraftDataAnalysisWcfService
         {
             try
             {
+                LogHelper.Info("DataInputService.AddLevelTopFlightRecords Requested.", null);
                 DataInputServiceBll bll = new DataInputServiceBll();
                 return bll.AddLevelTopFlightRecords(flight, topRecords);
             }

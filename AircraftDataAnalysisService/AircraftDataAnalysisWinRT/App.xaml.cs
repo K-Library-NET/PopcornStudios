@@ -33,6 +33,22 @@ namespace AircraftDataAnalysisWinRT
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            this.UnhandledException += App_UnhandledException;
+        }
+
+        async void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            try
+            {
+                e.Handled = true;
+                await Windows.Storage.FileIO.WriteTextAsync(await Windows.Storage.KnownFolders.MusicLibrary.CreateFileAsync(
+                    "errorlog.txt", Windows.Storage.CreationCollisionOption.GenerateUniqueName),
+                 string.Format("[{0}]: ", DateTime.Now.ToString()) + e.Message + "\r\n" + e.Exception.Message + "\r\n" + e.Exception.StackTrace);
+            }
+            catch (Exception ex)
+            {
+            }
+            //throw new NotImplementedException();
         }
 
         /// <summary>
@@ -84,9 +100,9 @@ namespace AircraftDataAnalysisWinRT
 
                 //test debug
                 //if (!rootFrame.Navigate(typeof(Test.TestBindDynamicColumn), "AllGroups"))
-                if (!rootFrame.Navigate(typeof(Test.TestReadFile), "AllGroups"))
-                //if (!rootFrame.Navigate(typeof(PStudio.WinApp.Aircraft.FDAPlatform.MainPage), "AllGroups"))
-                // if (!rootFrame.Navigate(typeof(Test.TestAddAircraftModel), "AllGroups"))
+                //if (!rootFrame.Navigate(typeof(Test.TestReadFile), "AllGroups"))
+                //if (!rootFrame.Navigate(typeof(Test.TestAddAircraftModel), "AllGroups"))
+                if (!rootFrame.Navigate(typeof(PStudio.WinApp.Aircraft.FDAPlatform.MainPage), "AllGroups"))
                 {
                     throw new Exception("Failed to create initial page");
                 }

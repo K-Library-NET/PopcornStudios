@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,10 +62,12 @@ namespace AircraftDataAnalysisWinRT.Services
                        select new AircraftDataInput.DecisionRecord()
                        {
                            DecisionID = one.DecisionID,
+                           EventLevel = one.EventLevel,
                            DecisionName = one.DecisionName,
                            DecisionDescription = one.DecisionDescription,
                            EndSecond = one.EndSecond,
                            FlightID = one.FlightID,
+                           HappenSecond = one.HappenSecond,
                            StartSecond = one.StartSecond
                        };
 
@@ -76,7 +79,14 @@ namespace AircraftDataAnalysisWinRT.Services
 
         internal static AircraftDataInput.Level2FlightRecord ToDataInput(FlightDataEntitiesRT.Level2FlightRecord level2Record)
         {
-            throw new NotImplementedException();
+            return new AircraftDataInput.Level2FlightRecord()
+            {
+                EndSecond = level2Record.EndSecond,
+                FlightID = level2Record.FlightID,
+                ParameterID = level2Record.FlightID,
+                StartSecond = level2Record.StartSecond,
+                ExtremumPointInfo = RTConverter.ToDataInput(level2Record.ExtremumPointInfo)
+            };
         }
 
         internal static System.Collections.ObjectModel.ObservableCollection<AircraftDataInput.Level1FlightRecord>
@@ -209,8 +219,10 @@ namespace AircraftDataAnalysisWinRT.Services
             {
                 DecisionID = one.DecisionID,
                 DecisionName = one.DecisionName,
+                EventLevel = one.EventLevel,
                 LastTime = one.LastTime,
                 RelatedParameters = one.RelatedParameters.ToArray(),
+                DecisionDescriptionStringTemplate = one.DecisionDescriptionStringTemplate,
                 Conditions =
                 (from two in one.Conditions
                  select RTConverter.FromAircraftService(two)).ToArray()
@@ -258,7 +270,7 @@ namespace AircraftDataAnalysisWinRT.Services
             }
         }
 
-        private static FlightDataEntitiesRT.Decisions.CompareOperator FromAircraftService(
+        internal static FlightDataEntitiesRT.Decisions.CompareOperator FromAircraftService(
             AircraftService.CompareOperator compareOperator)
         {
             switch (compareOperator)
@@ -274,6 +286,8 @@ namespace AircraftDataAnalysisWinRT.Services
 
         internal static FlightDataEntitiesRT.Charts.ChartPanel FromAircraftService(AircraftService.ChartPanel one)
         {
+            if (one == null)
+                return null;
             return new FlightDataEntitiesRT.Charts.ChartPanel()
             {
                 PanelID = one.PanelID,
@@ -293,6 +307,125 @@ namespace AircraftDataAnalysisWinRT.Services
             recs = new System.Collections.ObjectModel.ObservableCollection<AircraftDataInput.Level2FlightRecord>(result);
 
             return recs;
+        }
+
+        internal static FlightDataEntitiesRT.ExtremumPointInfo FromAircraftService(AircraftService.ExtremumPointInfo one)
+        {
+            if (one == null)
+                return null;
+
+            FlightDataEntitiesRT.ExtremumPointInfo info = new FlightDataEntitiesRT.ExtremumPointInfo()
+            {
+                MaxValue = one.MaxValue,
+                MaxValueSecond = one.MaxValueSecond,
+                MinValue = one.MinValue,
+                MinValueSecond = one.MinValueSecond,
+                ParameterID = one.ParameterID
+            };
+
+            return info;
+        }
+
+        internal static FlightDataEntitiesRT.LevelTopFlightRecord FromAircraftService(AircraftService.LevelTopFlightRecord one)
+        {
+            FlightDataEntitiesRT.LevelTopFlightRecord rec = new FlightDataEntitiesRT.LevelTopFlightRecord()
+            {
+                EndSecond = one.EndSecond,
+                FlightID = one.FlightID,
+                ParameterID = one.ParameterID,
+                StartSecond = one.StartSecond,
+                ExtremumPointInfo = FromAircraftService(one.ExtremumPointInfo),
+                Level2FlightRecord = FromAircraftService(one.Level2FlightRecord)
+            };
+
+            return rec;
+        }
+
+        internal static FlightDataEntitiesRT.Level2FlightRecord[] FromAircraftService(
+            System.Collections.ObjectModel.ObservableCollection<AircraftService.Level2FlightRecord> observableCollection)
+        {
+            var result = from one in observableCollection
+                         select new FlightDataEntitiesRT.Level2FlightRecord()
+                         {
+                             EndSecond = one.EndSecond,
+                             FlightID = one.FlightID,
+                             ParameterID = one.ParameterID,
+                             StartSecond = one.StartSecond,
+                             ExtremumPointInfo = FromAircraftService(one.ExtremumPointInfo)
+                         };
+
+            return result.ToArray();
+        }
+
+        internal static AircraftDataInput.LevelTopFlightRecord ToDataInput(FlightDataEntitiesRT.LevelTopFlightRecord one)
+        {
+            return new AircraftDataInput.LevelTopFlightRecord()
+            {
+                ExtremumPointInfo = RTConverter.ToDataInput(one.ExtremumPointInfo),
+                EndSecond = one.EndSecond,
+                FlightID = one.FlightID,
+                Level2FlightRecord = ToDataInput(one.Level2FlightRecord),
+                ParameterID = one.ParameterID,
+                StartSecond = one.StartSecond
+            };
+        }
+
+        internal static AircraftDataInput.ExtremumPointInfo ToDataInput(
+            FlightDataEntitiesRT.ExtremumPointInfo extremumPointInfo)
+        {
+            return new AircraftDataInput.ExtremumPointInfo()
+            {
+                FlightID = extremumPointInfo.FlightID,
+                MaxValue = extremumPointInfo.MaxValue,
+                MaxValueSecond = extremumPointInfo.MaxValueSecond,
+                MinValue = extremumPointInfo.MinValue,
+                MinValueSecond = extremumPointInfo.MinValueSecond,
+                ParameterID = extremumPointInfo.ParameterID
+            };
+        }
+
+        internal static FlightDataEntitiesRT.Decisions.DecisionRecord FromAircraftService(
+            AircraftService.DecisionRecord one)
+        {
+            return new FlightDataEntitiesRT.Decisions.DecisionRecord()
+            {
+                DecisionID = one.DecisionID,
+                FlightID = one.FlightID,
+                EventLevel = one.EventLevel,
+                DecisionDescription = one.DecisionDescription,
+                DecisionName = one.DecisionName,
+                StartSecond = one.StartSecond,
+                EndSecond = one.EndSecond,
+                HappenSecond = one.HappenSecond
+            };
+        }
+
+        internal static ObservableCollection<KeyValuePair<string, ObservableCollection<FlightDataEntitiesRT.ParameterRawData>>>
+            FromAircraftService(ObservableCollection<KeyValuePair<string, ObservableCollection<AircraftService.FlightRawData>>> observableCollection)
+        {
+            var result = from one in observableCollection
+                         select new KeyValuePair<string, ObservableCollection<FlightDataEntitiesRT.ParameterRawData>>(
+                             one.Key, RTConverter.FromAircraftService(one.Value));
+
+            return new ObservableCollection<KeyValuePair<string,
+                ObservableCollection<FlightDataEntitiesRT.ParameterRawData>>>(result);
+        }
+
+        internal static ObservableCollection<FlightDataEntitiesRT.ParameterRawData>
+            FromAircraftService(ObservableCollection<AircraftService.FlightRawData> observableCollection)
+        {
+            var result = from one in observableCollection
+                         select new FlightDataEntitiesRT.ParameterRawData()
+                         {
+                             ParameterID = one.ParameterID,
+                             Second = one.Second,
+                             Values = one.Values.ToArray()
+                         };
+
+            if (result == null || result.Count() <= 0)
+                return new ObservableCollection<FlightDataEntitiesRT.ParameterRawData>();
+
+            return new ObservableCollection<FlightDataEntitiesRT.ParameterRawData>(result);
         }
     }
 }

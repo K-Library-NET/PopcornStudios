@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="4bef2d5d-5b7c-4501-9380-1bbaf3d06699" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="23628f15-e285-4f8a-8b4d-c531b7eea710" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -22,13 +22,15 @@
     <MetadataSource Address="http://localhost:45240/AircraftService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="AircraftService.disco" MetadataType="Disco" ID="40e0dc5e-c5d7-4bb1-9f65-e0bb61e7e908" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?disco" />
-    <MetadataFile FileName="AircraftService.xsd" MetadataType="Schema" ID="44a391c3-7643-4126-802f-e535276149d3" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd1" />
-    <MetadataFile FileName="AircraftService1.xsd" MetadataType="Schema" ID="0c8ec121-1b01-4ad2-acab-7a906ba676c5" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd0" />
-    <MetadataFile FileName="AircraftService2.xsd" MetadataType="Schema" ID="600fbc65-8b1d-4219-992b-6f59ee305349" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd3" />
-    <MetadataFile FileName="AircraftService3.xsd" MetadataType="Schema" ID="652c9d49-d0dc-40a3-8e8a-3411f7d03b29" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd2" />
-    <MetadataFile FileName="AircraftService4.xsd" MetadataType="Schema" ID="1da821c8-7651-401c-bf12-b43211d71667" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd4" />
-    <MetadataFile FileName="AircraftService.wsdl" MetadataType="Wsdl" ID="2eac56d3-dea1-427b-aae3-94a2b6c5d73b" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?wsdl" />
+    <MetadataFile FileName="AircraftService.xsd" MetadataType="Schema" ID="9f58f819-c44b-4789-9943-099518dc1fcf" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd5" />
+    <MetadataFile FileName="AircraftService.disco" MetadataType="Disco" ID="59bd122e-1f79-40ff-804d-0e7972ed9f3d" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?disco" />
+    <MetadataFile FileName="AircraftService1.xsd" MetadataType="Schema" ID="a0f02571-8a8c-4f44-ad56-6b0ffadbd39d" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd1" />
+    <MetadataFile FileName="AircraftService2.xsd" MetadataType="Schema" ID="0ac6d0c4-de35-47ea-a261-1b242ce3d652" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd0" />
+    <MetadataFile FileName="AircraftService3.xsd" MetadataType="Schema" ID="cfed12f7-9209-4e9d-859b-a882876452a3" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd3" />
+    <MetadataFile FileName="AircraftService4.xsd" MetadataType="Schema" ID="7ce331f2-1970-4c79-8818-379a81ee47ea" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd2" />
+    <MetadataFile FileName="AircraftService5.xsd" MetadataType="Schema" ID="a9a255bd-c80c-4a06-876b-77f4585ce349" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd4" />
+    <MetadataFile FileName="AircraftService.wsdl" MetadataType="Wsdl" ID="b5b7218a-7ef1-44fb-98d5-670cb87e343b" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?wsdl" />
+    <MetadataFile FileName="AircraftService6.xsd" MetadataType="Schema" ID="1968d3ce-9fac-497c-a075-b75b34660651" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd6" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

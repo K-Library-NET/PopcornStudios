@@ -367,10 +367,10 @@ namespace AircraftDataAnalysisWinRT.Common
         /// 属性提供要显示的组。</param>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            var frameState = SuspensionManager.SessionStateForFrame(this.Frame);
-            var pageState = new Dictionary<String, Object>();
-            this.SaveState(pageState);
-            frameState[_pageKey] = pageState;
+            //var frameState = SuspensionManager.SessionStateForFrame(this.Frame);
+            //var pageState = new Dictionary<String, Object>();
+            //this.SaveState(pageState);
+            //frameState[_pageKey] = pageState;
         }
 
         /// <summary>

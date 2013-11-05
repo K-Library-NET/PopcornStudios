@@ -38,13 +38,14 @@ namespace AircraftDataAnalysisWcfService
         KeyValuePair<string, FlightDataEntities.FlightRawData[]>[] GetFlightData(Flight flight,
             string[] parameterIds, int startSecond, int endSecond);
 
-        /// <summary>
-        /// 取得该架次的极值数据
-        /// </summary>
-        /// <param name="flight"></param>
-        /// <returns></returns>
-        [OperationContract]
-        FlightDataEntities.ExtremumPointInfo[] GetExtremumPointInfos(Flight flight);
+        //直接通过LevelTop来取得
+        ///// <summary>
+        ///// 取得该架次的极值数据
+        ///// </summary>
+        ///// <param name="flight"></param>
+        ///// <returns></returns>
+        //[OperationContract]
+        //FlightDataEntities.ExtremumPointInfo[] GetExtremumPointInfos(Flight flight);
 
         /// <summary>
         /// 通过机型，取得所有曲线面板
@@ -77,7 +78,7 @@ namespace AircraftDataAnalysisWcfService
         /// <returns></returns>
         [OperationContract]
         FlightDataEntities.LevelTopFlightRecord[] GetLevelTopFlightRecords(Flight flight,
-            string[] parameterIds, bool withLevel1Data);
+            string[] parameterIds);
 
         /// <summary>
         /// 取得一个架次的所有判定成功记录
@@ -86,5 +87,8 @@ namespace AircraftDataAnalysisWcfService
         /// <returns></returns>
         [OperationContract]
         FlightDataEntities.Decisions.DecisionRecord[] GetDecisionRecords(Flight flight);
+
+        [OperationContract]
+        ExtremumReportDefinition GetExtremumReportDefinition(string aircraftModelName);
     }
 }

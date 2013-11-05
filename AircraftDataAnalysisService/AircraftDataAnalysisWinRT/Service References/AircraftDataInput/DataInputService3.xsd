@@ -62,6 +62,7 @@
   <xs:element name="LevelTopFlightRecord" nillable="true" type="tns:LevelTopFlightRecord" />
   <xs:complexType name="ExtremumPointInfo">
     <xs:sequence>
+      <xs:element minOccurs="0" name="FlightID" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="MaxValue" type="xs:float" />
       <xs:element minOccurs="0" name="MaxValueSecond" type="xs:float" />
       <xs:element minOccurs="0" name="MinValue" type="xs:float" />
@@ -78,13 +79,9 @@
   <xs:element name="ArrayOfLevel2FlightRecord" nillable="true" type="tns:ArrayOfLevel2FlightRecord" />
   <xs:complexType name="Level2FlightRecord">
     <xs:sequence>
-      <xs:element minOccurs="0" name="AvgValue" type="xs:float" />
-      <xs:element minOccurs="0" name="Count" type="xs:int" />
       <xs:element minOccurs="0" name="EndSecond" type="xs:int" />
       <xs:element minOccurs="0" name="ExtremumPointInfo" nillable="true" type="tns:ExtremumPointInfo" />
       <xs:element minOccurs="0" name="FlightID" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="MaxValue" type="xs:float" />
-      <xs:element minOccurs="0" name="MinValue" type="xs:float" />
       <xs:element minOccurs="0" name="ParameterID" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="StartSecond" type="xs:int" />
     </xs:sequence>

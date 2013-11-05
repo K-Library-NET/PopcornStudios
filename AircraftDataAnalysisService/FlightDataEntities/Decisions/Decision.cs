@@ -53,5 +53,15 @@ namespace FlightDataEntities.Decisions
             get;
             set;
         }
+
+        /// <summary>
+        /// 生成事件描述的模板
+        /// </summary>
+        [DataMember]
+        public string DecisionDescriptionStringTemplate
+        {
+            get;
+            set;
+        }
     }
 }

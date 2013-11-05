@@ -57,7 +57,7 @@ namespace AircraftDataAnalysisWinRT.Test
         {
             var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
             openPicker.ViewMode = Windows.Storage.Pickers.PickerViewMode.List;
-            openPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.ComputerFolder; 
+            openPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.ComputerFolder;
             openPicker.FileTypeFilter.Add(".phy");// ([".png", ".jpg", ".jpeg"]);
             StorageFile file = await openPicker.PickSingleFileAsync();
             if (file != null)
@@ -160,17 +160,10 @@ namespace AircraftDataAnalysisWinRT.Test
 
                         DataReading reading = new DataReading(extractor, this.CurrentFlight,
                             parameters);
-
+                        reading.Header = this.ViewModel.Header;
                         reading.ReadData();
 
-                        //this.gridData.AutoGenerateColumns = false;
-                        //this.gridData.Columns.Clear();
-                        //var rawDataModel = this.ViewModel.GetRawDataModel();
-                        //foreach (var col in rawDataModel.ColumnCollection)
-                        //{
-                        //    this.gridData.Columns.Add(col);
-                        //}
-                        //this.gridData.ItemsSource = rawDataModel.RawDataRowViewModel;
+                        this.tbMessage.Text = string.Format("{1} ReadData Complete: {0}", DateTime.Now, this.CurrentFlight.FlightID);
                     }));
         }
 
@@ -220,7 +213,7 @@ namespace AircraftDataAnalysisWinRT.Test
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
+            //base.OnNavigatedTo(e);
             this.RefreshFlights();
         }
 

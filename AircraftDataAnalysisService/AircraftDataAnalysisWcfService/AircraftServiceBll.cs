@@ -549,9 +549,41 @@ namespace AircraftDataAnalysisWcfService
         /// <param name="parameterIds"></param>
         /// <param name="withLevel1Data"></param>
         /// <returns></returns>
-        internal LevelTopFlightRecord[] GetLevelTopFlightRecords(Flight flight, string[] parameterIds, bool withLevel1Data)
+        internal LevelTopFlightRecord[] GetLevelTopFlightRecords(Flight flight, string[] parameterIds)
         {
-            throw new NotImplementedException();
+            using (AircraftMongoDbDal dal = new AircraftMongoDbDal())
+            {
+                MongoServer mongoServer = dal.GetMongoServer();
+                //不用判断是否为空，必须不能为空才能继续，否则内部要抛异常
+                try
+                {//此方法操作的记录为跟架次密切相关，但肯定LevelTopRecord需要包含趋势分析等信息，
+                    //建议不要分表，存放在Common里面
+                    MongoDatabase database = dal.GetMongoDatabaseByAircraftModel(mongoServer, flight.Aircraft.AircraftModel);
+                    if (database != null)
+                    {
+                        MongoCollection<FlightDataEntities.LevelTopFlightRecord> modelCollection1
+                            = dal.GetLevelTopFlightRecordMongoCollectionByFlight(database, flight);
+
+                        IMongoQuery q1 = null;
+
+                        if (parameterIds == null || parameterIds.Length == 0)
+                            q1 = Query.EQ("FlightID", new BsonString(flight.FlightID));
+                        else
+                            q1 = Query.And(Query.EQ("FlightID", new BsonString(flight.FlightID)),
+                                Query.In("ParameterID", (from pm in parameterIds select new BsonString(pm))));
+
+                        var cursor = modelCollection1.Find(q1);
+
+                        return cursor.ToArray();
+                    }
+                }
+                catch (Exception e)
+                {
+                    LogHelper.Error("GetLevelTopFlightRecords", e);
+                    return new LevelTopFlightRecord[] { };
+                }
+            }
+            return new LevelTopFlightRecord[] { };
         }
 
         internal KeyValuePair<string, FlightRawData[]>[] GetFlightData(
@@ -599,45 +631,88 @@ namespace AircraftDataAnalysisWcfService
         {
             MongoCollection<FlightDataEntities.Level1FlightRecord> modelCollection1
                 = dal.GetLevel1FlightRecordMongoCollectionByFlight(database, flight);
-            var bsonParamID = from id in parameterIds
-                              select new BsonString(id);
-
-            //先取出Level1记录
-            IMongoQuery q1 = Query.And(
-                Query.EQ("FlightID", flight.FlightID),
-                Query.In("ParameterID", bsonParamID), //前两个条件必须：架次、参数ID
-                Query.Or(Query.And(
+            List<IMongoQuery> qs = new List<IMongoQuery>();
+            qs.Add(Query.EQ("FlightID", flight.FlightID));
+            qs.Add(Query.Or(Query.And(
                             Query.GTE("StartSecond", startSecond),
                             Query.LT("StartSecond", endSecond)),
                     Query.And(
                         Query.GT("EndSecond", startSecond),
-                        Query.LTE("EndSecond", endSecond)))
-                //最后这个条件是如果一个Level1Record的起始秒、结束秒
-                //介于参数起始值和结束值之间，都可以Select，
-                //因为区间段基本上是定长的，所以可以这样认定
-                        );
+                        Query.LTE("EndSecond", endSecond))));
+            //最后这个条件是如果一个Level1Record的起始秒、结束秒
+            //介于参数起始值和结束值之间，都可以Select，
+            //因为区间段基本上是定长的，所以可以这样认定
+            if (parameterIds != null && parameterIds.Length > 0)
+            {
+                var bsonParamID = from id in parameterIds
+                                  select new BsonString(id);
+                qs.Add(Query.In("ParameterID", bsonParamID));//前两个条件必须：架次、时间
+            }
+
+            IMongoQuery q1 = Query.And(qs);
+
+            //var bsonParamID = from id in parameterIds
+            //                  select new BsonString(id);
+
+            ////先取出Level1记录
+            //IMongoQuery q1 = Query.And(
+            //    Query.EQ("FlightID", flight.FlightID),
+            //    Query.Or(Query.And(
+            //                Query.GTE("StartSecond", startSecond),
+            //                Query.LT("StartSecond", endSecond)),
+            //        Query.And(
+            //            Query.GT("EndSecond", startSecond),
+            //            Query.LTE("EndSecond", endSecond))),
+            //    //最后这个条件是如果一个Level1Record的起始秒、结束秒
+            //    //介于参数起始值和结束值之间，都可以Select，
+            //    //因为区间段基本上是定长的，所以可以这样认定
+            //    Query.In("ParameterID", bsonParamID) //前两个条件必须：架次、时间
+            //            );
 
             var cursor = modelCollection1.Find(q1);
             return cursor;
         }
 
-        private IEnumerable<KeyValuePair<string, FlightRawData[]>> TransformToFlightRawData(string[] parameterIds, MongoCursor<Level1FlightRecord> cursor)
+        private IEnumerable<KeyValuePair<string, FlightRawData[]>> TransformToFlightRawData(string[] parameterIds,
+            MongoCursor<Level1FlightRecord> cursor)
         {
             Dictionary<string, List<Level1FlightRecord>> datas = new Dictionary<string, List<Level1FlightRecord>>();
             Dictionary<string, List<FlightRawData>> resultMap = new Dictionary<string, List<FlightRawData>>();
-            foreach (string key in parameterIds)
+            if (parameterIds == null || parameterIds.Length == 0)
             {
-                if (!datas.ContainsKey(key))
+                Dictionary<string, string> paramIdtmp = new Dictionary<string, string>();
+                foreach (var rec in cursor)
                 {
-                    datas.Add(key, new List<Level1FlightRecord>());
-                    resultMap.Add(key, new List<FlightRawData>());
+                    if (!paramIdtmp.ContainsKey(rec.ParameterID))
+                    {
+                        paramIdtmp.Add(rec.ParameterID, rec.ParameterID);
+                        datas.Add(rec.ParameterID, new List<Level1FlightRecord>());
+                        resultMap.Add(rec.ParameterID, new List<FlightRawData>());
+                    }
+                    else
+                    {
+                        datas[rec.ParameterID].Add(rec);
+                    }
+                }
+                parameterIds = paramIdtmp.Keys.ToArray();
+            }
+            else
+            {
+                foreach (string key in parameterIds)
+                {
+                    if (!datas.ContainsKey(key))
+                    {
+                        datas.Add(key, new List<Level1FlightRecord>());
+                        resultMap.Add(key, new List<FlightRawData>());
+                    }
+                }
+                foreach (var c in cursor)
+                {
+                    if (datas.ContainsKey(c.ParameterID))
+                        datas[c.ParameterID].Add(c);
                 }
             }
-            foreach (var c in cursor)
-            {
-                if (datas.ContainsKey(c.ParameterID))
-                    datas[c.ParameterID].Add(c);
-            }
+
             foreach (string k in datas.Keys)
             {
                 var values = datas[k];
@@ -760,7 +835,9 @@ namespace AircraftDataAnalysisWcfService
         {
             FlightDataEntities.Decisions.Decision[] decisions = new FlightDataEntities.Decisions.Decision[]{
                 new Decision(){ DecisionID = "001", DecisionName="起飞时仰角大", EventLevel = 2, LastTime = 1, 
-                     RelatedParameters =new string[]{"FY","NHL","NHR","KG5","KG6","KG7"  },
+                     DecisionDescriptionStringTemplate = "@@FY#=##FY@°>11°，dT=##dT@s≥1s",
+                      //俯仰角=00°>11°，dT=0s≥1s
+                      RelatedParameters =new string[]{"FY","NHL","NHR","KG5","KG6","KG7"  },
                      //俯仰角(10/FY)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)，襟翼放下25°(32->7/Kg7)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "FY", Operator = CompareOperator.GreaterThan , ParameterValue =11},
@@ -769,7 +846,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG6", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "002", DecisionName="起飞时未放襟翼", EventLevel = 1, LastTime = 2, 
-                     RelatedParameters =new string[]{"NHL","NHR","KG5","KG6","KG7","KG8" },
+                      DecisionDescriptionStringTemplate = "dT=##dT@s≥2s",
+                      //dT=0s≥2s
+                      RelatedParameters =new string[]{"NHL","NHR","KG5","KG6","KG7","KG8" },
                      //左发高压转速(30/NHL)，右发高压转速(31/NHR)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)，襟翼放下25°(32->7/Kg7)，襟翼放下35°(32->8/Kg8)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.GreaterThan , ParameterValue =95},
@@ -780,7 +859,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG8", Operator = CompareOperator.Equal , ParameterValue=0},
                      }},
                      new Decision(){ DecisionID = "003", DecisionName="起飞时襟翼放到35°", EventLevel = 1, LastTime = 2, 
-                     RelatedParameters =new string[]{"NHL","NHR","KG5","KG6","KG8" },
+                      DecisionDescriptionStringTemplate = "dT=##dT@s≥2s",
+                      //dT=0s≥12s
+                      RelatedParameters =new string[]{"NHL","NHR","KG5","KG6","KG8" },
                      //左发高压转速(30/NHL)，右发高压转速(31/NHR)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)，襟翼放下35°(32->8/Kg8)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.GreaterThan , ParameterValue =95},
@@ -790,7 +871,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG8", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "004", DecisionName="失速时未告警", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{"Vi","aT","KG15" },
+                      DecisionDescriptionStringTemplate = "@@Vi#=##Vi@km/h>150km/h，@@aT#=##aT@°>12.5°，dT=##dT@s≥1s",
+                      //指示空速=000km/h>150km/h，真攻角=00°>12.5°，dT=0s≥1s
+                      RelatedParameters =new string[]{"Vi","aT","KG15" },
                      //指示空速(3/Vi)，真攻角(5/aT)，失速告警信号(32->15/Kg15)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =150},
@@ -798,7 +881,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG15", Operator = CompareOperator.Equal , ParameterValue = 0},
                      }},
                      new Decision(){ DecisionID = "005", DecisionName="起飞后未收起落架", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{"Vi","NHL","NHR","KG5","KG6" },
+                      DecisionDescriptionStringTemplate = "dT=##dT@s≥1s",
+                      //dT=0s≥1s
+                      RelatedParameters =new string[]{"Vi","NHL","NHR","KG5","KG6" },
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.GreaterThan , ParameterValue =90},
@@ -808,7 +893,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG6", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "006", DecisionName="剩余油量1000千克", EventLevel = 1, LastTime = 2, 
-                     RelatedParameters =new string[]{ "NHL","NHR","KG2"},
+                      DecisionDescriptionStringTemplate = "dT=##dT@s≥2s",
+                      //dT=0s≥2s
+                      RelatedParameters =new string[]{ "NHL","NHR","KG2"},
                      //左发高压转速(30/NHL)，右发高压转速(31/NHR)，剩油1000kg(32->2/Kg2)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.GreaterThan , ParameterValue =50},
@@ -816,7 +903,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG12", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "007", DecisionName="主液压系统压降信号", EventLevel = 1, LastTime = 4, 
-                     RelatedParameters =new string[]{ "NHL","NHR","KG3"},
+                      DecisionDescriptionStringTemplate = "dT=##dT@s≥4s",
+                      //dT=0s≥4s
+                      RelatedParameters =new string[]{ "NHL","NHR","KG3"},
                      //左发高压转速(30/NHL)，右发高压转速(31/NHR)，主液压系统压降(32->3/Kg3)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.GreaterThan , ParameterValue =50},
@@ -824,7 +913,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG3", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "008", DecisionName="助力液压系统压降信号", EventLevel = 1, LastTime = 3, 
-                     RelatedParameters =new string[]{ "NHL","NHR","KG4"},
+                      DecisionDescriptionStringTemplate = "dT=##dT@s≥3s",
+                      //dT=0s≥3s
+                      RelatedParameters =new string[]{ "NHL","NHR","KG4"},
                      //左发高压转速(30/NHL)，右发高压转速(31/NHR)，助液压系统压降(32->4/Kg4)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.GreaterThan , ParameterValue =50},
@@ -832,7 +923,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG4", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "009", DecisionName="前舱盖未锁紧", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{ "Vi","NHL","NHR","KG9"},
+                      DecisionDescriptionStringTemplate = "dT=##dT@s≥1s",
+                      //dT=0s≥1s
+                      RelatedParameters =new string[]{ "Vi","NHL","NHR","KG9"},
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，前舱盖锁紧(32->9/Kg9)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =150},
@@ -841,7 +934,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG9", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "010", DecisionName="后舱盖未锁紧", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{ "NHL","NHR","KG10"},
+                      DecisionDescriptionStringTemplate = "dT=##dT@s≥1s",
+                      //dT=0s≥1s
+                      RelatedParameters =new string[]{ "NHL","NHR","KG10"},
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，后舱盖锁紧(32->10/Kg10)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =150},
@@ -850,7 +945,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG10", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "011", DecisionName="左发防冰接通", EventLevel = 2, LastTime = 1, 
-                     RelatedParameters =new string[]{ "NHL","NHR","T6L","T6R","KG11"},
+                      DecisionDescriptionStringTemplate = "dT=##dT@s≥1s",
+                      //dT=0s≥1s
+                      RelatedParameters =new string[]{ "NHL","NHR","T6L","T6R","KG11"},
                      //左发高压转速(30/NHL)，右发高压转速(31/NHR)，左发排气温度(28/T6L)，右发排气温度(29/T6R)，左防冰接通(32->11/Kg11)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.GreaterThan , ParameterValue =50},
@@ -858,7 +955,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG11", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "012", DecisionName="右发防冰接通", EventLevel = 2, LastTime = 1, 
-                     RelatedParameters =new string[]{ "NHL","NHR","T6L","T6R","KG11"},
+                     DecisionDescriptionStringTemplate = "dT=##dT@s≥1s",
+                      //dT=0s≥1s
+                       RelatedParameters =new string[]{ "NHL","NHR","T6L","T6R","KG11"},
                      //左发高压转速(30/NHL)，右发高压转速(31/NHR)，，左发排气温度(28/T6L)，右发排气温度(29/T6R)右防冰接通(32->11/Kg11)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.GreaterThan , ParameterValue =50},
@@ -866,7 +965,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG12", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "013", DecisionName="左发电机故障", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{"NHL","NHR","T6L","T6R","KG13" },
+                       DecisionDescriptionStringTemplate = "dT=##dT@s≥1s",
+                      //dT=0s≥1s
+                      RelatedParameters =new string[]{"NHL","NHR","T6L","T6R","KG13" },
                      //左发高压转速(30/NHL)，右发高压转速(31/NHR)，左发排气温度(28/T6L)，右发排气温度(29/T6R)，左主电源脱网(32->13/Kg13)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.GreaterThan , ParameterValue =50},
@@ -874,6 +975,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG13", Operator = CompareOperator.Equal , ParameterValue = 1},
                      }},
                      new Decision(){ DecisionID = "014", DecisionName="右发电机故障", EventLevel = 1, LastTime = 1, 
+                      DecisionDescriptionStringTemplate = "dT=##dT@s≥1s",
+                      //dT=0s≥1s
                      RelatedParameters =new string[]{ "NHL","NHR","T6L","T6R","KG14" },
                      //左发高压转速(30/NHL)，右发高压转速(31/NHR)，左发排气温度(28/T6L)，右发排气温度(29/T6R)，右主电源脱网(32->14/Kg14)
                      Conditions = new SubCondition[]{
@@ -882,6 +985,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG14", Operator = CompareOperator.Equal , ParameterValue = 1},
                      }},
                      new Decision(){ DecisionID = "015", DecisionName="左发转速达到99%", EventLevel = 1, LastTime = 10, 
+                     DecisionDescriptionStringTemplate = "@@NHL#=##NHL@%>99%，dT=##dT@s≥10s",
+                      //左发转速=00%>99%，dT=00s≥10s
                      RelatedParameters =new string[]{ "Vi","NHL","NHR","T6L","T6R" },
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左发排气温度(28/T6L)，右发排气温度(29/T6R)
                      Conditions = new SubCondition[]{
@@ -889,6 +994,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.GreaterThan , ParameterValue = 99},
                      }},
                      new Decision(){ DecisionID = "016", DecisionName="右发转速达到99%", EventLevel = 1, LastTime = 10, 
+                     DecisionDescriptionStringTemplate = "@@NHR#=##NHR@%>99%，dT=##dT@s≥10s",
+                      //右发转速=00%>99%，dT=00s≥10s
                      RelatedParameters =new string[]{ "Vi","NHL","NHR","T6L","T6R" },
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左发排气温度(28/T6L)，右发排气温度(29/T6R)
                      Conditions = new SubCondition[]{
@@ -896,6 +1003,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "NHR", Operator = CompareOperator.GreaterThan , ParameterValue = 99},
                      }},
                      new Decision(){ DecisionID = "017", DecisionName="左发转速超转", EventLevel = 1, LastTime = 1, 
+                     DecisionDescriptionStringTemplate = "@@NHL#=##NHL@%>101%，dT=##dT@s≥1s",
+                      //左发转速=00%>101%，dT=0s≥1s
                      RelatedParameters =new string[]{ "Vi","NHL","NHR","T6L","T6R"},
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左发排气温度(28/T6L)，右发排气温度(29/T6R)
                      Conditions = new SubCondition[]{
@@ -903,6 +1012,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.GreaterThan , ParameterValue = 101},
                      }},
                      new Decision(){ DecisionID = "018", DecisionName="右发转速超转", EventLevel = 1, LastTime = 1, 
+                     DecisionDescriptionStringTemplate = "@@NHR#=##NHR@%>101%，dT=##dT@s≥1s",
+                      //右发转速=00%>101%，dT=0s≥1s
                      RelatedParameters =new string[]{ "Vi","NHL","NHR","T6L","T6R"},
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左发排气温度(28/T6L)，右发排气温度(29/T6R)
                      Conditions = new SubCondition[]{
@@ -910,6 +1021,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "NHR", Operator = CompareOperator.GreaterThan , ParameterValue = 101},
                      }},
                      new Decision(){ DecisionID = "019", DecisionName="左发中间转速超时", EventLevel = 1, LastTime = 1800, 
+                      DecisionDescriptionStringTemplate = "@@NHL#=##NHL@%>94.7%，dT=##dT@s≥1800s",
+                      //左发转速=00%>94.7%，dT=000s≥1800
                      RelatedParameters =new string[]{ "Vi","NHL","NHR","T6L","T6R"},
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左发排气温度(28/T6L)，右发排气温度(29/T6R)
                      Conditions = new SubCondition[]{
@@ -917,6 +1030,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.GreaterThan , ParameterValue = 94.7F},
                      }},
                      new Decision(){ DecisionID = "020", DecisionName="右发中间转速超时", EventLevel = 1, LastTime = 1800, 
+                      DecisionDescriptionStringTemplate = "@@NHR#=##NHR@%>94.7%，dT=##dT@s≥1800s",
+                      //右发转速=00%>94.7%，dT=000s≥1800s
                      RelatedParameters =new string[]{ "Vi","NHL","NHR","T6L","T6R"},
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左发排气温度(28/T6L)，右发排气温度(29/T6R)
                      Conditions = new SubCondition[]{
@@ -924,13 +1039,17 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "NHR", Operator = CompareOperator.GreaterThan , ParameterValue = 94.7F},
                      }},
                      new Decision(){ DecisionID = "021", DecisionName="左发最大军用转速超时", EventLevel = 1, LastTime = 720, 
-                     RelatedParameters =new string[]{ "Vi","NHL","NHR","T6L","T6R"},
+                      DecisionDescriptionStringTemplate = "@@NHL#=##NHL@%>96%，dT=##dT@s≥720s",
+                      //左发转速=00%>96%，dT=000s≥720s
+                      RelatedParameters =new string[]{ "Vi","NHL","NHR","T6L","T6R"},
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左发排气温度(28/T6L)，右发排气温度(29/T6R)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =100},
                          new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.GreaterThan , ParameterValue = 96},
                      }},
                      new Decision(){ DecisionID = "022", DecisionName="右发最大军用转速超时", EventLevel = 1, LastTime = 720, 
+                      DecisionDescriptionStringTemplate = "@@NHR#=##NHR@%>96%，dT=##dT@s≥720s",
+                      //右发转速=00%>96%，dT=000s≥720s
                      RelatedParameters =new string[]{ "Vi","NHL","NHR","T6L","T6R"},
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左发排气温度(28/T6L)，右发排气温度(29/T6R)
                      Conditions = new SubCondition[]{
@@ -938,7 +1057,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "NHR", Operator = CompareOperator.GreaterThan , ParameterValue = 96},
                      }},
                      new Decision(){ DecisionID = "023", DecisionName="空中左发停车", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{ "Vi","NHL","NHR","KG5","KG6","KG13"},
+                      DecisionDescriptionStringTemplate = "@@NHL#=##NHL@%<50%，@@NHR#=##NHR@%>53%，dT=##dT@s≥1s",
+                      //左发转速=00%<50%，右发转速=00%>53%，dT=0s≥1s
+                      RelatedParameters =new string[]{ "Vi","NHL","NHR","KG5","KG6","KG13"},
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)，左主电源脱网(32->13/Kg13)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =100},
@@ -949,7 +1070,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG14", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "024", DecisionName="空中右发停车", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{  "Vi","NHL","NHR","KG5","KG6","KG14"},
+                       DecisionDescriptionStringTemplate = "@@NHR#=##NHR@%<50%，@@NHL#=##NHL@%>53%，dT=##dT@s≥1s",
+                      //右发转速=00%<50%，左发转速=00%>53%，dT=0s≥1s
+                         RelatedParameters =new string[]{  "Vi","NHL","NHR","KG5","KG6","KG14"},
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)，右主电源脱网(32->14/Kg14)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =100},
@@ -960,6 +1083,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG14", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "025", DecisionName="空速超限", EventLevel = 1, LastTime = 1, 
+                      DecisionDescriptionStringTemplate = "@@Vi#=##Vi@km/h>1250km/h，dT=##dT@s≥1s",
+                      //指示空速=0000km/h>1250km/h，dT=0s≥1s
                      RelatedParameters =new string[]{ "Vi","NHL","NHR","KG5","KG6"},
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)
                      Conditions = new SubCondition[]{
@@ -968,6 +1093,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG6", Operator = CompareOperator.Equal , ParameterValue=0},
                      }},
                      new Decision(){ DecisionID = "026", DecisionName="高度超限", EventLevel = 1, LastTime = 1, 
+                      DecisionDescriptionStringTemplate = "@@Hp#=##Hp@km/h>15200km/h，dT=##dT@s≥1s",
+                      //气压高度=00000km/h>15200km/h，dT=0s≥1s
                      RelatedParameters =new string[]{  "Vi","NHL","NHR","KG5","KG6"},
                      //气压高度(2/Hp),指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)
                      Conditions = new SubCondition[]{
@@ -977,6 +1104,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG6", Operator = CompareOperator.Equal , ParameterValue=0},
                      }},
                      new Decision(){ DecisionID = "027", DecisionName="升降速度超限", EventLevel = 1, LastTime = 1, 
+                      DecisionDescriptionStringTemplate = "@@Vy#绝对值=##Vy@m/s>150 m/s，dT=##dT@s≥1s",
+                      //升降速度绝对值=000m/s>150 m/s，dT=0s≥1s
                      RelatedParameters =new string[]{  "Vi","Vy","NHL","NHR"},
                      //指示空速(3/Vi)，升降速度(6/Vy)，左发高压转速(30/NHL)，右发高压转速(31/NHR)
                      Conditions = new SubCondition[]{
@@ -991,15 +1120,19 @@ namespace AircraftDataAnalysisWcfService
                          },
                      }},
                      new Decision(){ DecisionID = "028", DecisionName="马赫数超限", EventLevel = 1, LastTime = 1, 
+                      DecisionDescriptionStringTemplate = "@@M#=##M@>1.7，dT=##dT@s≥1s",
+                      //马赫数=0>1.7，dT=0s≥1s
                      RelatedParameters =new string[]{ "Vi","M","NHL","NHR","KG5","KG6"},
                      //指示空速(3/Vi)，马赫数(4/M)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =100},
-                         new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.GreaterThan , ParameterValue = 1.7F},
+                         new SubCondition(){ ParameterID = "M", Operator = CompareOperator.GreaterThan , ParameterValue = 1.7F},
                          new SubCondition(){ ParameterID = "KG5", Operator = CompareOperator.Equal , ParameterValue = 0},
                          new SubCondition(){ ParameterID = "KG6", Operator = CompareOperator.Equal , ParameterValue=0},
                      }},
                      new Decision(){ DecisionID = "029", DecisionName="着陆仰角过大", EventLevel = 1, LastTime = 1, 
+                     DecisionDescriptionStringTemplate = "@@FY#=##FY@°>11°，dT=##dT@s≥1s",
+                      //俯仰角=00°>11°，dT=0s≥1s
                      RelatedParameters =new string[]{ "FY","NHL","NHR","KG5","KG6","KG8"},
                      //俯仰角(10/FY)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)，襟翼放下35°(32->8/Kg8)
                      Conditions = new SubCondition[]{
@@ -1011,6 +1144,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG8", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "030", DecisionName="着陆时襟翼未放", EventLevel = 1, LastTime = 1, 
+                     DecisionDescriptionStringTemplate = "dT=##dT@s≥10s",
+                      //dT=0s≥1s
                      RelatedParameters =new string[]{  "Vi","NHL","NHR","KG5","KG6","KG8"},
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)，襟翼放下35°(32->8/Kg8)
                      Conditions = new SubCondition[]{
@@ -1022,6 +1157,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG8", Operator = CompareOperator.Equal , ParameterValue=0},
                      }},
                      new Decision(){ DecisionID = "031", DecisionName="着陆时垂直过载过大", EventLevel = 1, LastTime = 1, 
+                     DecisionDescriptionStringTemplate = "@@Hp#=##Hp@m<100m，@@Ny#=##Ny@g绝对值>2g，dT=##dT@s≥10s",
+                      //气压高度=00m<100m，法向过载=0g绝对值>2g，dT=0s≥1s
                      RelatedParameters =new string[]{ "Hp","Ny","NHL","NHR","KG5","KG6","KG8"},
                      //气压高度(2/Hp),法向过载(22/Ny)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)，襟翼放下35°(32->8/Kg8)
                      Conditions = new SubCondition[]{
@@ -1041,6 +1178,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG8", Operator = CompareOperator.Equal , ParameterValue= 1},
                      }},
                      new Decision(){ DecisionID = "032", DecisionName="着陆时未放起落架", EventLevel = 1, LastTime = 1, 
+                     DecisionDescriptionStringTemplate = "@@Nx#=##Nx@g<0，dT=##dT@s≥10s",
+                      //纵向过载=0g<0，dT=0s≥1s
                      RelatedParameters =new string[]{  "Nx","NHL","NHR","KG5","KG6","KG8"},
                      //纵向过载(23/Nx)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)，襟翼放下35°(32->8/Kg8)
                      Conditions = new SubCondition[]{
@@ -1052,7 +1191,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG8", Operator = CompareOperator.Equal , ParameterValue= 1},
                      }},
                      new Decision(){ DecisionID = "033", DecisionName="M=1附近时间过长", EventLevel = 2, LastTime = 10, 
-                     RelatedParameters =new string[]{  "M","NHL","NHR","KG5","KG6"},
+                     DecisionDescriptionStringTemplate = "0.95<（@@M#=##M@）<1.02，dT=##dT@s≥10s",
+                      //0.95<（马赫数=0）<1.02，dT=0s≥10s
+                      RelatedParameters =new string[]{  "M","NHL","NHR","KG5","KG6"},
                      //马赫数(4/M)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "M", Operator = CompareOperator.GreaterThan , ParameterValue =0.95F},
@@ -1061,14 +1202,18 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG6", Operator = CompareOperator.Equal , ParameterValue=0},
                      }},
                      new Decision(){ DecisionID = "034", DecisionName="零载荷超过2秒", EventLevel = 2, LastTime = 2, 
-                     RelatedParameters =new string[]{ "Vi","Ny","NHL","NHR"},
+                     DecisionDescriptionStringTemplate = "@@Ny#=##Ny@g<0.2g，dT=##dT@s≥2s",
+                      //法向过载=0g<0.2g，dT=0s≥2s
+                      RelatedParameters =new string[]{ "Vi","Ny","NHL","NHR"},
                      //指示空速(3/Vi)，法向过载(22/Ny)，左发高压转速(30/NHL)，右发高压转速(31/NHR)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =100},
                          new SubCondition(){ ParameterID = "Ny", Operator = CompareOperator.SmallerThan , ParameterValue = 0.2F},
                      }},
                      new Decision(){ DecisionID = "035", DecisionName="法向过载超限", EventLevel = 2, LastTime = 1, 
-                     RelatedParameters =new string[]{ "Vi","Ny","NHL","NHR"},
+                      DecisionDescriptionStringTemplate = "@@Ny#=##Ny@g<-1g或>7g，dT=##dT@s≥1s",
+                      //法向过载=0g<-1g或>7g，dT=0s≥1s
+                      RelatedParameters =new string[]{ "Vi","Ny","NHL","NHR"},
                      //指示空速(3/Vi)，法向过载(22/Ny)，左发高压转速(30/NHL)，右发高压转速(31/NHR)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =100},
@@ -1082,27 +1227,35 @@ namespace AircraftDataAnalysisWcfService
                          },
                      }},
                      new Decision(){ DecisionID = "036", DecisionName="纵向过载超限", EventLevel = 2, LastTime = 1, 
-                     RelatedParameters =new string[]{ "Vi","Nx","NHL","NHR"},
+                      DecisionDescriptionStringTemplate = "@@Nx#=##Nx@g>0.7g，dT=##dT@s≥1s",
+                      //纵向过载=0g>0.7g，dT=0s≥1s
+                      RelatedParameters =new string[]{ "Vi","Nx","NHL","NHR"},
                      //指示空速(3/Vi)，纵向过载(23/Nx)，左发高压转速(30/NHL)，右发高压转速(31/NHR)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =150},
                          new SubCondition(){ ParameterID = "Nx", Operator = CompareOperator.GreaterThan , ParameterValue = 0.7F},
                      }},
                      new Decision(){ DecisionID = "037", DecisionName="侧向过载超限", EventLevel = 2, LastTime = 1, 
-                     RelatedParameters =new string[]{  "Vi","Nz","NHL","NHR"},
+                       DecisionDescriptionStringTemplate = "@@Nz#=##Nz@g>0.5g，dT=##dT@s≥1s",
+                      //侧向过载=0g>0.5g，dT=0s≥1s
+                      RelatedParameters =new string[]{  "Vi","Nz","NHL","NHR"},
                      //指示空速(3/Vi)，侧向过载(24/Nz)，左发高压转速(30/NHL)，右发高压转速(31/NHR)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =150},
                          new SubCondition(){ ParameterID = "Nz", Operator = CompareOperator.GreaterThan , ParameterValue = 0.5F},
                      }},
                      new Decision(){ DecisionID = "038", DecisionName="倾斜角超限", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{  "Vi","HG","NHL","NHR"},
+                       DecisionDescriptionStringTemplate = "@@HG#=##HG@°>65°，dT=##dT@s≥1s",
+                      //倾斜角=00°>65°，dT=0s≥1s
+                      RelatedParameters =new string[]{  "Vi","HG","NHL","NHR"},
                      //指示空速(3/Vi)，倾斜角(9/HG)，左发高压转速(30/NHL)，右发高压转速(31/NHR)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =150},
                          new SubCondition(){ ParameterID = "HG", Operator = CompareOperator.GreaterThan , ParameterValue = 65},
                      }},
                      new Decision(){ DecisionID = "039", DecisionName="俯仰角超限", EventLevel = 1, LastTime = 1, 
+                      DecisionDescriptionStringTemplate = "@@FY#=##FY@°>25°，dT=##dT@s≥1s",
+                      //俯仰角=00°>25°，dT=0s≥1s
                      RelatedParameters =new string[]{  "Vi","FY","NHL","NHR"},
                      //指示空速(3/Vi)，俯仰角(10/FY)，左发高压转速(30/NHL)，右发高压转速(31/NHR)
                      Conditions = new SubCondition[]{
@@ -1110,6 +1263,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "FY", Operator = CompareOperator.GreaterThan , ParameterValue = 25},
                      }},
                      new Decision(){ DecisionID = "040", DecisionName="总温传感器故障", EventLevel = 1, LastTime = 1, 
+                     DecisionDescriptionStringTemplate = "@@Tt#=##Tt@℃ 绝对值>80℃，dT=##dT@s≥1s",
+                      //大气总温=00℃绝对值>80℃，dT=0s≥1s
                      RelatedParameters =new string[]{  "Vi","Tt","NHL","NHR"},
                      //指示空速(3/Vi)，大气总温(7/Tt)，左发高压转速(30/NHL)，右发高压转速(31/NHR)
                      Conditions = new SubCondition[]{
@@ -1124,6 +1279,8 @@ namespace AircraftDataAnalysisWcfService
                          },
                      }},
                      new Decision(){ DecisionID = "041", DecisionName="攻角传感器故障", EventLevel = 1, LastTime = 1, 
+                      DecisionDescriptionStringTemplate = "@@aT#=##aT@>15°，dT=##dT@≥1s",
+                      //真攻角=00°>15°，dT=0s≥1s
                      RelatedParameters =new string[]{  "Vi","aT","NHL","NHR"},
                      //指示空速(3/Vi)，真攻角(5/aT)，左发高压转速(30/NHL)，右发高压转速(31/NHR)
                      Conditions = new SubCondition[]{
@@ -1131,6 +1288,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "aT", Operator = CompareOperator.GreaterThan , ParameterValue = 15},
                      }},
                      new Decision(){ DecisionID = "042", DecisionName="着陆时坡度大于40°", EventLevel = 1, LastTime = 1, 
+                     DecisionDescriptionStringTemplate = "@@HG#=##HG@>40°，dT=##dT@≥1s",
+                      //倾斜角=00°>40°，dT=0s≥1s
                      RelatedParameters =new string[]{  "Vi","HG","NHL","NHR","KG5","KG6","KG8"},
                      //指示空速(3/Vi)，倾斜角(9/HG)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)，襟翼放下35°(32->8/Kg8)
                      Conditions = new SubCondition[]{
@@ -1143,7 +1302,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG8", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "043", DecisionName="副翼偏角超限", EventLevel = 1, LastTime = 2, 
-                     RelatedParameters =new string[]{  "Vi","Dx","NHL","NHR"},
+                    DecisionDescriptionStringTemplate = "@@Dx#=##Dx@° 绝对值>21°，dT=##dT@≥2s",
+                      //副翼角位移=00°绝对值>21°，dT=0s≥2s
+                      RelatedParameters =new string[]{  "Vi","Dx","NHL","NHR"},
                      //指示空速(3/Vi)，副翼角位移(25/Dx)，左发高压转速(30/NHL)，右发高压转速(31/NHR)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =150},
@@ -1157,7 +1318,9 @@ namespace AircraftDataAnalysisWcfService
                          },
                      }},
                      new Decision(){ DecisionID = "044", DecisionName="副翼传感器故障", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{ "Vi","Dx","KZB","NHL","NHR"},
+                      DecisionDescriptionStringTemplate = "副翼角位移变化率=##Dx@° 绝对值<0.3°，dT=##dT@s≥1s",
+                      //副翼角位移变化率=0°绝对值<0.3°，dT=0s≥1s
+                      RelatedParameters =new string[]{ "Vi","Dx","KZB","NHL","NHR"},
                      //指示空速(3/Vi)，副翼角位移(25/Dx)，纵向状态标志(18/KZB)，左发高压转速(30/NHL)，右发高压转速(31/NHR)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =150},
@@ -1198,7 +1361,9 @@ namespace AircraftDataAnalysisWcfService
                          }
                      }},
                      new Decision(){ DecisionID = "045", DecisionName="平尾传感器故障", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{ "Vi","Dz","KZB","NHL","NHR"},
+                      DecisionDescriptionStringTemplate = "平尾角位移变化率=##Dz@° 绝对值<0.3°，dT=##dT@s≥1s",
+                      //平尾角位移变化率=0°绝对值<0.3°，dT=0s≥1s
+                      RelatedParameters =new string[]{ "Vi","Dz","KZB","NHL","NHR"},
                      //指示空速(3/Vi)，平尾角位移(27/Dz)，纵向状态标志(18/KZB)，左发高压转速(30/NHL)，右发高压转速(31/NHR)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =150},
@@ -1239,7 +1404,9 @@ namespace AircraftDataAnalysisWcfService
                          }
                      }},
                      new Decision(){ DecisionID = "046", DecisionName="方向舵传感器故障", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{ "Vi","Dy","KZB","NHL","NHR"},
+                     DecisionDescriptionStringTemplate = "方向舵角位移变化率=##Dy@°绝对值<0.3°，dT=##dT@s≥1s",
+                      //方向舵角位移变化率=0°绝对值<0.3°，dT=0s≥1s
+                      RelatedParameters =new string[]{ "Vi","Dy","KZB","NHL","NHR"},
                      //指示空速(3/Vi)，方向舵角位移(26/Dy)，纵向状态标志(18/KZB)，左发高压转速(30/NHL)，右发高压转速(31/NHR)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =150},
@@ -1280,7 +1447,9 @@ namespace AircraftDataAnalysisWcfService
                          }
                      }},
                      new Decision(){ DecisionID = "047", DecisionName="飞控出现自动拉起信号", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{  "KZB","KG5","KG6"},
+                     DecisionDescriptionStringTemplate = "dT=##dT@s≥1s",
+                      //dT=0s≥1s
+                      RelatedParameters =new string[]{  "KZB","KG5","KG6"},
                      //纵向状态标志(18/KZB)，左起落架放下(32->5/Kg5)，右起落架放下(32->6/Kg6)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "KZB", Operator = CompareOperator.GreaterThan , ParameterValue = 3400},
@@ -1289,7 +1458,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG6", Operator = CompareOperator.Equal , ParameterValue=0}, 
                      }},
                      new Decision(){ DecisionID = "048", DecisionName="起飞时左发转速低", EventLevel = 2, LastTime = 1, 
-                     RelatedParameters =new string[]{  "M","Nx","NHL","NHR","KG7"},
+                      DecisionDescriptionStringTemplate = "@@NHL#=##NHL@%<95%，dT=##dT@s≥1s",
+                      //左发转速=00%<95%，dT=00s≥1s
+                      RelatedParameters =new string[]{  "M","Nx","NHL","NHR","KG7"},
                      //马赫数(4/M)，纵向过载(23/Nx)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，襟翼放下25°(31->7/Kg7)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "M", Operator = CompareOperator.GreaterThan , ParameterValue = 0.19F},
@@ -1300,6 +1471,8 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.SmallerThan , ParameterValue = 95},
                      }},
                      new Decision(){ DecisionID = "049", DecisionName="起飞时右发转速低", EventLevel = 2, LastTime = 1, 
+                      DecisionDescriptionStringTemplate = "@@NHR#=##NHR@%<95%，dT=##dT@s≥1s",
+                      //右发转速=00%<95%，dT=00s≥1s
                      RelatedParameters =new string[]{ "M","Nx","NHL","NHR","KG7"},
                      //马赫数(4/M)，纵向过载(23/Nx)，左发高压转速(30/NHL)，右发高压转速(30/NHR)，襟翼放下25°(32->7/Kg7)
                      Conditions = new SubCondition[]{
@@ -1311,6 +1484,7 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "NHR", Operator = CompareOperator.SmallerThan , ParameterValue = 95},
                      }},
                      new Decision(){ DecisionID = "050", DecisionName="左发起动时超温", EventLevel = 1, LastTime = 1, 
+                          DecisionDescriptionStringTemplate = "@@T6L#=##T6L@℃>630℃，dT=##dT@s≥1s",
                      RelatedParameters =new string[]{ "T6L","T6R","KG13"},
                      //左发排气温度(28/T6L)，右发排气温度(29/T6R)，左主电源脱网(37->13/Kg13)
                      Conditions = new SubCondition[]{
@@ -1318,6 +1492,7 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG13", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "051", DecisionName="右发起动时超温", EventLevel = 1, LastTime = 1, 
+                          DecisionDescriptionStringTemplate = "@@T6R#=##T6R@℃>630℃，dT=##dT@s≥1s",
                      RelatedParameters =new string[]{ "T6L","T6R","KG14"},
                      //左发排气温度(28/T6L)，右发排气温度(29/T6R)，右主电源脱网(37->14/Kg14)
                      Conditions = new SubCondition[]{
@@ -1325,21 +1500,27 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG14", Operator = CompareOperator.Equal , ParameterValue = 1},
                      }},
                      new Decision(){ DecisionID = "052", DecisionName="左发起动后超温", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{ "T6L","T6R","KG13"},
+                     DecisionDescriptionStringTemplate = "@@T6L#=##T6L@℃>700℃，dT=##dT@s≥1s",
+                      //左发排气温度=000℃>700℃，dT=00s≥1s
+                      RelatedParameters =new string[]{ "T6L","T6R","KG13"},
                      //左发排气温度(28/T6L)，右发排气温度(29/T6R)，左主电源脱网(37->13/Kg13)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "T6L", Operator = CompareOperator.GreaterThan , ParameterValue =700},
                          new SubCondition(){ ParameterID = "KG13", Operator = CompareOperator.Equal , ParameterValue = 0},
                      }},
                      new Decision(){ DecisionID = "053", DecisionName="右发起动后超温", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{ "T6L","T6R","KG14"},
+                     DecisionDescriptionStringTemplate = "@@T6R#=##T6R@℃>700℃，dT=##dT@s≥1s",
+                      //右发排气温度=000℃>700℃，dT=00s≥1s
+                      RelatedParameters =new string[]{ "T6L","T6R","KG14"},
                      //左发排气温度(28/T6L)，右发排气温度(29/T6R)，右主电源脱网(37->14/Kg14)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "T6R", Operator = CompareOperator.GreaterThan , ParameterValue =700},
                          new SubCondition(){ ParameterID = "KG14", Operator = CompareOperator.Equal , ParameterValue=0},
                      }},
                      new Decision(){ DecisionID = "054", DecisionName="放伞时指示空速大", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{  "Vi","Nx","NHL","NHR","KG8"},
+                     DecisionDescriptionStringTemplate = "@@Vi#=##Vi@km/h>305km/h，dT=##dT@≥1s",
+                      //指示空速=0000km/h>305km/h，dT=0s≥1s
+                      RelatedParameters =new string[]{  "Vi","Nx","NHL","NHR","KG8"},
                      //指示空速(3/Vi)，纵向过载(23/Nx)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，襟翼放下35°(32->8/Kg8)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue = 305},
@@ -1347,7 +1528,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG8", Operator = CompareOperator.Equal , ParameterValue = 1},
                      }},
                      new Decision(){ DecisionID = "055", DecisionName="襟翼35°时指示空速小", EventLevel = 2, LastTime = 1, 
-                     RelatedParameters =new string[]{  "Vi","NHL","NHR","KG8"},
+                      DecisionDescriptionStringTemplate = "100km/h<（@@Vi#=##Vi@km/h）<280km/h，dT=##dT@≥1s",
+                      //100km/h<（指示空速=000km/h）<280km/h，dT=0s≥1s
+                      RelatedParameters =new string[]{  "Vi","NHL","NHR","KG8"},
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，襟翼放下35°(32->8/Kg8)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.GreaterThan , ParameterValue =100},
@@ -1356,7 +1539,9 @@ namespace AircraftDataAnalysisWcfService
                          new SubCondition(){ ParameterID = "KG8", ConditionType = SubConditionType.DeltaRate, Operator = CompareOperator.GreaterThan , ParameterValue=1},
                      }},
                      new Decision(){ DecisionID = "056", DecisionName="飞机滑行时俯仰角大", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{ "Vi","NHL","NHR","FY"},
+                     DecisionDescriptionStringTemplate = "@@FY#=##FY@° 绝对值>6°，dT=##dT@s≥1s",
+                      //俯仰角=0°绝对值>6°，dT=0s≥1s
+                      RelatedParameters =new string[]{ "Vi","NHL","NHR","FY"},
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，俯仰角(10/FY)
                      Conditions = new SubCondition[]{ new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.SmallerThan , ParameterValue =200},
                          new SubCondition(){ ParameterID = "NHL", Operator = CompareOperator.GreaterThan , ParameterValue = 50},
@@ -1372,7 +1557,9 @@ namespace AircraftDataAnalysisWcfService
                             }
                      }},
                      new Decision(){ DecisionID = "057", DecisionName="飞机滑行时倾斜角大", EventLevel = 1, LastTime = 1, 
-                     RelatedParameters =new string[]{  "Vi","NHL","NHR","HG"},
+                      DecisionDescriptionStringTemplate = "@@HG#=##HG@° 绝对值>6°，dT=##dT@s≥1s",
+                      //倾斜角=0°绝对值>6°，dT=0s≥1s
+                         RelatedParameters =new string[]{  "Vi","NHL","NHR","HG"},
                      //指示空速(3/Vi)，左发高压转速(30/NHL)，右发高压转速(31/NHR)，倾斜角(9/HG)
                      Conditions = new SubCondition[]{
                          new SubCondition(){ ParameterID = "Vi", Operator = CompareOperator.SmallerThan , ParameterValue =200},
@@ -1432,6 +1619,71 @@ namespace AircraftDataAnalysisWcfService
             }
 
             return null;
+        }
+
+        internal ExtremumReportDefinition GetExtremumReportDefinition(string aircraftModelName)
+        {
+            //debug，暂时只有一个机型
+            return new ExtremumReportDefinition(){ AircraftModelName = aircraftModelName, 
+                Items = new ExtremumReportItemDefinition[]{
+                 /*   2	气压高度	Hp
+3	指示空速	Vi
+4	马赫数	M
+5	真攻角	aT
+6	升降速度	Vy
+7	大气总温	Tt
+8	真航向	ZH
+9	倾斜角	HG
+10	俯仰角	FY
+13	偏流角	DR
+14	地速	GS
+15	俯仰角速度	Wy
+16	横滚角速度	Wx
+17	盘旋角速度	Wz
+18	纵向状态标志	KZB
+19	横向状态标志	KCB
+20	平尾伺服器输入	ZS
+21	副翼伺服器输入	CS
+22	法向过载	Ny
+23	纵向过载	Nx
+24	侧向过载	Nz
+25	副翼角位移	Dx
+26	方向舵角位移	Dy
+27	平尾角位移	Dz
+28	左发排气温度	T6L
+29	右发排气温度	T6R
+30	左发高压转速	NHL
+31	右发高压转速	NHR*/
+                 new ExtremumReportItemDefinition(){ ParameterID = "Hp", Number = 2},
+                 new ExtremumReportItemDefinition(){ ParameterID = "Vi", Number = 3},
+                 new ExtremumReportItemDefinition(){ ParameterID = "M", Number = 4},
+                 new ExtremumReportItemDefinition(){ ParameterID = "aT", Number = 5},
+                 new ExtremumReportItemDefinition(){ ParameterID = "Vy", Number = 6},
+                 new ExtremumReportItemDefinition(){ ParameterID = "Tt", Number = 7},
+                 new ExtremumReportItemDefinition(){ ParameterID = "ZH", Number = 8},
+                 new ExtremumReportItemDefinition(){ ParameterID = "HG", Number = 9},
+                 new ExtremumReportItemDefinition(){ ParameterID = "FY", Number = 10},
+                 new ExtremumReportItemDefinition(){ ParameterID = "DR", Number = 13},
+                 new ExtremumReportItemDefinition(){ ParameterID = "GS", Number = 14},
+                 new ExtremumReportItemDefinition(){ ParameterID = "Wy", Number = 15},
+                 new ExtremumReportItemDefinition(){ ParameterID = "Wx", Number = 16},
+                 new ExtremumReportItemDefinition(){ ParameterID = "Wz", Number = 17},
+                 new ExtremumReportItemDefinition(){ ParameterID = "KZB", Number = 18},
+                 new ExtremumReportItemDefinition(){ ParameterID = "KCB", Number = 19},
+                 new ExtremumReportItemDefinition(){ ParameterID = "ZS", Number = 20},
+                 new ExtremumReportItemDefinition(){ ParameterID = "CS", Number = 21},
+                 new ExtremumReportItemDefinition(){ ParameterID = "Ny", Number = 22},
+                 new ExtremumReportItemDefinition(){ ParameterID = "Nx", Number = 23},
+                 new ExtremumReportItemDefinition(){ ParameterID = "Nz", Number = 24},
+                 new ExtremumReportItemDefinition(){ ParameterID = "Dx", Number = 25},
+                 new ExtremumReportItemDefinition(){ ParameterID = "Dy", Number = 26},
+                 new ExtremumReportItemDefinition(){ ParameterID = "Dz", Number = 27},
+                 new ExtremumReportItemDefinition(){ ParameterID = "T6L", Number = 28},
+                 new ExtremumReportItemDefinition(){ ParameterID = "T6R", Number = 29},
+                 new ExtremumReportItemDefinition(){ ParameterID = "NHL", Number = 30},
+                 new ExtremumReportItemDefinition(){ ParameterID = "NHR", Number = 31},
+                }
+            };
         }
     }
 }

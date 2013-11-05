@@ -58,14 +58,14 @@ namespace AircraftDataAnalysisWinRT.Test
         /// <param name="e"></param>
         private void OnRefreshAircraftClicked(object sender, RoutedEventArgs e)
         {//TODO:
-            var flights = ServerHelper.GetAllFlights(ServerHelper.GetCurrentAircraftModel());
-            var flightViewModels = from one in flights
-                                   select new AircraftDataAnalysisWinRT.DataModel.FlightDataItem(one.FlightID,
-                                       one.FlightName, string.Empty, string.Empty, one.Aircraft.AircraftModel.Caption,
-                                       string.Format("{0} {1} {2} {3}",
-                                       one.FlightID, one.FlightName, one.EndSecond, one.Aircraft.AircraftModel.ModelName),
-                                       null);
-            this.viewModels.ItemsSource = flightViewModels;
+            //var flights = ServerHelper.GetAllFlights(ServerHelper.GetCurrentAircraftModel());
+            //var flightViewModels = from one in flights
+            //                       select new AircraftDataAnalysisWinRT.DataModel.FaultDiagnosisViewModel(one.FlightID,
+            //                           one.FlightName, string.Empty, string.Empty, one.Aircraft.AircraftModel.Caption,
+            //                           string.Format("{0} {1} {2} {3}",
+            //                           one.FlightID, one.FlightName, one.EndSecond, one.Aircraft.AircraftModel.ModelName),
+            //                           null);
+            //this.viewModels.ItemsSource = flightViewModels;
         }
 
         /// <summary>
@@ -133,6 +133,71 @@ namespace AircraftDataAnalysisWinRT.Test
         private void OnCurrentAicraftModelChartsAdded(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void OnReadAircraftClicked(object sender, RoutedEventArgs e)
+        {
+            var dt = ServerHelper.GetDataTable(new Flight()
+             {
+                 Aircraft = new AircraftInstance()
+                 {
+                     AircraftModel = ServerHelper.GetCurrentAircraftModel(),
+                     AircraftNumber = "0004",
+                     LastUsed = DateTime.Now
+                 },
+                 FlightID = "781102221",
+                 FlightName = "781102221-1.phy",
+                 StartSecond = 0,
+                 EndSecond = 5520
+             }, new string[] { "Et", "Hp" }, 0, 200);
+
+
+            var result2 = new FlightParameter[]{ new FlightParameter(){ ParameterID = "Et", Caption = "飞行时间"},
+                 new FlightParameter(){ Caption = "大气压", ParameterID = "Hp"}};
+            //GetFlightParameters();
+
+            this.grdView.AutoGenerateColumns = false;
+            this.grdView.Columns.Clear();
+            //this.ColumnCollection = new ObservableCollection<Telerik.UI.Xaml.Controls.Grid.DataGridColumn>();
+            
+            if (result2 != null && result2.Count() > 0)
+            {
+                int i = 0;
+                foreach (var one in result2)
+                {
+                    //这里才是去掉NULL值
+                    if (one.ParameterID == "(NULL)")
+                        continue;
+
+                    Telerik.UI.Xaml.Controls.Grid.DataGridColumn col
+                        = new Telerik.UI.Xaml.Controls.Grid.DataGridTextColumn()
+                        {
+                            Name = one.ParameterID,
+                            PropertyName = one.ParameterID,//"Values[" + i.ToString() + "]",
+                            CanUserEdit = false,
+                            Header = one.Caption
+                        };
+
+                    this.grdView.Columns.Add(col);
+                    i++;
+                }
+            }
+
+            //this.RawDataRowViewModel.Columns.Insert(0, new DataColumn() { Caption = "秒值", ColumnName = "Second", DataType = typeof(int) });
+
+            this.grdView.Columns.Insert(0,
+                new Telerik.UI.Xaml.Controls.Grid.DataGridTextColumn()
+                {
+                    Name = "Second",
+                    PropertyName = "Second",
+                    Header = "秒值"
+                });
+            this.grdView.ItemsSource = dt;
+        }
+
+        private void OnReadLevelTopClicked(object sender, RoutedEventArgs e)
+        {
+            // ServerHelper.GetExtremumPointInfos(
         }
     }
 }
