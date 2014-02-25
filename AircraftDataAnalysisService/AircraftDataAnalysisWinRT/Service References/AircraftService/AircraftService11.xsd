@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/FlightDataEntities" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/FlightDataEntities" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/MongoDB.Bson" />
   <xs:complexType name="AircraftModel">
     <xs:sequence>
       <xs:element minOccurs="0" name="Caption" nillable="true" type="xs:string" />
@@ -118,6 +119,8 @@
   <xs:element name="LevelTopFlightRecord" nillable="true" type="tns:LevelTopFlightRecord" />
   <xs:complexType name="ExtremumPointInfo">
     <xs:sequence>
+      <xs:element minOccurs="0" name="AircraftNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FlightDateTime" type="xs:dateTime" />
       <xs:element minOccurs="0" name="FlightID" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="MaxValue" type="xs:float" />
       <xs:element minOccurs="0" name="MaxValueSecond" type="xs:float" />
@@ -163,4 +166,28 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ExtremumReportItemDefinition" nillable="true" type="tns:ExtremumReportItemDefinition" />
+  <xs:complexType name="ArrayOfFlightRawDataRelationPoint">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FlightRawDataRelationPoint" nillable="true" type="tns:FlightRawDataRelationPoint" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfFlightRawDataRelationPoint" nillable="true" type="tns:ArrayOfFlightRawDataRelationPoint" />
+  <xs:complexType name="FlightRawDataRelationPoint">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FlightDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="FlightID" nillable="true" type="xs:string" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/MongoDB.Bson" minOccurs="0" name="Id" type="q2:ObjectId" />
+      <xs:element minOccurs="0" name="XAxisParameterID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="XAxisParameterValue" type="xs:double" />
+      <xs:element minOccurs="0" name="YAxisParameterID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="YAxisParameterValue" type="xs:double" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="FlightRawDataRelationPoint" nillable="true" type="tns:FlightRawDataRelationPoint" />
+  <xs:complexType name="ArrayOfExtremumPointInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ExtremumPointInfo" nillable="true" type="tns:ExtremumPointInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfExtremumPointInfo" nillable="true" type="tns:ArrayOfExtremumPointInfo" />
 </xs:schema>

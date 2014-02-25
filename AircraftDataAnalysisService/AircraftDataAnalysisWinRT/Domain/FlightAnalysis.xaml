@@ -1,22 +1,90 @@
-﻿<common:LayoutAwarePage
+﻿<common:LayoutAwarePage 
+    xmlns:Charts1="using:Infragistics.Controls.Charts"  xmlns:Grid="using:Syncfusion.UI.Xaml.Grid" 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:PStudio.WinApp.Aircraft.FDAPlatform.Domain"
-    xmlns:common="using:AircraftDataAnalysisWinRT.Common"
-    xmlns:Chart="using:Telerik.UI.Xaml.Controls.Chart" 
-    xmlns:Charting="using:Telerik.Charting"
+    xmlns:common="using:AircraftDataAnalysisWinRT.Common" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:MyControl="using:AircraftDataAnalysisWinRT.MyControl"
+    xmlns:Navigation="using:Syncfusion.UI.Xaml.Controls.Navigation"
+                        xmlns:testModel ="using:AircraftDataAnalysisWinRT.DataModel"
     x:Name="pageRoot"
     x:Class="PStudio.WinApp.Aircraft.FDAPlatform.Domain.FlightAnalysis"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Mode=Self}}"
+    xmlns:input="using:Syncfusion.UI.Xaml.Controls.Input"
     mc:Ignorable="d">
 
     <common:LayoutAwarePage.Resources>
+        <Grid:SortDirectionToVisibilityConverter x:Key="sortDirectionToVisibilityConverter" />
+        <Grid:SortDirectionToWidthConverter x:Key="sortDirectionToWidthConverter" />
+        <Style x:Key="FilterToggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup>
+                                    <VisualState x:Name="Filtered">
+                                        <Storyboard BeginTime="0">
+                                            <ObjectAnimationUsingKeyFrames BeginTime="0"
+                                                                       Duration="1"
+                                                                       Storyboard.TargetName="path"
+                                                                       Storyboard.TargetProperty="Data">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="M2.1299944,9.9798575L55.945994,9.9798575 35.197562,34.081179 35.197562,62.672859 23.428433,55.942383 23.428433,33.52121z M1.3001332,0L56.635813,0C57.355887,0,57.935946,0.5891428,57.935946,1.3080959L57.935946,2.8258877C57.935946,3.5448422,57.355887,4.133985,56.635813,4.133985L1.3001332,4.133985C0.58005941,4.133985,-2.3841858E-07,3.5448422,0,2.8258877L0,1.3080959C-2.3841858E-07,0.5891428,0.58005941,0,1.3001332,0z" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="UnFiltered">
+                                        <Storyboard BeginTime="0">
+                                            <ObjectAnimationUsingKeyFrames BeginTime="0"
+                                                                       Duration="1"
+                                                                       Storyboard.TargetName="path"
+                                                                       Storyboard.TargetProperty="Data">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="M0,0 L118.49799,0 L72.811813,53.068943 L72.811813,116.02525 L46.897243,101.20534 L46.897243,51.835941 z" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}"
+                                Background="Transparent">
+                                <Path Name="path"
+                                  Margin="4"
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Bottom"
+                                  Data="M0,0 L118.49799,0 L72.811813,53.068943 L72.811813,116.02525 L46.897243,101.20534 L46.897243,51.835941 z"
+                                  Fill="Gray"
+                                  Opacity="0.8"
+                                  Stretch="Fill" />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
-        <x:String x:Key="AppName">My Application</x:String>
+        <x:String x:Key="ChevronGlyph">&#xE26B;</x:String>
+        <!--
+            此页所显示的分组项的集合，绑定到完整
+            项列表的子集，因为无法虚拟化组中的项
+        -->
+        <CollectionViewSource
+            x:Name="groupedItemsViewSource"
+            Source="{Binding Groups}"
+            IsSourceGrouped="true"
+            ItemsPath="Items"
+            />
+        <!--d:Source="{Binding Groups, Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}"-->
+
+        <Color x:Key="AccentColor">#FF1196CD</Color>
+        <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+
+        <Style TargetType="Navigation:SfTabItem">
+            <Setter Property="SelectedForeground" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="DarkGray"/>
+        </Style>
     </common:LayoutAwarePage.Resources>
 
     <!--
@@ -24,12 +92,11 @@
         * Row 0 contains the back button and page title
         * Row 1 contains the rest of the page layout
     -->
-    <Grid Style="{StaticResource LayoutRootStyle}" x:Name="grdHost" Background="{StaticResource AllBackgroundColor}">
+    <Grid Style="{StaticResource LayoutRootStyle}" x:Name="grdHost" Background="{StaticResource AllBackgroundColor}" IsDoubleTapEnabled="False">
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->
@@ -59,8 +126,6 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <!-- Back button and page title -->
-        <Image x:Name="bg" HorizontalAlignment="Stretch"  Margin="0" Grid.Row="0" VerticalAlignment="Stretch" Source="ms-appx:///Assets/bg.jpg" Stretch="Fill" Grid.RowSpan="2" Visibility="Collapsed"  />
 
         <!-- Back button and page title -->
         <Grid>
@@ -70,65 +135,152 @@
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Grid.Column="1" Text="飞行分析" Style="{StaticResource PageHeaderTextStyle}"/>
-            <StackPanel HorizontalAlignment="Right" Margin="16,0,0,0" VerticalAlignment="Center" Orientation="Horizontal" Grid.Column="1">
-                <Button x:Name="btSelectPanel" Margin="10,0" Click="btSelectPanel_Click" BorderBrush="{StaticResource AllBorderColor}" Foreground="Black">
+            <StackPanel Visibility="Collapsed" HorizontalAlignment="Right" Margin="16,0,0,0" VerticalAlignment="Center" Orientation="Horizontal" Grid.Column="1">
+                <Button x:Name="btAddParm" Margin="10,0" BorderBrush="{StaticResource AllBorderColor}" Foreground="Black" Background="#FFFDFDFD">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="../Assets/SmallLogo.png" Width="32" Height="32"/>
-                        <TextBlock Text="选择面板" VerticalAlignment="Center"/>
+                        <Image Source="../Assets/566256.png" Width="50" Height="50"/>
+                        <TextBlock Text="添加参数" VerticalAlignment="Center" FontSize="24" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="btAddParm" Margin="10,0" BorderBrush="{StaticResource AllBorderColor}" Foreground="Black">
+                <Button x:Name="btAllChart" Visibility="Collapsed" Margin="10,0" BorderBrush="{StaticResource AllBorderColor}" Foreground="Black" Background="#FFFDFDFD" >
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="../Assets/SmallLogo.png" Width="32" Height="32"/>
-                        <TextBlock Text="添加参数" VerticalAlignment="Center"/>
+                        <Image Source="../Assets/566261.png" Width="50" Height="50"/>
+                        <TextBlock Text="图形全屏" VerticalAlignment="Center" FontSize="24" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="btAllChart" Margin="10,0" BorderBrush="{StaticResource AllBorderColor}" Foreground="Black" >
+                <Button x:Name="btAllTable" Margin="10,0" BorderBrush="{StaticResource AllBorderColor}" 
+                        Click="OnNavigateToGrid_Clicked" Foreground="Black" Background="#FFFDFDFD"  >
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="../Assets/SmallLogo.png" Width="32" Height="32"/>
-                        <TextBlock Text="图形全屏" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-                <Button x:Name="btAllTable" Margin="10,0" BorderBrush="{StaticResource AllBorderColor}" Foreground="Black"  >
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="../Assets/SmallLogo.png" Width="32" Height="32"/>
-                        <TextBlock Text="表格全屏" VerticalAlignment="Center"/>
+                        <Image Source="../Assets/566269.png" Width="50" Height="50"/>
+                        <TextBlock Text="转到表格" VerticalAlignment="Center" FontSize="24" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
         </Grid>
-        <Grid Margin="10,0" Grid.Row="1">
+
+        <!--<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto"
+                      HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled">-->
+        <Grid x:Name="grdMain" Grid.Row="1" IsDoubleTapEnabled="False">
+            <!--
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1000"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+-->
+            <Navigation:SfTabControl x:Name="tabHost" TabStripPlacement="Left"
+                                     DoubleTapped="tabHost_DoubleTapped"
+                                     SelectionChanged="cbPanelSelect_SelectionChanged" Background="{StaticResource AllBackgroundWhiteColor}"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                         ScrollViewer.HorizontalScrollMode="Disabled"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                                         ScrollViewer.VerticalScrollMode="Auto" >
+            </Navigation:SfTabControl>
+            <!--
+            <MyControl:FAChartModel1 Grid.Column="1" x:Name="chartTest"/>
+            <Border Grid.Column="2" Grid.Row="1" BorderBrush="{StaticResource AllBorderColor}" BorderThickness="1" 
+                    Margin="5,0,5,5" Grid.RowSpan="2" Background="{StaticResource AllBackgroundWhiteColor}" 
+                    CornerRadius="8" Padding="10">
+                <MyControl:FAChart x:Name="chartUc1"/>
+            </Border>-->
+        </Grid>
+
+        <!--
+        </ScrollViewer>
+        <Grid Margin="0" Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="151*"/>
-                <RowDefinition Height="163*"/>
+                <RowDefinition MinHeight="80" Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120*"/>
-                <ColumnDefinition Width="529*"/>
+                <ColumnDefinition MinWidth="80" Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition MinWidth="80" Width="2*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition MinWidth="80" Width="*"/>
             </Grid.ColumnDefinitions>
-            <Grid HorizontalAlignment="Left" Height="628" Margin="0" Grid.RowSpan="2" VerticalAlignment="Top" Width="288">
-                <ItemsControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding Path=RelatedParameterCollection}"
-                          Name="lvParameters" Background="Gray" Margin="15,0,0,10">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <ToggleSwitch Header="{Binding Path=Parameter.Caption}" IsOn="{Binding Path=IsChecked,Mode=TwoWay}"
-                                  OnContent="" OffContent=""/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <!--<ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding Path=IsChecked,Mode=TwoWay}" Margin="5">
-                                <TextBlock FontSize="24" Text="{Binding Path=Parameter.Caption}"/>
-                            </CheckBox>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>-->
-                </ItemsControl>
-            </Grid>
-            <MyControl:FAGrid x:Name="grdCtrl" Grid.Column="1" Grid.Row="1" Margin="0,0,0,10" />
-            <MyControl:FAChart x:Name="chartCtrl" Grid.Column="1" />
+            <Border BorderBrush="{StaticResource AllBorderColor}" BorderThickness="1" 
+                    Margin="5,0,5,5" Grid.RowSpan="2" Background="{StaticResource AllBackgroundWhiteColor}" 
+                    CornerRadius="8" Padding="10">
+                <Grid Margin="0" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ComboBox x:Name="cbPanelSelect" Margin="15" FontSize="24" BorderBrush="Black" 
+                              DisplayMemberPath="PanelName"
+                              SelectionChanged="cbPanelSelect_SelectionChanged"/>
+                    <ItemsControl Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+            			x:Name="lvParameters" Background="Gray" >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox BorderBrush="Black" VerticalContentAlignment="Center" Foreground="Black"
+            						IsChecked="{Binding IsChecked, Mode=TwoWay}" Margin="5">
+                                    <TextBlock VerticalAlignment="Center" FontSize="24" Text="{Binding Parameter.Caption}"/>
+                                </CheckBox>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Border>
+            <Border BorderBrush="{StaticResource AllBorderColor}" x:Name="borderHostCtrl"
+                   BorderThickness="1" 
+                Margin="0,0,5,5" Grid.Column="2" CornerRadius="8" Background="{StaticResource AllBackgroundWhiteColor}" 
+                    Padding="10" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <MyControl:FAChartModel1 x:Name="chartCtrl" Margin="0" />
+            </Border>
+            <Border BorderBrush="{StaticResource AllBorderColor}" BorderThickness="1" 
+                Margin="0,0,5,5" Grid.Column="4" CornerRadius="8" Background="{StaticResource AllBackgroundWhiteColor}" 
+                    Padding="10">
+                <Charts1:XamDataChart Grid.Column="1" 
+                                  >
+                    <Charts1:XamDataChart.DataContext>
+                        <testModel:TestModelDataSource/>
+                    </Charts1:XamDataChart.DataContext>
+                    <Charts1:XamDataChart.Axes>
+                        <Charts1:CategoryXAxis x:Name="xmXAxis" ItemsSource="{Binding}" Label="{}{Second}" >
+                            <Charts1:CategoryXAxis.LabelSettings >
+                                <Charts1:AxisLabelSettings Location="OutsideBottom" Extent="35" Foreground="Black"/>
+                            </Charts1:CategoryXAxis.LabelSettings>
+                        </Charts1:CategoryXAxis>
+                        <Charts1:NumericYAxis x:Name="xmYAxis" >
+                            <Charts1:NumericYAxis.LabelSettings >
+                                <Charts1:AxisLabelSettings Location="OutsideLeft" Extent="55"
+                                                      FontSize="18" Foreground="Black"/>
+                            </Charts1:NumericYAxis.LabelSettings>
+                        </Charts1:NumericYAxis>
+                    </Charts1:XamDataChart.Axes>
+                    <Charts1:XamDataChart.Series>
+                        <Charts1:LineSeries ValueMemberPath="Hp" MarkerType="None"
+                         ItemsSource="{Binding}" Thickness="2" 
+                         XAxis="{Binding ElementName=xmXAxis}" 
+                         YAxis="{Binding ElementName=xmYAxis}" >
+                        </Charts1:LineSeries>
+                    </Charts1:XamDataChart.Series>
+                </Charts1:XamDataChart> 
+                <Grid:SfDataGrid x:Name="grdData"  AutoGenerateColumns="True"
+                                   Foreground="#FF2A2A2A"
+                          BorderBrush="#FFC8E3E3" BorderThickness="1" RowSelectionBrush="#FFdff3f4"
+                              GroupRowSelectionBrush="#FFdff3f4">
+                    <Grid:SfDataGrid.HeaderStyle>
+                        <Style TargetType="Grid:GridHeaderCellControl">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="BorderBrush" Value="#FF5E5B5C" />
+                            <Setter Property="BorderThickness" Value="2" />
+                            <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            <Setter Property="FontFamily" Value="Segoe UI" />
+                            <Setter Property="FontSize" Value="16" />
+                            <Setter Property="Foreground" Value="#FF5E5B5C" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                        </Style>
+                    </Grid:SfDataGrid.HeaderStyle>
+                </Grid:SfDataGrid>
+            </Border>
+            <input:SfGridSplitter Margin="-5,0,0,0" Width="15" Grid.Column="1"
+                                VerticalAlignment="Stretch" />
+            <input:SfGridSplitter Margin="-5,0,0,0" Width="10" Grid.Column="3"
+                                VerticalAlignment="Stretch" />
         </Grid>
-        <Grid Margin="0" Grid.Row="0" Grid.RowSpan="2"/>
-        <Grid Margin="0" Grid.Row="0" Grid.RowSpan="2"/>
-
+        -->
     </Grid>
 </common:LayoutAwarePage>

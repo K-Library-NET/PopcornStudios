@@ -7,6 +7,7 @@
       <xsd:import schemaLocation="http://localhost:45240/DataInputService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities" />
       <xsd:import schemaLocation="http://localhost:45240/DataInputService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities.Decisions" />
       <xsd:import schemaLocation="http://localhost:45240/DataInputService.svc?xsd=xsd4" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://localhost:45240/DataInputService.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/MongoDB.Bson" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IAircraftDataInput_AddOrReplaceFlight_InputMessage">
@@ -39,6 +40,24 @@
   <wsdl:message name="IAircraftDataInput_AddLevelTopFlightRecords_OutputMessage">
     <wsdl:part name="parameters" element="tns:AddLevelTopFlightRecordsResponse" />
   </wsdl:message>
+  <wsdl:message name="IAircraftDataInput_AddFlightRawDataRelationPoints_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddFlightRawDataRelationPoints" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftDataInput_AddFlightRawDataRelationPoints_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddFlightRawDataRelationPointsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftDataInput_AddOrReplaceFlightExtreme_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddOrReplaceFlightExtreme" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftDataInput_AddOrReplaceFlightExtreme_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddOrReplaceFlightExtremeResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftDataInput_AddFlightConditionDecisionRecordsBatch_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddFlightConditionDecisionRecordsBatch" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftDataInput_AddFlightConditionDecisionRecordsBatch_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddFlightConditionDecisionRecordsBatchResponse" />
+  </wsdl:message>
   <wsdl:portType name="IAircraftDataInput">
     <wsdl:operation name="AddOrReplaceFlight">
       <wsdl:input wsaw:Action="http://tempuri.org/IAircraftDataInput/AddOrReplaceFlight" message="tns:IAircraftDataInput_AddOrReplaceFlight_InputMessage" />
@@ -59,6 +78,18 @@
     <wsdl:operation name="AddLevelTopFlightRecords">
       <wsdl:input wsaw:Action="http://tempuri.org/IAircraftDataInput/AddLevelTopFlightRecords" message="tns:IAircraftDataInput_AddLevelTopFlightRecords_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IAircraftDataInput/AddLevelTopFlightRecordsResponse" message="tns:IAircraftDataInput_AddLevelTopFlightRecords_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddFlightRawDataRelationPoints">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftDataInput/AddFlightRawDataRelationPoints" message="tns:IAircraftDataInput_AddFlightRawDataRelationPoints_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftDataInput/AddFlightRawDataRelationPointsResponse" message="tns:IAircraftDataInput_AddFlightRawDataRelationPoints_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddOrReplaceFlightExtreme">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftDataInput/AddOrReplaceFlightExtreme" message="tns:IAircraftDataInput_AddOrReplaceFlightExtreme_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftDataInput/AddOrReplaceFlightExtremeResponse" message="tns:IAircraftDataInput_AddOrReplaceFlightExtreme_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddFlightConditionDecisionRecordsBatch">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftDataInput/AddFlightConditionDecisionRecordsBatch" message="tns:IAircraftDataInput_AddFlightConditionDecisionRecordsBatch_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftDataInput/AddFlightConditionDecisionRecordsBatchResponse" message="tns:IAircraftDataInput_AddFlightConditionDecisionRecordsBatch_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IAircraftDataInput" type="tns:IAircraftDataInput">
@@ -101,6 +132,33 @@
     </wsdl:operation>
     <wsdl:operation name="AddLevelTopFlightRecords">
       <soap:operation soapAction="http://tempuri.org/IAircraftDataInput/AddLevelTopFlightRecords" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddFlightRawDataRelationPoints">
+      <soap:operation soapAction="http://tempuri.org/IAircraftDataInput/AddFlightRawDataRelationPoints" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddOrReplaceFlightExtreme">
+      <soap:operation soapAction="http://tempuri.org/IAircraftDataInput/AddOrReplaceFlightExtreme" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddFlightConditionDecisionRecordsBatch">
+      <soap:operation soapAction="http://tempuri.org/IAircraftDataInput/AddFlightConditionDecisionRecordsBatch" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

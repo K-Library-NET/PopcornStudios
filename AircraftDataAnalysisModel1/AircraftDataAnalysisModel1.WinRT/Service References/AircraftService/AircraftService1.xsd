@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/FlightDataEntities.Decisions" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/FlightDataEntities.Decisions" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:65214/AircraftService.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:complexType name="ArrayOfDecision">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Decision" nillable="true" type="tns:Decision" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDecision" nillable="true" type="tns:ArrayOfDecision" />
+  <xs:complexType name="Decision">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Conditions" nillable="true" type="tns:ArrayOfSubCondition" />
+      <xs:element minOccurs="0" name="DecisionDescriptionStringTemplate" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DecisionID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DecisionName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EventLevel" type="xs:int" />
+      <xs:element minOccurs="0" name="LastTime" type="xs:int" />
+      <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="RelatedParameters" nillable="true" type="q1:ArrayOfstring" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Decision" nillable="true" type="tns:Decision" />
+  <xs:complexType name="ArrayOfSubCondition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SubCondition" nillable="true" type="tns:SubCondition" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSubCondition" nillable="true" type="tns:ArrayOfSubCondition" />
+  <xs:complexType name="SubCondition">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ConditionType" type="tns:SubConditionType" />
+      <xs:element minOccurs="0" name="Operator" type="tns:CompareOperator" />
+      <xs:element minOccurs="0" name="ParameterID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ParameterValue" type="xs:float" />
+      <xs:element minOccurs="0" name="Relation" type="tns:ConditionRelation" />
+      <xs:element minOccurs="0" name="RootDecision" nillable="true" type="tns:Decision" />
+      <xs:element minOccurs="0" name="SubConditions" nillable="true" type="tns:ArrayOfSubCondition" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SubCondition" nillable="true" type="tns:SubCondition" />
+  <xs:simpleType name="SubConditionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Compare" />
+      <xs:enumeration value="DeltaRate" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="SubConditionType" nillable="true" type="tns:SubConditionType" />
+  <xs:simpleType name="CompareOperator">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Equal" />
+      <xs:enumeration value="NotEqual" />
+      <xs:enumeration value="GreaterThan" />
+      <xs:enumeration value="GreaterOrEqual" />
+      <xs:enumeration value="SmallerThan" />
+      <xs:enumeration value="SmallerOrEqual" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="CompareOperator" nillable="true" type="tns:CompareOperator" />
+  <xs:simpleType name="ConditionRelation">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AND" />
+      <xs:enumeration value="OR" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ConditionRelation" nillable="true" type="tns:ConditionRelation" />
+  <xs:complexType name="ArrayOfDecisionRecord">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DecisionRecord" nillable="true" type="tns:DecisionRecord" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDecisionRecord" nillable="true" type="tns:ArrayOfDecisionRecord" />
+  <xs:complexType name="DecisionRecord">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DecisionDescription" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DecisionID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DecisionName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EndSecond" type="xs:int" />
+      <xs:element minOccurs="0" name="EventLevel" type="xs:int" />
+      <xs:element minOccurs="0" name="FlightID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="HappenSecond" type="xs:int" />
+      <xs:element minOccurs="0" name="StartSecond" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DecisionRecord" nillable="true" type="tns:DecisionRecord" />
+  <xs:complexType name="ArrayOfFlightConditionDecision">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FlightConditionDecision" nillable="true" type="tns:FlightConditionDecision" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfFlightConditionDecision" nillable="true" type="tns:ArrayOfFlightConditionDecision" />
+  <xs:complexType name="FlightConditionDecision">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Decision">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="FlightConditionDecision" nillable="true" type="tns:FlightConditionDecision" />
+</xs:schema>

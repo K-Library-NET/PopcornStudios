@@ -121,7 +121,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
             {
                 if (this.file != null)
                 {
-                    DataReading read = new DataReading(this.extractor, flight, this.Parameters);
+                    IDataReading read = new DataReading(this.extractor, flight, this.Parameters);
                     await read.ReadDataAsync();
                     this.Header = read.Header;
                     if (this.Header != null)
@@ -137,15 +137,38 @@ namespace AircraftDataAnalysisWinRT.DataModel
         {
             if (this.file != null)
             {
-                DataReading read = new DataReading(this.extractor, flight, this.Parameters);
+                this.Flight.GlobeDatas = new GlobeData[] { };
+                IDataReading read = new DataReading(this.extractor, flight, this.Parameters);
                 read.ReadHeader();
                 this.Header = read.Header;
                 if (this.Header != null)
                 {
                     this.flight.EndSecond = this.Header.FlightSeconds;
                     this.EndSecond = this.flight.EndSecond;
+                    if (this.Header.Latitudes != null && this.Header.Longitudes != null)
+                        this.Flight.GlobeDatas = this.ToGlobeDatas(this.Header.Latitudes, this.Header.Longitudes);
                 }
             }
+        }
+
+        private GlobeData[] ToGlobeDatas(float[] Latitudes, float[] Longitudes)
+        {
+            int max = Math.Min(Latitudes.Length, Longitudes.Length);
+
+            List<GlobeData> dts = new List<GlobeData>();
+
+            for (int i = 0; i < max; i++)
+            {
+                GlobeData dt = new GlobeData() { Latitude = Latitudes[i], Longitude = Longitudes[i] };
+
+                if (dt.Latitude > 90 || dt.Longitude > 180)
+                    continue;
+                //经度大于180度不可以、纬度不能大于90
+
+                dts.Add(dt);
+            }
+
+            return dts.ToArray();
         }
 
         public AsyncActionWithProgressCompletedHandler<int> Completed
@@ -215,7 +238,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
             var extractor = FlightDataReading.AircraftModel1.FlightRawDataExtractorFactory
                 .CreateFlightRawDataExtractor(this.File, parameters);
 
-            DataReading reading = new DataReading(extractor, this.flight,
+            IDataReading reading = new DataReading(extractor, this.flight,
                 parameters);
             reading.Header = this.Header;
             RawDataPointViewModel viewModel = new RawDataPointViewModel();

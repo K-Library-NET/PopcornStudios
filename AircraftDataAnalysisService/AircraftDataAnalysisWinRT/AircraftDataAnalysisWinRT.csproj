@@ -28,6 +28,7 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -112,23 +113,63 @@
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="Common\DataPointToBrushConverter.cs" />
     <Compile Include="Common\DecisionWrap.cs" />
+    <Compile Include="Common\NavigationHelper.cs" />
+    <Compile Include="Common\ObservableDictionary.cs" />
+    <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="DataModel\ChartPanelViewModel.cs" />
     <Compile Include="DataModel\DecisionRecordFlightAnalysisViewModel.cs" />
     <Compile Include="DataModel\ExtremumInfoFlightAnalysisViewModel.cs" />
     <Compile Include="DataModel\ExtremumReportViewModel.cs" />
-    <Compile Include="DataModel\FlightAnalysisViewModel.cs" />
+    <Compile Include="DataModel\FlightAnalysisSubViewModel.cs" />
+    <Compile Include="DataModel\FlightAnalysisSubViewModelFactory.cs" />
+    <Compile Include="DataModel\FlightDateTreeViewModel.cs" />
+    <Compile Include="DataModel\StatReportDataViewModel.cs" />
+    <Compile Include="DataModel\StatReportSelectViewModel.cs" />
+    <Compile Include="DataModel\StatReportViewModel.cs" />
+    <Compile Include="DataModel\TrendAnalysisItem.cs" />
+    <Compile Include="Domain\FlightAnalysisSub.xaml.cs">
+      <DependentUpon>FlightAnalysisSub.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Domain\FlightAnalysisViewModel.cs" />
+    <Compile Include="Domain\GridDataPage.xaml.cs">
+      <DependentUpon>GridDataPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Domain\ImportAircraftBatchConfirm.xaml.cs">
       <DependentUpon>ImportAircraftBatchConfirm.xaml</DependentUpon>
     </Compile>
     <Compile Include="Domain\ImportLoadConfirmPage.xaml.cs">
       <DependentUpon>ImportLoadConfirmPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Domain\TrendAnalysisViewModel.cs" />
+    <Compile Include="FastDataReadings\DecisionStepSecondsHandler.cs" />
+    <Compile Include="FastDataReadings\DeleteExistsHandler.cs" />
+    <Compile Include="FastDataReadings\FastDataReading.cs" />
+    <Compile Include="FastDataReadings\FastDataReadingStepHandler.cs" />
+    <Compile Include="FastDataReadings\LevelRecordsStepSecondsHandler.cs" />
+    <Compile Include="FastDataReadings\OthersStepSecondsHandler.cs" />
+    <Compile Include="FastDataReadings\ReadSecondsHandler.cs" />
+    <Compile Include="FastDataReadings\BasicStepSecondsHandler.cs" />
+    <Compile Include="LogHelper.cs" />
+    <Compile Include="MyControl\AxisDataBindingObject.cs" />
+    <Compile Include="MyControl\BindingChartUIFactory.cs" />
     <Compile Include="MyControl\FAChart.xaml.cs">
       <DependentUpon>FAChart.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MyControl\FAChartModel.cs" />
+    <Compile Include="MyControl\FAChartModel1.xaml.cs">
+      <DependentUpon>FAChartModel1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MyControl\FAGlobeChart.xaml.cs">
+      <DependentUpon>FAGlobeChart.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MyControl\FAGrid.xaml.cs">
       <DependentUpon>FAGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MyControl\FAGridModel1.xaml.cs">
+      <DependentUpon>FAGridModel1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MyControl\GridDataPage.xaml.cs">
+      <DependentUpon>GridDataPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MyControl\IConfirmDialog.cs" />
     <Compile Include="MyControl\SwitchChartPanelConfirmPage.xaml.cs">
@@ -141,8 +182,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataModel\AddFileViewModel.cs" />
-    <Compile Include="DataModel\AircraftModelDataGroup.cs" />
-    <Compile Include="DataModel\AircraftMongoDbDataSource.cs" />
+    <Compile Include="DataModel\EngineMonitoringViewModel.cs" />
+    <Compile Include="DataModel\TestModelDataSource.cs" />
     <Compile Include="DataModel\DataCommon.cs" />
     <Compile Include="DataModel\FaultDiagnosisViewModel.cs" />
     <Compile Include="DataModel\RawDataPointViewModel.cs" />
@@ -199,8 +240,10 @@
     </Compile>
     <Compile Include="Services\DataInputHelper.cs" />
     <Compile Include="Services\DataReading.cs" />
+    <Compile Include="Services\IDataReading.cs" />
     <Compile Include="Services\RTConverter.cs" />
     <Compile Include="Services\ServerHelper.cs" />
+    <Compile Include="Styles\AircraftDataAnalysisGlobalPallete.cs" />
     <Compile Include="Test\TestAddAircraftModel.xaml.cs">
       <DependentUpon>TestAddAircraftModel.xaml</DependentUpon>
     </Compile>
@@ -217,6 +260,7 @@
     </AppxManifest>
     <None Include="Common\ReadMe.txt" />
     <None Include="AircraftDataAnalysisWinRT_TemporaryKey.pfx" />
+    <None Include="DataModel\SampleData.json" />
     <None Include="Properties\ServiceReferences.Designer.ClientConfig" />
     <None Include="Service References\AircraftDataInput\AircraftDataAnalysisWinRT.AircraftDataInput.Flight.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -237,6 +281,9 @@
     <None Include="Service References\AircraftDataInput\DataInputService4.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\AircraftDataInput\DataInputService5.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.AircraftModel.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -249,16 +296,25 @@
     <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.DecisionRecord.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.ExtremumPointInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.ExtremumReportDefinition.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.Flight.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.FlightConditionDecision.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.FlightParameters.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.FlightRawData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.FlightRawDataRelationPoint.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\AircraftService\AircraftDataAnalysisWinRT.AircraftService.LevelTopFlightRecord.datasource">
@@ -322,6 +378,9 @@
     <None Include="Service References\AircraftService\AircraftService4.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\AircraftService\AircraftService5.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\AircraftService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -335,6 +394,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Domain\FlightAnalysisSub.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Domain\GridDataPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Domain\ImportAircraftBatchConfirm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -347,7 +414,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="MyControl\FAChartModel1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MyControl\FAGlobeChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MyControl\FAGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MyControl\FAGridModel1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MyControl\GridDataPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -407,6 +490,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Styles\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Test\TestAddAircraftModel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -438,8 +525,8 @@
     <SDKReference Include="NetAdvantage WinRT, Version=13.1">
       <Name>NetAdvantage WinRT</Name>
     </SDKReference>
-    <SDKReference Include="RadControls for Windows 8, Version=2013.2.611">
-      <Name>RadControls for Windows 8</Name>
+    <SDKReference Include="Syncfusion controls for WinRT XAML, Version=11.2.0.25">
+      <Name>Syncfusion Controls for WinRT XAML</Name>
     </SDKReference>
   </ItemGroup>
   <ItemGroup>

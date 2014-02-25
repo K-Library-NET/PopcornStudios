@@ -1370,5 +1370,36 @@ namespace FlightDataReading.AircraftModel1
 
             return decisions;
         }
+
+        public DateTime ParseDate(string p)
+        {
+            if (!string.IsNullOrEmpty(p) && p.Length >= 8)
+            {
+                string sub = p.Substring(2, 6);
+                DateTime dt = DateTime.ParseExact(sub, "yyMMdd", System.Globalization.CultureInfo.CurrentCulture);
+
+                //string yearStr = sub.Substring(0, 2);
+                //string monthStr = sub.Substring(2, 2);
+                //string dayStr = sub.Substring(4, 2);
+
+                //DateTime dt2 = new DateTime(2000 + Convert.ToInt32(yearStr), 
+                //    Convert.ToInt32(monthStr), Convert.ToInt32(dayStr));
+
+                return dt;
+                //return dt2;
+            }
+
+            return DateTime.Now;
+        }
+
+        public string ParseAircraftNumber(string p)
+        {
+            if (!string.IsNullOrEmpty(p) && p.Length >= 2)
+            {
+                return p.Substring(0, 2);
+            }
+
+            return string.Empty;
+        }
     }
 }

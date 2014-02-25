@@ -29,6 +29,7 @@
     <MetadataFile FileName="DataInputService1.xsd" MetadataType="Schema" ID="59399d56-354a-40ff-b83c-df3390bc4b5c" SourceId="1" SourceUrl="http://localhost:45240/DataInputService.svc?xsd=xsd3" />
     <MetadataFile FileName="DataInputService2.xsd" MetadataType="Schema" ID="8eb9710f-bbd5-48fc-8b81-59679cce076c" SourceId="1" SourceUrl="http://localhost:45240/DataInputService.svc?xsd=xsd1" />
     <MetadataFile FileName="DataInputService3.xsd" MetadataType="Schema" ID="b0639eb1-b612-4e71-b476-cb2212524c08" SourceId="1" SourceUrl="http://localhost:45240/DataInputService.svc?xsd=xsd2" />
+    <MetadataFile FileName="DataInputService5.xsd" MetadataType="Schema" ID="aa42d1fa-cf1f-40b9-84db-ec67162caee4" SourceId="1" SourceUrl="http://localhost:45240/DataInputService.svc?xsd=xsd5" />
     <MetadataFile FileName="DataInputService4.xsd" MetadataType="Schema" ID="58f5e9ce-6199-42d3-90ad-c6e7ee429452" SourceId="1" SourceUrl="http://localhost:45240/DataInputService.svc?xsd=xsd0" />
     <MetadataFile FileName="DataInputService.disco" MetadataType="Disco" ID="b05e275c-faf5-4009-aaee-5d7ee69f9288" SourceId="1" SourceUrl="http://localhost:45240/DataInputService.svc?disco" />
   </Metadata>

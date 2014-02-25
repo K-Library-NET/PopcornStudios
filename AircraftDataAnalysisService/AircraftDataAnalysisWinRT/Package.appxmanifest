@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="6d224e35-5976-4f25-8089-d331f73401ab" Publisher="CN=LibreK" Version="1.0.0.4" />
+  <Identity Name="6d224e35-5976-4f25-8089-d331f73401ab" Publisher="CN=LibreK" Version="1.0.0.2" />
   <Properties>
     <DisplayName>飞行参数分析</DisplayName>
     <PublisherDisplayName>LibreK</PublisherDisplayName>
@@ -16,7 +16,7 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="AircraftDataAnalysisWinRT.App">
       <VisualElements DisplayName="飞行参数分析" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="飞行参数分析WinRT" ForegroundText="light" BackgroundColor="#464646">
-        <DefaultTile ShowName="allLogos" />
+        <DefaultTile ShowName="logoOnly" />
         <SplashScreen Image="Assets\SplashScreen.png" />
         <InitialRotationPreference>
           <Rotation Preference="portrait" />
@@ -28,13 +28,6 @@
     </Application>
   </Applications>
   <Capabilities>
-    <Capability Name="removableStorage" />
-    <Capability Name="sharedUserCertificates" />
-    <Capability Name="musicLibrary" />
-    <Capability Name="picturesLibrary" />
-    <Capability Name="privateNetworkClientServer" />
-    <Capability Name="enterpriseAuthentication" />
-    <Capability Name="internetClientServer" />
     <Capability Name="internetClient" />
   </Capabilities>
 </Package>

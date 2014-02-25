@@ -9,6 +9,7 @@
       <xsd:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/System.Collections.Generic" />
       <xsd:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities.Charts" />
       <xsd:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/FlightDataEntities.Decisions" />
+      <xsd:import schemaLocation="http://localhost:45240/AircraftService.svc?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/MongoDB.Bson" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IAircraftService_GetCurrentAircraftModel_InputMessage">
@@ -22,6 +23,12 @@
   </wsdl:message>
   <wsdl:message name="IAircraftService_GetAllFlights_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetAllFlightsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetAllFlightsByInstance_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllFlightsByInstance" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetAllFlightsByInstance_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllFlightsByInstanceResponse" />
   </wsdl:message>
   <wsdl:message name="IAircraftService_GetFlightData_InputMessage">
     <wsdl:part name="parameters" element="tns:GetFlightData" />
@@ -65,6 +72,24 @@
   <wsdl:message name="IAircraftService_GetExtremumReportDefinition_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetExtremumReportDefinitionResponse" />
   </wsdl:message>
+  <wsdl:message name="IAircraftService_GetAllFlightConditionDecisions_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllFlightConditionDecisions" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetAllFlightConditionDecisions_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllFlightConditionDecisionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetFlightRawDataRelationPoints_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetFlightRawDataRelationPoints" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetFlightRawDataRelationPoints_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetFlightRawDataRelationPointsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetExtremumPointInfosByAircraftInstance_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetExtremumPointInfosByAircraftInstance" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetExtremumPointInfosByAircraftInstance_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetExtremumPointInfosByAircraftInstanceResponse" />
+  </wsdl:message>
   <wsdl:portType name="IAircraftService">
     <wsdl:operation name="GetCurrentAircraftModel">
       <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetCurrentAircraftModel" message="tns:IAircraftService_GetCurrentAircraftModel_InputMessage" />
@@ -73,6 +98,10 @@
     <wsdl:operation name="GetAllFlights">
       <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetAllFlights" message="tns:IAircraftService_GetAllFlights_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetAllFlightsResponse" message="tns:IAircraftService_GetAllFlights_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllFlightsByInstance">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetAllFlightsByInstance" message="tns:IAircraftService_GetAllFlightsByInstance_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetAllFlightsByInstanceResponse" message="tns:IAircraftService_GetAllFlightsByInstance_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="GetFlightData">
       <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetFlightData" message="tns:IAircraftService_GetFlightData_InputMessage" />
@@ -102,6 +131,18 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetExtremumReportDefinition" message="tns:IAircraftService_GetExtremumReportDefinition_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetExtremumReportDefinitionResponse" message="tns:IAircraftService_GetExtremumReportDefinition_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation name="GetAllFlightConditionDecisions">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetAllFlightConditionDecisions" message="tns:IAircraftService_GetAllFlightConditionDecisions_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetAllFlightConditionDecisionsResponse" message="tns:IAircraftService_GetAllFlightConditionDecisions_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFlightRawDataRelationPoints">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetFlightRawDataRelationPoints" message="tns:IAircraftService_GetFlightRawDataRelationPoints_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetFlightRawDataRelationPointsResponse" message="tns:IAircraftService_GetFlightRawDataRelationPoints_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetExtremumPointInfosByAircraftInstance">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetExtremumPointInfosByAircraftInstance" message="tns:IAircraftService_GetExtremumPointInfosByAircraftInstance_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetExtremumPointInfosByAircraftInstanceResponse" message="tns:IAircraftService_GetExtremumPointInfosByAircraftInstance_OutputMessage" />
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IAircraftService" type="tns:IAircraftService">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -116,6 +157,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetAllFlights">
       <soap:operation soapAction="http://tempuri.org/IAircraftService/GetAllFlights" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllFlightsByInstance">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetAllFlightsByInstance" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -179,6 +229,33 @@
     </wsdl:operation>
     <wsdl:operation name="GetExtremumReportDefinition">
       <soap:operation soapAction="http://tempuri.org/IAircraftService/GetExtremumReportDefinition" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllFlightConditionDecisions">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetAllFlightConditionDecisions" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFlightRawDataRelationPoints">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetFlightRawDataRelationPoints" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExtremumPointInfosByAircraftInstance">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetExtremumPointInfosByAircraftInstance" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

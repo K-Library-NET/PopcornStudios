@@ -81,4 +81,18 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="DecisionRecord" nillable="true" type="tns:DecisionRecord" />
+  <xs:complexType name="ArrayOfFlightConditionDecision">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FlightConditionDecision" nillable="true" type="tns:FlightConditionDecision" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfFlightConditionDecision" nillable="true" type="tns:ArrayOfFlightConditionDecision" />
+  <xs:complexType name="FlightConditionDecision">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Decision">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="FlightConditionDecision" nillable="true" type="tns:FlightConditionDecision" />
 </xs:schema>

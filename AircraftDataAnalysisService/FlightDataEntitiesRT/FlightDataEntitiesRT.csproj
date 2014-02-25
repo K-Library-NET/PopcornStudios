@@ -118,6 +118,7 @@
     <Compile Include="Decisions\Decision.cs" />
     <Compile Include="Decisions\DecisionRecord.cs" />
     <Compile Include="Decisions\DeltaRateSubCondition.cs" />
+    <Compile Include="Decisions\FlightConditionDecision.cs" />
     <Compile Include="Decisions\IDecision.cs" />
     <Compile Include="Decisions\SubCondition.cs" />
     <Compile Include="ExtremumPointInfo.cs" />
@@ -125,12 +126,19 @@
     <Compile Include="FlightDataHeader.cs" />
     <Compile Include="FlightParameter.cs" />
     <Compile Include="FlightParameters.cs" />
+    <Compile Include="FlightRawDataRelationPoint.cs" />
+    <Compile Include="GlobeData.cs" />
     <Compile Include="IFlightRawDataExtractor.cs" />
+    <Compile Include="IModelRawDataBuilder.cs" />
     <Compile Include="Level1FlightRecord.cs" />
     <Compile Include="Level2FlightRecord.cs" />
     <Compile Include="LevelTopFlightRecord.cs" />
+    <Compile Include="ModelRawData.cs" />
+    <Compile Include="ModelRawDataBuilder.cs" />
+    <Compile Include="ModelRawDataCollection.cs" />
     <Compile Include="ParameterRawData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\StatConditionReportRecord.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">

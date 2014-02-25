@@ -1,0 +1,82 @@
+﻿<UserControl
+    x:Class="AircraftDataAnalysisModel1.WinRT.MyControl.DataPointTracker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AircraftDataAnalysisModel1.WinRT.MyControl"
+    xmlns:Charts="using:Infragistics.Controls.Charts"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <DataTemplate x:Key="DataTrackerTemplate">
+            <local:TrackingGrid x:Name="trackingGrid" Series="{Binding Series}" VisibilityItem="{Binding ElementName=visibilityItem}">
+                <Ellipse x:Name="seriesMarker" Stretch="Fill" HorizontalAlignment="Stretch" 
+                                 VerticalAlignment="Stretch" Fill="Transparent" Stroke="Transparent" 
+                                 StrokeThickness="0.5" MinWidth="15" MinHeight="15" />
+                <local:VisibilityItem x:Name="visibilityItem" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Visibility="Collapsed">
+                    <Ellipse Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                                     Fill="{Binding ActualItemBrush}" Stroke="{Binding Series.ActualMarkerOutline}" 
+                                     StrokeThickness="0.5" MinWidth="15" MinHeight="15" />
+                </local:VisibilityItem>
+            </local:TrackingGrid>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Charts:XamDataChart Grid.Column="1"  x:Name="DataChart"   CrosshairVisibility="Visible"                         
+                         PointerMoved="xamDataChart1_PointerMoved">
+
+            <!--<Charts:XamDataChart.DataContext>
+                <local:SimpleDataCollection/>
+            </Charts:XamDataChart.DataContext>-->
+            <Charts:XamDataChart.Axes>
+                <Charts:CategoryXAxis x:Name="xmXAxis" ItemsSource="{Binding}" Label="{}{Label}" >
+                    <Charts:CategoryXAxis.LabelSettings >
+                        <Charts:AxisLabelSettings Location="OutsideTop" Extent="35" />
+                    </Charts:CategoryXAxis.LabelSettings>
+                </Charts:CategoryXAxis>
+                <Charts:CategoryXAxis x:Name="xmXAxis2" ItemsSource="{Binding}" Label="{}{Label}" >
+                    <Charts:CategoryXAxis.LabelSettings >
+                        <Charts:AxisLabelSettings Location="OutsideBottom" Extent="35" />
+                    </Charts:CategoryXAxis.LabelSettings>
+                </Charts:CategoryXAxis>
+                <Charts:NumericYAxis x:Name="xmYAxis" Stroke="#FFF2A724" CrossingValue="2"
+                         CrossingAxis="{Binding ElementName=xmXAxis}">
+
+                    <Charts:NumericYAxis.LabelSettings >
+                        <Charts:AxisLabelSettings Location="OutsideLeft" Extent="55" FontFamily="Global User Interface" />
+                    </Charts:NumericYAxis.LabelSettings>
+                </Charts:NumericYAxis>
+                <Charts:NumericYAxis x:Name="xmYAxis2" Stroke="Red" CrossingValue="4"
+                         CrossingAxis="{Binding ElementName=xmXAxis2}"
+                        >
+                    <Charts:NumericYAxis.LabelSettings >
+                        <Charts:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
+                    </Charts:NumericYAxis.LabelSettings>
+                </Charts:NumericYAxis>
+            </Charts:XamDataChart.Axes>
+            <Charts:XamDataChart.Series>
+                <Charts:LineSeries ValueMemberPath="Value"
+                         ItemsSource="{Binding}"  x:Name="serie1"
+                         XAxis="{Binding ElementName=xmXAxis}" 
+                         YAxis="{Binding ElementName=xmYAxis}" Background="Red" 
+                                   Brush="DarkOrchid" Thickness="5" MarkerType="None" 
+                               MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                <Charts:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding}" x:Name="line1"
+                         XAxis="{Binding ElementName=xmXAxis2}" 
+                         YAxis="{Binding ElementName=xmYAxis2}" 
+                                   Brush="{Binding ElementName=serie1,Path=Brush}" Thickness="5" MarkerType="None"   />
+                <!--<Charts:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding}" x:Name="line2"
+                         XAxis="{Binding ElementName=xmXAxis}" 
+                         YAxis="{Binding ElementName=xmYAxis}" 
+                                   Brush="Blue" Thickness="5" MarkerType="None"  />-->
+            </Charts:XamDataChart.Series>
+        </Charts:XamDataChart>
+
+    </Grid>
+</UserControl>

@@ -131,9 +131,6 @@
     <Compile Include="Domain\TrendAnalysis.xaml.cs">
       <DependentUpon>TrendAnalysis.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DXPage1.xaml.cs">
-      <DependentUpon>DXPage1.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -205,10 +202,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DXPage1.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -225,23 +218,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <SDKReference Include="DevExpress.Controls, Version=13.1">
-      <Name>DevExpress.Controls</Name>
-    </SDKReference>
-    <SDKReference Include="DevExpress.Core, Version=13.1">
-      <Name>DevExpress.Core</Name>
-    </SDKReference>
-    <SDKReference Include="DevExpress.Data, Version=13.1">
-      <Name>DevExpress.Data</Name>
-    </SDKReference>
-    <SDKReference Include="DevExpress.Visualization, Version=13.1">
-      <Name>DevExpress.Visualization</Name>
-    </SDKReference>
-    <SDKReference Include="RadControls for Windows 8, Version=2013.2.611">
-      <Name>RadControls for Windows 8</Name>
-    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

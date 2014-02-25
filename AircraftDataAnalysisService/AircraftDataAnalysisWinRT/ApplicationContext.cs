@@ -14,10 +14,10 @@ namespace AircraftDataAnalysisWinRT
             //使用云端IIS服务，去掉下面两行注释
             //this.DataInputServiceURL = "http://42.96.198.241/AircraftDataAnalysisWcfService/DataInputService.svc";
             //this.AircraftServiceURL = "http://42.96.198.241/AircraftDataAnalysisWcfService/AircraftService.svc";
-            //throw new Exception("test");
+
             //使用本机IIS服务（不是VS调试器），去掉下面两行注释
-            this.DataInputServiceURL = "http://127.0.0.1/AircraftDataAnalysisWcfService/DataInputService.svc";
-            this.AircraftServiceURL = "http://127.0.0.1/AircraftDataAnalysisWcfService/AircraftService.svc";
+            //this.DataInputServiceURL = "http://localhost/AircraftDataAnalysisWcfService/DataInputService.svc";
+            //this.AircraftServiceURL = "http://localhost/AircraftDataAnalysisWcfService/AircraftService.svc";
 
             //上面四行全部注释，那就是使用VS调试器
         }
@@ -74,6 +74,40 @@ namespace AircraftDataAnalysisWinRT
             }
         }
 
+        public Task<FlightDataEntitiesRT.FlightParameters> GetFlightParametersAsync(
+            FlightDataEntitiesRT.AircraftModel aircraftModel)
+        {
+            if (this.m_objectMap.ContainsKey("AircraftModel_FlightParameters:" + aircraftModel.ModelName)
+                && this.m_objectMap["AircraftModel_FlightParameters:" + aircraftModel.ModelName] != null)
+            {
+                return Task.Run<FlightDataEntitiesRT.FlightParameters>(
+                      new Func<FlightDataEntitiesRT.FlightParameters>(() =>
+                      {
+                          if (this.m_objectMap.ContainsKey("AircraftModel_FlightParameters:" + aircraftModel.ModelName)
+                              && this.m_objectMap["AircraftModel_FlightParameters:" + aircraftModel.ModelName] != null)
+                          {
+                              return m_objectMap["AircraftModel_FlightParameters:" + aircraftModel.ModelName] as FlightDataEntitiesRT.FlightParameters;
+                          }
+                          return null;
+                      }));
+                //  return m_objectMap["AircraftModel_FlightParameters:" + aircraftModel.ModelName] as FlightDataEntitiesRT.FlightParameters;
+            }
+            else
+            {
+                Task<FlightDataEntitiesRT.FlightParameters> parameters = ServerHelper.GetFlightParametersAsync(
+                    AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentAircraftModel);
+                parameters.ContinueWith(new Action<Task<FlightDataEntitiesRT.FlightParameters>>(
+                    delegate(Task<FlightDataEntitiesRT.FlightParameters> t)
+                    {
+                        if (!m_objectMap.ContainsKey("AircraftModel_FlightParameters:" + aircraftModel.ModelName))
+                        {
+                            m_objectMap.Add("AircraftModel_FlightParameters:" + aircraftModel.ModelName, t.Result);
+                        }
+                    }));
+                return parameters;
+            }
+        }
+
         internal IEnumerable<FlightDataEntitiesRT.Decisions.Decision> GetDecisions(FlightDataEntitiesRT.AircraftModel aircraftModel)
         {
             if (this.m_objectMap.ContainsKey("AircraftModel_Decisions:" + aircraftModel.ModelName)
@@ -102,6 +136,64 @@ namespace AircraftDataAnalysisWinRT
                 return result.First();
 
             return p;
+        }
+
+        public Domain.FlightAnalysisViewModel GetViewModelByCurrentFlight()
+        {
+            return GetCurrentViewModel(CurrentFlight);
+        }
+
+        public Domain.FlightAnalysisViewModel GetCurrentViewModel(FlightDataEntitiesRT.Flight flight)
+        {
+            if (flight == null || string.IsNullOrEmpty(flight.FlightID))
+            {
+                return null;
+            }
+
+            string key = this.GetFlightViewModelKey(flight.FlightID);
+            return GetCurrentViewModel(key);
+        }
+
+        public Domain.FlightAnalysisViewModel GetCurrentViewModel(string key)
+        {
+            if (this.m_objectMap.ContainsKey(key)
+                && this.m_objectMap[key] != null
+                && this.m_objectMap[key] is Domain.FlightAnalysisViewModel)
+            {
+                return this.m_objectMap[key] as Domain.FlightAnalysisViewModel;
+            }
+
+            return null;
+        }
+
+        public void SetCurrentViewModel(FlightDataEntitiesRT.Flight flight,
+            AircraftDataAnalysisWinRT.Domain.FlightAnalysisViewModel viewModel)
+        {
+            if (flight == null || string.IsNullOrEmpty(flight.FlightID))
+            {
+                return;
+            }
+
+            SetCurrentViewModel(flight.FlightID, viewModel);
+        }
+
+        public void SetCurrentViewModel(string flightID,
+            AircraftDataAnalysisWinRT.Domain.FlightAnalysisViewModel viewModel)
+        {
+            string key = this.GetFlightViewModelKey(flightID);
+            if (this.m_objectMap.ContainsKey(key))
+            {
+                this.m_objectMap[key] = viewModel;
+            }
+            else
+            {
+                this.m_objectMap.Add(key, viewModel);
+            }
+        }
+
+        private string GetFlightViewModelKey(string flightID)
+        {
+            return string.Format("FlightViewModel: {0}", flightID);
         }
     }
 }

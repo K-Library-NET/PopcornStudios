@@ -76,4 +76,49 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="AddFlightRawDataRelationPoints">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/FlightDataEntities" minOccurs="0" name="flight" nillable="true" type="q10:Flight" />
+        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/FlightDataEntities" minOccurs="0" name="flightRawDataRelationPoints" nillable="true" type="q11:ArrayOfFlightRawDataRelationPoint" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddFlightRawDataRelationPointsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="AddFlightRawDataRelationPointsResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddOrReplaceFlightExtreme">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/FlightDataEntities" minOccurs="0" name="flight" nillable="true" type="q12:Flight" />
+        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/FlightDataEntities" minOccurs="0" name="extremumPointInfo" nillable="true" type="q13:ArrayOfExtremumPointInfo" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddOrReplaceFlightExtremeResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="AddOrReplaceFlightExtremeResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddFlightConditionDecisionRecordsBatch">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/FlightDataEntities" minOccurs="0" name="flight" nillable="true" type="q14:Flight" />
+        <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/FlightDataEntities.Decisions" minOccurs="0" name="records" nillable="true" type="q15:ArrayOfDecisionRecord" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddFlightConditionDecisionRecordsBatchResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="AddFlightConditionDecisionRecordsBatchResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 </xs:schema>

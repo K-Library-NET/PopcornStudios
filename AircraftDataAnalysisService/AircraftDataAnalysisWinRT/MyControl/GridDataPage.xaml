@@ -1,0 +1,299 @@
+﻿<common:LayoutAwarePage
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AircraftDataAnalysisWinRT.MyControl"
+    xmlns:common="using:AircraftDataAnalysisWinRT.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Grid="using:Syncfusion.UI.Xaml.Grid"
+    x:Name="pageRoot"
+    x:Class="AircraftDataAnalysisWinRT.MyControl.GridDataPage"
+                   xmlns:datapager="using:Syncfusion.UI.Xaml.Controls.DataPager"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Mode=Self}}"
+    mc:Ignorable="d">
+    <common:LayoutAwarePage.Resources>
+        <Grid:SortDirectionToVisibilityConverter x:Key="sortDirectionToVisibilityConverter" />
+        <Grid:SortDirectionToWidthConverter x:Key="sortDirectionToWidthConverter" />
+        <Style x:Key="FilterToggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup>
+                                    <VisualState x:Name="Filtered">
+                                        <Storyboard BeginTime="0">
+                                            <ObjectAnimationUsingKeyFrames BeginTime="0"
+                                                                       Duration="1"
+                                                                       Storyboard.TargetName="path"
+                                                                       Storyboard.TargetProperty="Data">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="M2.1299944,9.9798575L55.945994,9.9798575 35.197562,34.081179 35.197562,62.672859 23.428433,55.942383 23.428433,33.52121z M1.3001332,0L56.635813,0C57.355887,0,57.935946,0.5891428,57.935946,1.3080959L57.935946,2.8258877C57.935946,3.5448422,57.355887,4.133985,56.635813,4.133985L1.3001332,4.133985C0.58005941,4.133985,-2.3841858E-07,3.5448422,0,2.8258877L0,1.3080959C-2.3841858E-07,0.5891428,0.58005941,0,1.3001332,0z" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="UnFiltered">
+                                        <Storyboard BeginTime="0">
+                                            <ObjectAnimationUsingKeyFrames BeginTime="0"
+                                                                       Duration="1"
+                                                                       Storyboard.TargetName="path"
+                                                                       Storyboard.TargetProperty="Data">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="M0,0 L118.49799,0 L72.811813,53.068943 L72.811813,116.02525 L46.897243,101.20534 L46.897243,51.835941 z" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}"
+                                Background="Transparent">
+                                <Path Name="path"
+                                  Margin="4"
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Bottom"
+                                  Data="M0,0 L118.49799,0 L72.811813,53.068943 L72.811813,116.02525 L46.897243,101.20534 L46.897243,51.835941 z"
+                                  Fill="Gray"
+                                  Opacity="0.8"
+                                  Stretch="Fill" />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <x:String x:Key="AppName">飞行分析</x:String>
+    </common:LayoutAwarePage.Resources>
+    <Grid Background="{StaticResource AllBackgroundColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <VisualStateManager.VisualStateGroups>
+
+            <!-- Visual states reflect the application's view state -->
+            <VisualStateGroup x:Name="ApplicationViewStates">
+                <VisualState x:Name="FullScreenLandscape"/>
+                <VisualState x:Name="Filled"/>
+
+                <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
+                <VisualState x:Name="FullScreenPortrait">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+
+                <!-- The back button and title have different styles when snapped -->
+                <VisualState x:Name="Snapped">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <!-- Back button and page title -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid:SfDataGrid x:Name="grdData"  Background="White"
+                         AutoGenerateColumns="False"
+                              Foreground="#FF2A2A2A"
+			AllowGrouping="False" AllowSorting="False" AllowResizingColumns="True"
+                         AllowDraggingColumns="True" ColumnSizer="AutoWithLastColumnFill"
+                          BorderBrush="#FFC8E3E3" BorderThickness="1" RowSelectionBrush="#FFdff3f4"
+                              GroupRowSelectionBrush="#FFdff3f4"
+                               ItemsSource="{Binding ElementName=sfDataPager,
+                                                     Path=PagedSource}">
+                <Grid:SfDataGrid.HeaderStyle>
+                    <Style TargetType="Grid:GridHeaderCellControl">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderBrush" Value="#FF5E5B5C" />
+                        <Setter Property="BorderThickness" Value="2" />
+                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                        <Setter Property="FontFamily" Value="Segoe UI" />
+                        <Setter Property="FontSize" Value="16" />
+                        <Setter Property="Foreground" Value="#FF5E5B5C" />
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Grid:GridHeaderCellControl">
+                                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="0" MinWidth="{Binding Path=SortDirection, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource sortDirectionToWidthConverter}}" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                              VerticalAlignment="Center"
+                                              FontFamily="{TemplateBinding FontFamily}"
+                                              FontSize="{TemplateBinding FontSize}"
+                                              FontWeight="{TemplateBinding FontWeight}" />
+                                            <Grid Grid.Column="1">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="18" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Path Name="path"
+                                      Width="10.84"
+                                      Height="9.87"
+                                      Margin="5,0,0,0"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Data="F1M753.644,-13.0589L753.736,-12.9639 753.557,-12.7816 732.137,8.63641 732.137,29.7119 756.445,5.40851 764.094,-2.24384 764.275,-2.42352 771.834,5.1286 796.137,29.4372 796.137,8.36163 774.722,-13.0589 764.181,-23.5967 753.644,-13.0589z"
+                                      Fill="#FF5E5B5C"
+                                      Stretch="Fill"
+                                      Visibility="{Binding Path=SortDirection,
+                                                           RelativeSource={RelativeSource TemplatedParent},
+                                                           ConverterParameter=Ascending,
+                                                           Converter={StaticResource sortDirectionToVisibilityConverter}}">
+                                                    <Path.RenderTransform>
+                                                        <TransformGroup>
+                                                            <TransformGroup.Children>
+                                                                <RotateTransform Angle="0" />
+                                                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                            </TransformGroup.Children>
+                                                        </TransformGroup>
+                                                    </Path.RenderTransform>
+                                                </Path>
+
+                                                <Path Width="10.84"
+                                      Height="9.87"
+                                      Margin="5,0,0,0"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Data="F1M181.297,177.841L181.205,177.746 181.385,177.563 202.804,156.146 202.804,135.07 178.497,159.373 170.847,167.026 170.666,167.205 163.107,159.653 138.804,135.345 138.804,156.42 160.219,177.841 170.76,188.379 181.297,177.841z"
+                                      Fill="#FF5E5B5C"
+                                      Stretch="Fill"
+                                      Visibility="{Binding Path=SortDirection,
+                                                           RelativeSource={RelativeSource TemplatedParent},
+                                                           ConverterParameter=Decending,
+                                                           Converter={StaticResource sortDirectionToVisibilityConverter}}">
+                                                    <Path.RenderTransform>
+                                                        <TransformGroup>
+                                                            <TransformGroup.Children>
+                                                                <RotateTransform Angle="0" />
+                                                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                            </TransformGroup.Children>
+                                                        </TransformGroup>
+                                                    </Path.RenderTransform>
+                                                </Path>
+
+                                                <TextBlock x:Name="NumberBlock"
+                                           Grid.Column="1"
+                                           Margin="0,-4,0,0"
+                                           VerticalAlignment="Center"
+                                           FontSize="10"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           Text="{TemplateBinding SortNumber}"
+                                           Visibility="{TemplateBinding SortNumberVisibility}" />
+
+                                            </Grid>
+                                            <ToggleButton x:Name="Part_filterToggleButton"
+                                          Grid.Column="2"
+                                          Width="28"
+                                          Height="28"
+                                          HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Stretch"
+                                          Style="{StaticResource FilterToggleButtonStyle}"
+                                          Visibility="{TemplateBinding FilterIconVisiblity}" />
+                                            <Grid:ExcelLikeUIFilterControl x:Name="Part_ExcelLikeFilterControl" IsOpen="{Binding IsChecked, ElementName=Part_filterToggleButton, Mode=TwoWay}" />
+                                        </Grid>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Grid:SfDataGrid.HeaderStyle>
+                <Grid:SfDataGrid.Columns>
+                    <!--"Second", "Et","Hp","Vi","M","aT","Vy","Tt","ZH","HG","FY","EW","NS",
+                "DR","GS",-->
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="Second" HeaderText="秒"/>
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="Et" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="Hp" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="Vi" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto"  MappingName="M" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="aT"/>
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="Vy" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="Tt" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="ZH" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto"  MappingName="HG" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="FY"/>
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="EW" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="NS" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="DR" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto"  MappingName="GS" />
+                    <!--"Wy","Wx","Wz","KZB","KCB","ZS","CS","Ny","Nx","Nz",
+                "Dy","Dx","Dz","T6L","T6R","NHL","NHR",-->
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="Wy" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="Wx" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="Wz" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto"  MappingName="KZB" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="KCB"/>
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="ZS" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="CS" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="Ny" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto"  MappingName="Nx" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="Nz"/>
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="Dy" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="Dx" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="Dz" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto"  MappingName="T6L" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto"  MappingName="T6R" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto"  MappingName="NHL" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto"  MappingName="NHR" />
+                    <!--
+                "KG1","KG2","KG3","KG4","KG5","KG6","KG7","KG8","KG9","KG10","KG11","KG12","KG13","KG14","KG15"-->
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="KG1" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="KG2" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="KG3" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto"  MappingName="KG4" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="KG5"/>
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="KG6" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="KG7" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="KG8" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto"  MappingName="KG9" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="KG10"/>
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="KG11" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="KG12" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto" MappingName="KG13" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto"  MappingName="KG14" />
+                    <Grid:GridTextColumn MinimumWidth="80" ColumnSizer="Auto"  MappingName="KG15" />
+
+                </Grid:SfDataGrid.Columns>
+            </Grid:SfDataGrid>
+            <datapager:SfDataPager x:Name="sfDataPager"
+                                   Grid.Row="1"
+                                   Height="80"
+                                   Margin="0,-15,0,0"
+                                   HorizontalContentAlignment="Right"
+                                   AccentBackground="#FF53C3D5"
+                                   AccentForeground="White"
+                                   DisplayMode="PreviousNextNumeric"
+                                   NumericButtonCount="10"  
+                                   PageSize="500" />
+        </Grid>
+    </Grid>
+</common:LayoutAwarePage>

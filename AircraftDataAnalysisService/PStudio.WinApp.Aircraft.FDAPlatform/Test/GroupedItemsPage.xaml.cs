@@ -21,7 +21,7 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform
     /// <summary>
     /// 显示分组的项集合的页。
     /// </summary>
-    public sealed partial class GroupedItemsPage : PStudio.WinApp.Aircraft.FDAPlatform.Common.LayoutAwarePage
+    public sealed partial class GroupedItemsPage : Page
     {
         public GroupedItemsPage()
         {
@@ -37,12 +37,12 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform
         /// </param>
         /// <param name="pageState">此页在以前会话期间保留的状态
         /// 字典。首次访问页面时为 null。</param>
-        protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
-        {
-            // TODO: 创建适用于问题域的合适数据模型以替换示例数据
-            var sampleDataGroups = SampleDataSource.GetGroups((String)navigationParameter);
-            this.DefaultViewModel["Groups"] = sampleDataGroups;
-        }
+        //protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
+        //{
+        //    // TODO: 创建适用于问题域的合适数据模型以替换示例数据
+        //    var sampleDataGroups = SampleDataSource.GetGroups((String)navigationParameter);
+        //    this.DefaultViewModel["Groups"] = sampleDataGroups;
+        //}
 
         /// <summary>
         /// 在单击组标题时进行调用。

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="48af3305-8a48-4925-be7c-e53bded6423a" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.ObjectModel.ObservableCollection`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>false</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:65214/DataInputService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="DataInputService.xsd" MetadataType="Schema" ID="8a182d7e-f635-4674-a05c-f053f74456f7" SourceId="1" SourceUrl="http://localhost:65214/DataInputService.svc?xsd=xsd1" />
+    <MetadataFile FileName="DataInputService.disco" MetadataType="Disco" ID="f6c0320b-35ed-491e-b1b7-45096892e43d" SourceId="1" SourceUrl="http://localhost:65214/DataInputService.svc?disco" />
+    <MetadataFile FileName="DataInputService1.xsd" MetadataType="Schema" ID="01695244-3a70-4a5b-92c4-897269cb45a1" SourceId="1" SourceUrl="http://localhost:65214/DataInputService.svc?xsd=xsd4" />
+    <MetadataFile FileName="DataInputService2.xsd" MetadataType="Schema" ID="1f31c21f-7531-4396-a3d2-977f2f26de4b" SourceId="1" SourceUrl="http://localhost:65214/DataInputService.svc?xsd=xsd5" />
+    <MetadataFile FileName="DataInputService3.xsd" MetadataType="Schema" ID="809f0508-25ac-4b6f-af89-e001cca03b39" SourceId="1" SourceUrl="http://localhost:65214/DataInputService.svc?xsd=xsd0" />
+    <MetadataFile FileName="DataInputService4.xsd" MetadataType="Schema" ID="2b36043d-2030-4e13-8b92-5e36cd1bf3c0" SourceId="1" SourceUrl="http://localhost:65214/DataInputService.svc?xsd=xsd2" />
+    <MetadataFile FileName="DataInputService.wsdl" MetadataType="Wsdl" ID="4f3c5297-df4b-4722-adf5-c2fbf65b0a71" SourceId="1" SourceUrl="http://localhost:65214/DataInputService.svc?wsdl" />
+    <MetadataFile FileName="DataInputService5.xsd" MetadataType="Schema" ID="442db5c3-9fff-4128-b697-836a3ced274c" SourceId="1" SourceUrl="http://localhost:65214/DataInputService.svc?xsd=xsd3" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

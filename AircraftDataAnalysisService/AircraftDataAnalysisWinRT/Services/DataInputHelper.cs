@@ -52,7 +52,7 @@ namespace AircraftDataAnalysisWinRT.Services
             return task;
         }
 
-        public static string AddDecisionRecordsBatch(FlightDataEntitiesRT.Flight flight, 
+        public static string AddDecisionRecordsBatch(FlightDataEntitiesRT.Flight flight,
             List<DecisionRecord> decisionRecords)
         {//TODO: test
             Task<string> task = AddDecisionRecordsBatchAsync(flight, decisionRecords);
@@ -123,7 +123,7 @@ namespace AircraftDataAnalysisWinRT.Services
             return RTConverter.FromDataInput(task.Result);
         }
 
-        internal static void AddLevelTopFlightRecords(FlightDataEntitiesRT.Flight flight, 
+        internal static void AddLevelTopFlightRecords(FlightDataEntitiesRT.Flight flight,
             List<FlightDataEntitiesRT.LevelTopFlightRecord> topRecords)
         {
             AircraftDataInput.AircraftDataInputClient client = GetClient();
@@ -135,6 +135,48 @@ namespace AircraftDataAnalysisWinRT.Services
                     from one in topRecords select RTConverter.ToDataInput(one))));
             task.Wait();
             //return RTConverter.FromDataInput(task.Result);
+        }
+
+        internal static void AddFlightRawDataRelationPoints(FlightDataEntitiesRT.Flight flight,
+            List<FlightDataEntitiesRT.FlightRawDataRelationPoint> flightRawDataRelationPoints)
+        {
+            AircraftDataInput.AircraftDataInputClient client = GetClient();
+            AircraftDataInput.Flight rtFlight = RTConverter.ToDataInput(flight);
+
+            var points = from one in flightRawDataRelationPoints
+                         select RTConverter.ToDataInput(one);
+            var collection = new System.Collections.ObjectModel.ObservableCollection<
+                AircraftDataInput.FlightRawDataRelationPoint>(points);
+
+            Task<string> task = client.AddFlightRawDataRelationPointsAsync(rtFlight, collection);
+            task.Wait();
+        }
+
+        internal static void AddOrReplaceFlightExtreme(FlightDataEntitiesRT.Flight flight,
+            FlightDataEntitiesRT.ExtremumPointInfo[] extremumPointInfo)
+        {
+            AircraftDataInput.AircraftDataInputClient client = GetClient();
+            AircraftDataInput.Flight rtFlight = RTConverter.ToDataInput(flight);
+
+            var points = from one in extremumPointInfo
+                         select RTConverter.ToDataInput(one);
+            var collection = new System.Collections.ObjectModel.ObservableCollection<
+                AircraftDataInput.ExtremumPointInfo>(points);
+
+            Task<string> task = client.AddOrReplaceFlightExtremeAsync(rtFlight, collection);
+            task.Wait();
+        }
+
+        internal static void AddFlightConditionDecisionRecordsBatch(
+            FlightDataEntitiesRT.Flight flight, List<DecisionRecord> decisionFlightRecords)
+        {
+            AircraftDataInput.AircraftDataInputClient client = GetClient();
+            AircraftDataInput.Flight rtFlight = RTConverter.ToDataInput(flight);
+
+            var collection = RTConverter.ToDataInput(decisionFlightRecords);
+
+            Task<string> task = client.AddFlightConditionDecisionRecordsBatchAsync(rtFlight, collection);
+            task.Wait();
         }
     }
 }

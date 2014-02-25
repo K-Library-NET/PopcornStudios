@@ -33,36 +33,36 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         {
             this.InitializeComponent();
 
-            rdgList.SelectionChanged += rdgList_SelectionChanged;
+            //rdgList.SelectionChanged += rdgList_SelectionChanged;
         }
 
         private int selectCount = 0;
 
-        void rdgList_SelectionChanged(object sender, Telerik.UI.Xaml.Controls.Grid.DataGridSelectionChangedEventArgs e)
-        {
-            if (e.RemovedItems.Count() > 0 && e.AddedItems.Count() > 0)
-            {
-                if (e.AddedItems.First().Equals(e.RemovedItems.First()) && selectCount>0)
-                {
-                    NavigateToPanel();
-                    selectCount = 0;
-                }
-                else
-                {
-                    selectCount++;
-                }
-            }
-            else
-            {
-                selectCount++;
-            }
-        }
+        //void rdgList_SelectionChanged(object sender, Telerik.UI.Xaml.Controls.Grid.DataGridSelectionChangedEventArgs e)
+        //{
+        //    if (e.RemovedItems.Count() > 0 && e.AddedItems.Count() > 0)
+        //    {
+        //        if (e.AddedItems.First().Equals(e.RemovedItems.First()) && selectCount>0)
+        //        {
+        //            NavigateToPanel();
+        //            selectCount = 0;
+        //        }
+        //        else
+        //        {
+        //            selectCount++;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        selectCount++;
+        //    }
+        //}
 
 
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            //base.OnNavigatedTo(e);
+            base.OnNavigatedTo(e);
 
             FaultDiagnosisViewModel viewModel = new FaultDiagnosisViewModel();
 
@@ -131,6 +131,36 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
             }
             return builder.ToString();
         }
-        
+
+        private void OnDoubleTapped2(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            if (e.OriginalSource != null && e.OriginalSource is Windows.UI.Xaml.FrameworkElement
+                && (e.OriginalSource as Windows.UI.Xaml.FrameworkElement).DataContext != null
+                && (e.OriginalSource as Windows.UI.Xaml.FrameworkElement).DataContext is DecisionWrap)
+            {
+                DecisionWrap wrap = (e.OriginalSource as Windows.UI.Xaml.FrameworkElement).DataContext as DecisionWrap;
+                if (wrap.Record != null && wrap.Decision != null)
+                {
+                    this.Frame.Navigate(typeof(FlightAnalysis), wrap);
+                }
+            }
+        }
+
+        private void OnRowSelectedChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
+        {
+            if (this.DataContext != null && this.DataContext is FaultDiagnosisViewModel)
+            {
+                if (this.rdgList.SelectedItem == null || !(this.rdgList.SelectedItem is DecisionWrap)
+                    || (this.rdgList.SelectedItem as DecisionWrap).Record == null)
+                {
+                    (this.DataContext as FaultDiagnosisViewModel).IsValueSelected = false;
+                }
+                else
+                {
+                    (this.DataContext as FaultDiagnosisViewModel).IsValueSelected = true;
+                }
+            }
+        }
+
     }
 }

@@ -33,21 +33,17 @@ namespace AircraftDataAnalysisWinRT
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
             this.UnhandledException += App_UnhandledException;
         }
 
-        async void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            try
-            {
-                e.Handled = true;
-                await Windows.Storage.FileIO.WriteTextAsync(await Windows.Storage.KnownFolders.MusicLibrary.CreateFileAsync(
-                    "errorlog.txt", Windows.Storage.CreationCollisionOption.GenerateUniqueName),
-                 string.Format("[{0}]: ", DateTime.Now.ToString()) + e.Message + "\r\n" + e.Exception.Message + "\r\n" + e.Exception.StackTrace);
-            }
-            catch (Exception ex)
-            {
-            }
+            LogHelper.Error(e.Exception);
+            //LOG Exception
+            e.Handled = true;
+            System.Diagnostics.Debug.WriteLine(string.Format("{1} @ {0} @ {2} ", e.Exception, e.Message,
+                e.Exception != null ? e.Exception.StackTrace : string.Empty));
             //throw new NotImplementedException();
         }
 

@@ -31,7 +31,7 @@
     <!-- RichTextBlock 样式-->
 
     <Style x:Key="BasicRichTextStyle" TargetType="RichTextBlock">
-        <Setter Property="Foreground" Value="{StaticResource ApplicationForegroundThemeBrush}"/>
+        <!--<Setter Property="Foreground" Value="{StaticResource ApplicationForegroundThemeBrush}"/>-->
         <Setter Property="FontSize" Value="{StaticResource ControlContentThemeFontSize}"/>
         <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}"/>
         <Setter Property="TextTrimming" Value="WordEllipsis"/>
@@ -1761,7 +1761,7 @@
                     VerticalAlignment="Center"
                     Stretch="Uniform"/>
             </Grid>
-            <ToolTipService.Placement>鼠标</ToolTipService.Placement>
+            <!--<ToolTipService.Placement>鼠标</ToolTipService.Placement>-->
             <ToolTipService.ToolTip>
                 <ToolTip>
                     <ToolTip.Style>

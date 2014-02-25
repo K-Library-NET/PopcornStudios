@@ -1,0 +1,343 @@
+﻿<common:LayoutAwarePage
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PStudio.WinApp.Aircraft.FDAPlatform.Domain"
+    xmlns:common="using:AircraftDataAnalysisWinRT.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:Grid1="using:Syncfusion.UI.Xaml.Grid"
+    x:Name="pageRoot"
+    x:Class="PStudio.WinApp.Aircraft.FDAPlatform.Domain.FaultDiagnosis"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Mode=Self}}"
+    mc:Ignorable="d">
+
+    <common:LayoutAwarePage.Resources>
+        <Grid1:SortDirectionToVisibilityConverter x:Key="sortDirectionToVisibilityConverter" />
+        <Grid1:SortDirectionToWidthConverter x:Key="sortDirectionToWidthConverter" />
+        <Style x:Key="FilterToggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup>
+                                    <VisualState x:Name="Filtered">
+                                        <Storyboard BeginTime="0">
+                                            <ObjectAnimationUsingKeyFrames BeginTime="0"
+                                                                       Duration="1"
+                                                                       Storyboard.TargetName="path"
+                                                                       Storyboard.TargetProperty="Data">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="M2.1299944,9.9798575L55.945994,9.9798575 35.197562,34.081179 35.197562,62.672859 23.428433,55.942383 23.428433,33.52121z M1.3001332,0L56.635813,0C57.355887,0,57.935946,0.5891428,57.935946,1.3080959L57.935946,2.8258877C57.935946,3.5448422,57.355887,4.133985,56.635813,4.133985L1.3001332,4.133985C0.58005941,4.133985,-2.3841858E-07,3.5448422,0,2.8258877L0,1.3080959C-2.3841858E-07,0.5891428,0.58005941,0,1.3001332,0z" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="UnFiltered">
+                                        <Storyboard BeginTime="0">
+                                            <ObjectAnimationUsingKeyFrames BeginTime="0"
+                                                                       Duration="1"
+                                                                       Storyboard.TargetName="path"
+                                                                       Storyboard.TargetProperty="Data">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="M0,0 L118.49799,0 L72.811813,53.068943 L72.811813,116.02525 L46.897243,101.20534 L46.897243,51.835941 z" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}"
+                                Background="Transparent">
+                                <Path Name="path"
+                                  Margin="4"
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Bottom"
+                                  Data="M0,0 L118.49799,0 L72.811813,53.068943 L72.811813,116.02525 L46.897243,101.20534 L46.897243,51.835941 z"
+                                  Fill="Gray"
+                                  Opacity="0.8"
+                                  Stretch="Fill" />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="rowStyle" TargetType="Grid1:VirtualizingCellsControl">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Grid1:VirtualizingCellsControl">
+                        <Grid x:Name="PART_RootGrid">
+                            <Border x:Name="PART_RowBorder"
+                                    BorderBrush="#FFccd9d9"
+                                    BorderThickness="0,0,0,1">
+                                <ContentPresenter Foreground="Red" />
+                            </Border>
+                            <Border x:Name="PART_SelectionBorder"
+                                    Background="#FFacd6d7"
+                                    Opacity="0.5"
+                                    Visibility="{TemplateBinding SelectionBorderVisiblity}" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <LinearGradientBrush x:Key="AllBackuground" EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF72B7FD"/>
+            <GradientStop Color="#FFDCEEFF" Offset="1"/>
+        </LinearGradientBrush>
+        <local:FaultEventLevelConverter x:Key="converter"/>
+    </common:LayoutAwarePage.Resources>
+
+    <!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+    <Grid Style="{StaticResource LayoutRootStyle}" Background="{StaticResource AllBackgroundColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <VisualStateManager.VisualStateGroups>
+
+            <!-- Visual states reflect the application's view state -->
+            <VisualStateGroup x:Name="ApplicationViewStates">
+                <VisualState x:Name="FullScreenLandscape"/>
+                <VisualState x:Name="Filled"/>
+
+                <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
+                <VisualState x:Name="FullScreenPortrait">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+
+                <!-- The back button and title have different styles when snapped -->
+                <VisualState x:Name="Snapped">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <!-- Back button and page title -->
+        <Image Visibility="Collapsed" x:Name="bg" HorizontalAlignment="Stretch"  Margin="0" Grid.Row="0" VerticalAlignment="Stretch" Source="ms-appx:///Assets/bg.jpg" Stretch="Fill" Grid.RowSpan="2" />
+
+        <!-- Back button and page title -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="故障诊断" Style="{StaticResource PageHeaderTextStyle}"/>
+            <StackPanel Grid.Column="1" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center" 
+					Orientation="Horizontal">
+                <Button x:Name="btAllTable" Margin="10,0"  Visibility="Collapsed">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="../Assets/SmallLogo.png" Width="32" Height="32"/>
+                        <TextBlock Text="表格全屏" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="btNavigateToPanel" Margin="10,0" IsEnabled="{Binding Path=IsValueSelected}" 
+                        Click="OnNavigateToPanelClick" VerticalAlignment="Stretch">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="50" Source="../Assets/566268.png" Width="50"/>
+                        <TextBlock Text="跳转到面板" VerticalAlignment="Center" FontSize="24" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Grid Margin="5,0,5,5" Grid.Row="1" Background="{StaticResource AllBackgroundWhiteColor}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="80"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <ToggleSwitch x:Name="toggleShowAll" FontSize="24"
+                             OnContent="显示所有故障判据" OffContent="显示所有故障判据" Foreground="Black" 
+                              IsOn="{Binding Path=IsShowAllDecisions,Mode=TwoWay}"/>
+                    <TextBlock Margin="125,0,25,0" Text="故障处理建议：" VerticalAlignment="Center"
+                               Foreground="Black" FontSize="24" FontWeight="ExtraBold"/>
+                    <TextBlock Margin="0,0,25,0" Text="{Binding Path=SelectedValue,ElementName=decisionListBox}" VerticalAlignment="Center"
+                               Foreground="Black" FontSize="24" FontWeight="ExtraBold"/>
+                </StackPanel>
+            </Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="0.01"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="事件ID" Margin="30,5" Foreground="Black" VerticalAlignment="Center" 
+                               HorizontalAlignment="Center" Width="120" FontSize="24" FontWeight="ExtraBold"/>
+                    <TextBlock Text="事件开始时间" Margin="30,5" Foreground="Black" VerticalAlignment="Center" 
+                               HorizontalAlignment="Center" Width="150" FontSize="24" FontWeight="ExtraBold"/>
+                    <TextBlock Text="事件结束时间" Margin="30,5" Foreground="Black" VerticalAlignment="Center" 
+                               HorizontalAlignment="Center" Width="150" FontSize="24" FontWeight="ExtraBold"/>
+                    <TextBlock Text="事件名称：事件说明" Margin="30,5" Foreground="Black" VerticalAlignment="Center" 
+                               HorizontalAlignment="Center" MinWidth="120" FontSize="24" FontWeight="ExtraBold"/>
+                </StackPanel>
+                <ListBox Grid.Row="1" x:Name="decisionListBox"
+                         ItemsSource="{Binding DecisionRecordCollection}" SelectedValuePath="DecisionHelpContent" >
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBlock Text="{Binding Path=DecisionID}" Margin="30,5" 
+                                           Foreground="{Binding Path=EventLevel,Converter={StaticResource ResourceKey=converter}}"
+                                           VerticalAlignment="Center" 
+                               HorizontalAlignment="Center" Width="120" FontSize="24"/>
+                                <TextBlock Text="{Binding Path=StartTimeSpan}" 
+                                            Margin="30,5" 
+                                           Foreground="{Binding Path=EventLevel,Converter={StaticResource ResourceKey=converter}}" 
+                                           VerticalAlignment="Center" 
+                               HorizontalAlignment="Center" Width="150" FontSize="24"/>
+                                <TextBlock Text="{Binding Path=EndTimeSpan}" 
+                                            Margin="30,5" Foreground="{Binding Path=EventLevel,Converter={StaticResource ResourceKey=converter}}"
+                                           VerticalAlignment="Center" 
+                               HorizontalAlignment="Center" Width="150" FontSize="24"/>
+                                <TextBlock Text="{Binding Path=Description}" 
+                                            Margin="30,5" Foreground="{Binding Path=EventLevel,Converter={StaticResource ResourceKey=converter}}"
+                                           VerticalAlignment="Center" 
+                               HorizontalAlignment="Center" MinWidth="120" FontSize="24"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Grid1:SfDataGrid  Grid.Row="2"
+                x:Name="rdgList" Margin="0" AutoGenerateColumns="False" 
+				ItemsSource="{Binding DecisionRecordCollection}" DoubleTapped="OnDoubleTapped2"
+				  AllowGrouping="False" AllowResizingColumns="True" 
+                              Foreground="#FF2A2A2A" BorderBrush="#FFC8E3E3" BorderThickness="0,1" 
+                              RowSelectionBrush="#FFdff3f4"
+                              GroupRowSelectionBrush="#FFdff3f4"
+                              AllowDraggingColumns="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                              ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="OnRowSelectedChanged" >
+                    <Grid1:SfDataGrid.HeaderStyle>
+                        <Style TargetType="Grid1:GridHeaderCellControl">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="BorderBrush" Value="#FF5E5B5C" />
+                            <Setter Property="BorderThickness" Value="2" />
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            <Setter Property="FontFamily" Value="Segoe UI" />
+                            <Setter Property="FontSize" Value="24" />
+                            <Setter Property="Foreground" Value="#FF5E5B5C" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Grid1:GridHeaderCellControl">
+                                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="0" MinWidth="{Binding Path=SortDirection, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource sortDirectionToWidthConverter}}" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                              VerticalAlignment="Center"
+                                              FontFamily="{TemplateBinding FontFamily}"
+                                              FontSize="{TemplateBinding FontSize}"
+                                              FontWeight="{TemplateBinding FontWeight}" />
+                                                <Grid Grid.Column="1">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="18" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Path Name="path"
+                                      Width="10.84"
+                                      Height="9.87"
+                                      Margin="5,0,0,0"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Data="F1M753.644,-13.0589L753.736,-12.9639 753.557,-12.7816 732.137,8.63641 732.137,29.7119 756.445,5.40851 764.094,-2.24384 764.275,-2.42352 771.834,5.1286 796.137,29.4372 796.137,8.36163 774.722,-13.0589 764.181,-23.5967 753.644,-13.0589z"
+                                      Fill="#FF5E5B5C"
+                                      Stretch="Fill"
+                                      Visibility="{Binding Path=SortDirection,
+                                                           RelativeSource={RelativeSource TemplatedParent},
+                                                           ConverterParameter=Ascending,
+                                                           Converter={StaticResource sortDirectionToVisibilityConverter}}">
+                                                        <Path.RenderTransform>
+                                                            <TransformGroup>
+                                                                <TransformGroup.Children>
+                                                                    <RotateTransform Angle="0" />
+                                                                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                                </TransformGroup.Children>
+                                                            </TransformGroup>
+                                                        </Path.RenderTransform>
+                                                    </Path>
+
+                                                    <Path Width="10.84"
+                                      Height="9.87"
+                                      Margin="5,0,0,0"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Data="F1M181.297,177.841L181.205,177.746 181.385,177.563 202.804,156.146 202.804,135.07 178.497,159.373 170.847,167.026 170.666,167.205 163.107,159.653 138.804,135.345 138.804,156.42 160.219,177.841 170.76,188.379 181.297,177.841z"
+                                      Fill="#FF5E5B5C"
+                                      Stretch="Fill"
+                                      Visibility="{Binding Path=SortDirection,
+                                                           RelativeSource={RelativeSource TemplatedParent},
+                                                           ConverterParameter=Decending,
+                                                           Converter={StaticResource sortDirectionToVisibilityConverter}}">
+                                                        <Path.RenderTransform>
+                                                            <TransformGroup>
+                                                                <TransformGroup.Children>
+                                                                    <RotateTransform Angle="0" />
+                                                                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                                </TransformGroup.Children>
+                                                            </TransformGroup>
+                                                        </Path.RenderTransform>
+                                                    </Path>
+
+                                                    <TextBlock x:Name="NumberBlock"
+                                           Grid.Column="1"
+                                           Margin="0,-4,0,0"
+                                           VerticalAlignment="Center"
+                                           FontSize="10"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           Text="{TemplateBinding SortNumber}"
+                                           Visibility="{TemplateBinding SortNumberVisibility}" />
+
+                                                </Grid>
+                                                <ToggleButton x:Name="Part_filterToggleButton"
+                                          Grid.Column="2"
+                                          Width="28"
+                                          Height="28"
+                                          HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Stretch"
+                                          Style="{StaticResource FilterToggleButtonStyle}"
+                                          Visibility="{TemplateBinding FilterIconVisiblity}" />
+                                                <Grid1:ExcelLikeUIFilterControl x:Name="Part_ExcelLikeFilterControl" IsOpen="{Binding IsChecked, ElementName=Part_filterToggleButton, Mode=TwoWay}" />
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Grid1:SfDataGrid.HeaderStyle>
+                    <Grid1:SfDataGrid.Columns>
+                        <Grid1:GridTextColumn HeaderText="事件ID" HorizontalHeaderContentAlignment="Center" ColumnSizer="Auto" MappingName="DecisionID" TextAlignment="Center"/>
+                        <Grid1:GridTextColumn HeaderText="事件开始时间" HorizontalHeaderContentAlignment="Center"  ColumnSizer="Auto" MappingName="StartTimeSpan" TextAlignment="Center"/>
+                        <Grid1:GridTextColumn HeaderText="事件结束时间" HorizontalHeaderContentAlignment="Center"  ColumnSizer="Auto" MappingName="EndTimeSpan" TextAlignment="Center"/>
+                        <Grid1:GridTextColumn HeaderText="事件名称：事件说明" HorizontalHeaderContentAlignment="Center"  ColumnSizer="AutoWithLastColumnFill" MappingName="Description" TextAlignment="Left"/>
+                    </Grid1:SfDataGrid.Columns>
+                </Grid1:SfDataGrid>
+            </Grid>
+        </Grid>
+        <Grid Margin="0" Grid.RowSpan="2"/>
+
+    </Grid>
+</common:LayoutAwarePage>

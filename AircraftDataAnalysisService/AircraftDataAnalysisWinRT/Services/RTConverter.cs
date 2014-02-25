@@ -58,6 +58,9 @@ namespace AircraftDataAnalysisWinRT.Services
         internal static System.Collections.ObjectModel.ObservableCollection<AircraftDataInput.DecisionRecord>
             ToDataInput(List<FlightDataEntitiesRT.Decisions.DecisionRecord> decisionRecords)
         {
+            if (decisionRecords == null || decisionRecords.Count <= 0)
+                return new ObservableCollection<AircraftDataInput.DecisionRecord>();
+
             var recs = from one in decisionRecords
                        select new AircraftDataInput.DecisionRecord()
                        {
@@ -155,6 +158,9 @@ namespace AircraftDataAnalysisWinRT.Services
 
         internal static FlightDataEntitiesRT.FlightParameters FromAircraftService(AircraftService.FlightParameters parameters)
         {
+            if (parameters == null)
+                return null;
+
             return new FlightDataEntitiesRT.FlightParameters()
             {
                 BytesCount = parameters.BytesCount,
@@ -216,6 +222,23 @@ namespace AircraftDataAnalysisWinRT.Services
         internal static FlightDataEntitiesRT.Decisions.Decision FromAircraftService(AircraftService.Decision one)
         {
             var decisions = new FlightDataEntitiesRT.Decisions.Decision()
+            {
+                DecisionID = one.DecisionID,
+                DecisionName = one.DecisionName,
+                EventLevel = one.EventLevel,
+                LastTime = one.LastTime,
+                RelatedParameters = one.RelatedParameters.ToArray(),
+                DecisionDescriptionStringTemplate = one.DecisionDescriptionStringTemplate,
+                Conditions =
+                (from two in one.Conditions
+                 select RTConverter.FromAircraftService(two)).ToArray()
+            };
+            return decisions;
+        }
+
+        internal static FlightDataEntitiesRT.Decisions.FlightConditionDecision FromAircraftService(AircraftService.FlightConditionDecision one)
+        {
+            var decisions = new FlightDataEntitiesRT.Decisions.FlightConditionDecision()
             {
                 DecisionID = one.DecisionID,
                 DecisionName = one.DecisionName,
@@ -426,6 +449,49 @@ namespace AircraftDataAnalysisWinRT.Services
                 return new ObservableCollection<FlightDataEntitiesRT.ParameterRawData>();
 
             return new ObservableCollection<FlightDataEntitiesRT.ParameterRawData>(result);
+        }
+
+        internal static AircraftDataAnalysisWinRT.AircraftDataInput.FlightRawDataRelationPoint
+            ToDataInput(FlightDataEntitiesRT.FlightRawDataRelationPoint one)
+        {
+            return new AircraftDataInput.FlightRawDataRelationPoint()
+            {
+                FlightDate = one.FlightDate,
+                FlightID = one.FlightID,
+                XAxisParameterID = one.XAxisParameterID,
+                XAxisParameterValue = one.XAxisParameterValue,
+                YAxisParameterID = one.YAxisParameterID,
+                YAxisParameterValue = one.YAxisParameterValue
+            };
+        }
+
+        internal static AircraftService.AircraftInstance ToAircraftService(FlightDataEntitiesRT.AircraftInstance aircraftInstance)
+        {
+            return new AircraftService.AircraftInstance()
+                   {
+                       AircraftModel = new AircraftService.AircraftModel()
+                       {
+                           Caption = aircraftInstance.AircraftModel.Caption,
+                           LastUsed = aircraftInstance.AircraftModel.LastUsed,
+                           ModelName = aircraftInstance.AircraftModel.ModelName
+                       }
+                       ,
+                       AircraftNumber = aircraftInstance.AircraftNumber,
+                       LastUsed = aircraftInstance.LastUsed
+                   };
+        }
+
+        internal static FlightDataEntitiesRT.FlightRawDataRelationPoint FromAircraftService(AircraftService.FlightRawDataRelationPoint one)
+        {
+            return new FlightDataEntitiesRT.FlightRawDataRelationPoint()
+            {
+                FlightDate = one.FlightDate,
+                FlightID = one.FlightID,
+                XAxisParameterID = one.XAxisParameterID,
+                XAxisParameterValue = one.XAxisParameterValue,
+                YAxisParameterID = one.YAxisParameterID,
+                YAxisParameterValue = one.YAxisParameterValue
+            };
         }
     }
 }

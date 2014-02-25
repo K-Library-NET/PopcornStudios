@@ -110,6 +110,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AircraftModel1RawData.cs" />
+    <Compile Include="AircraftModel1RawDataBuilder.cs" />
+    <Compile Include="AircraftModel1RawDataLite.cs" />
     <Compile Include="FlightRawDataExtractorFactory.cs" />
     <Compile Include="FlightBinaryDataContentFrameDefinition.cs" />
     <Compile Include="FlightBinaryDataContentSegmentDefinition.cs" />

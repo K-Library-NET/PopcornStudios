@@ -62,6 +62,7 @@
     <Compile Include="AircraftModel.cs" />
     <Compile Include="Charts\ChartPanel.cs" />
     <Compile Include="Decisions\CompareOperator.cs" />
+    <Compile Include="Decisions\FlightConditionDecision.cs" />
     <Compile Include="Decisions\SubConditionType.cs" />
     <Compile Include="Decisions\ConditionRelation.cs" />
     <Compile Include="Decisions\DecisionRecord.cs" />
@@ -73,11 +74,13 @@
     <Compile Include="FlightRawData.cs" />
     <Compile Include="ExtremumReportDefinition.cs" />
     <Compile Include="ExtremumReportItemDefinition.cs" />
+    <Compile Include="FlightRawDataRelationPoint.cs" />
     <Compile Include="Level1FlightRecord.cs" />
     <Compile Include="Level2FlightRecord.cs" />
     <Compile Include="LevelTopFlightRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LogHelper.cs" />
+    <Compile Include="Reports\StatConditionReportRecord.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

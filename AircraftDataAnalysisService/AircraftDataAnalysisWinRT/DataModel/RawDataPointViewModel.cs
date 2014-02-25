@@ -34,13 +34,15 @@ namespace AircraftDataAnalysisWinRT.DataModel
 
         public ObservableCollection<AircraftService.FlightParameter> ParameterList { get; set; }
 
-        public ObservableCollection<Telerik.UI.Xaml.Controls.Grid.DataGridColumn> ColumnCollection { get; set; }
+        //public ObservableCollection<Telerik.UI.Xaml.Controls.Grid.DataGridColumn> ColumnCollection { get; set; }
+        public ObservableCollection<Syncfusion.UI.Xaml.Grid.GridColumn> ColumnCollection { get; set; }
 
         internal void GenerateColumns()
         {
             var result2 = GetFlightParameters();
 
-            this.ColumnCollection = new ObservableCollection<Telerik.UI.Xaml.Controls.Grid.DataGridColumn>();
+            this.ColumnCollection = new ObservableCollection<Syncfusion.UI.Xaml.Grid.GridColumn>();
+            //new ObservableCollection<Telerik.UI.Xaml.Controls.Grid.DataGridColumn>();
 
             if (result2 != null && result2.Count() > 0)
             {
@@ -50,15 +52,24 @@ namespace AircraftDataAnalysisWinRT.DataModel
                     //这里才是去掉NULL值
                     if (one.ParameterID == "(NULL)")
                         continue;
-
-                    Telerik.UI.Xaml.Controls.Grid.DataGridColumn col
-                        = new Telerik.UI.Xaml.Controls.Grid.DataGridTextColumn()
+                    Syncfusion.UI.Xaml.Grid.GridTextColumn col
+                        = new Syncfusion.UI.Xaml.Grid.GridTextColumn()
                         {
-                            Name = one.ParameterID,
-                            PropertyName = one.ParameterID,//"Values[" + i.ToString() + "]",
-                            CanUserEdit = false,
-                            Header = one.Caption
+                            MappingName = one.ParameterID,
+                            AllowEditing = false,
+                            TextAlignment = Windows.UI.Xaml.TextAlignment.Center,
+                            HorizontalHeaderContentAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
+                            HeaderText = one.Caption
                         };
+
+                    //Telerik.UI.Xaml.Controls.Grid.DataGridColumn col
+                    //    = new Telerik.UI.Xaml.Controls.Grid.DataGridTextColumn()
+                    //    {
+                    //        Name = one.ParameterID,
+                    //        PropertyName = one.ParameterID,//"Values[" + i.ToString() + "]",
+                    //        CanUserEdit = false,
+                    //        Header = one.Caption
+                    //    };
 
                     this.ColumnCollection.Add(col);
                     i++;
@@ -67,12 +78,21 @@ namespace AircraftDataAnalysisWinRT.DataModel
 
             this.RawDataRowViewModel.Columns.Insert(0, new DataColumn() { Caption = "秒值", ColumnName = "Second", DataType = typeof(int) });
 
+            //this.ColumnCollection.Insert(0,
+            //    new Telerik.UI.Xaml.Controls.Grid.DataGridTextColumn()
+            //    {
+            //        Name = "Second",
+            //        PropertyName = "Second",
+            //        Header = "秒值"
+            //    });
             this.ColumnCollection.Insert(0,
-                new Telerik.UI.Xaml.Controls.Grid.DataGridTextColumn()
+                new Syncfusion.UI.Xaml.Grid.GridTextColumn()
                 {
-                    Name = "Second",
-                    PropertyName = "Second",
-                    Header = "秒值"
+                    HeaderText = "秒值",
+                    AllowEditing = false,
+                    MappingName = "Second",
+                    HorizontalHeaderContentAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
+                    TextAlignment = Windows.UI.Xaml.TextAlignment.Center
                 });
         }
 
@@ -97,7 +117,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
         public RawDataRowViewModel RawDataRowViewModel { get; set; }
     }
 
-    public class RawDataRowViewModel : FlightDataEntitiesRT.DataTable
+    public class RawDataRowViewModel : FlightDataEntitiesRT.DataTable, IEnumerable<FlightDataEntitiesRT.DataRow>
     {
         public void AddOneSecondValue(int i, FlightDataEntitiesRT.ParameterRawData[] datas)
         {
@@ -107,7 +127,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
 
             foreach (var dt in datas)
             {
-                row[dt.ParameterID] = Math.Round(dt.Values[0], 2);//写死用第一个值，并且两位小数保留
+                row[dt.ParameterID] = Convert.ToSingle(Math.Round(dt.Values[0], 2));//写死用第一个值，并且两位小数保留
             }
 
             this.Rows.Add(row);
@@ -134,6 +154,11 @@ namespace AircraftDataAnalysisWinRT.DataModel
             //}
 
             //this.Items.Add(model);
+        }
+
+        public new IEnumerator<DataRow> GetEnumerator()
+        {
+            return this.Rows.GetEnumerator();
         }
     }
 }

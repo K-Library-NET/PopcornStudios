@@ -24,11 +24,12 @@
     <MetadataSource Address="http://localhost:45240/AircraftService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="AircraftService3.xsd" MetadataType="Schema" ID="937d73a9-af86-43d3-a91c-065b9c91fdc7" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd5" />
+    <MetadataFile FileName="AircraftService5.xsd" MetadataType="Schema" ID="54b37648-e63e-4b55-ab83-ff333c36c942" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd7" />
     <MetadataFile FileName="AircraftService.disco" MetadataType="Disco" ID="78d1668a-abb2-43ae-aa17-407bc63af092" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?disco" />
     <MetadataFile FileName="AircraftService1.xsd" MetadataType="Schema" ID="e379388c-1d5a-4a17-90ce-df4a3ad33cbd" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd1" />
     <MetadataFile FileName="AircraftService.xsd" MetadataType="Schema" ID="b8ede0d0-7fd7-439d-ba98-9e6cdf46190f" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd0" />
     <MetadataFile FileName="AircraftService2.xsd" MetadataType="Schema" ID="f7f7b342-1af4-4cbe-b6ba-9e3cf09b3a31" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd3" />
+    <MetadataFile FileName="AircraftService3.xsd" MetadataType="Schema" ID="937d73a9-af86-43d3-a91c-065b9c91fdc7" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd5" />
     <MetadataFile FileName="AircraftService11.xsd" MetadataType="Schema" ID="2e878645-5e53-4f28-b601-8f99b0fd3ceb" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd2" />
     <MetadataFile FileName="AircraftService21.xsd" MetadataType="Schema" ID="76f65a04-beac-4f43-bd5d-f6fcdb8c3b3c" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?xsd=xsd4" />
     <MetadataFile FileName="AircraftService.wsdl" MetadataType="Wsdl" ID="37350a8b-e8a6-44e0-af9b-bd12f8371c9b" SourceId="1" SourceUrl="http://localhost:45240/AircraftService.svc?wsdl" />
