@@ -247,7 +247,8 @@ namespace AircraftDataAnalysisWinRT.MyControl
             if (this.m_viewModel != null)
             {
                 var ids = from one in m_viewModel.RelatedParameterCollection
-                          where one.IsChecked && one.Parameter != null && !string.IsNullOrEmpty(one.Parameter.ParameterID)
+                          where //one.IsChecked && 
+                          one.Parameter != null && !string.IsNullOrEmpty(one.Parameter.ParameterID)
                           select one.Parameter.ParameterID;
 
                 return BindingChartUIFactory.BuildChartElements(m_viewModel, ids.ToArray(), ref m_faChartModel);

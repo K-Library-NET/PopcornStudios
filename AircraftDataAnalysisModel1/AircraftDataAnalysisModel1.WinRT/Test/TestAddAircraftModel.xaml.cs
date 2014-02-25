@@ -243,7 +243,7 @@ namespace AircraftDataAnalysisWinRT.Test
 
             var result = from one in flightParameters.Parameters
                          where testps.Contains(one.ParameterID)
-                         select new RelatedParameterViewModel(m_viewModel, true, one)
+                         select new RelatedParameterViewModel(m_viewModel, one)
                          ;
 
             return new System.Collections.ObjectModel.ObservableCollection<RelatedParameterViewModel>(result);

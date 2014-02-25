@@ -37,40 +37,40 @@ namespace AircraftDataAnalysisWinRT.Domain
             set { m_rawDatas = value; }
         }
 
-        private FlightDataEntitiesRT.Charts.ChartPanel m_currentPanel = null;
+        //private FlightDataEntitiesRT.Charts.ChartPanel m_currentPanel = null;
 
-        /// <summary>
-        /// 当前面板，
-        /// TODO TODO: 需要修改适应SELECTED TAB
-        /// </summary>
-        public FlightDataEntitiesRT.Charts.ChartPanel CurrentPanel
-        {
-            get
-            {
-                return m_currentPanel;
-            }
-            set
-            {
-                this.SetProperty<FlightDataEntitiesRT.Charts.ChartPanel>(ref m_currentPanel, value);
-                this.RelatedParameterCollection.Clear();
-                //RelatedParametery要改变
-                if (this.m_currentPanel == null)
-                {
-                    return;
-                }
-                else
-                {
-                    var paramIDs = m_currentPanel.ParameterIDs;
+        ///// <summary>
+        ///// 当前面板，
+        ///// TODO TODO: 需要修改适应SELECTED TAB
+        ///// </summary>
+        //public FlightDataEntitiesRT.Charts.ChartPanel CurrentPanel
+        //{
+        //    get
+        //    {
+        //        return m_currentPanel;
+        //    }
+        //    set
+        //    {
+        //        this.SetProperty<FlightDataEntitiesRT.Charts.ChartPanel>(ref m_currentPanel, value);
+        //        this.RelatedParameterCollection.Clear();
+        //        //RelatedParametery要改变
+        //        if (this.m_currentPanel == null)
+        //        {
+        //            return;
+        //        }
+        //        else
+        //        {
+        //            var paramIDs = m_currentPanel.ParameterIDs;
 
-                    FlightDataEntitiesRT.FlightParameters parameters =
-                        ApplicationContext.Instance.GetFlightParameters(ApplicationContext.Instance.CurrentAircraftModel);
-                    var pms = from one in parameters.Parameters
-                              where paramIDs.Contains(one.ParameterID)
-                              select new RelatedParameterViewModel(this, true, one);
-                    this.RelatedParameterCollection = new ObservableCollection<RelatedParameterViewModel>(pms);
-                }
-            }
-        }
+        //            FlightDataEntitiesRT.FlightParameters parameters =
+        //                ApplicationContext.Instance.GetFlightParameters(ApplicationContext.Instance.CurrentAircraftModel);
+        //            var pms = from one in parameters.Parameters
+        //                      where paramIDs.Contains(one.ParameterID)
+        //                      select new RelatedParameterViewModel(this, one);
+        //            this.RelatedParameterCollection = new ObservableCollection<RelatedParameterViewModel>(pms);
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// 根据起始、结束时间，相关的参数刷新数据
@@ -181,7 +181,8 @@ namespace AircraftDataAnalysisWinRT.Domain
                     return false;
                 }));
 
-            if (vm1 != null && vm1.IsChecked == false)
+            if (vm1 != null)
+                //&& vm1.IsChecked == false)
                 return false;
 
             return true;
@@ -259,25 +260,82 @@ namespace AircraftDataAnalysisWinRT.Domain
 
     }
 
+    /// <summary>
+    /// 飞行分析里面左边参数的ViewModel列表
+    /// 20140226 冲刺
+    /// </summary>
     public class RelatedParameterViewModel : AircraftDataAnalysisWinRT.Common.BindableBase
     {
-        public RelatedParameterViewModel(FlightAnalysisViewModel viewModel, bool isChecked, FlightParameter para)
+        public RelatedParameterViewModel(FlightAnalysisViewModel viewModel, FlightParameter para)
         {
             this.viewModel = viewModel;
-            this.m_isChecked = isChecked;
             this.m_parameter = para;
         }
 
-        private bool m_isChecked = true;
-
-        public bool IsChecked
+        public Windows.UI.Xaml.Media.Brush ForegroundBrush
         {
-            get { return m_isChecked; }
+            get
+            {
+                int index = this.viewModel.RelatedParameterCollection.IndexOf(this);
+
+                if (index >= 0 && index < Styles.AircraftDataAnalysisGlobalPallete.Brushes.Length)
+                {
+                    return Styles.AircraftDataAnalysisGlobalPallete.Brushes[index];
+                }
+
+                return new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Gray);
+            }
+        }
+
+        public string ParameterCaption
+        {
+            get
+            {
+                return string.Format("{0} : ", this.m_parameter.Caption);
+            }
+        }
+
+        public string XValueDisplayStr
+        {
+            get
+            {
+                return string.Format("X: {0}  ", this.m_xValue);
+            }
+        }
+
+        public string YValueDisplayStr
+        {
+            get
+            {
+                return string.Format("Y: {0}  ", this.m_yValue);
+            }
+        }
+
+        private double m_xValue = 0;
+
+        private double m_yValue = 0;
+
+        public double XValue
+        {
+            get
+            {
+                return Math.Round(m_xValue, 3);
+            }
             set
             {
-                this.SetProperty<bool>(ref m_isChecked, value);
-                //this.ViewModel.FilterData(this);
-                //System.Diagnostics.Debug.WriteLine("IsCheckedChanged");
+                this.SetProperty<double>(ref m_xValue, value);
+            }
+        }
+
+        public double YValue
+        {
+            get
+            {
+                return Math.Round(m_yValue, 3);
+            }
+            set
+            {
+                this.SetProperty<double>(ref m_yValue, value);
             }
         }
 

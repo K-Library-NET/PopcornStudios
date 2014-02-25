@@ -57,7 +57,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
             var parameters = ApplicationContext.Instance.GetFlightParameters(
                          ApplicationContext.Instance.CurrentAircraftModel);
 
-            RelatedParameterViewModel model = new RelatedParameterViewModel(this, true,
+            RelatedParameterViewModel model = new RelatedParameterViewModel(this,// true,
                 this.FindParameter(this.extremumReportItemWrap.ParameterID, parameters));
 
             var collection = new System.Collections.ObjectModel.ObservableCollection<RelatedParameterViewModel>();

@@ -133,7 +133,7 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
                 ApplicationContext.Instance.CurrentAircraftModel);
 
             var result = from one in flightParameters.Parameters
-                         select new RelatedParameterViewModel(m_viewModel, true, one);
+                         select new RelatedParameterViewModel(m_viewModel, one);
 
             return new System.Collections.ObjectModel.ObservableCollection<RelatedParameterViewModel>(result);
         }

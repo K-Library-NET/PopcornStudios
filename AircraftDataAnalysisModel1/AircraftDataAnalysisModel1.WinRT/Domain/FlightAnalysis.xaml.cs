@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -24,11 +25,53 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
     /// <summary>
     /// 基本页，提供大多数应用程序通用的特性。
     /// </summary>
-    public sealed partial class FlightAnalysis : AircraftDataAnalysisWinRT.Common.LayoutAwarePage
+    public sealed partial class FlightAnalysis : AircraftDataAnalysisWinRT.Common.LayoutAwarePage,
+        AircraftDataAnalysisModel1.WinRT.MyControl.ITrackerParent
     {
         public FlightAnalysis()
         {
             this.InitializeComponent();
+
+            m_charts.Add(this.tracker1);
+            m_charts.Add(this.tracker2);
+            m_charts.Add(this.tracker3);
+            m_charts.Add(this.tracker4);
+            m_charts.Add(this.tracker5);
+            m_charts.Add(this.tracker6);
+            m_charts.Add(this.tracker7);
+
+            this.tracker1.TrackerParent = this;
+            this.tracker2.TrackerParent = this;
+            this.tracker3.TrackerParent = this;
+            this.tracker4.TrackerParent = this;
+            this.tracker5.TrackerParent = this;
+            this.tracker6.TrackerParent = this;
+            this.tracker7.TrackerParent = this;
+
+            this.tracker1.LineBrush = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[0];
+            this.tracker2.LineBrush = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[1];
+            this.tracker3.LineBrush = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[3];
+            this.tracker4.LineBrush = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[3];
+            this.tracker5.LineBrush = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[4];
+            this.tracker6.LineBrush = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[5];
+            this.tracker7.LineBrush = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[6];
+        }
+
+        private List<AircraftDataAnalysisModel1.WinRT.MyControl.DataPointTracker> m_charts
+            = new List<AircraftDataAnalysisModel1.WinRT.MyControl.DataPointTracker>();
+
+        public void NotifyOtherTracker(object sender, PointerRoutedEventArgs e)
+        {
+            foreach (var t in m_charts)
+            {
+                t.OnOtherTrackerNotify(sender, e);
+            }
+        }
+
+        public void SetCoordinate(double unscaledX, double unscaledY,
+            IEnumerable<AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint> source)
+        {
+            throw new NotImplementedException();
         }
 
         private FlightAnalysisViewModel m_viewModel = null;
@@ -46,144 +89,67 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         {
             base.OnNavigatedTo(e);
             System.Diagnostics.Debug.WriteLine(string.Format("Start analysis:{0}", DateTime.Now));
-            PanelChangedWrap wrapPanel = this.GetCurrentPanel(e.Parameter);
 
-            await NavigationToPanel(task, wrapPanel);
-        }
+            var chartPanels = ApplicationContext.Instance.GetChartPanels(ApplicationContext.Instance.CurrentAircraftModel);
+            IEnumerable<PanelChangedWrap> allPanels = null;
 
-        private PanelChangedWrap GetCurrentPanel(object p)
-        {
-
-
-            Task<IEnumerable<FlightDataEntitiesRT.Charts.ChartPanel>> task = Task.Run<
-                IEnumerable<FlightDataEntitiesRT.Charts.ChartPanel>>(
-                new Func<IEnumerable<FlightDataEntitiesRT.Charts.ChartPanel>>(delegate()
+            if (chartPanels != null && chartPanels.Count() > 0)
             {
-                var panels = ApplicationContext.Instance.GetChartPanels(ApplicationContext.Instance.CurrentAircraftModel);
-                return panels;
-            }));
-
-            //要处理别的地方导航过来的
-            if (e.Parameter != null && e.Parameter is AircraftDataAnalysisWinRT.Common.DecisionWrap)
-            {
-                DecisionRecordFlightAnalysisViewModel viewModel1 = new DecisionRecordFlightAnalysisViewModel(
-                    e.Parameter as AircraftDataAnalysisWinRT.Common.DecisionWrap);
-                this.DataContext = viewModel1;
-                m_viewModel = viewModel1;
-                // this.grdCtrl.ViewModel = viewModel1;
-                BindDataCore();
-                return;
-            }
-            else if (e.Parameter != null && e.Parameter is ExtremumReportItemWrap)
-            {
-                ExtremumInfoFlightAnalysisViewModel viewModel2 = new ExtremumInfoFlightAnalysisViewModel(
-                    e.Parameter as ExtremumReportItemWrap);
-                this.DataContext = viewModel2;
-                m_viewModel = viewModel2;
-                // this.grdCtrl.ViewModel = viewModel2;
-                BindDataCore();
-                return;
-            }
-            //处理别的地方导航过来的
-
-            if (e.Parameter != null && e.Parameter is PanelChangedWrap
-               && (e.Parameter as PanelChangedWrap).SelectedPanel != null)
-            {
-                wrapPanel = e.Parameter as PanelChangedWrap;
+                var converted = from one in chartPanels
+                                select new PanelChangedWrap() { SelectedPanel = one };
+                allPanels = converted;
             }
 
-
-            throw new NotImplementedException();
-        }
-
-        private async Task NavigationToPanel(Task<IEnumerable<FlightDataEntitiesRT.Charts.ChartPanel>> task,
-            PanelChangedWrap wrapPanel)
-        {
-            string panelID = string.Empty;
-            FlightAnalysisViewModel viewModel = new FlightAnalysisViewModel()
+            m_viewModel = new FlightAnalysisViewModel()
             {
                 CurrentStartSecond = ApplicationContext.Instance.CurrentFlight.StartSecond,
                 CurrentEndSecond = ApplicationContext.Instance.CurrentFlight.EndSecond
             };
 
-            if (wrapPanel != null)
-            {
-                panelID = wrapPanel.SelectedPanel.PanelID;
-            }
-            else
-            {
-                viewModel.CurrentStartSecond = 0;
-                viewModel.CurrentEndSecond = ApplicationContext.Instance.CurrentFlight.EndSecond;
-            }
-            //要么是没有选择ID的，那就是第一个Panel
-            var panels2 = await task;
-            System.Diagnostics.Debug.WriteLine(string.Format("Flight Analysis Model Created:{0}", DateTime.Now));
-            this.tabHost.Items.Clear();
-            //create tabs
-            if (panels2 != null && panels2.Count() > 0)
-            {
-                foreach (var pan in panels2)
-                {
-                    var content = new AircraftDataAnalysisWinRT.MyControl.FAChart()
-                               {
-                                   DataContext = viewModel,
-                                   ViewModel = viewModel,
-                               };
-                    content.FlightAnalysisSubNavigationRequested += content_FlightAnalysisSubNavigationRequested;
-                    SfTabItem item = new SfTabItem()
-                    {
-                        Header = pan.PanelName,
-                        Content = content,
-                        //new ScrollViewer()
-                        //{
-                        //    HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
-                        //    HorizontalScrollMode = ScrollMode.Disabled,
-                        //    VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-                        //    VerticalScrollMode = ScrollMode.Auto,
-                        //    Content =
+            PanelChangedWrap wrapPanel = this.GetCurrentPanel(allPanels, e.Parameter);
 
-                        //}
-                    };
-                    item.DoubleTapped += item_DoubleTapped;
-                    item.Name = pan.PanelID;
-                    this.tabHost.Items.Add(item);
-                }
-            }
-
-
-            //开始注意消息循环了，最后才绑定viewModel;
-            //m_viewModel = viewModel;
-            if (string.IsNullOrEmpty(panelID))
-            {
-                System.Diagnostics.Debug.Assert(panels2 != null && panels2.Count() > 0
-                    && panels2.First() != null);
-                panelID = panels2.First().PanelID;
-            }
-            //如果还是空，则直接Return
-            if (string.IsNullOrEmpty(panelID))
+            if (wrapPanel == null)
                 return;
-            m_viewModel = viewModel;
 
-            SetSelectedPanel(panelID);
-            //m_viewModel.RefreshAndRetriveData();
+            NavigationToPanelAsync(wrapPanel, allPanels);
+        }
 
-            //this.chartTest.SubViewModel = new FlightAnalysisSubViewModel() = m_viewModel;
-            return;
+        private PanelChangedWrap GetCurrentPanel(IEnumerable<PanelChangedWrap> allPanels, object navigateParameter)
+        {
+            var chartPanels = allPanels;
+            //ApplicationContext.Instance.GetChartPanels(ApplicationContext.Instance.CurrentAircraftModel);
 
-            //debug
+            if (chartPanels != null && chartPanels.Count() > 0)
+            {
+                if (navigateParameter != null && navigateParameter is FlightAnalysisNavigationParameter)
+                {
+                    FlightAnalysisNavigationParameter parameter = navigateParameter as FlightAnalysisNavigationParameter;
 
-            //TODO: rebuild bindingPanel
-            /*
-            this.cbPanelSelect.ItemsSource = panels2;
-            int index = this.GetPanelSelectedIndex(panels2, panelID);
-            m_switcher = true;
-            this.cbPanelSelect.SelectedIndex = index;
-            m_switcher = false;
-            viewModel.CurrentPanel = panels2.ElementAt(index);
-            m_viewModel = viewModel;*/
-            //this.grdCtrl.ViewModel = m_viewModel;
-            //this.grdCtrl.ReBindColumns();
-            BindDataCore();
+                    foreach (var c in chartPanels)
+                    {
+                        string selectedPanelID = parameter.SelectedPanelID;
+                        if (c.SelectedPanel.PanelID == selectedPanelID)
+                            return c;
+                    }
+                }
+
+                var selected = chartPanels.First();
+
+                return selected;
+            }
+
+            return null;
+        }
+
+        private async Task NavigationToPanelAsync(PanelChangedWrap wrapPanel, IEnumerable<PanelChangedWrap> allPanels)
+        {
+            if (wrapPanel == null || wrapPanel.SelectedPanel == null
+                || string.IsNullOrEmpty(wrapPanel.SelectedPanel.PanelID))
+                return;
+
+            SetSelectedPanel(wrapPanel, allPanels);
+
+            BindDataCore(wrapPanel, allPanels);
         }
 
         void content_FlightAnalysisSubNavigationRequested(object sender, EventArgs e)
@@ -195,48 +161,68 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
             }
         }
 
-        private void SetSelectedPanel(string panelID)
+        private void SetSelectedPanel(PanelChangedWrap wrapPanel, IEnumerable<PanelChangedWrap> allPanels)
         {
-            var parameters = this.GetFlightParameters();
+            var parameters = this.GetFlightParameters(wrapPanel.SelectedPanel.ParameterIDs);
 
-            foreach (var tb in this.tabHost.Items)
+            this.m_viewModel.RelatedParameterCollection.Clear();
+
+            foreach (var par in parameters)
             {
-                if (tb != null && tb is SfTabItem)
-                {
-                    SfTabItem tabItem = tb as SfTabItem;
-                    if (tabItem.Name == panelID)
-                    {
-                        m_viewModel.RelatedParameterCollection.Clear();
-                        this.tabHost.SelectedItem = tabItem;
-
-                        var pars = ApplicationContext.Instance.GetChartPanels(
-                            ApplicationContext.Instance.CurrentAircraftModel);
-                        foreach (var p in pars)
-                        {
-                            if (panelID == p.PanelID)
-                            {
-                                var prResult = from pr in parameters
-                                               where p.ParameterIDs.Contains(pr.ParameterID)
-                                               select pr;
-
-                                foreach (var pid in prResult)
-                                {
-                                    m_viewModel.RelatedParameterCollection.Add(new RelatedParameterViewModel(m_viewModel, true, pid));
-                                }
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
+                this.m_viewModel.RelatedParameterCollection.Add(
+                    new RelatedParameterViewModel(this.m_viewModel, par)
+                    );
             }
 
             m_viewModel.RefreshAndRetriveData();
             ApplicationContext.Instance.SetCurrentViewModel(ApplicationContext.Instance.CurrentFlight, m_viewModel);
         }
 
-        private void BindDataCore()
-        {//debug
+        private void BindDataCore(PanelChangedWrap wrapPanel, IEnumerable<PanelChangedWrap> allPanels)
+        {
+            //1. m_viewModel绑定左边列表
+            this.panelParameterListCtrl.DataContext = m_viewModel;
+
+            //2. btPanels 绑定Selected Panel
+            FlightAnalysisCommandViewModel commandViewModel = new FlightAnalysisCommandViewModel(
+                m_viewModel, allPanels, this.Frame) { SelectedPanel = wrapPanel };
+
+            this.btPanel1.DataContext = commandViewModel;
+            this.btPanel2.DataContext = commandViewModel;
+            this.btPanel3.DataContext = commandViewModel;
+            this.btPanel4.DataContext = commandViewModel;
+            this.btPanel5.DataContext = commandViewModel;
+            this.btPanel6.DataContext = commandViewModel;
+            this.btPanel7.DataContext = commandViewModel;
+            this.btPanel8.DataContext = commandViewModel;
+            this.btPanel9.DataContext = commandViewModel;
+            this.btPanel10.DataContext = commandViewModel;
+            this.btPanel11.DataContext = commandViewModel;
+            this.btPanel12.DataContext = commandViewModel;
+
+            //3. 根据当前Selected的面板加载数据
+            for (int i = 0; i < this.m_charts.Count; i++)
+            {
+                if (i < this.m_viewModel.RelatedParameterCollection.Count)
+                {
+                    var related = this.m_viewModel.RelatedParameterCollection[i];
+                    System.Collections.ObjectModel.ObservableCollection<SimpleDataPoint> points
+                        = this.GetRelatedData(m_viewModel, related);
+                    this.m_charts[i].DataContext = points;
+                }
+                else
+                {
+                    this.m_charts[i].Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    if (this.m_charts[i].Parent != null &&
+                        this.m_charts[i].Parent is UIElement)
+                    {
+                        (this.m_charts[i].Parent as UIElement).Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    }
+                }
+            }
+
+
+            //debug
             return;
             //debug
 
@@ -277,9 +263,15 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
             }));*/
         }
 
+        private System.Collections.ObjectModel.ObservableCollection<SimpleDataPoint>
+            GetRelatedData(FlightAnalysisViewModel m_viewModel, RelatedParameterViewModel related)
+        {
+            throw new NotImplementedException();
+        }
+
         private void RebindColumns()
         {
-            var result2 = GetFlightParameters();
+            var result2 = GetFlightParameters(null);
             var related = from o1 in this.m_viewModel.RelatedParameterCollection
                           select o1.Parameter.ParameterID;
 
@@ -322,14 +314,16 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
             //this.grdData.Columns["Second"].HorizontalHeaderContentAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
         }
 
-        private FlightDataEntitiesRT.FlightParameter[] GetFlightParameters()
+        private FlightDataEntitiesRT.FlightParameter[] GetFlightParameters(IEnumerable<string> parameterIDs)
         {
             var flightParameters = ApplicationContext.Instance.GetFlightParameters(
                 ApplicationContext.Instance.CurrentAircraftModel);
 
             var result = from one in flightParameters.Parameters
                          where one.ParameterID != "(NULL)" && this.ExistsParameter(one.ParameterID)
-                         && m_viewModel.RelatedParameterSelected(one.ParameterID)
+                         && (parameterIDs == null || parameterIDs.Count() <= 0 ||
+                         parameterIDs.Contains(one.ParameterID))
+                         //m_viewModel.RelatedParameterSelected(one.ParameterID)
                          select one;
 
             return result.ToArray();
@@ -448,28 +442,282 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         //    }
         //}
 
-
-        private string[] SelectedIds(FlightAnalysisViewModel viewModel)
-        {
-            var result = from one in viewModel.RelatedParameterCollection
-                         where one.IsChecked
-                         select one.Parameter.ParameterID;
-
-            return result.ToArray();
-        }
-
         private void tabHost_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
 
         }
+
     }
 
-    class PanelChangedWrap
+    public class PanelChangedWrap
     {
         public FlightDataEntitiesRT.Charts.ChartPanel SelectedPanel
         {
             get;
             set;
+        }
+    }
+
+    public class FlightAnalysisNavigationParameter
+    {
+        public string SelectedPanelID { get; set; }
+    }
+
+    public class FlightAnalysisCommandViewModel : AircraftDataAnalysisWinRT.Common.BindableBase
+    {
+        public FlightAnalysisCommandViewModel(FlightAnalysisViewModel viewModel,
+            IEnumerable<PanelChangedWrap> wrapPanels, Frame frame)
+        {
+            this.m_viewModel = viewModel;
+            this.m_wrapPanels = wrapPanels;
+
+            this.m_panel1SelectedCommand = new FlightAnalysisNavCommand(viewModel,
+                m_wrapPanels.ElementAt(0).SelectedPanel.PanelID, false, frame);
+
+            this.m_panel2SelectedCommand = new FlightAnalysisNavCommand(viewModel,
+                m_wrapPanels.ElementAt(1).SelectedPanel.PanelID, false, frame);
+
+            this.m_panel3SelectedCommand = new FlightAnalysisNavCommand(viewModel,
+                m_wrapPanels.ElementAt(2).SelectedPanel.PanelID, false, frame);
+
+            this.m_panel4SelectedCommand = new FlightAnalysisNavCommand(viewModel,
+                m_wrapPanels.ElementAt(3).SelectedPanel.PanelID, false, frame);
+
+            this.m_panel5SelectedCommand = new FlightAnalysisNavCommand(viewModel,
+                m_wrapPanels.ElementAt(4).SelectedPanel.PanelID, false, frame);
+
+            this.m_panel6SelectedCommand = new FlightAnalysisNavCommand(viewModel,
+                m_wrapPanels.ElementAt(5).SelectedPanel.PanelID, false, frame);
+
+            this.m_panel7SelectedCommand = new FlightAnalysisNavCommand(viewModel,
+                m_wrapPanels.ElementAt(6).SelectedPanel.PanelID, false, frame);
+
+            this.m_panel8SelectedCommand = new FlightAnalysisNavCommand(viewModel,
+                m_wrapPanels.ElementAt(7).SelectedPanel.PanelID, false, frame);
+
+            this.m_panel9SelectedCommand = new FlightAnalysisNavCommand(viewModel,
+                m_wrapPanels.ElementAt(8).SelectedPanel.PanelID, false, frame);
+
+            this.m_panel10SelectedCommand = new FlightAnalysisNavCommand(viewModel,
+                m_wrapPanels.ElementAt(9).SelectedPanel.PanelID, false, frame);
+
+            this.m_panel11SelectedCommand = new FlightAnalysisNavCommand(viewModel,
+                m_wrapPanels.ElementAt(10).SelectedPanel.PanelID, false, frame);
+
+            this.m_panel12SelectedCommand = new FlightAnalysisNavCommand(viewModel,
+                m_wrapPanels.ElementAt(11).SelectedPanel.PanelID, false, frame);
+        }
+
+        private PanelChangedWrap m_selectedPanel;
+
+        public PanelChangedWrap SelectedPanel
+        {
+            get { return m_selectedPanel; }
+            set
+            {
+                this.SetProperty<PanelChangedWrap>(ref m_selectedPanel, value);
+
+                int index = this.FindSelectedIndex();
+
+                switch (index)
+                {
+                    case 0: { m_panel1SelectedCommand.IsPanelSelected = true; break; }
+                    case 1: { m_panel2SelectedCommand.IsPanelSelected = true; break; }
+                    case 2: { m_panel3SelectedCommand.IsPanelSelected = true; break; }
+                    case 3: { m_panel4SelectedCommand.IsPanelSelected = true; break; }
+                    case 4: { m_panel5SelectedCommand.IsPanelSelected = true; break; }
+                    case 5: { m_panel6SelectedCommand.IsPanelSelected = true; break; }
+                    case 6: { m_panel7SelectedCommand.IsPanelSelected = true; break; }
+                    case 7: { m_panel8SelectedCommand.IsPanelSelected = true; break; }
+                    case 8: { m_panel9SelectedCommand.IsPanelSelected = true; break; }
+                    case 9: { m_panel10SelectedCommand.IsPanelSelected = true; break; }
+                    case 10: { m_panel11SelectedCommand.IsPanelSelected = true; break; }
+                    case 11: { m_panel12SelectedCommand.IsPanelSelected = true; break; }
+                    default: break;
+                }
+            }
+        }
+
+        private int FindSelectedIndex()
+        {
+            int i = 0;
+            foreach (var one in m_wrapPanels)
+            {
+                if (one.SelectedPanel.PanelID == m_selectedPanel.SelectedPanel.PanelID)
+                    return i;
+                i++;
+            }
+
+            return -1;
+        }
+
+        private FlightAnalysisNavCommand m_panel1SelectedCommand = null;
+
+        public ICommand Panel1SelectedCommand
+        {
+            get
+            {
+                return m_panel1SelectedCommand;
+            }
+        }
+
+        private FlightAnalysisNavCommand m_panel2SelectedCommand = null;
+
+        public ICommand Panel2SelectedCommand
+        {
+            get
+            {
+                return m_panel2SelectedCommand;
+            }
+        }
+
+        private FlightAnalysisNavCommand m_panel3SelectedCommand = null;
+
+        public ICommand Panel3SelectedCommand
+        {
+            get
+            {
+                return m_panel3SelectedCommand;
+            }
+        }
+
+        private FlightAnalysisNavCommand m_panel4SelectedCommand = null;
+
+        public ICommand Panel4SelectedCommand
+        {
+            get
+            {
+                return m_panel4SelectedCommand;
+            }
+        }
+
+        private FlightAnalysisNavCommand m_panel5SelectedCommand = null;
+
+        public ICommand Panel5SelectedCommand
+        {
+            get
+            {
+                return m_panel5SelectedCommand;
+            }
+        }
+
+        private FlightAnalysisNavCommand m_panel6SelectedCommand = null;
+
+        public ICommand Panel6SelectedCommand
+        {
+            get
+            {
+                return m_panel6SelectedCommand;
+            }
+        }
+
+        private FlightAnalysisNavCommand m_panel7SelectedCommand = null;
+
+        public ICommand Panel7SelectedCommand
+        {
+            get
+            {
+                return m_panel7SelectedCommand;
+            }
+        }
+
+        private FlightAnalysisNavCommand m_panel8SelectedCommand = null;
+
+        public ICommand Panel8SelectedCommand
+        {
+            get
+            {
+                return m_panel8SelectedCommand;
+            }
+        }
+
+        private FlightAnalysisNavCommand m_panel9SelectedCommand = null;
+
+        public ICommand Panel9SelectedCommand
+        {
+            get
+            {
+                return m_panel9SelectedCommand;
+            }
+        }
+
+        private FlightAnalysisNavCommand m_panel10SelectedCommand = null;
+
+        public ICommand Panel10SelectedCommand
+        {
+            get
+            {
+                return m_panel10SelectedCommand;
+            }
+        }
+
+        private FlightAnalysisNavCommand m_panel11SelectedCommand = null;
+
+        public ICommand Panel11SelectedCommand
+        {
+            get
+            {
+                return m_panel11SelectedCommand;
+            }
+        }
+
+        private FlightAnalysisNavCommand m_panel12SelectedCommand = null;
+
+        private FlightAnalysisViewModel m_viewModel;
+        private IEnumerable<PanelChangedWrap> m_wrapPanels;
+
+        public ICommand Panel12SelectedCommand
+        {
+            get
+            {
+                return m_panel12SelectedCommand;
+            }
+        }
+    }
+
+    public class FlightAnalysisNavCommand : ICommand
+    {
+        private bool m_isPanelSelected;
+
+        public bool IsPanelSelected
+        {
+            get { return m_isPanelSelected; }
+            set
+            {
+                m_isPanelSelected = value;
+                if (CanExecuteChanged != null)
+                    CanExecuteChanged(this, EventArgs.Empty);
+            }
+        }
+
+        private string m_panelID;
+        private FlightAnalysisViewModel m_viewModel;
+        private Frame m_frame;
+
+        public FlightAnalysisNavCommand(FlightAnalysisViewModel viewModel,
+            string panelID, bool isPanelSelected, Frame frame)
+        {
+            this.m_viewModel = viewModel;
+            this.m_panelID = panelID;
+            this.m_isPanelSelected = isPanelSelected;
+            this.m_frame = frame;
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            if (m_isPanelSelected)
+                return false;
+            return true;
+        }
+
+        public event EventHandler CanExecuteChanged;
+
+        public void Execute(object parameter)
+        {
+            FlightAnalysisNavigationParameter navParameter
+                = new FlightAnalysisNavigationParameter() { SelectedPanelID = this.m_panelID };
+
+            m_frame.Navigate(typeof(FlightAnalysis), navParameter);
         }
     }
 }

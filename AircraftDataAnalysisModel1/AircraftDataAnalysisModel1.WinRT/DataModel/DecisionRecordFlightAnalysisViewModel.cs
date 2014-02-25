@@ -56,7 +56,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
 
             var result = from one in this.DecisionWrap.Decision.RelatedParameters
                          where this.FindParameter(one, parameters) != null
-                         select new RelatedParameterViewModel(this, true, this.FindParameter(one, parameters));
+                         select new RelatedParameterViewModel(this, this.FindParameter(one, parameters));
 
             return new System.Collections.ObjectModel.ObservableCollection<RelatedParameterViewModel>(result);
         }

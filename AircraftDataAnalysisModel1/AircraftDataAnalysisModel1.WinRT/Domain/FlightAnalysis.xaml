@@ -16,6 +16,7 @@
         <Color x:Key="AccentColor">#FF1196CD</Color>
         <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
         <local:BooleanColorBrushConverter x:Key="converter"/>
+        
     </common:LayoutAwarePage.Resources>
 
     <!--
@@ -129,7 +130,8 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="0" CornerRadius="15" Padding="10" Margin="5" Background="White" BorderBrush="White">
-                <ItemsControl x:Name="panelParameterListCtrl" ItemsSource="{StaticResource ResourceKey=PanelParameterList}">
+                <ItemsControl x:Name="panelParameterListCtrl"
+                              ItemsSource="{Binding Path=RelatedParameterCollection}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border BorderBrush="Black" BorderThickness="1" Margin="25,5">
