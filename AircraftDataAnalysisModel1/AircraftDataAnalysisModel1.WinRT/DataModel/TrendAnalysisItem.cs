@@ -262,13 +262,14 @@ namespace AircraftDataAnalysisWinRT.DataModel
 
         }
     }
-    /// <summary>
-    /// Simple storage class for pair of string and double value
-    /// </summary>
-    public class SimpleDataPoint
-    {
-        public double Value { get; set; }
-        public string Label { get; set; }
-    }
+
+    ///// <summary>
+    ///// Simple storage class for pair of string and double value
+    ///// </summary>
+    //public class SimpleDataPoint
+    //{
+    //    public double Value { get; set; }
+    //    public string Label { get; set; }
+    //}
 
 }

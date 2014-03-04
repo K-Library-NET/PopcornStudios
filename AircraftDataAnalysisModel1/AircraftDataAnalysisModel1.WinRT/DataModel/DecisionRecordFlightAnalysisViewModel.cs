@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AircraftDataAnalysisWinRT.DataModel
 {
-    public class DecisionRecordFlightAnalysisViewModel : FlightAnalysisViewModel
+    public class DecisionRecordFlightAnalysisViewModel : FlightAnalysisViewModelOld
     {
         public DecisionRecordFlightAnalysisViewModel(DecisionWrap decisionWrap)
             : base()

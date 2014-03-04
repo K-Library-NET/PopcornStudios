@@ -25,11 +25,11 @@ namespace AircraftDataAnalysisWinRT.MyControl
             this.InitializeComponent();
         }
 
-        private FlightAnalysisViewModel m_viewModel = null;
+        private FlightAnalysisViewModelOld m_viewModel = null;
 
         private Type m_prevModelType = null;
 
-        public FlightAnalysisViewModel ViewModel
+        public FlightAnalysisViewModelOld ViewModel
         {
             get { return m_viewModel; }
             set

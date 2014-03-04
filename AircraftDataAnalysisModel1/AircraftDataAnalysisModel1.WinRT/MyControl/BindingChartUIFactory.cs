@@ -34,7 +34,7 @@ namespace AircraftDataAnalysisWinRT.MyControl
 
 
 
-        internal static IEnumerable<XamDataChart> BuildChartElements(FlightAnalysisViewModel viewModel,
+        internal static IEnumerable<XamDataChart> BuildChartElements(FlightAnalysisViewModelOld viewModel,
             IEnumerable<string> parameterIDs, ref FAChartModel faChartModel)
         {
             List<XamDataChart> charts = new List<XamDataChart>();
@@ -56,7 +56,7 @@ namespace AircraftDataAnalysisWinRT.MyControl
             return charts;
         }
 
-        private static IEnumerable<AxisDataBindingObject> CalculateBindingObjects(FlightAnalysisViewModel viewModel,
+        private static IEnumerable<AxisDataBindingObject> CalculateBindingObjects(FlightAnalysisViewModelOld viewModel,
             IEnumerable<string> parameterIds)
         {
             if (parameterIds != null)

@@ -29,7 +29,7 @@ namespace AircraftDataAnalysisWinRT.Test
             this.InitializeComponent();
         }
 
-        private FlightAnalysisViewModel m_viewModel;
+        private FlightAnalysisViewModelOld m_viewModel;
 
         /// <summary>
         /// 使用在导航过程中传递的内容填充页。在从以前的会话
@@ -211,7 +211,7 @@ namespace AircraftDataAnalysisWinRT.Test
             System.Diagnostics.Debug.WriteLine(string.Format("Start trend chart:{0}", DateTime.Now));
             base.OnNavigatedTo(e);
 
-            FlightAnalysisViewModel viewModel = new FlightAnalysisViewModel();
+            FlightAnalysisViewModelOld viewModel = new FlightAnalysisViewModelOld();
             var panels = ApplicationContext.Instance.GetChartPanels(ApplicationContext.Instance.CurrentAircraftModel);
 
             viewModel.CurrentStartSecond = 0;

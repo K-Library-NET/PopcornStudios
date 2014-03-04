@@ -148,10 +148,10 @@ namespace AircraftDataAnalysisWinRT.MyControl
 
 
         [Obsolete("Old")]
-        private FlightAnalysisViewModel m_viewModel = null;
+        private FlightAnalysisViewModelOld m_viewModel = null;
 
         [Obsolete("Old")]
-        public FlightAnalysisViewModel ViewModel
+        public FlightAnalysisViewModelOld ViewModel
         {
             get { return m_viewModel; }
             set

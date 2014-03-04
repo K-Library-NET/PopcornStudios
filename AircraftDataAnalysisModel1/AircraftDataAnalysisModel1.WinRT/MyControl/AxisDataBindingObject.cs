@@ -14,13 +14,13 @@ namespace AircraftDataAnalysisWinRT.MyControl
     /// </summary>
     class AxisDataBindingObject
     {
-        public AxisDataBindingObject(FlightAnalysisViewModel viewModel)
+        public AxisDataBindingObject(FlightAnalysisViewModelOld viewModel)
         {
             this.viewModel = viewModel;
         }
 
         internal ObservableCollection<string> RelatedParameterIDs = new ObservableCollection<string>();
-        protected FlightAnalysisViewModel viewModel;
+        protected FlightAnalysisViewModelOld viewModel;
 
         public virtual string ParameterID
         {
@@ -143,7 +143,7 @@ namespace AircraftDataAnalysisWinRT.MyControl
 
     class KGAxisDataBindingObject : AxisDataBindingObject
     {
-        public KGAxisDataBindingObject(FlightAnalysisViewModel viewModel)
+        public KGAxisDataBindingObject(FlightAnalysisViewModelOld viewModel)
             : base(viewModel)
         {
         }
@@ -332,7 +332,7 @@ namespace AircraftDataAnalysisWinRT.MyControl
 
     class NHAxisDataBindingObject : AxisDataBindingObject
     {
-        public NHAxisDataBindingObject(FlightAnalysisViewModel viewModel)
+        public NHAxisDataBindingObject(FlightAnalysisViewModelOld viewModel)
             : base(viewModel)
         {
         }
@@ -468,7 +468,7 @@ namespace AircraftDataAnalysisWinRT.MyControl
 
     class T6AxisDataBindingObject : AxisDataBindingObject
     {
-        public T6AxisDataBindingObject(FlightAnalysisViewModel viewModel)
+        public T6AxisDataBindingObject(FlightAnalysisViewModelOld viewModel)
             : base(viewModel)
         {
         }

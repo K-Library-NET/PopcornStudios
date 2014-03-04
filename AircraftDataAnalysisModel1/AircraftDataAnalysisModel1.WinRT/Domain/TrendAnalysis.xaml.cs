@@ -28,7 +28,7 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
     /// </summary>
     public sealed partial class TrendAnalysis : AircraftDataAnalysisWinRT.Common.LayoutAwarePage
     {
-        private FlightAnalysisViewModel m_viewModel;
+        private FlightAnalysisViewModelOld m_viewModel;
 
         public TrendAnalysis()
         {

@@ -1,7 +1,8 @@
-﻿using AircraftDataAnalysisWinRT;
+﻿using AircraftDataAnalysisModel1.WinRT.MyControl;
+using AircraftDataAnalysisWinRT;
 using AircraftDataAnalysisWinRT.DataModel;
 using AircraftDataAnalysisWinRT.Domain;
-using Syncfusion.UI.Xaml.Controls.Navigation;
+using Infragistics.Controls.Charts;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,56 +40,307 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
             m_charts.Add(this.tracker5);
             m_charts.Add(this.tracker6);
             m_charts.Add(this.tracker7);
-
-            this.tracker1.TrackerParent = this;
-            this.tracker2.TrackerParent = this;
-            this.tracker3.TrackerParent = this;
-            this.tracker4.TrackerParent = this;
-            this.tracker5.TrackerParent = this;
-            this.tracker6.TrackerParent = this;
-            this.tracker7.TrackerParent = this;
-
-            this.tracker1.LineBrush = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[0];
-            this.tracker2.LineBrush = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[1];
-            this.tracker3.LineBrush = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[3];
-            this.tracker4.LineBrush = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[3];
-            this.tracker5.LineBrush = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[4];
-            this.tracker6.LineBrush = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[5];
-            this.tracker7.LineBrush = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[6];
         }
 
-        private List<AircraftDataAnalysisModel1.WinRT.MyControl.DataPointTracker> m_charts
-            = new List<AircraftDataAnalysisModel1.WinRT.MyControl.DataPointTracker>();
+        #region tracking point function
+
+        private List<Infragistics.Controls.Charts.XamDataChart> m_charts
+            = new List<Infragistics.Controls.Charts.XamDataChart>();
 
         public void NotifyOtherTracker(object sender, PointerRoutedEventArgs e)
         {
             foreach (var t in m_charts)
             {
-                t.OnOtherTrackerNotify(sender, e);
+                this.OnOtherTrackerNotify(sender, e, t);
+            }
+        }
+
+        public void OnOtherTrackerNotify(object sender, PointerRoutedEventArgs e,
+            Infragistics.Controls.Charts.XamDataChart targetChart)
+        {
+            if (sender == targetChart)
+                return;
+
+            this.xamDataChart_PointerMoved(sender, e, targetChart);
+        }
+
+        void xamDataChart_PointerMoved(object sender, PointerRoutedEventArgs e,
+            Infragistics.Controls.Charts.XamDataChart targetChart)
+        {
+            XamDataChart chart = sender as XamDataChart;
+            if (chart == null)
+            {
+                return;
+            }
+            System.Diagnostics.Debug.WriteLine(targetChart.GetHashCode().ToString() + " PointerMoved: " + e.GetCurrentPoint(null).Position.ToString());
+
+            chart = targetChart;
+            foreach (var series in chart.Series)
+            {
+                var seriesPos = e.GetCurrentPoint(series).Position;
+                System.Diagnostics.Debug.WriteLine("TrySelectClosest: " + seriesPos.ToString());
+                if (seriesPos.X >= 0 &&
+                    seriesPos.X < series.ActualWidth &&
+                    (sender != targetChart || (seriesPos.Y >= 0 && seriesPos.Y < series.ActualHeight)))
+                {
+                    SelectClosest(
+                    series, seriesPos);
+                }
+            }
+
+            if (sender == targetChart)
+                CategoryChart_PointerMoved(sender, e, targetChart);
+
+            if (sender == targetChart)
+            {
+                this.NotifyOtherTracker(sender, e);
+            }
+        }
+
+        public //static 
+            void SelectClosest(Series series, Point point)
+        {
+            double minDist = double.PositiveInfinity;
+            TrackingGrid closest = null;
+            FrameworkElement closestContent = null;
+            FrameworkElement beforeVisible = null;
+
+            foreach (var grid in TrackingGrid.Items()
+                .Where((i) => i.Series == series))
+            {
+                double left = GetLeft(series, grid.Item as FrameworkElement);
+                double dist = System.Math.Abs(point.X - left);
+                var content = grid.VisibilityItem;
+
+                if (content != null &&
+                    content.Visibility == Visibility.Visible)
+                {
+                    beforeVisible = content;
+                    content.Visibility
+                        = Visibility.Collapsed;
+                }
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    closest = grid.Item;
+                    closestContent = content;
+                }
+            }
+
+            if (closest != null)
+            {
+                if (closestContent != null)
+                {
+                    closestContent.Visibility
+                        = Visibility.Visible;
+                    System.Diagnostics.Debug.WriteLine("closestContent: " + closestContent.GetHashCode());
+                }
+            }
+            else
+            {
+                if (beforeVisible != null)
+                {
+                    beforeVisible.Visibility
+                        = Visibility.Visible;
+                }
+            }
+        }
+
+        private //static 
+            double GetLeft(Series series, FrameworkElement item)
+        {
+            Marker m = FindMarker(item);
+
+            if (m == null)
+            {
+                return double.NaN;
+            }
+            if (m.Visibility == Visibility.Collapsed)
+            {
+                return double.NaN;
+            }
+            TranslateTransform t = m.RenderTransform as TranslateTransform;
+            if (t == null)
+            {
+                return double.NaN;
+            }
+            return t.X + m.ActualWidth / 2.0;
+        }
+
+        private //static 
+            Marker FindMarker(FrameworkElement item)
+        {
+            while (item != null)
+            {
+                if (item is Marker)
+                {
+                    return item as Marker;
+                }
+                item = VisualTreeHelper.GetParent(item)
+                    as FrameworkElement;
+            }
+            return null;
+        }
+
+        private void CategoryChart_PointerMoved(object sender, PointerRoutedEventArgs e,
+            Infragistics.Controls.Charts.XamDataChart targetChart)
+        {
+            var series = targetChart.Series.FirstOrDefault();
+            if (series == null) return;
+
+            var position = e.GetCurrentPoint(series).Position;
+
+            // calculate crosshair coordinates on CategoryDateTimeXAxis 
+            if (((XamDataChart)series.SeriesViewer).Axes.OfType<CategoryXAxis>().Any())
+            {
+                var xAxis = ((XamDataChart)series.SeriesViewer).Axes.OfType<CategoryXAxis>().First();
+                var yAxis = ((XamDataChart)series.SeriesViewer).Axes.OfType<NumericYAxis>().First();
+
+                var viewport = new Rect(0, 0, xAxis.ActualWidth, yAxis.ActualHeight);
+                var window = series.SeriesViewer.WindowRect;
+
+                bool isInverted = xAxis.IsInverted;
+                ScalerParams param = new ScalerParams(window, viewport, isInverted);
+                var unscaledX = xAxis.GetUnscaledValue(position.X, param);
+
+                isInverted = yAxis.IsInverted;
+                param = new ScalerParams(window, viewport, isInverted);
+                var unscaledY = yAxis.GetUnscaledValue(position.Y, param);
+
+                DateTime xDate = new DateTime((long)unscaledX);
+
+                //var x = unscaledX.ToString();//String.Format("{0:T}", xDate);
+                //var y = unscaledY.ToString();// String.Format("{0:0.00}", unscaledY);
+                this.SetCoordinate(unscaledX, unscaledY, targetChart.DataContext as IEnumerable<SimpleDataPoint>);
             }
         }
 
         public void SetCoordinate(double unscaledX, double unscaledY,
             IEnumerable<AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint> source)
         {
+            return;
             throw new NotImplementedException();
         }
 
-        private FlightAnalysisViewModel m_viewModel = null;
+        #endregion tracking point function
+
+        private FlightAnalysisViewModelOld m_viewModel = null;
 
         private void OnNavigateToHome_Clicked(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(MainPage));
         }
 
-        void item_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        private Dictionary<XamDataChart, DateTime> m_prevTabTime = new Dictionary<XamDataChart, DateTime>();
+
+        /// <summary>
+        /// 把单击转化为双击，为了适应XamDataChart不支持双击的情况
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void item_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (sender == null || !(sender is XamDataChart))
+                return;
+
+            var chart = sender as XamDataChart;
+            if (m_prevTabTime.ContainsKey(chart))
+            {
+                var dt = m_prevTabTime[chart];
+                if (DateTime.Now.Subtract(dt).TotalMilliseconds <= DoubleClickInterval)
+                {
+                    this.item_DoubleTapped(sender, e, chart);
+                    m_prevTabTime.Remove(chart);
+                    return;
+                }
+                else
+                {
+                    m_prevTabTime[chart] = DateTime.Now;
+                }
+            }
+            else
+            {
+                m_prevTabTime.Add(chart, DateTime.Now);
+            }
+        }
+
+        private readonly int DoubleClickInterval = 500; //双击间隔的毫秒
+
+        /// <summary>
+        /// Chart的双击处理，一般是Navigate到Sub视图
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="targetChart"></param>
+        void item_DoubleTapped(object sender, TappedRoutedEventArgs e, XamDataChart targetChart)
         {
         }
 
+        /// <summary>
+        /// 导航进来的主方法
+        /// </summary>
+        /// <param name="e"></param>
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             System.Diagnostics.Debug.WriteLine(string.Format("Start analysis:{0}", DateTime.Now));
+            //return;//debug
+            AircraftDataAnalysisModel1.WinRT.DataModel.FlightAnalysisViewModel rootViewModel
+                = this.GetRootViewModel();
+            if (rootViewModel == null)
+                return;
+
+            rootViewModel.UserThreadInvoker = this.Dispatcher;
+
+            FlightAnalysisNavigationParameter navPara = null;
+            if (e != null)
+            {
+                if (e.Parameter != null && e.Parameter is FlightAnalysisNavigationParameter)
+                {
+                    navPara = e.Parameter as FlightAnalysisNavigationParameter;
+                    if (!string.IsNullOrEmpty(navPara.SelectedPanelID))
+                    {
+                        rootViewModel.SetCurrentPanel(navPara.SelectedPanelID);
+                    }
+                }
+            }
+            else
+            {
+            }
+
+            if (navPara != null && navPara.DataLoader != null
+                && navPara.DataLoader.CurrentFlight.FlightID == ApplicationContext.Instance.CurrentFlight.FlightID)
+                rootViewModel.DataLoader = navPara.DataLoader;
+            else
+            {
+                rootViewModel.DataLoader = new AircraftDataAnalysisModel1.WinRT.Domain.AircraftAnalysisDataLoader()
+                {
+                    CurrentFlight = ApplicationContext.Instance.CurrentFlight,
+                    CurrentAircraftModel = ApplicationContext.Instance.CurrentAircraftModel
+                };
+            }
+            rootViewModel.InitializeAsync();
+
+            return;//debug
+
+            //1. 先设置轮转颜色，每个轴可能有最多3个颜色，所以下面要修改
+            this.LineBrush1 = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[0];
+            this.LineBrush2 = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[1];
+            this.LineBrush3 = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[3];
+            this.LineBrush4 = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[3];
+            this.LineBrush5 = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[4];
+            this.LineBrush6 = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[5];
+            this.LineBrush7 = AircraftDataAnalysisWinRT.Styles.AircraftDataAnalysisGlobalPallete.Brushes[6];
+
+            //debug: 设置测试数据源
+            this.tracker1.DataContext = new AircraftDataAnalysisWinRT.Test.TestSimpleDataSource();
+            this.tracker2.DataContext = new AircraftDataAnalysisWinRT.Test.TestSimpleDataSource();
+            this.tracker3.DataContext = new AircraftDataAnalysisWinRT.Test.TestSimpleDataSource();
+            this.tracker4.DataContext = new AircraftDataAnalysisWinRT.Test.TestSimpleDataSource();
+            this.tracker5.DataContext = new AircraftDataAnalysisWinRT.Test.TestSimpleDataSource();
+            this.tracker6.DataContext = new AircraftDataAnalysisWinRT.Test.TestSimpleDataSource();
+
+
 
             var chartPanels = ApplicationContext.Instance.GetChartPanels(ApplicationContext.Instance.CurrentAircraftModel);
             IEnumerable<PanelChangedWrap> allPanels = null;
@@ -100,7 +352,7 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
                 allPanels = converted;
             }
 
-            m_viewModel = new FlightAnalysisViewModel()
+            m_viewModel = new FlightAnalysisViewModelOld()
             {
                 CurrentStartSecond = ApplicationContext.Instance.CurrentFlight.StartSecond,
                 CurrentEndSecond = ApplicationContext.Instance.CurrentFlight.EndSecond
@@ -114,6 +366,382 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
             NavigationToPanelAsync(wrapPanel, allPanels);
         }
 
+        private AircraftDataAnalysisModel1.WinRT.DataModel.FlightAnalysisViewModel GetRootViewModel()
+        {
+            object value = null;
+            if (this.Resources.TryGetValue("datacontext", out value))
+            {
+                if (value != null && (value is AircraftDataAnalysisModel1.WinRT.DataModel.FlightAnalysisViewModel))
+                    return value as AircraftDataAnalysisModel1.WinRT.DataModel.FlightAnalysisViewModel;
+            }
+            return null;
+        }
+
+        #region repeat
+
+        public Brush LineBrush1
+        {
+            get
+            {
+
+                var serie1 = this.tracker1.Series[0];
+                if (serie1 != null)
+                    return serie1.Brush;
+
+                return null;
+            }
+            set
+            {
+                var serie1 = this.tracker1.Series[0];
+                if (serie1 != null)
+                    serie1.Brush = value;
+            }
+        }
+
+        public Brush LineBrush2
+        {
+            get
+            {
+
+                var serie1 = this.tracker2.Series[0];
+                if (serie1 != null)
+                    return serie1.Brush;
+
+                return null;
+            }
+            set
+            {
+                var serie1 = this.tracker2.Series[0];
+                if (serie1 != null)
+                    serie1.Brush = value;
+            }
+        }
+
+        public Brush LineBrush3
+        {
+            get
+            {
+
+                var serie1 = this.tracker3.Series[0];
+                if (serie1 != null)
+                    return serie1.Brush;
+
+                return null;
+            }
+            set
+            {
+                var serie1 = this.tracker3.Series[0];
+                if (serie1 != null)
+                    serie1.Brush = value;
+            }
+        }
+
+        public Brush LineBrush4
+        {
+            get
+            {
+
+                var serie1 = this.tracker4.Series[0];
+                if (serie1 != null)
+                    return serie1.Brush;
+
+                return null;
+            }
+            set
+            {
+                var serie1 = this.tracker4.Series[0];
+                if (serie1 != null)
+                    serie1.Brush = value;
+            }
+        }
+
+        public Brush LineBrush5
+        {
+            get
+            {
+
+                var serie1 = this.tracker5.Series[0];
+                if (serie1 != null)
+                    return serie1.Brush;
+
+                return null;
+            }
+            set
+            {
+                var serie1 = this.tracker5.Series[0];
+                if (serie1 != null)
+                    serie1.Brush = value;
+            }
+        }
+
+        public Brush LineBrush6
+        {
+            get
+            {
+
+                var serie1 = this.tracker6.Series[0];
+                if (serie1 != null)
+                    return serie1.Brush;
+
+                return null;
+            }
+            set
+            {
+                var serie1 = this.tracker6.Series[0];
+                if (serie1 != null)
+                    serie1.Brush = value;
+            }
+        }
+
+        public Brush LineBrush7
+        {
+            get
+            {
+
+                var serie1 = this.tracker7.Series[0];
+                if (serie1 != null)
+                    return serie1.Brush;
+
+                return null;
+            }
+            set
+            {
+                var serie1 = this.tracker7.Series[0];
+                if (serie1 != null)
+                    serie1.Brush = value;
+            }
+        }
+
+        private void xamDataChart1_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            this.xamDataChart_PointerMoved(sender, e, this.tracker1);
+        }
+
+        private void xamDataChart2_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            this.xamDataChart_PointerMoved(sender, e, this.tracker2);
+        }
+
+        private void xamDataChart3_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            this.xamDataChart_PointerMoved(sender, e, this.tracker3);
+        }
+
+        private void xamDataChart4_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            this.xamDataChart_PointerMoved(sender, e, this.tracker4);
+        }
+
+        private void xamDataChart5_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            this.xamDataChart_PointerMoved(sender, e, this.tracker5);
+        }
+
+        private void xamDataChart6_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            this.xamDataChart_PointerMoved(sender, e, this.tracker6);
+        }
+
+        private void xamDataChart7_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            this.xamDataChart_PointerMoved(sender, e, this.tracker7);
+        }
+
+        private void btPanel1_Click(object sender, RoutedEventArgs e)
+        {
+            var rootViewModel = this.GetRootViewModel();
+            if (rootViewModel != null && rootViewModel.DataLoader != null
+                && rootViewModel.PanelViewItems.Count > 0)
+            {
+                FlightAnalysisNavigationParameter parameter = new FlightAnalysisNavigationParameter()
+                {
+                    DataLoader = rootViewModel.DataLoader,
+                    SelectedPanelID = rootViewModel.PanelViewItems[0].PanelID
+                };
+
+                this.Frame.Navigate(typeof(FlightAnalysis), parameter);
+            }
+        }
+
+        private void btPanel2_Click(object sender, RoutedEventArgs e)
+        {
+            var rootViewModel = this.GetRootViewModel();
+            if (rootViewModel != null && rootViewModel.DataLoader != null
+                && rootViewModel.PanelViewItems.Count > 1)
+            {
+                FlightAnalysisNavigationParameter parameter = new FlightAnalysisNavigationParameter()
+                {
+                    DataLoader = rootViewModel.DataLoader,
+                    SelectedPanelID = rootViewModel.PanelViewItems[1].PanelID
+                };
+
+                this.Frame.Navigate(typeof(FlightAnalysis), parameter);
+            }
+        }
+
+        private void btPanel3_Click(object sender, RoutedEventArgs e)
+        {
+            var rootViewModel = this.GetRootViewModel();
+            if (rootViewModel != null && rootViewModel.DataLoader != null
+                && rootViewModel.PanelViewItems.Count > 2)
+            {
+                FlightAnalysisNavigationParameter parameter = new FlightAnalysisNavigationParameter()
+                {
+                    DataLoader = rootViewModel.DataLoader,
+                    SelectedPanelID = rootViewModel.PanelViewItems[2].PanelID
+                };
+
+                this.Frame.Navigate(typeof(FlightAnalysis), parameter);
+            }
+        }
+
+        private void btPanel4_Click(object sender, RoutedEventArgs e)
+        {
+            var rootViewModel = this.GetRootViewModel();
+            if (rootViewModel != null && rootViewModel.DataLoader != null
+                && rootViewModel.PanelViewItems.Count > 3)
+            {
+                FlightAnalysisNavigationParameter parameter = new FlightAnalysisNavigationParameter()
+                {
+                    DataLoader = rootViewModel.DataLoader,
+                    SelectedPanelID = rootViewModel.PanelViewItems[3].PanelID
+                };
+
+                this.Frame.Navigate(typeof(FlightAnalysis), parameter);
+            }
+        }
+
+        private void btPanel5_Click(object sender, RoutedEventArgs e)
+        {
+            var rootViewModel = this.GetRootViewModel();
+            if (rootViewModel != null && rootViewModel.DataLoader != null
+                && rootViewModel.PanelViewItems.Count > 4)
+            {
+                FlightAnalysisNavigationParameter parameter = new FlightAnalysisNavigationParameter()
+                {
+                    DataLoader = rootViewModel.DataLoader,
+                    SelectedPanelID = rootViewModel.PanelViewItems[4].PanelID
+                };
+
+                this.Frame.Navigate(typeof(FlightAnalysis), parameter);
+            }
+        }
+
+        private void btPanel6_Click(object sender, RoutedEventArgs e)
+        {
+            var rootViewModel = this.GetRootViewModel();
+            if (rootViewModel != null && rootViewModel.DataLoader != null
+                && rootViewModel.PanelViewItems.Count > 5)
+            {
+                FlightAnalysisNavigationParameter parameter = new FlightAnalysisNavigationParameter()
+                {
+                    DataLoader = rootViewModel.DataLoader,
+                    SelectedPanelID = rootViewModel.PanelViewItems[5].PanelID
+                };
+
+                this.Frame.Navigate(typeof(FlightAnalysis), parameter);
+            }
+        }
+
+        private void btPanel7_Click(object sender, RoutedEventArgs e)
+        {
+            var rootViewModel = this.GetRootViewModel();
+            if (rootViewModel != null && rootViewModel.DataLoader != null
+                && rootViewModel.PanelViewItems.Count > 6)
+            {
+                FlightAnalysisNavigationParameter parameter = new FlightAnalysisNavigationParameter()
+                {
+                    DataLoader = rootViewModel.DataLoader,
+                    SelectedPanelID = rootViewModel.PanelViewItems[6].PanelID
+                };
+
+                this.Frame.Navigate(typeof(FlightAnalysis), parameter);
+            }
+        }
+
+        private void btPanel8_Click(object sender, RoutedEventArgs e)
+        {
+            var rootViewModel = this.GetRootViewModel();
+            if (rootViewModel != null && rootViewModel.DataLoader != null
+                && rootViewModel.PanelViewItems.Count > 7)
+            {
+                FlightAnalysisNavigationParameter parameter = new FlightAnalysisNavigationParameter()
+                {
+                    DataLoader = rootViewModel.DataLoader,
+                    SelectedPanelID = rootViewModel.PanelViewItems[7].PanelID
+                };
+
+                this.Frame.Navigate(typeof(FlightAnalysis), parameter);
+            }
+        }
+
+        private void btPanel9_Click(object sender, RoutedEventArgs e)
+        {
+            var rootViewModel = this.GetRootViewModel();
+            if (rootViewModel != null && rootViewModel.DataLoader != null
+                && rootViewModel.PanelViewItems.Count > 8)
+            {
+                FlightAnalysisNavigationParameter parameter = new FlightAnalysisNavigationParameter()
+                {
+                    DataLoader = rootViewModel.DataLoader,
+                    SelectedPanelID = rootViewModel.PanelViewItems[8].PanelID
+                };
+
+                this.Frame.Navigate(typeof(FlightAnalysis), parameter);
+            }
+        }
+
+        private void btPanel10_Click(object sender, RoutedEventArgs e)
+        {
+            var rootViewModel = this.GetRootViewModel();
+            if (rootViewModel != null && rootViewModel.DataLoader != null
+                && rootViewModel.PanelViewItems.Count > 9)
+            {
+                FlightAnalysisNavigationParameter parameter = new FlightAnalysisNavigationParameter()
+                {
+                    DataLoader = rootViewModel.DataLoader,
+                    SelectedPanelID = rootViewModel.PanelViewItems[9].PanelID
+                };
+
+                this.Frame.Navigate(typeof(FlightAnalysis), parameter);
+            }
+        }
+
+        private void btPanel11_Click(object sender, RoutedEventArgs e)
+        {
+            var rootViewModel = this.GetRootViewModel();
+            if (rootViewModel != null && rootViewModel.DataLoader != null
+                && rootViewModel.PanelViewItems.Count > 10)
+            {
+                FlightAnalysisNavigationParameter parameter = new FlightAnalysisNavigationParameter()
+                {
+                    DataLoader = rootViewModel.DataLoader,
+                    SelectedPanelID = rootViewModel.PanelViewItems[10].PanelID
+                };
+
+                this.Frame.Navigate(typeof(FlightAnalysis), parameter);
+            }
+        }
+
+        private void btPanel12_Click(object sender, RoutedEventArgs e)
+        {
+            var rootViewModel = this.GetRootViewModel();
+            if (rootViewModel != null && rootViewModel.DataLoader != null
+                && rootViewModel.PanelViewItems.Count > 11)
+            {
+                FlightAnalysisNavigationParameter parameter = new FlightAnalysisNavigationParameter()
+                {
+                    DataLoader = rootViewModel.DataLoader,
+                    SelectedPanelID = rootViewModel.PanelViewItems[11].PanelID
+                };
+
+                this.Frame.Navigate(typeof(FlightAnalysis), parameter);
+            }
+        }
+
+        #endregion repeat
+
+        #region old obsolete
         private PanelChangedWrap GetCurrentPanel(IEnumerable<PanelChangedWrap> allPanels, object navigateParameter)
         {
             var chartPanels = allPanels;
@@ -264,7 +892,7 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         }
 
         private System.Collections.ObjectModel.ObservableCollection<SimpleDataPoint>
-            GetRelatedData(FlightAnalysisViewModel m_viewModel, RelatedParameterViewModel related)
+            GetRelatedData(FlightAnalysisViewModelOld m_viewModel, RelatedParameterViewModel related)
         {
             throw new NotImplementedException();
         }
@@ -446,7 +1074,7 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         {
 
         }
-
+        #endregion old obsolete
     }
 
     public class PanelChangedWrap
@@ -461,12 +1089,13 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
     public class FlightAnalysisNavigationParameter
     {
         public string SelectedPanelID { get; set; }
+        public AircraftDataAnalysisModel1.WinRT.Domain.AircraftAnalysisDataLoader DataLoader { get; set; }
     }
 
     public class FlightAnalysisCommandViewModel : AircraftDataAnalysisWinRT.Common.BindableBase
     {
-        public FlightAnalysisCommandViewModel(FlightAnalysisViewModel viewModel,
-            IEnumerable<PanelChangedWrap> wrapPanels, Frame frame)
+        public FlightAnalysisCommandViewModel(FlightAnalysisViewModelOld viewModel,
+            IEnumerable<PanelChangedWrap> wrapPanels, Windows.UI.Xaml.Controls.Frame frame)
         {
             this.m_viewModel = viewModel;
             this.m_wrapPanels = wrapPanels;
@@ -663,7 +1292,7 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
 
         private FlightAnalysisNavCommand m_panel12SelectedCommand = null;
 
-        private FlightAnalysisViewModel m_viewModel;
+        private FlightAnalysisViewModelOld m_viewModel;
         private IEnumerable<PanelChangedWrap> m_wrapPanels;
 
         public ICommand Panel12SelectedCommand
@@ -691,11 +1320,11 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         }
 
         private string m_panelID;
-        private FlightAnalysisViewModel m_viewModel;
-        private Frame m_frame;
+        private FlightAnalysisViewModelOld m_viewModel;
+        private Windows.UI.Xaml.Controls.Frame m_frame;
 
-        public FlightAnalysisNavCommand(FlightAnalysisViewModel viewModel,
-            string panelID, bool isPanelSelected, Frame frame)
+        public FlightAnalysisNavCommand(FlightAnalysisViewModelOld viewModel,
+            string panelID, bool isPanelSelected, Windows.UI.Xaml.Controls.Frame frame)
         {
             this.m_viewModel = viewModel;
             this.m_panelID = panelID;

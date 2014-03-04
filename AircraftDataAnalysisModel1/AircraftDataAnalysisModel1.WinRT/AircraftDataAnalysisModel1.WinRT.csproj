@@ -19,7 +19,7 @@
     <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -126,8 +126,10 @@
     <Compile Include="DataModel\ExtremumInfoFlightAnalysisViewModel.cs" />
     <Compile Include="DataModel\ExtremumReportViewModel.cs" />
     <Compile Include="DataModel\FaultDiagnosisViewModel.cs" />
+    <Compile Include="DataModel\FlightAnalysisChartGroupViewModel.cs" />
     <Compile Include="DataModel\FlightAnalysisSubViewModel.cs" />
     <Compile Include="DataModel\FlightAnalysisSubViewModelFactory.cs" />
+    <Compile Include="DataModel\FlightAnalysisViewModel.cs" />
     <Compile Include="DataModel\FlightDateTreeViewModel.cs" />
     <Compile Include="DataModel\RawDataPointViewModel.cs" />
     <Compile Include="DataModel\StatReportDataViewModel.cs" />
@@ -135,6 +137,7 @@
     <Compile Include="DataModel\StatReportViewModel.cs" />
     <Compile Include="DataModel\TestModelDataSource.cs" />
     <Compile Include="DataModel\TrendAnalysisItem.cs" />
+    <Compile Include="Domain\AircraftAnalysisDataLoader.cs" />
     <Compile Include="Domain\EngineMonitoring.xaml.cs">
       <DependentUpon>EngineMonitoring.xaml</DependentUpon>
     </Compile>
@@ -150,7 +153,7 @@
     <Compile Include="Domain\FlightAnalysisSub.xaml.cs">
       <DependentUpon>FlightAnalysisSub.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Domain\FlightAnalysisViewModel.cs" />
+    <Compile Include="Domain\FlightAnalysisViewModelOld.cs" />
     <Compile Include="Domain\GridDataPage.xaml.cs">
       <DependentUpon>GridDataPage.xaml</DependentUpon>
     </Compile>
@@ -537,9 +540,29 @@
     <SDKReference Include="NetAdvantage WinRT, Version=13.1">
       <Name>NetAdvantage for Windows UI</Name>
     </SDKReference>
-    <SDKReference Include="Syncfusion controls for WinRT XAML, Version=11.2.0.25">
-      <Name>Syncfusion Controls for WinRT XAML</Name>
-    </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Syncfusion.Data.WinRT, Version=11.2010.0.25, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.Data.WinRT.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.SfChart.WinRT, Version=11.2010.0.25, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.SfChart.WinRT.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.SfGrid.WinRT, Version=11.2010.0.25, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.SfGrid.WinRT.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.SfInput.WinRT, Version=11.2010.0.25, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.SfInput.WinRT.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.SfShared.WinRT, Version=11.2010.0.25, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.SfShared.WinRT.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.SfTabControl.WinRT, Version=11.2010.0.25, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.SfTabControl.WinRT.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.SfTreeNavigator.WinRT, Version=11.2010.0.25, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <HintPath>..\packages\Syncfusion.SfTreeNavigator.WinRT.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

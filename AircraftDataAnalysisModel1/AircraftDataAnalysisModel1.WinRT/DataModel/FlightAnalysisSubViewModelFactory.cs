@@ -10,7 +10,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
     class FlightAnalysisSubViewModelFactory
     {
         internal static FlightAnalysisSubViewModel Create(
-            AircraftDataAnalysisWinRT.Domain.FlightAnalysisViewModel HostViewModel,
+            AircraftDataAnalysisWinRT.Domain.FlightAnalysisViewModelOld HostViewModel,
             FlightDataEntitiesRT.Flight flight, string hostParameterID)
         {
             FlightAnalysisSubViewModel viewModel = new FlightAnalysisSubViewModel() { ViewModel = HostViewModel };

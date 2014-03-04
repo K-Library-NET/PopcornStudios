@@ -54,10 +54,10 @@ namespace AircraftDataAnalysisWinRT.MyControl
 
         public FAChartModel m_faChartModel;
 
-        private FlightAnalysisViewModel m_viewModel = null;
+        private FlightAnalysisViewModelOld m_viewModel = null;
         private IEnumerable<XamDataChart> m_loadingCharts;
 
-        public FlightAnalysisViewModel ViewModel
+        public FlightAnalysisViewModelOld ViewModel
         {
             get
             {

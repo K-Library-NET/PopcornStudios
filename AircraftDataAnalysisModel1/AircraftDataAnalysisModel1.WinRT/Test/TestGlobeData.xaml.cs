@@ -53,4 +53,41 @@ namespace AircraftDataAnalysisWinRT.Test
             this.chart1.ItemsSource = datas;
         }
     }
+
+    internal class TestSimpleDataSource : ObservableCollection<AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint>
+    {
+        public TestSimpleDataSource()
+        {
+            this.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
+            {
+                Label = 1,
+                Value = 3
+            });
+            this.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
+            {
+                Label = 2,
+                Value = 4
+            });
+            this.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
+            {
+                Label = 3,
+                Value = 2
+            });
+            this.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
+            {
+                Label = 4,
+                Value = 1
+            });
+            this.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
+            {
+                Label = 5,
+                Value = 5
+            });
+            this.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
+            {
+                Label = 6,
+                Value = 3
+            });
+        }
+    }
 }

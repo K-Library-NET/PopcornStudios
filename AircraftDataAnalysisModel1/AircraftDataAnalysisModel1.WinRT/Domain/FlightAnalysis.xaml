@@ -8,15 +8,29 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:MyControl="using:AircraftDataAnalysisModel1.WinRT.MyControl"  
     x:Name="pageRoot"
+    xmlns:datamodel="using:AircraftDataAnalysisModel1.WinRT.DataModel"
     x:Class="PStudio.WinApp.Aircraft.FDAPlatform.Domain.FlightAnalysis" 
     xmlns:input="using:Syncfusion.UI.Xaml.Controls.Input"
+    xmlns:test="using:AircraftDataAnalysisWinRT.Test"
     mc:Ignorable="d">
 
     <common:LayoutAwarePage.Resources>
         <Color x:Key="AccentColor">#FF1196CD</Color>
         <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
         <local:BooleanColorBrushConverter x:Key="converter"/>
-        
+        <DataTemplate x:Key="DataTrackerTemplate">
+            <MyControl:TrackingGrid x:Name="trackingGrid" Series="{Binding Series}" VisibilityItem="{Binding ElementName=visibilityItem}">
+                <Ellipse x:Name="seriesMarker" Stretch="Fill" HorizontalAlignment="Stretch" 
+                                 VerticalAlignment="Stretch" Fill="Transparent" Stroke="Transparent" 
+                                 StrokeThickness="0.5" MinWidth="15" MinHeight="15" />
+                <MyControl:VisibilityItem x:Name="visibilityItem" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" Visibility="Collapsed">
+                    <Ellipse Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                                     Fill="{Binding ActualItemBrush}" Stroke="{Binding Series.ActualMarkerOutline}" 
+                                     StrokeThickness="0.5" MinWidth="15" MinHeight="15" />
+                </MyControl:VisibilityItem>
+            </MyControl:TrackingGrid>
+        </DataTemplate>
+        <datamodel:FlightAnalysisViewModel x:Key="datacontext"/>
     </common:LayoutAwarePage.Resources>
 
     <!--
@@ -67,55 +81,6 @@
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Grid.Column="1" Text="飞行分析" Style="{StaticResource PageHeaderTextStyle}"/>
-            <Grid Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="300,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <!--左发动机	右发动机	发动机	大气机数据	惯导飞控	位移	
-                着陆姿态A	着陆姿态B	角速度	过载	告警信号A	告警信号B
--->
-                <StackPanel Margin="16,0,0,0" VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="0">
-                    <Button x:Name="btPanel1" BorderBrush="{StaticResource AllBorderColor}"
-                            Foreground="Black" Background="{Binding Path=IsPanel1Selected,Converter={StaticResource ResourceKey=converter}}">左发动机
-                    </Button>
-                    <Button x:Name="btPanel2" BorderBrush="{StaticResource AllBorderColor}"
-                            Foreground="Black" Background="{Binding Path=IsPanel2Selected,Converter={StaticResource ResourceKey=converter}}">右发动机
-                    </Button>
-                    <Button x:Name="btPanel3"  BorderBrush="{StaticResource AllBorderColor}"
-                            Foreground="Black" Background="{Binding Path=IsPanel3Selected,Converter={StaticResource ResourceKey=converter}}">发动机
-                    </Button>
-                    <Button x:Name="btPanel4"  BorderBrush="{StaticResource AllBorderColor}"
-                            Foreground="Black" Background="{Binding Path=IsPanel4Selected,Converter={StaticResource ResourceKey=converter}}">大气机数据
-                    </Button>
-                    <Button x:Name="btPanel5"  BorderBrush="{StaticResource AllBorderColor}"
-                            Foreground="Black" Background="{Binding Path=IsPanel5Selected,Converter={StaticResource ResourceKey=converter}}">惯导飞控
-                    </Button>
-                    <Button x:Name="btPanel6"  BorderBrush="{StaticResource AllBorderColor}"
-                            Foreground="Black" Background="{Binding Path=IsPanel6Selected,Converter={StaticResource ResourceKey=converter}}">位移
-                    </Button>
-                </StackPanel>
-                <StackPanel Margin="16,0,0,0" VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="1">
-                    <Button x:Name="btPanel7" BorderBrush="{StaticResource AllBorderColor}"
-                            Foreground="Black" Background="{Binding Path=IsPanel7Selected,Converter={StaticResource ResourceKey=converter}}">着陆姿态A
-                    </Button>
-                    <Button x:Name="btPanel8" BorderBrush="{StaticResource AllBorderColor}"
-                            Foreground="Black" Background="{Binding Path=IsPanel8Selected,Converter={StaticResource ResourceKey=converter}}">着陆姿态B
-                    </Button>
-                    <Button x:Name="btPanel9"  BorderBrush="{StaticResource AllBorderColor}"
-                            Foreground="Black" Background="{Binding Path=IsPanel9Selected,Converter={StaticResource ResourceKey=converter}}">角速度
-                    </Button>
-                    <Button x:Name="btPanel10"  BorderBrush="{StaticResource AllBorderColor}"
-                            Foreground="Black" Background="{Binding Path=IsPanel10Selected,Converter={StaticResource ResourceKey=converter}}">过载
-                    </Button>
-                    <Button x:Name="btPanel11"  BorderBrush="{StaticResource AllBorderColor}"
-                            Foreground="Black" Background="{Binding Path=IsPanel11Selected,Converter={StaticResource ResourceKey=converter}}">告警信号A
-                    </Button>
-                    <Button x:Name="btPanel12"  BorderBrush="{StaticResource AllBorderColor}"
-                            Foreground="Black" Background="{Binding Path=IsPanel12Selected,Converter={StaticResource ResourceKey=converter}}">告警信号B
-                    </Button>
-                </StackPanel>
-            </Grid>
             <Button Grid.Column="1" x:Name="btHome" Margin="10,0" HorizontalAlignment="Right"
                     BorderBrush="{StaticResource AllBorderColor}" 
                         Click="OnNavigateToHome_Clicked" Foreground="Black" Background="#FFFDFDFD"  >
@@ -124,64 +89,474 @@
                 </StackPanel>
             </Button>
         </Grid>
-        <Grid x:Name="grdMain" Grid.Row="1" IsDoubleTapEnabled="False">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="400"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" CornerRadius="15" Padding="10" Margin="5" Background="White" BorderBrush="White">
-                <ItemsControl x:Name="panelParameterListCtrl"
-                              ItemsSource="{Binding Path=RelatedParameterCollection}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderBrush="Black" BorderThickness="1" Margin="25,5">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <TextBlock FontSize="26" FontWeight="Bold" Text="{Binding Path=ParameterCaption}"
-                                               Foreground="{Binding Path=ForegroundBrush}"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock FontSize="26" Margin="15,5" Text="{Binding Path=XValueDisplayStr}"
-                                               Foreground="{Binding Path=ForegroundBrush}"/>
-                                        <TextBlock FontSize="26" Margin="15,5" Text="{Binding Path=YValueDisplayStr}"
-                                               Foreground="{Binding Path=ForegroundBrush}"/>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </Border>
-            <Border Grid.Column="1" CornerRadius="15" Padding="10" Margin="5" Background="White" BorderBrush="White">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled"
-                              VerticalScrollMode="Auto">
-                    <StackPanel>
-                        <Border Margin="5" BorderBrush="Black" BorderThickness="1">
-                            <MyControl:DataPointTracker x:Name="tracker1" Height="240" DoubleTapped="item_DoubleTapped"/>
-                        </Border>
-                        <Border Margin="5" BorderBrush="Black" BorderThickness="1">
-                            <MyControl:DataPointTracker x:Name="tracker2" Height="240" DoubleTapped="item_DoubleTapped"/>
-                        </Border>
-                        <Border Margin="5" BorderBrush="Black" BorderThickness="1">
-                            <MyControl:DataPointTracker x:Name="tracker3" Height="240" DoubleTapped="item_DoubleTapped"/>
-                        </Border>
-                        <Border Margin="5" BorderBrush="Black" BorderThickness="1">
-                            <MyControl:DataPointTracker x:Name="tracker4" Height="240" DoubleTapped="item_DoubleTapped"/>
-                        </Border>
-                        <Border Margin="5" BorderBrush="Black" BorderThickness="1">
-                            <MyControl:DataPointTracker x:Name="tracker5" Height="240" DoubleTapped="item_DoubleTapped"/>
-                        </Border>
-                        <Border Margin="5" BorderBrush="Black" BorderThickness="1">
-                            <MyControl:DataPointTracker x:Name="tracker6" Height="240" DoubleTapped="item_DoubleTapped"/>
-                        </Border>
-                        <Border Margin="5" BorderBrush="Black" BorderThickness="1">
-                            <MyControl:DataPointTracker x:Name="tracker7" Height="240" DoubleTapped="item_DoubleTapped"/>
-                        </Border>
+        <Grid x:Name="grdMain" Grid.Row="1" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <StackPanel Margin="25,0,25,0" HorizontalAlignment="Center"
+                            VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="0">
+                    <Button x:Name="btPanel1" BorderBrush="{StaticResource AllBorderColor}"
+                            DataContext="{StaticResource ResourceKey=datacontext}"
+                            Foreground="Black" Background="{Binding Path=IsPanel1Selected,
+                        Converter={StaticResource ResourceKey=converter}}"
+                            Click="btPanel1_Click"
+                            Content="{Binding Path= Panel1Caption}">
+                    </Button>
+                    <Button x:Name="btPanel2" BorderBrush="{StaticResource AllBorderColor}"
+                            DataContext="{StaticResource ResourceKey=datacontext}"
+                            Foreground="Black" Background="{Binding Path=IsPanel2Selected,
+                        Converter={StaticResource ResourceKey=converter}}"
+                            Click="btPanel2_Click"
+                        Content="{Binding Path= Panel2Caption}">
+                    </Button>
+                    <Button x:Name="btPanel3"  BorderBrush="{StaticResource AllBorderColor}"
+                            DataContext="{StaticResource ResourceKey=datacontext}"
+                            Foreground="Black" Background="{Binding Path=IsPanel3Selected,
+                        Converter={StaticResource ResourceKey=converter}}"
+                            Click="btPanel3_Click"
+                            Content="{Binding Path= Panel3Caption}">
+                    </Button>
+                    <Button x:Name="btPanel4"  BorderBrush="{StaticResource AllBorderColor}"
+                            DataContext="{StaticResource ResourceKey=datacontext}"
+                            Foreground="Black" Background="{Binding Path=IsPanel4Selected,
+                        Converter={StaticResource ResourceKey=converter}}"
+                            Click="btPanel4_Click"
+                            Content="{Binding Path= Panel4Caption}">
+                    </Button>
+                    <Button x:Name="btPanel5"  BorderBrush="{StaticResource AllBorderColor}"
+                            DataContext="{StaticResource ResourceKey=datacontext}"
+                            Foreground="Black" Background="{Binding Path=IsPanel5Selected,
+                        Converter={StaticResource ResourceKey=converter}}"
+                            Click="btPanel5_Click"
+                            Content="{Binding Path= Panel5Caption}">
+                    </Button>
+                    <Button x:Name="btPanel6"  BorderBrush="{StaticResource AllBorderColor}"
+                            DataContext="{StaticResource ResourceKey=datacontext}"
+                            Foreground="Black" Background="{Binding Path=IsPanel6Selected,
+                        Converter={StaticResource ResourceKey=converter}}"
+                            Click="btPanel6_Click"
+                            Content="{Binding Path= Panel6Caption}">
+                    </Button>
+                    <Button x:Name="btPanel7" BorderBrush="{StaticResource AllBorderColor}"
+                            DataContext="{StaticResource ResourceKey=datacontext}"
+                            Foreground="Black" Background="{Binding Path=IsPanel7Selected,
+                        Converter={StaticResource ResourceKey=converter}}"
+                            Click="btPanel7_Click"
+                            Content="{Binding Path= Panel7Caption}">
+                    </Button>
+                    <Button x:Name="btPanel8" BorderBrush="{StaticResource AllBorderColor}"
+                            DataContext="{StaticResource ResourceKey=datacontext}"
+                            Foreground="Black" Background="{Binding Path=IsPanel8Selected,
+                        Converter={StaticResource ResourceKey=converter}}"
+                            Click="btPanel8_Click"
+                            Content="{Binding Path= Panel8Caption}">
+                    </Button>
+                    <Button x:Name="btPanel9"  BorderBrush="{StaticResource AllBorderColor}"
+                            DataContext="{StaticResource ResourceKey=datacontext}"
+                            Foreground="Black" Background="{Binding Path=IsPanel9Selected,
+                        Converter={StaticResource ResourceKey=converter}}"
+                            Click="btPanel9_Click"
+                            Content="{Binding Path= Panel9Caption}">
+                    </Button>
+                    <Button x:Name="btPanel10"  BorderBrush="{StaticResource AllBorderColor}"
+                            DataContext="{StaticResource ResourceKey=datacontext}"
+                            Foreground="Black" Background="{Binding Path=IsPanel10Selected,
+                        Converter={StaticResource ResourceKey=converter}}"
+                            Click="btPanel10_Click"
+                            Content="{Binding Path= Panel10Caption}">
+                    </Button>
+                    <Button x:Name="btPanel11"  BorderBrush="{StaticResource AllBorderColor}"
+                            DataContext="{StaticResource ResourceKey=datacontext}"
+                            Foreground="Black" Background="{Binding Path=IsPanel11Selected,
+                        Converter={StaticResource ResourceKey=converter}}"
+                            Click="btPanel11_Click"
+                            Content="{Binding Path= Panel11Caption}">
+                    </Button>
+                    <Button x:Name="btPanel12"  BorderBrush="{StaticResource AllBorderColor}"
+                            DataContext="{StaticResource ResourceKey=datacontext}"
+                            Foreground="Black" Background="{Binding Path=IsPanel12Selected,
+                        Converter={StaticResource ResourceKey=converter}}"
+                            Click="btPanel12_Click"
+                            Content="{Binding Path= Panel12Caption}">
+                    </Button>
+                </StackPanel>
+                <!--<Grid Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="300,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    左发动机	右发动机	发动机	大气机数据	惯导飞控	位移	
+                着陆姿态A	着陆姿态B	角速度	过载	告警信号A	告警信号B
+                    <StackPanel Margin="16,0,0,0" VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="1">
                     </StackPanel>
-                </ScrollViewer>
-            </Border>
+                </Grid>
+-->
+
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="400"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" CornerRadius="15" Padding="10" Margin="5" Background="White" BorderBrush="White">
+                    <ItemsControl x:Name="panelParameterListCtrl"
+                              ItemsSource="{Binding Path=RelatedParameterCollection}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="25,5">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock FontSize="26" FontWeight="Bold" Text="{Binding Path=ParameterCaption}"
+                                               Foreground="{Binding Path=ForegroundBrush}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock FontSize="26" Margin="15,5" Text="{Binding Path=XValueDisplayStr}"
+                                               Foreground="{Binding Path=ForegroundBrush}"/>
+                                            <TextBlock FontSize="26" Margin="15,5" Text="{Binding Path=YValueDisplayStr}"
+                                               Foreground="{Binding Path=ForegroundBrush}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+                <Border Grid.Column="1" CornerRadius="15" Padding="10" Margin="5" Background="White" BorderBrush="White"
+                    DataContext="{StaticResource ResourceKey=datacontext}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled"
+                              VerticalScrollMode="Auto">
+                        <StackPanel>
+                            <Border Margin="5" BorderBrush="Black" BorderThickness="1" >
+                                <Charts1:XamDataChart  x:Name="tracker1" Height="240" Tapped="item_Tapped"  
+                                DataContext="{Binding Path=Group1}"
+                                PointerMoved="xamDataChart1_PointerMoved">
+                                    <!--<Charts1:XamDataChart.DataContext>
+                                    <test:TestSimpleDataSource/>
+                                </Charts1:XamDataChart.DataContext>-->
+                                    <Charts1:XamDataChart.Axes>
+                                        <Charts1:CategoryXAxis x:Name="xm1XAxis" ItemsSource="{Binding Path=Serie1}" Label="{}{Label}" >
+                                            <Charts1:CategoryXAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Extent="35" />
+                                            </Charts1:CategoryXAxis.LabelSettings>
+                                        </Charts1:CategoryXAxis>
+                                        <Charts1:NumericYAxis x:Name="xm1YAxis" Stroke="#FFF2A724" CrossingValue="2"
+                                        CrossingAxis="{Binding ElementName=xm1XAxis}">
+                                            <Charts1:NumericYAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Location="OutsideLeft" Extent="55" FontFamily="Global User Interface" />
+                                            </Charts1:NumericYAxis.LabelSettings>
+                                        </Charts1:NumericYAxis>
+                                        <!--<Charts1:NumericYAxis x:Name="xmYAxis2" Stroke="Red" CrossingValue="4"
+                                        CrossingAxis="{Binding ElementName=xm1XAxis2}">
+                                        <Charts1:NumericYAxis.LabelSettings >
+                                            <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
+                                        </Charts1:NumericYAxis.LabelSettings>
+                                    </Charts1:NumericYAxis>-->
+                                    </Charts1:XamDataChart.Axes>
+                                    <Charts1:XamDataChart.Series>
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                          x:Name="serie11" ItemsSource="{Binding Path=Serie1}"
+                                         XAxis="{Binding ElementName=xm1XAxis}" 
+                                         YAxis="{Binding ElementName=xm1YAxis}" Brush="Red"
+                                              Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" >
+                                            <!--
+                                            <Charts1:LineSeries.ItemsSource>
+                                                <test:TestSimpleDataSource/>
+                                            </Charts1:LineSeries.ItemsSource>-->
+                                        </Charts1:LineSeries>
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding Path=Serie2}" x:Name="serie12"
+                                         XAxis="{Binding ElementName=xm1XAxis}" 
+                                         YAxis="{Binding ElementName=xm1YAxis}"  
+                                               Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding Path=Serie3}" x:Name="serie13"
+                                         XAxis="{Binding ElementName=xm1XAxis}" 
+                                         YAxis="{Binding ElementName=xm1YAxis}"  
+                                                        Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                    </Charts1:XamDataChart.Series>
+                                </Charts1:XamDataChart>
+                            </Border>
+                            <Border Margin="5" BorderBrush="Black" BorderThickness="1">
+                                <Charts1:XamDataChart  x:Name="tracker2" Height="240" Tapped="item_Tapped"  
+                                DataContext="{Binding Path=Group2}"              
+                                PointerMoved="xamDataChart2_PointerMoved">
+                                    <Charts1:XamDataChart.Axes>
+                                        <Charts1:CategoryXAxis x:Name="xm2XAxis" ItemsSource="{Binding}" Label="{}{Label}" >
+                                            <Charts1:CategoryXAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Extent="35" />
+                                            </Charts1:CategoryXAxis.LabelSettings>
+                                        </Charts1:CategoryXAxis>
+                                        <Charts1:NumericYAxis x:Name="xm2YAxis" Stroke="#FFF2A724" CrossingValue="2"
+                                        CrossingAxis="{Binding ElementName=xm2XAxis}">
+                                            <Charts1:NumericYAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Location="OutsideLeft" Extent="55" FontFamily="Global User Interface" />
+                                            </Charts1:NumericYAxis.LabelSettings>
+                                        </Charts1:NumericYAxis>
+                                        <!--<Charts1:NumericYAxis x:Name="xmYAxis2" Stroke="Red" CrossingValue="4"
+                                        CrossingAxis="{Binding ElementName=xm1XAxis2}">
+                                        <Charts1:NumericYAxis.LabelSettings >
+                                            <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
+                                        </Charts1:NumericYAxis.LabelSettings>
+                                    </Charts1:NumericYAxis>-->
+                                    </Charts1:XamDataChart.Axes>
+                                    <Charts1:XamDataChart.Series>
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                         ItemsSource="{Binding Path=Serie1}"  x:Name="serie21"
+                                         XAxis="{Binding ElementName=xm2XAxis}" 
+                                         YAxis="{Binding ElementName=xm2YAxis}"  
+                                              Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding Path=Serie2}" x:Name="serie22"
+                                         XAxis="{Binding ElementName=xm2XAxis}" 
+                                         YAxis="{Binding ElementName=xm2YAxis}"  
+                                               Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding Path=Serie3}" x:Name="serie23"
+                                         XAxis="{Binding ElementName=xm2XAxis}" 
+                                         YAxis="{Binding ElementName=xm2YAxis}"  
+                                                        Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                    </Charts1:XamDataChart.Series>
+                                </Charts1:XamDataChart>
+                            </Border>
+                            <Border Margin="5" BorderBrush="Black" BorderThickness="1">
+                                <Charts1:XamDataChart  x:Name="tracker3" Height="240" Tapped="item_Tapped"   
+                                DataContext="{Binding Path=Group3}"             
+                                PointerMoved="xamDataChart3_PointerMoved">
+                                    <Charts1:XamDataChart.Axes>
+                                        <Charts1:CategoryXAxis x:Name="xm3XAxis" ItemsSource="{Binding}" Label="{}{Label}" >
+                                            <Charts1:CategoryXAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Extent="35" />
+                                            </Charts1:CategoryXAxis.LabelSettings>
+                                        </Charts1:CategoryXAxis>
+                                        <Charts1:NumericYAxis x:Name="xm3YAxis" Stroke="#FFF2A724" CrossingValue="2"
+                                        CrossingAxis="{Binding ElementName=xm3XAxis}">
+                                            <Charts1:NumericYAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Location="OutsideLeft" Extent="55" FontFamily="Global User Interface" />
+                                            </Charts1:NumericYAxis.LabelSettings>
+                                        </Charts1:NumericYAxis>
+                                        <!--<Charts1:NumericYAxis x:Name="xmYAxis2" Stroke="Red" CrossingValue="4"
+                                        CrossingAxis="{Binding ElementName=xm1XAxis2}">
+                                        <Charts1:NumericYAxis.LabelSettings >
+                                            <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
+                                        </Charts1:NumericYAxis.LabelSettings>
+                                    </Charts1:NumericYAxis>-->
+                                    </Charts1:XamDataChart.Axes>
+                                    <Charts1:XamDataChart.Series>
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                         ItemsSource="{Binding Path=Serie1}"  x:Name="serie31"
+                                         XAxis="{Binding ElementName=xm3XAxis}" 
+                                         YAxis="{Binding ElementName=xm3YAxis}"  
+                                              Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding Path=Serie2}" x:Name="serie32"
+                                         XAxis="{Binding ElementName=xm3XAxis}" 
+                                         YAxis="{Binding ElementName=xm3YAxis}"  
+                                               Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding Path=Serie3}" x:Name="serie33"
+                                         XAxis="{Binding ElementName=xm3XAxis}" 
+                                         YAxis="{Binding ElementName=xm3YAxis}"  
+                                                        Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                    </Charts1:XamDataChart.Series>
+                                </Charts1:XamDataChart>
+                            </Border>
+                            <Border Margin="5" BorderBrush="Black" BorderThickness="1">
+                                <Charts1:XamDataChart  x:Name="tracker4" Height="240" Tapped="item_Tapped"    
+                                DataContext="{Binding Path=Group4}"            
+                                PointerMoved="xamDataChart4_PointerMoved">
+                                    <Charts1:XamDataChart.Axes>
+                                        <Charts1:CategoryXAxis x:Name="xm4XAxis" ItemsSource="{Binding}" Label="{}{Label}" >
+                                            <Charts1:CategoryXAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Extent="35" />
+                                            </Charts1:CategoryXAxis.LabelSettings>
+                                        </Charts1:CategoryXAxis>
+                                        <Charts1:NumericYAxis x:Name="xm4YAxis" Stroke="#FFF2A724" CrossingValue="2"
+                                        CrossingAxis="{Binding ElementName=xm4XAxis}">
+                                            <Charts1:NumericYAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Location="OutsideLeft" Extent="55" FontFamily="Global User Interface" />
+                                            </Charts1:NumericYAxis.LabelSettings>
+                                        </Charts1:NumericYAxis>
+                                        <!--<Charts1:NumericYAxis x:Name="xmYAxis2" Stroke="Red" CrossingValue="4"
+                                        CrossingAxis="{Binding ElementName=xm1XAxis2}">
+                                        <Charts1:NumericYAxis.LabelSettings >
+                                            <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
+                                        </Charts1:NumericYAxis.LabelSettings>
+                                    </Charts1:NumericYAxis>-->
+                                    </Charts1:XamDataChart.Axes>
+                                    <Charts1:XamDataChart.Series>
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                         ItemsSource="{Binding Path=Serie1}"  x:Name="serie41"
+                                         XAxis="{Binding ElementName=xm4XAxis}" 
+                                         YAxis="{Binding ElementName=xm4YAxis}"  
+                                              Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding Path=Serie2}" x:Name="serie42"
+                                         XAxis="{Binding ElementName=xm4XAxis}" 
+                                         YAxis="{Binding ElementName=xm4YAxis}"  
+                                               Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding Path=Serie3}" x:Name="serie43"
+                                         XAxis="{Binding ElementName=xm4XAxis}" 
+                                         YAxis="{Binding ElementName=xm4YAxis}"  
+                                                        Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                    </Charts1:XamDataChart.Series>
+                                </Charts1:XamDataChart>
+                            </Border>
+                            <Border Margin="5" BorderBrush="Black" BorderThickness="1">
+                                <Charts1:XamDataChart  x:Name="tracker5" Height="240" Tapped="item_Tapped"    
+                                DataContext="{Binding Path=Group5}"            
+                                PointerMoved="xamDataChart5_PointerMoved">
+                                    <Charts1:XamDataChart.Axes>
+                                        <Charts1:CategoryXAxis x:Name="xm5XAxis" ItemsSource="{Binding}" Label="{}{Label}" >
+                                            <Charts1:CategoryXAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Extent="35" />
+                                            </Charts1:CategoryXAxis.LabelSettings>
+                                        </Charts1:CategoryXAxis>
+                                        <Charts1:NumericYAxis x:Name="xm5YAxis" Stroke="#FFF2A724" CrossingValue="2"
+                                        CrossingAxis="{Binding ElementName=xm5XAxis}">
+                                            <Charts1:NumericYAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Location="OutsideLeft" Extent="55" FontFamily="Global User Interface" />
+                                            </Charts1:NumericYAxis.LabelSettings>
+                                        </Charts1:NumericYAxis>
+                                        <!--<Charts1:NumericYAxis x:Name="xmYAxis2" Stroke="Red" CrossingValue="4"
+                                        CrossingAxis="{Binding ElementName=xm1XAxis2}">
+                                        <Charts1:NumericYAxis.LabelSettings >
+                                            <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
+                                        </Charts1:NumericYAxis.LabelSettings>
+                                    </Charts1:NumericYAxis>-->
+                                    </Charts1:XamDataChart.Axes>
+                                    <Charts1:XamDataChart.Series>
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                         ItemsSource="{Binding Path=Serie1}"  x:Name="serie51"
+                                         XAxis="{Binding ElementName=xm5XAxis}" 
+                                         YAxis="{Binding ElementName=xm5YAxis}"  
+                                              Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding Path=Serie2}" x:Name="serie52"
+                                         XAxis="{Binding ElementName=xm5XAxis}" 
+                                         YAxis="{Binding ElementName=xm5YAxis}"  
+                                               Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding Path=Serie3}" x:Name="serie53"
+                                         XAxis="{Binding ElementName=xm5XAxis}" 
+                                         YAxis="{Binding ElementName=xm5YAxis}"  
+                                                        Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                    </Charts1:XamDataChart.Series>
+                                </Charts1:XamDataChart>
+                            </Border>
+                            <Border Margin="5" BorderBrush="Black" BorderThickness="1">
+                                <Charts1:XamDataChart  x:Name="tracker6" Height="240" Tapped="item_Tapped"         
+                                DataContext="{Binding Path=Group6}"       
+                                PointerMoved="xamDataChart6_PointerMoved">
+                                    <Charts1:XamDataChart.Axes>
+                                        <Charts1:CategoryXAxis x:Name="xm6XAxis" ItemsSource="{Binding}" Label="{}{Label}" >
+                                            <Charts1:CategoryXAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Extent="35" />
+                                            </Charts1:CategoryXAxis.LabelSettings>
+                                        </Charts1:CategoryXAxis>
+                                        <Charts1:NumericYAxis x:Name="xm6YAxis" Stroke="#FFF2A724" CrossingValue="2"
+                                        CrossingAxis="{Binding ElementName=xm6XAxis}">
+                                            <Charts1:NumericYAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Location="OutsideLeft" Extent="55" FontFamily="Global User Interface" />
+                                            </Charts1:NumericYAxis.LabelSettings>
+                                        </Charts1:NumericYAxis>
+                                        <!--<Charts1:NumericYAxis x:Name="xmYAxis2" Stroke="Red" CrossingValue="4"
+                                        CrossingAxis="{Binding ElementName=xm1XAxis2}">
+                                        <Charts1:NumericYAxis.LabelSettings >
+                                            <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
+                                        </Charts1:NumericYAxis.LabelSettings>
+                                    </Charts1:NumericYAxis>-->
+                                    </Charts1:XamDataChart.Axes>
+                                    <Charts1:XamDataChart.Series>
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                         ItemsSource="{Binding Path=Serie1}"  x:Name="serie61"
+                                         XAxis="{Binding ElementName=xm1XAxis}" 
+                                         YAxis="{Binding ElementName=xm1YAxis}"  
+                                              Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding Path=Serie2}" x:Name="serie62"
+                                         XAxis="{Binding ElementName=xm1XAxis}" 
+                                         YAxis="{Binding ElementName=xm1YAxis}"  
+                                               Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding Path=Serie3}" x:Name="serie63"
+                                         XAxis="{Binding ElementName=xm6XAxis}" 
+                                         YAxis="{Binding ElementName=xm6YAxis}"  
+                                                        Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                    </Charts1:XamDataChart.Series>
+                                </Charts1:XamDataChart>
+                            </Border>
+                            <Border Margin="5" BorderBrush="Black" BorderThickness="1">
+                                <Charts1:XamDataChart  x:Name="tracker7" Height="240" Tapped="item_Tapped"    
+                                DataContext="{Binding Path=Group7}"            
+                                PointerMoved="xamDataChart7_PointerMoved">
+                                    <Charts1:XamDataChart.Axes>
+                                        <Charts1:CategoryXAxis x:Name="xm7XAxis" ItemsSource="{Binding}" Label="{}{Label}" >
+                                            <Charts1:CategoryXAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Extent="35" />
+                                            </Charts1:CategoryXAxis.LabelSettings>
+                                        </Charts1:CategoryXAxis>
+                                        <Charts1:NumericYAxis x:Name="xm7YAxis" Stroke="#FFF2A724" CrossingValue="2"
+                                        CrossingAxis="{Binding ElementName=xm7XAxis}">
+                                            <Charts1:NumericYAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Location="OutsideLeft" Extent="55" FontFamily="Global User Interface" />
+                                            </Charts1:NumericYAxis.LabelSettings>
+                                        </Charts1:NumericYAxis>
+                                        <!--<Charts1:NumericYAxis x:Name="xmYAxis2" Stroke="Red" CrossingValue="4"
+                                        CrossingAxis="{Binding ElementName=xm1XAxis2}">
+                                        <Charts1:NumericYAxis.LabelSettings >
+                                            <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
+                                        </Charts1:NumericYAxis.LabelSettings>
+                                    </Charts1:NumericYAxis>-->
+                                    </Charts1:XamDataChart.Axes>
+                                    <Charts1:XamDataChart.Series>
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                         ItemsSource="{Binding Path=Serie1}"  x:Name="serie71"
+                                         XAxis="{Binding ElementName=xm7XAxis}" 
+                                         YAxis="{Binding ElementName=xm7YAxis}"  
+                                              Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding Path=Serie2}" x:Name="serie72"
+                                         XAxis="{Binding ElementName=xm7XAxis}" 
+                                         YAxis="{Binding ElementName=xm7YAxis}"  
+                                               Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries ValueMemberPath="Value"
+                                   ItemsSource="{Binding Path=Serie3}" x:Name="serie73"
+                                         XAxis="{Binding ElementName=xm7XAxis}" 
+                                         YAxis="{Binding ElementName=xm7YAxis}"  
+                                                        Thickness="5" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                    </Charts1:XamDataChart.Series>
+                                </Charts1:XamDataChart>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
         </Grid>
 
     </Grid>

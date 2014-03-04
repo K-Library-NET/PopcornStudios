@@ -205,7 +205,7 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
             }
             return dts;
         }
-        private FlightAnalysisViewModel m_viewModel;
+        private FlightAnalysisViewModelOld m_viewModel;
     }
 
     public class Labelconvertor : IValueConverter

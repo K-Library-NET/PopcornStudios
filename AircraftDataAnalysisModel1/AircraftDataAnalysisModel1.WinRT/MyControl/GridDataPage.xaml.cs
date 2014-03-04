@@ -23,7 +23,7 @@ namespace AircraftDataAnalysisWinRT.MyControl
     /// </summary>
     public sealed partial class GridDataPage : AircraftDataAnalysisWinRT.Common.LayoutAwarePage
     {
-        private FlightAnalysisViewModel m_viewModel;
+        private FlightAnalysisViewModelOld m_viewModel;
         public GridDataPage()
         {
             this.InitializeComponent();
@@ -135,7 +135,7 @@ namespace AircraftDataAnalysisWinRT.MyControl
             set;
         }
 
-        public FlightAnalysisViewModel ViewModel
+        public FlightAnalysisViewModelOld ViewModel
         {
             get;
             set;

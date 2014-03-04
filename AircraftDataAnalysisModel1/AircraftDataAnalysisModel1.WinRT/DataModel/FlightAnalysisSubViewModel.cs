@@ -140,7 +140,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
             //return m_faChartModel;
         }
 
-        public AircraftDataAnalysisWinRT.Domain.FlightAnalysisViewModel ViewModel
+        public AircraftDataAnalysisWinRT.Domain.FlightAnalysisViewModelOld ViewModel
         {
             get;
             set;

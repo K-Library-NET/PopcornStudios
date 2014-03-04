@@ -32,6 +32,13 @@ namespace AircraftDataAnalysisWinRT.Test
             this.InitializeComponent();
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            this.DataContext = null;
+        }
+
         /// <summary>
         /// 使用在导航过程中传递的内容填充页。在从以前的会话
         /// 重新创建页时，也会提供任何已保存状态。
@@ -154,6 +161,14 @@ namespace AircraftDataAnalysisWinRT.Test
             //{
             //    System.Diagnostics.Debug.WriteLine(ex);
             //}
+        }
+
+        private void CategoryChart_PointerMoved_1(object sender, PointerRoutedEventArgs e)
+        {
+        }
+
+        void xamDataChart1_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
         }
     }
 }

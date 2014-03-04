@@ -138,12 +138,12 @@ namespace AircraftDataAnalysisWinRT
             return p;
         }
 
-        public Domain.FlightAnalysisViewModel GetViewModelByCurrentFlight()
+        public Domain.FlightAnalysisViewModelOld GetViewModelByCurrentFlight()
         {
             return GetCurrentViewModel(CurrentFlight);
         }
 
-        public Domain.FlightAnalysisViewModel GetCurrentViewModel(FlightDataEntitiesRT.Flight flight)
+        public Domain.FlightAnalysisViewModelOld GetCurrentViewModel(FlightDataEntitiesRT.Flight flight)
         {
             if (flight == null || string.IsNullOrEmpty(flight.FlightID))
             {
@@ -154,20 +154,20 @@ namespace AircraftDataAnalysisWinRT
             return GetCurrentViewModel(key);
         }
 
-        public Domain.FlightAnalysisViewModel GetCurrentViewModel(string key)
+        public Domain.FlightAnalysisViewModelOld GetCurrentViewModel(string key)
         {
             if (this.m_objectMap.ContainsKey(key)
                 && this.m_objectMap[key] != null
-                && this.m_objectMap[key] is Domain.FlightAnalysisViewModel)
+                && this.m_objectMap[key] is Domain.FlightAnalysisViewModelOld)
             {
-                return this.m_objectMap[key] as Domain.FlightAnalysisViewModel;
+                return this.m_objectMap[key] as Domain.FlightAnalysisViewModelOld;
             }
 
             return null;
         }
 
         public void SetCurrentViewModel(FlightDataEntitiesRT.Flight flight,
-            AircraftDataAnalysisWinRT.Domain.FlightAnalysisViewModel viewModel)
+            AircraftDataAnalysisWinRT.Domain.FlightAnalysisViewModelOld viewModel)
         {
             if (flight == null || string.IsNullOrEmpty(flight.FlightID))
             {
@@ -178,7 +178,7 @@ namespace AircraftDataAnalysisWinRT
         }
 
         public void SetCurrentViewModel(string flightID,
-            AircraftDataAnalysisWinRT.Domain.FlightAnalysisViewModel viewModel)
+            AircraftDataAnalysisWinRT.Domain.FlightAnalysisViewModelOld viewModel)
         {
             string key = this.GetFlightViewModelKey(flightID);
             if (this.m_objectMap.ContainsKey(key))

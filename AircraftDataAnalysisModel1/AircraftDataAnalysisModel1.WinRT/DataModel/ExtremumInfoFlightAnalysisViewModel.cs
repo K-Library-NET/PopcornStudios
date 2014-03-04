@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AircraftDataAnalysisWinRT.DataModel
 {
-    public class ExtremumInfoFlightAnalysisViewModel : FlightAnalysisViewModel
+    public class ExtremumInfoFlightAnalysisViewModel : FlightAnalysisViewModelOld
     {
         private ExtremumReportItemWrap extremumReportItemWrap;
 
