@@ -81,17 +81,20 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         {
             IEnumerable<AircraftInstance> selectedAircraft = this.GetSelectedAircrafts(viewModel);
 
-            foreach (var aircraft in selectedAircraft)
+            if (selectedAircraft != null && selectedAircraft.Count() > 0)
             {
-                if (viewModel.ItemsMap.ContainsKey(aircraft.AircraftNumber))
+                foreach (var aircraft in selectedAircraft)
                 {
-                    this.AddData(aircraft, viewModel);
-                    continue;
-                }
+                    if (viewModel.ItemsMap.ContainsKey(aircraft.AircraftNumber))
+                    {
+                        this.AddData(aircraft, viewModel);
+                        continue;
+                    }
 
-                ExtremumPointInfo[] infos = ServerHelper.GetExtremumPointInfos(aircraft);
-                viewModel.ItemsMap.Add(aircraft.AircraftNumber, new List<ExtremumPointInfo>(infos));
-                this.AddData(aircraft, viewModel);
+                    ExtremumPointInfo[] infos = ServerHelper.GetExtremumPointInfos(aircraft);
+                    viewModel.ItemsMap.Add(aircraft.AircraftNumber, new List<ExtremumPointInfo>(infos));
+                    this.AddData(aircraft, viewModel);
+                }
             }
         }
 
@@ -158,7 +161,19 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
 
         private IEnumerable<AircraftInstance> GetSelectedAircrafts(TrendAnalysisViewModel viewModel)
         {
-            throw new NotImplementedException();
+            if (this.listAircrafts.ItemsSource != null && this.listAircrafts.ItemsSource is List<AircraftInstanceBindingClass>)
+            {
+                List<AircraftInstanceBindingClass> bindingClass = this.listAircrafts.ItemsSource as List<AircraftInstanceBindingClass>;
+
+                var result = from one in bindingClass
+                             where one.IsSelected
+                             select one.AircraftInstance;
+
+                return result;
+            }
+
+            return new AircraftInstance[] { };
+            //throw new NotImplementedException();
         }
 
         private void BindAircraft(TrendAnalysisViewModel viewModel)

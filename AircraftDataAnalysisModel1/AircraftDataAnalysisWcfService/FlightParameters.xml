@@ -104,7 +104,7 @@
     <Byte Index="229"/>
   </Parameter>
   <Parameter ParameterID="ZS" ParameterDataType="Single" Index="20"
-             SubIndex="-1" Caption="平尾伺服器输入(左平尾舵机位移)"  Unit="">
+             SubIndex="-1" Caption="平尾伺服器输入"  Unit="">
     <Byte Index="7"/>
     <Byte Index="39"/>
     <Byte Index="71"/>

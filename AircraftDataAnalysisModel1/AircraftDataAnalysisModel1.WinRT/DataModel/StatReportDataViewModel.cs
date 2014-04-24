@@ -1,4 +1,5 @@
-﻿using AircraftDataAnalysisWinRT.Common;
+﻿using AircraftDataAnalysisModel1.WinRT.MyControl;
+using AircraftDataAnalysisWinRT.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -41,6 +42,104 @@ namespace AircraftDataAnalysisWinRT.DataModel
         }
 
         public ObservableCollection<ColumnChartDetailData> ColumnChartDetails
+        {
+            get;
+            set;
+        }
+
+        internal void ReloadDecisionRecords(FlightDataEntitiesRT.Decisions.DecisionRecord[] decisionRecords)
+        {
+            SetBindPieChart(decisionRecords);
+            StackColumnCollection colCollection = new StackColumnCollection();
+            var grouped2 = from one in decisionRecords
+                           group one by this.GetFlightMonthStr(one.FlightID) into gp2
+                           select gp2;
+
+            foreach (var gpitem in grouped2)
+            {
+                StackColumnItem col = new StackColumnItem() { MonthStr = gpitem.Key };
+
+                var grouped3 = from two in gpitem
+                               group two by two.DecisionID into gp2
+                               select gp2;
+
+                foreach (var gp3 in grouped3)
+                {
+                    var summed = from three in gp3
+                                 select three.EndSecond - three.StartSecond;
+
+                    if (gp3.Key == "1")
+                    {
+                        col.Condition1 = summed.Sum();
+                    }
+                    else if (gp3.Key == "2")
+                    {
+                        col.Condition2 = summed.Sum();
+                    }
+                    else if (gp3.Key == "3")
+                    {
+                        col.Condition3 = summed.Sum();
+                    }
+                    else if (gp3.Key == "4")
+                    {
+                        col.Condition4 = summed.Sum();
+                    }
+                }
+
+                colCollection.Add(col);
+            }
+
+            this.StackColumnCollection = colCollection;
+
+            this.OnPropertyChanged("PieChartDataSource");
+            this.OnPropertyChanged("StackColumnCollection");
+        }
+
+        private void SetBindPieChart(FlightDataEntitiesRT.Decisions.DecisionRecord[] decisionRecords)
+        {
+            AircraftDataAnalysisModel1.WinRT.MyControl.PieChartDataSource pieSource =
+                new AircraftDataAnalysisModel1.WinRT.MyControl.PieChartDataSource();
+            var grouped1 = from one in decisionRecords
+                           group one by one.DecisionID into gp1
+                           select gp1;
+
+            List<PieChartAmount> amounts = new List<PieChartAmount>();
+            foreach (var gpitem in grouped1)
+            {
+                var temp = from one in gpitem
+                           select one.EndSecond - one.StartSecond;
+
+                var temp2 = temp.Sum();
+
+                PieChartAmount amount = new PieChartAmount()
+                {
+                    CategoryName = this.GetCategoryName(gpitem.Key),
+                    Amount = temp2
+                };
+
+                pieSource.Add(amount);
+            }
+
+            this.PieChartDataSource = pieSource;
+        }
+
+        private string GetFlightMonthStr(string flightID)
+        {
+            throw new NotImplementedException();
+        }
+
+        private string GetCategoryName(string p)
+        {
+            throw new NotImplementedException();
+        }
+
+        public AircraftDataAnalysisModel1.WinRT.MyControl.PieChartDataSource PieChartDataSource
+        {
+            get;
+            set;
+        }
+
+        public AircraftDataAnalysisModel1.WinRT.MyControl.StackColumnCollection StackColumnCollection
         {
             get;
             set;

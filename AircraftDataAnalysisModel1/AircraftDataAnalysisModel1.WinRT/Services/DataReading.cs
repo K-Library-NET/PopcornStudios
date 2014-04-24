@@ -166,10 +166,15 @@ namespace AircraftDataAnalysisWinRT.Services
         public void ReadData(int startSecond, int endSecond, bool putIntoServer,
             AircraftDataAnalysisWinRT.DataModel.RawDataPointViewModel previewModel)
         {
+            Task<Flight> flightTask = null;
+
             if (putIntoServer)
             {
+                var temp = this.Flight.GlobeDatas;
+                this.Flight.GlobeDatas = null;
                 DataInputHelper.DeleteExistsData(this.Flight);
-                DataInputHelper.AddOrReplaceFlightAsync(this.Flight);//需要先新增或者更新Flight
+                this.Flight.GlobeDatas = temp;
+                flightTask = DataInputHelper.AddOrReplaceFlightAsync(this.Flight);//需要先新增或者更新Flight
             }
 
             var decisions = ServerHelper.GetDecisions(ApplicationContext.Instance.CurrentAircraftModel);
@@ -214,6 +219,21 @@ namespace AircraftDataAnalysisWinRT.Services
             for (int i = startSecond; i < Math.Min(this.Header.FlightSeconds, endSecond); i++)
             {
                 ParameterRawData[] datas = m_rawDataExtractor.GetDataBySecond(i);
+
+                foreach (var ddt in datas)
+                {
+                    if (ddt.ParameterID == "NHL" && ddt.Second < (this.Header.FlightSeconds / 10)
+                        && ddt.Values[0] >= 65535F)
+                    {
+                        ddt.Values[0] = 0;
+                    }//左发高压转速在头10%和末尾10%，有可能出现65535的情况，使得曲线显示有异常
+                    if (ddt.ParameterID == "NHL" && ddt.Second > (9 * this.Header.FlightSeconds / 10)
+                        && ddt.Values[0] >= 65535F)
+                    {
+                        ddt.Values[0] = 0;
+                    }//这种情况目前写死去掉
+                }
+
                 if (previewModel != null && previewModel.RawDataRowViewModel != null)
                     previewModel.RawDataRowViewModel.AddOneSecondValue(i, datas);
                 //DEBUG
@@ -329,6 +349,24 @@ namespace AircraftDataAnalysisWinRT.Services
                     }
                 }
 
+                foreach (var decisionKey in hasFlightHappendMap.Keys)
+                {
+                    if (decisionKey.HasHappened)
+                    {
+                        DecisionRecord record = new DecisionRecord()
+                        {
+                            FlightID = Flight.FlightID,
+                            EventLevel = decisionKey.EventLevel,
+                            StartSecond = decisionKey.ActiveStartSecond,
+                            EndSecond = decisionKey.ActiveEndSecond,
+                            DecisionID = decisionKey.DecisionID,
+                            DecisionName = decisionKey.DecisionName,
+                        };
+                        record.DecisionDescription = decisionKey.ToDecisionDescriptionString(record);
+                        decisionFlightRecords.Add(record);
+                    }
+                }
+
                 //Parallel.ForEach(decisions, new ParallelOptions() { MaxDegreeOfParallelism = 4 },
                 //    new Action<Decision>(delegate(Decision de)
                 //    {
@@ -375,6 +413,24 @@ namespace AircraftDataAnalysisWinRT.Services
 
                     if (this.Progress != null)
                         this.Progress(this, (int)this.PercentCurrent);
+                }
+
+                foreach (var decisionKey in hasHappendMap.Keys)
+                {
+                    if (decisionKey.HasHappened)
+                    {
+                        DecisionRecord record = new DecisionRecord()
+                        {
+                            FlightID = Flight.FlightID,
+                            EventLevel = decisionKey.EventLevel,
+                            StartSecond = decisionKey.ActiveStartSecond,
+                            EndSecond = decisionKey.ActiveEndSecond,
+                            DecisionID = decisionKey.DecisionID,
+                            DecisionName = decisionKey.DecisionName,
+                        };
+                        record.DecisionDescription = decisionKey.ToDecisionDescriptionString(record);
+                        decisionRecords.Add(record);
+                    }
                 }
 
                 if (putIntoServer)
@@ -443,15 +499,15 @@ namespace AircraftDataAnalysisWinRT.Services
                               where extremeParameterIDs.Contains(one1.ParameterID)
                               select one1.ExtremumPointInfo;
 
-                foreach (var ext in extreme)
-                {
-                    ext.FlightDate = this.Flight.FlightDate;
-                }
-                DataInputHelper.AddOrReplaceFlightExtreme(this.Flight, extreme.ToArray());
+                List<ExtremumPointInfo> tempExtInfos = new List<ExtremumPointInfo>(extreme);
+
+                DataInputHelper.AddOrReplaceFlightExtreme(this.Flight, tempExtInfos.ToArray());
 
                 this.PutInServer(topRecords, this.Flight, level2RecordMap);
             }
 
+            if (flightTask != null)
+                flightTask.Wait();
             task.Wait();
             //if (putIntoServer)
             //    DataInputHelper.AddDecisionRecordsBatch(this.Flight, decisionRecords);
@@ -482,7 +538,7 @@ namespace AircraftDataAnalysisWinRT.Services
                 if (i >= step && i % step == 0)
                 {
                     var task = DataInputHelper.AddOneParameterValueAsync(this.Flight, key, tempList.ToArray());
-                    task.Wait();
+                    //task.Wait();
                     if (!string.IsNullOrEmpty(task.Result))
                     {
                     }
@@ -495,7 +551,7 @@ namespace AircraftDataAnalysisWinRT.Services
             if (tempList.Count > 0)
             {
                 var task2 = DataInputHelper.AddOneParameterValueAsync(this.Flight, key, tempList.ToArray());
-                task2.Wait();
+                //task2.Wait();
                 if (!string.IsNullOrEmpty(task2.Result))
                 {
                 }

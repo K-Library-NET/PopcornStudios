@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Media;
 
 namespace AircraftDataAnalysisWinRT.DataModel
 {
@@ -57,6 +58,14 @@ namespace AircraftDataAnalysisWinRT.DataModel
                 Vi = 277,
                 Tt = 277,
             }); */
+
+            this.m_hpCollection = new TrendAnalysisSubViewModel();
+            this.m_kbCollection = new TrendAnalysisSubViewModel();
+            this.m_nCollection = new TrendAnalysisSubViewModel();
+            this.m_nhCollection = new TrendAnalysisSubViewModel();
+            this.m_t6Collection = new TrendAnalysisSubViewModel();
+            this.m_ttCollection = new TrendAnalysisSubViewModel();
+            this.m_viCollection = new TrendAnalysisSubViewModel();
         }
 
         public Dictionary<string, List<ExtremumPointInfo>> ItemsMap = new Dictionary<string, List<ExtremumPointInfo>>();
@@ -151,18 +160,101 @@ namespace AircraftDataAnalysisWinRT.DataModel
             }
         }
 
+        public Brush T6LBrush
+        {
+            get
+            {
+                return Styles.AircraftDataAnalysisGlobalPallete.Brushes[0];
+            }
+        }
 
+        public Brush T6RBrush
+        {
+            get
+            {
+                return Styles.AircraftDataAnalysisGlobalPallete.Brushes[1];
+            }
+        }
 
-        //private TrendAnalysisSubViewModel m_ttCollection = null;
+        public Brush NHLBrush
+        {
+            get
+            {
+                return Styles.AircraftDataAnalysisGlobalPallete.Brushes[2];
+            }
+        }
 
-        //public TrendAnalysisSubViewModel TtCollection
-        //{
-        //    get { return m_ttCollection; }
-        //    set
-        //    {
-        //        this.SetProperty<TrendAnalysisSubViewModel>(ref m_ttCollection, value);
-        //    }
-        //}
+        public Brush NHRBrush
+        {
+            get
+            {
+                return Styles.AircraftDataAnalysisGlobalPallete.Brushes[3];
+            }
+        }
+
+        public Brush ViBrush
+        {
+            get
+            {
+                return Styles.AircraftDataAnalysisGlobalPallete.Brushes[4];
+            }
+        }
+
+        public Brush HpBrush
+        {
+            get
+            {
+                return Styles.AircraftDataAnalysisGlobalPallete.Brushes[5];
+            }
+        }
+
+        public Brush KZBBrush
+        {
+            get
+            {
+                return Styles.AircraftDataAnalysisGlobalPallete.Brushes[6];
+            }
+        }
+
+        public Brush KCBBrush
+        {
+            get
+            {
+                return Styles.AircraftDataAnalysisGlobalPallete.Brushes[7];
+            }
+        }
+
+        public Brush NyBrush
+        {
+            get
+            {
+                return Styles.AircraftDataAnalysisGlobalPallete.Brushes[8];
+            }
+        }
+
+        public Brush NxBrush
+        {
+            get
+            {
+                return Styles.AircraftDataAnalysisGlobalPallete.Brushes[9];
+            }
+        }
+
+        public Brush NzBrush
+        {
+            get
+            {
+                return Styles.AircraftDataAnalysisGlobalPallete.Brushes[0];
+            }
+        }
+
+        public Brush TtBrush
+        {
+            get
+            {
+                return Styles.AircraftDataAnalysisGlobalPallete.Brushes[1];
+            }
+        }
 
         public ObservableCollection<FlightDataEntitiesRT.AircraftInstance> AircraftInstances { get; set; }
     }

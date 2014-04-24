@@ -119,18 +119,21 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="DataModel\AddFileViewModel.cs" />
-    <Compile Include="DataModel\ChartPanelViewModel.cs" />
+    <Compile Include="DataModel\FaultDiagAnalysisViewModel.cs" />
+    <Compile Include="DataModel\FlightAnalysisSubSwitchChartViewModel.cs" />
     <Compile Include="DataModel\DataCommon.cs" />
     <Compile Include="DataModel\DecisionRecordFlightAnalysisViewModel.cs" />
     <Compile Include="DataModel\EngineMonitoringViewModel.cs" />
     <Compile Include="DataModel\ExtremumInfoFlightAnalysisViewModel.cs" />
     <Compile Include="DataModel\ExtremumReportViewModel.cs" />
     <Compile Include="DataModel\FaultDiagnosisViewModel.cs" />
+    <Compile Include="DataModel\FlightAnalysisChartGroupSubExtendedViewModel.cs" />
     <Compile Include="DataModel\FlightAnalysisChartGroupViewModel.cs" />
     <Compile Include="DataModel\FlightAnalysisSubViewModel.cs" />
     <Compile Include="DataModel\FlightAnalysisSubViewModelFactory.cs" />
     <Compile Include="DataModel\FlightAnalysisViewModel.cs" />
     <Compile Include="DataModel\FlightDateTreeViewModel.cs" />
+    <Compile Include="DataModel\IGroupVisibleObserver.cs" />
     <Compile Include="DataModel\RawDataPointViewModel.cs" />
     <Compile Include="DataModel\StatReportDataViewModel.cs" />
     <Compile Include="DataModel\StatReportSelectViewModel.cs" />
@@ -143,6 +146,9 @@
     </Compile>
     <Compile Include="Domain\ExtremumReport.xaml.cs">
       <DependentUpon>ExtremumReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Domain\FaultDiagAnalysis.xaml.cs">
+      <DependentUpon>FaultDiagAnalysis.xaml</DependentUpon>
     </Compile>
     <Compile Include="Domain\FaultDiagnosis.xaml.cs">
       <DependentUpon>FaultDiagnosis.xaml</DependentUpon>
@@ -157,6 +163,7 @@
     <Compile Include="Domain\GridDataPage.xaml.cs">
       <DependentUpon>GridDataPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Domain\IDataLoaderNavigator.cs" />
     <Compile Include="Domain\ImportAircraftBatchConfirm.xaml.cs">
       <DependentUpon>ImportAircraftBatchConfirm.xaml</DependentUpon>
     </Compile>
@@ -207,6 +214,12 @@
       <DependentUpon>GridDataPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MyControl\IConfirmDialog.cs" />
+    <Compile Include="MyControl\PieChartWrap.xaml.cs">
+      <DependentUpon>PieChartWrap.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MyControl\StackColumnChartWrap.xaml.cs">
+      <DependentUpon>StackColumnChartWrap.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MyControl\SwitchAircraftPanelConfirm.xaml.cs">
       <DependentUpon>SwitchAircraftPanelConfirm.xaml</DependentUpon>
     </Compile>
@@ -255,6 +268,9 @@
     <Compile Include="Test\TestBindDynamicColumn.xaml.cs">
       <DependentUpon>TestBindDynamicColumn.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Test\TestFlightAnalysisSub.xaml.cs">
+      <DependentUpon>TestFlightAnalysisSub.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Test\TestGlobeData.xaml.cs">
       <DependentUpon>TestGlobeData.xaml</DependentUpon>
     </Compile>
@@ -292,6 +308,9 @@
     <None Include="Service References\AircraftDataInput\DataInputService5.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\AircraftService\AircraftDataAnalysisModel1.WinRT.AircraftService.AircraftInstance.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Service References\AircraftService\AircraftDataAnalysisModel1.WinRT.AircraftService.AircraftModel.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -323,6 +342,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\AircraftService\AircraftDataAnalysisModel1.WinRT.AircraftService.FlightRawDataRelationPoint.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AircraftService\AircraftDataAnalysisModel1.WinRT.AircraftService.GlobeData.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\AircraftService\AircraftDataAnalysisModel1.WinRT.AircraftService.LevelTopFlightRecord.datasource">
@@ -414,6 +436,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Domain\FaultDiagAnalysis.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Domain\FaultDiagnosis.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -478,6 +504,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="MyControl\PieChartWrap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MyControl\StackColumnChartWrap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MyControl\SwitchAircraftPanelConfirm.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -514,6 +548,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Test\TestFlightAnalysisSub.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Test\TestGlobeData.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -540,29 +578,9 @@
     <SDKReference Include="NetAdvantage WinRT, Version=13.1">
       <Name>NetAdvantage for Windows UI</Name>
     </SDKReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Syncfusion.Data.WinRT, Version=11.2010.0.25, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.Data.WinRT.dll</HintPath>
-    </Reference>
-    <Reference Include="Syncfusion.SfChart.WinRT, Version=11.2010.0.25, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.SfChart.WinRT.dll</HintPath>
-    </Reference>
-    <Reference Include="Syncfusion.SfGrid.WinRT, Version=11.2010.0.25, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.SfGrid.WinRT.dll</HintPath>
-    </Reference>
-    <Reference Include="Syncfusion.SfInput.WinRT, Version=11.2010.0.25, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.SfInput.WinRT.dll</HintPath>
-    </Reference>
-    <Reference Include="Syncfusion.SfShared.WinRT, Version=11.2010.0.25, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.SfShared.WinRT.dll</HintPath>
-    </Reference>
-    <Reference Include="Syncfusion.SfTabControl.WinRT, Version=11.2010.0.25, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.SfTabControl.WinRT.dll</HintPath>
-    </Reference>
-    <Reference Include="Syncfusion.SfTreeNavigator.WinRT, Version=11.2010.0.25, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.SfTreeNavigator.WinRT.dll</HintPath>
-    </Reference>
+    <SDKReference Include="Syncfusion controls for WinRT XAML, Version=11.2.0.25">
+      <Name>Syncfusion Controls for WinRT XAML</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

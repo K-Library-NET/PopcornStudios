@@ -20,8 +20,10 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="Aircraft" nillable="true" type="tns:AircraftInstance" />
       <xs:element minOccurs="0" name="EndSecond" type="xs:int" />
+      <xs:element minOccurs="0" name="FlightDate" type="xs:dateTime" />
       <xs:element minOccurs="0" name="FlightID" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="FlightName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="GlobeDatas" nillable="true" type="tns:ArrayOfGlobeData" />
       <xs:element minOccurs="0" name="StartSecond" type="xs:int" />
     </xs:sequence>
   </xs:complexType>
@@ -34,6 +36,22 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="AircraftInstance" nillable="true" type="tns:AircraftInstance" />
+  <xs:complexType name="ArrayOfGlobeData">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="GlobeData" nillable="true" type="tns:GlobeData" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfGlobeData" nillable="true" type="tns:ArrayOfGlobeData" />
+  <xs:complexType name="GlobeData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AircraftModelName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FlightID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Index" type="xs:int" />
+      <xs:element minOccurs="0" name="Latitude" type="xs:float" />
+      <xs:element minOccurs="0" name="Longitude" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GlobeData" nillable="true" type="tns:GlobeData" />
   <xs:complexType name="ArrayOfFlightRawData">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="FlightRawData" nillable="true" type="tns:FlightRawData" />
@@ -190,4 +208,10 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ArrayOfExtremumPointInfo" nillable="true" type="tns:ArrayOfExtremumPointInfo" />
+  <xs:complexType name="ArrayOfAircraftInstance">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AircraftInstance" nillable="true" type="tns:AircraftInstance" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfAircraftInstance" nillable="true" type="tns:ArrayOfAircraftInstance" />
 </xs:schema>

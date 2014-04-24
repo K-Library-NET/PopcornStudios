@@ -52,9 +52,19 @@ namespace FlightDataEntities
         }
 
         [DataMember]
+        public DateTime FlightDate
+        {
+            get;
+            set;
+        }
+
+        [DataMember]
         public int StartSecond { get; set; }
 
         [DataMember]
         public int EndSecond { get; set; }
+
+        [DataMember]
+        public GlobeData[] GlobeDatas { get; set; }
     }
 }

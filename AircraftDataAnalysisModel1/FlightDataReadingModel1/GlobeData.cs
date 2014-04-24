@@ -29,5 +29,10 @@ namespace FlightDataEntitiesRT
             get;
             set;
         }
+
+        public static readonly float MIN_LATITUDE = 0;
+        public static readonly float MAX_LATITUDE = 90;
+        public static readonly float MIN_LONGITUDE = 0;
+        public static readonly float MAX_LONGITUDE = 180;
     }
 }

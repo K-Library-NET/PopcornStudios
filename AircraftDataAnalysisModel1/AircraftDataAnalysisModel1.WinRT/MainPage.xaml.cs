@@ -309,6 +309,17 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform
             {
                 AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight
                     = this.grdFlights.SelectedItem as FlightDataEntitiesRT.Flight;
+
+                if (AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.GlobeDatas == null
+                    || AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.GlobeDatas.Length == 0)
+                {
+                    AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.GlobeDatas = ServerHelper.GetFlightGlobeDatas(
+                        AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentAircraftModel,
+                        AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.FlightID,
+                        AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.EndSecond);
+                }
+
+                this.scMap.CurrentFlight = AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight;
             }
         }
 

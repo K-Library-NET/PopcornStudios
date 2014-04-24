@@ -83,6 +83,12 @@ namespace AircraftDataAnalysisWinRT.Domain
                     AddFileViewModel model = new AddFileViewModel(currentFlight, file, extractor,
                         aircraftModel, flightParameter);
                     model.InitLoadHeader();
+                    if (model.Header != null)
+                    {
+                        currentFlight.EndSecond = model.Header.FlightSeconds;
+                        if (model.Header.Latitudes != null && model.Header.Longitudes != null)
+                            currentFlight.GlobeDatas = AddFileViewModel.ToGlobeDatasStatic(model.Header.Latitudes, model.Header.Longitudes);
+                    }
                     this.m_addFileModels.Add(model);
                 }
 
@@ -106,23 +112,24 @@ namespace AircraftDataAnalysisWinRT.Domain
         {
             if (aircraftModel != null && !string.IsNullOrEmpty(aircraftModel.ModelName))
             {
-                if (aircraftModel.ModelName == "F4D")
-                {
-                    var result = FlightDataReading.AircraftModel1.FlightRawDataExtractorFactory
-                        .CreateFlightRawDataExtractor(file, flightParameter);
-                    extractor = result;
-                }
+                //if (aircraftModel.ModelName == "F4D")
+                //{
+                var result = FlightDataReading.AircraftModel1.FlightRawDataExtractorFactory
+                    .CreateFlightRawDataExtractor(file, flightParameter);
+                extractor = result;
+                //}
             }
             currentFlight = new FlightDataEntitiesRT.Flight()
             {
                 Aircraft = new FlightDataEntitiesRT.AircraftInstance()
                 {
                     AircraftModel = aircraftModel,
-                    AircraftNumber = "1234", //debug
+                    AircraftNumber = (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).ParseAircraftNumber(file.Name),
                     LastUsed = DateTime.Now
                 },
                 StartSecond = 0,
                 FlightName = file.Name,
+                FlightDate = (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).ParseDate(file.Name),
                 FlightID = this.RemoveIllegalChars(file.DisplayName)
             };
         }

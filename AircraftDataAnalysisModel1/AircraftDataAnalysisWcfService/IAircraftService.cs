@@ -114,5 +114,18 @@ namespace AircraftDataAnalysisWcfService
 
         [OperationContract]
         FlightDataEntities.ExtremumPointInfo[] GetExtremumPointInfosByAircraftInstance(AircraftInstance aircraftInstance);
+
+        [OperationContract]
+        GlobeData[] GetGlobeDatas(string flightID, AircraftModel model, int startIndex, int endIndex);
+
+        [OperationContract]
+        AircraftInstance[] GetAllAircrafts(AircraftModel model);
+
+        [OperationContract]
+        int GetEarliestYear(AircraftModel model);
+
+        [OperationContract]
+        FlightDataEntities.Decisions.DecisionRecord[] GetFlightConditionDecisionRecords(AircraftModel model,
+             DateTime startYearMonth, DateTime endYearMonth, string[] aircraftNumbers);
     }
 }

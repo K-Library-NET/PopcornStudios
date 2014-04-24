@@ -22,6 +22,12 @@
             <SolidColorBrush x:Key="AllBorderColor" Color="#FF6884FF"/>
             <SolidColorBrush x:Key="AllBackgroundColor" Color="#FF3399FF"/>
             <SolidColorBrush x:Key="AllBackgroundWhiteColor" Color="White"/>
+
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <x:String x:Key="ProgressBarIndeterminateForegroundThemeBrush">White</x:String>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

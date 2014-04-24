@@ -16,8 +16,8 @@ namespace AircraftDataAnalysisWinRT
             //this.AircraftServiceURL = "http://42.96.198.241/AircraftDataAnalysisWcfService/AircraftService.svc";
 
             //使用本机IIS服务（不是VS调试器），去掉下面两行注释
-            this.DataInputServiceURL = "http://localhost/AircraftDataAnalysisWcfService/DataInputService.svc";
-            this.AircraftServiceURL = "http://localhost/AircraftDataAnalysisWcfService/AircraftService.svc";
+            //this.DataInputServiceURL = "http://localhost/AircraftDataAnalysisWcfService/DataInputService.svc";
+            //this.AircraftServiceURL = "http://localhost/AircraftDataAnalysisWcfService/AircraftService.svc";
 
             //上面四行全部注释，那就是使用VS调试器
         }

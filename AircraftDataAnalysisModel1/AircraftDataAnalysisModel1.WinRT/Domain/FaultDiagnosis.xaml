@@ -146,8 +146,8 @@
                         <TextBlock Text="表格全屏" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="btNavigateToPanel" Margin="10,0" IsEnabled="{Binding Path=IsValueSelected}" 
-                        Click="OnNavigateToPanelClick" VerticalAlignment="Stretch">
+                <Button x:Name="btNavigateToPanel" Margin="10,0" Visibility="Collapsed" IsEnabled="{Binding Path=IsValueSelected}" 
+                       VerticalAlignment="Stretch"> <!--禁用 Click="OnNavigateToPanelClick"--> 
                     <StackPanel Orientation="Horizontal">
                         <Image Height="50" Source="../Assets/566268.png" Width="50"/>
                         <TextBlock Text="跳转到面板" VerticalAlignment="Center" FontSize="24" Margin="5,0,0,0"/>
@@ -191,7 +191,7 @@
                          ItemsSource="{Binding DecisionRecordCollection}" SelectedValuePath="DecisionHelpContent" >
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" >
+                            <StackPanel Orientation="Horizontal" DoubleTapped="OnDoubleTapped2">
                                 <TextBlock Text="{Binding Path=DecisionID}" Margin="30,5" 
                                            Foreground="{Binding Path=EventLevel,Converter={StaticResource ResourceKey=converter}}"
                                            VerticalAlignment="Center" 

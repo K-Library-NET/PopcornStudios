@@ -1,4 +1,5 @@
 ﻿using AircraftDataAnalysisWinRT.Common;
+using AircraftDataAnalysisWinRT.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,9 +16,16 @@ namespace AircraftDataAnalysisWinRT.DataModel
             this.rootViewModel = rootViewModel;
             this.m_command = new RefreshCommand(this.rootViewModel);
             this.m_Months = new ObservableCollection<MonthSelectViewModelItem>();
-            this.m_flight = new ObservableCollection<FlightSelectViewModelItem>();
+            this.m_aircrafts = new ObservableCollection<AircraftSelectViewModelItem>();
             this.m_Years = new ObservableCollection<YearSelectViewModelItem>();
+
             m_Years.Add(new AllYearSelectViewModelItem());
+
+            int year = ServerHelper.GetEarliestYear(ApplicationContext.Instance.CurrentAircraftModel);
+            for (int i = year; i <= DateTime.Now.Year; i++)
+            {
+                m_Years.Add(new YearSelectViewModelItem() { Year = i, Display = string.Format("{0}年", i) });
+            }
 
             this.m_Months.Add(new AllMonthSelectViewModelItem());
             this.m_Months.Add(new MonthSelectViewModelItem() { Month = 1, Display = "1月" });
@@ -33,20 +41,16 @@ namespace AircraftDataAnalysisWinRT.DataModel
             this.m_Months.Add(new MonthSelectViewModelItem() { Month = 11, Display = "11月" });
             this.m_Months.Add(new MonthSelectViewModelItem() { Month = 12, Display = "12月" });
 
-            this.m_flight.Add(new AllFlightSelectViewModelItem(this));
-            //this.m_flight.Add(new AllFlightSelectViewModelItem(this));
-            //this.m_flight.Add(new AllFlightSelectViewModelItem(this));
-            //this.m_flight.Add(new AllFlightSelectViewModelItem(this));
-            //this.m_flight.Add(new AllFlightSelectViewModelItem(this));
-            //this.m_flight.Add(new AllFlightSelectViewModelItem(this));
-            //this.m_flight.Add(new AllFlightSelectViewModelItem(this));
-            //this.m_flight.Add(new AllFlightSelectViewModelItem(this));
-            //this.m_flight.Add(new AllFlightSelectViewModelItem(this));
-            //this.m_flight.Add(new AllFlightSelectViewModelItem(this));
-            //this.m_flight.Add(new AllFlightSelectViewModelItem(this));
-            //this.m_flight.Add(new AllFlightSelectViewModelItem(this));
-            //this.m_flight.Add(new AllFlightSelectViewModelItem(this));
-            //this.m_flight.Add(new AllFlightSelectViewModelItem(this));
+            this.m_aircrafts.Add(new AllFlightSelectViewModelItem(this));
+
+            var aircrafts = ServerHelper.GetAllAircrafts(ApplicationContext.Instance.CurrentAircraftModel);
+            if (aircrafts != null && aircrafts.Count() > 0)
+            {
+                foreach (var air in aircrafts)
+                {
+                    this.m_aircrafts.Add(new AircraftSelectViewModelItem(this) { AircraftNumber = air.AircraftNumber });
+                }
+            }
         }
 
         private YearSelectViewModelItem m_selectedYear = null;
@@ -92,16 +96,16 @@ namespace AircraftDataAnalysisWinRT.DataModel
             set { this.SetProperty<ObservableCollection<MonthSelectViewModelItem>>(ref m_Months, value); }
         }
 
-        private ObservableCollection<FlightSelectViewModelItem> m_flight = null;
+        private ObservableCollection<AircraftSelectViewModelItem> m_aircrafts = null;
 
         private StatReportViewModel rootViewModel;
 
-        public ObservableCollection<FlightSelectViewModelItem> Flights
+        public ObservableCollection<AircraftSelectViewModelItem> Aircrafts
         {
-            get { return m_flight; }
+            get { return m_aircrafts; }
             set
             {
-                this.SetProperty<ObservableCollection<FlightSelectViewModelItem>>(ref m_flight, value);
+                this.SetProperty<ObservableCollection<AircraftSelectViewModelItem>>(ref m_aircrafts, value);
             }
         }
 
@@ -150,9 +154,9 @@ namespace AircraftDataAnalysisWinRT.DataModel
         }
     }
 
-    public class FlightSelectViewModelItem : BindableBase
+    public class AircraftSelectViewModelItem : BindableBase
     {
-        public FlightSelectViewModelItem(StatReportSelectViewModel selectModel)
+        public AircraftSelectViewModelItem(StatReportSelectViewModel selectModel)
         {
             this.selectModel = selectModel;
         }
@@ -165,48 +169,48 @@ namespace AircraftDataAnalysisWinRT.DataModel
             {
                 this.SetProperty<bool>(ref m_isSelected, value);
 
-                if (this.selectModel != null && this.selectModel.Flights.Count > 0
-                    && this.selectModel.Flights[0] is AllFlightSelectViewModelItem)
+                if (this.selectModel != null && this.selectModel.Aircrafts.Count > 0
+                    && this.selectModel.Aircrafts[0] is AllFlightSelectViewModelItem)
                 {
-                    (this.selectModel.Flights[0] as AllFlightSelectViewModelItem).OnPropertyChanged("IsSelected");
+                    (this.selectModel.Aircrafts[0] as AllFlightSelectViewModelItem).OnPropertyChanged("IsSelected");
                 }
             }
         }
 
-        private string m_FlightName = string.Empty;
+        private string m_AircraftNumber = string.Empty;
 
-        public string FlightName
+        public string AircraftNumber
         {
             get
             {
-                return this.m_FlightName;
+                return this.m_AircraftNumber;
             }
             set
             {
-                this.SetProperty<string>(ref m_FlightName, value);
+                this.SetProperty<string>(ref m_AircraftNumber, value);
             }
         }
 
-        private string m_flightID = string.Empty;
+        //private string m_flightID = string.Empty;
         protected StatReportSelectViewModel selectModel;
 
-        public string FlightID
-        {
-            get { return m_flightID; }
-            set
-            {
-                this.SetProperty<string>(ref m_flightID, value);
-            }
-        }
+        //public string FlightID
+        //{
+        //    get { return m_flightID; }
+        //    set
+        //    {
+        //        this.SetProperty<string>(ref m_flightID, value);
+        //    }
+        //}
     }
 
-    public class AllFlightSelectViewModelItem : FlightSelectViewModelItem
+    public class AllFlightSelectViewModelItem : AircraftSelectViewModelItem
     {
         public AllFlightSelectViewModelItem(StatReportSelectViewModel selectModel)
             : base(selectModel)
         {
-            this.FlightID = string.Empty;
-            this.FlightName = "(全部)";
+            //this.FlightID = string.Empty;
+            this.AircraftNumber = "(全部)";
         }
 
         public override bool IsSelected
@@ -215,9 +219,9 @@ namespace AircraftDataAnalysisWinRT.DataModel
             {
                 if (this.selectModel != null)
                 {
-                    if (this.selectModel.Flights.Count > 1)
+                    if (this.selectModel.Aircrafts.Count > 1)
                     {
-                        foreach (var m in this.selectModel.Flights)
+                        foreach (var m in this.selectModel.Aircrafts)
                         {
                             if (m is AllFlightSelectViewModelItem)
                                 continue;
@@ -233,7 +237,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
             {
                 if (this.selectModel != null)
                 {
-                    foreach (var m in this.selectModel.Flights)
+                    foreach (var m in this.selectModel.Aircrafts)
                     {
                         if (m == this)
                         {

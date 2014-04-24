@@ -52,19 +52,21 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         /// <param name="pageState">要使用可序列化状态填充的空字典。</param>
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
-        } 
+        }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             var context = this.SetDataContext();
-
+            this.m_datacontext = context;
+            this.comboMonth.DataContext = context.SelectModel;
+            this.comboYear.DataContext = context.SelectModel;
+            this.comboYear.SelectedItem = context.SelectModel.SelectedYear;
             //this.comboYear.SelectedValue = context.SelectModel.Years[0];
-            this.comboYear.SelectedValue = context.SelectModel.Years[0];
-            this.comboMonth.SelectedValue = context.SelectModel.Months[0];
-            //this.comboMonth.DataContext = context;
+            this.comboMonth.SelectedItem = context.SelectModel.SelectedMonth;
+            this.listAircrafts.DataContext = context.SelectModel;
             //this.DataContext = this.GetDataContext();
-
+            this.btnRefresh.DataContext = context.SelectModel;
             //Old Test
             //System.Diagnostics.Debug.WriteLine(string.Format("Start:{0}", DateTime.Now));
             //FlightAnalysisViewModel viewModel = new FlightAnalysisViewModel();
@@ -85,46 +87,34 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
 
         private StatReportViewModel SetDataContext()
         {
-            StatReportViewModel viewModel = this.grdHost.DataContext as StatReportViewModel;
-            //new StatReportViewModel();
-            viewModel.SelectModel.Years.Clear();
-            viewModel.SelectModel.Years.Add(new YearSelectViewModelItem() { Year = 2014, Display = "2014" });
-            viewModel.SelectModel.Years.Add(new YearSelectViewModelItem() { Year = 2013, Display = "2013" });
-
-            var flights = ServerHelper.GetAllFlights(ApplicationContext.Instance.CurrentAircraftModel);
-            if (flights != null && flights.Count() > 0)
-            {
-                foreach (var flight in flights)
-                {
-                    var viewFlight =
-                        new FlightSelectViewModelItem(viewModel.SelectModel)
-                        {
-                            FlightName = flight.FlightName,
-                            FlightID = flight.FlightID,
-                            IsSelected = false
-                        };
-
-                    if (ApplicationContext.Instance.CurrentFlight != null &&
-                        flight.FlightID == ApplicationContext.Instance.CurrentFlight.FlightID)
-                    {
-                        viewFlight.IsSelected = true;
-                    }
-
-                    viewModel.SelectModel.Flights.Add(viewFlight);
-                }
-            }
+            StatReportViewModel viewModel = new StatReportViewModel();
 
             if (ApplicationContext.Instance.CurrentFlight == null &&
-                viewModel.SelectModel.Flights.Count > 0 &&
-                viewModel.SelectModel.Flights[0] is AllFlightSelectViewModelItem)
+                viewModel.SelectModel.Aircrafts.Count > 0 &&
+                viewModel.SelectModel.Aircrafts[0] is AllFlightSelectViewModelItem)
             {
-                (viewModel.SelectModel.Flights[0] as AllFlightSelectViewModelItem).IsSelected = true;
+                (viewModel.SelectModel.Aircrafts[0] as AllFlightSelectViewModelItem).IsSelected = true;
             }
 
             viewModel.SelectModel.SelectedYear = viewModel.SelectModel.Years[0];
             viewModel.SelectModel.SelectedMonth = viewModel.SelectModel.Months[0];
 
+            viewModel.DataModel.PropertyChanged += DataModel_PropertyChanged;
+
             return viewModel;
+        }
+
+        void DataModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "PieChartDataSource")
+            {
+                this.ctrlPie.DataSource = this.m_datacontext.DataModel.PieChartDataSource;
+            }
+            else if (e.PropertyName == "PieChartDataSource")
+            {
+                this.ctrlStackCol.DataSource = this.m_datacontext.DataModel.StackColumnCollection;
+            }
+            //throw new NotImplementedException();
         }
 
         private System.Collections.ObjectModel.ObservableCollection<RelatedParameterViewModel> GetRelateds()
@@ -206,6 +196,7 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
             return dts;
         }
         private FlightAnalysisViewModelOld m_viewModel;
+        private StatReportViewModel m_datacontext;
     }
 
     public class Labelconvertor : IValueConverter
@@ -224,5 +215,26 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         #endregion
 
 
+    }
+
+    internal class IsPanel1SelectedConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value != null)
+            {
+                if (!("0".ToString().Equals(value.ToString())))
+                {
+                    return true;
+                }
+                return false;
+            }
+            return true;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

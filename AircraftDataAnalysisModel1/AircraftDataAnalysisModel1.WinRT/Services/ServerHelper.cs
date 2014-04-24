@@ -213,6 +213,9 @@ namespace AircraftDataAnalysisWinRT.Services
             task.Wait();
             client.CloseAsync();
 
+            if (task.Result == null)
+                return new ExtremumPointInfo[] { };
+
             var items = task.Result;
 
             var result = from one in items
@@ -355,9 +358,10 @@ namespace AircraftDataAnalysisWinRT.Services
             var decisions = from one in task.Result
                             select RTConverter.FromAircraftService(one);
 
+            var decisionArray = decisions.ToArray();
             List<FlightDataEntitiesRT.Decisions.Decision> tDecs = new List<FlightDataEntitiesRT.Decisions.Decision>();
 
-            foreach (var decision in decisions)
+            foreach (var decision in decisionArray)
             {
                 Queue<FlightDataEntitiesRT.Decisions.SubCondition> conds
                     = new Queue<FlightDataEntitiesRT.Decisions.SubCondition>();
@@ -415,21 +419,84 @@ namespace AircraftDataAnalysisWinRT.Services
             var decisionRecords = from one in task.Result
                                   select RTConverter.FromAircraftService(one);
 
-            return decisionRecords.ToArray();
+            var decisionItems = decisionRecords.ToArray();
+
+
+            List<FlightDataEntitiesRT.Decisions.FlightConditionDecision> tDecs = new List<FlightDataEntitiesRT.Decisions.FlightConditionDecision>();
+
+            foreach (var decision in decisionItems)
+            {
+                Queue<FlightDataEntitiesRT.Decisions.SubCondition> conds
+                    = new Queue<FlightDataEntitiesRT.Decisions.SubCondition>();
+                foreach (var sub in decision.Conditions)
+                {
+                    conds.Enqueue(sub);
+                }
+                while (conds.Count > 0)
+                {
+                    var s = conds.Dequeue();
+                    s.RootDecision = decision;
+
+                    if (s.SubConditions != null)
+                    {
+                        foreach (var sub in s.SubConditions)
+                        {
+                            conds.Enqueue(sub);
+                        }
+                    }
+                }
+
+                tDecs.Add(decision);
+            }
+
+            return tDecs.ToArray();
         }
 
         public static IEnumerable<FlightDataEntitiesRT.AircraftInstance> GetAllAircrafts(AircraftModel aircraftModel)
         {
-            //AircraftService.AircraftServiceClient client = GetClient();
-            //client.GetAllAircraftsAsync();
+            AircraftService.AircraftServiceClient client = GetClient();
+            Task<ObservableCollection<AircraftService.AircraftInstance>> task
+                = client.GetAllAircraftsAsync(RTConverter.ToAircraftService(aircraftModel));
 
-            return new FlightDataEntitiesRT.AircraftInstance[] 
-            { new FlightDataEntitiesRT.AircraftInstance(){
-                AircraftModel = ApplicationContext.Instance.CurrentAircraftModel ,
-             AircraftNumber = "0004",
-             LastUsed = DateTime.Now}
-            }
-             ;
+            task.Wait();
+            client.CloseAsync();
+
+            var result = from one in task.Result
+                         select RTConverter.FromAircraftService(one);
+
+            return result;
+
+            //return new FlightDataEntitiesRT.AircraftInstance[] 
+            //{ new FlightDataEntitiesRT.AircraftInstance(){
+            //    AircraftModel = ApplicationContext.Instance.CurrentAircraftModel ,
+            // AircraftNumber = "09",
+            // LastUsed = DateTime.Now},
+            //  new FlightDataEntitiesRT.AircraftInstance(){
+            //    AircraftModel = ApplicationContext.Instance.CurrentAircraftModel ,
+            // AircraftNumber = "17",
+            // LastUsed = DateTime.Now},
+            //  new FlightDataEntitiesRT.AircraftInstance(){
+            //    AircraftModel = ApplicationContext.Instance.CurrentAircraftModel ,
+            // AircraftNumber = "10",
+            // LastUsed = DateTime.Now},
+            //  new FlightDataEntitiesRT.AircraftInstance(){
+            //    AircraftModel = ApplicationContext.Instance.CurrentAircraftModel ,
+            // AircraftNumber = "12",
+            // LastUsed = DateTime.Now},
+            //  new FlightDataEntitiesRT.AircraftInstance(){
+            //    AircraftModel = ApplicationContext.Instance.CurrentAircraftModel ,
+            // AircraftNumber = "65",
+            // LastUsed = DateTime.Now},
+            //  new FlightDataEntitiesRT.AircraftInstance(){
+            //    AircraftModel = ApplicationContext.Instance.CurrentAircraftModel ,
+            // AircraftNumber = "78",
+            // LastUsed = DateTime.Now},
+            //  new FlightDataEntitiesRT.AircraftInstance(){
+            //    AircraftModel = ApplicationContext.Instance.CurrentAircraftModel ,
+            // AircraftNumber = "79",
+            // LastUsed = DateTime.Now},
+            //}
+            // ;
         }
 
         public static Flight[] GetAllFlights(AircraftModel aircraftModel, AircraftInstance aircraftInstance)
@@ -500,6 +567,73 @@ namespace AircraftDataAnalysisWinRT.Services
                           select RTConverter.FromAircraftService(one);
 
             return result2.ToArray();
+        }
+
+        public static GlobeData[] GetFlightGlobeDatas(AircraftModel model, string FlightID, int endSecond)
+        {
+            AircraftService.AircraftServiceClient client = GetClient();
+            var task = client.GetGlobeDatasAsync(FlightID, RTConverter.ToAircraftService(model), 0, endSecond);
+            task.Wait();
+            var results = task.Result;
+            client.CloseAsync();
+
+            if (results == null || results.Count() <= 0)
+                return new GlobeData[] { };
+
+            var result2 = from one in results
+                          orderby one.Index ascending
+                          select RTConverter.FromAircraftService(one);
+
+            return result2.ToArray();
+        }
+
+        public static int GetEarliestYear(AircraftModel aircraftModel)
+        {
+            AircraftService.AircraftServiceClient client = GetClient();
+            var task = client.GetEarliestYearAsync(RTConverter.ToAircraftService(aircraftModel));
+            task.Wait();
+            var results = task.Result;
+            client.CloseAsync();
+
+            if (results == null)
+                return DateTime.Now.Year;
+
+
+            int year = DateTime.Now.Year;
+
+            if (int.TryParse(results.ToString(), out year))
+            {
+                return year;
+            }
+
+            return year;
+        }
+
+        public static FlightDataEntitiesRT.Decisions.DecisionRecord[] GetFlightConditionDecisionRecords(AircraftModel model,
+             DateTime startYearMonth, DateTime endYearMonth, string[] aircraftNumbers)
+        {
+            AircraftService.AircraftServiceClient client = GetClient();
+            ObservableCollection<string> aircrafts = null;
+            if (aircraftNumbers != null && aircraftNumbers.Length > 0)
+            {
+                aircrafts = new ObservableCollection<string>(aircraftNumbers);
+            }
+
+            var task = client.GetFlightConditionDecisionRecordsAsync(
+                RTConverter.ToAircraftService(model), startYearMonth, endYearMonth, aircrafts);
+            task.Wait();
+            var results = task.Result;
+            client.CloseAsync();
+
+            if (results == null && results.Count <= 0)
+                return new FlightDataEntitiesRT.Decisions.DecisionRecord[] { };
+
+            var result = from obj in results
+                         select RTConverter.FromAircraftService(obj);
+
+            return result.ToArray();
+
+            //return new FlightDataEntitiesRT.Decisions.DecisionRecord[] { };
         }
     }
 }

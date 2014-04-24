@@ -4,19 +4,17 @@
     xmlns:local="using:PStudio.WinApp.Aircraft.FDAPlatform.Domain"
     xmlns:common="using:AircraftDataAnalysisWinRT.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Chart="using:Telerik.UI.Xaml.Controls.Chart"
+                        xmlns:ctrl="using:AircraftDataAnalysisModel1.WinRT.MyControl"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:Grid="using:Syncfusion.UI.Xaml.Grid"
-    x:Name="pageRoot"
-                        xmlns:model="using:AircraftDataAnalysisWinRT.DataModel"
+    x:Name="pageRoot"  xmlns:model="using:AircraftDataAnalysisWinRT.DataModel"
     x:Class="PStudio.WinApp.Aircraft.FDAPlatform.Domain.StatReport"
-    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Mode=Self}}"
     mc:Ignorable="d">
 
     <common:LayoutAwarePage.Resources>
 
         <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
-        <x:String x:Key="AppName">My Application</x:String>
+        <local:BooleanColorBrushConverter x:Key="converter"/>
         <local:Labelconvertor x:Key="labelconverter"/>
         <DataTemplate x:Key="legendPieChart">
             <StackPanel Orientation="Horizontal">
@@ -38,6 +36,124 @@
                        Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" Opacity="1"></TextBlock>
         </DataTemplate>
 
+        <Style x:Key="CheckBoxStyle1" TargetType="CheckBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource CheckBoxContentForegroundThemeBrush}"/>
+            <Setter Property="Padding" Value="2,3,0,0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontSize" Value="{StaticResource ControlContentThemeFontSize}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPointerOverBackgroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPointerOverBorderThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPointerOverForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="IndeterminateGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPointerOverForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPressedBackgroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPressedBorderThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPressedForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="IndeterminateGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPressedForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxDisabledBackgroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxDisabledBorderThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxDisabledForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="IndeterminateGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxDisabledForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxContentDisabledForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="CheckStates">
+                                    <VisualState x:Name="Checked">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CheckGlyph"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unchecked"/>
+                                    <VisualState x:Name="Indeterminate">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="IndeterminateGlyph"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="FocusStates">
+                                    <VisualState x:Name="Focused">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisualWhite"/>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisualBlack"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unfocused"/>
+                                    <VisualState x:Name="PointerFocused"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Name="panel" Width="{Binding ElementName=ContentPresenter, Path=ActualHeight}"  VerticalAlignment="Top" HorizontalAlignment="Left">
+                                    <Viewbox>
+                                        <Border BorderBrush="Black" BorderThickness="2">
+                                            <Grid>
+                                                <Rectangle x:Name="NormalRectangle" Fill="{StaticResource CheckBoxBackgroundThemeBrush}" Height="21" Stroke="{StaticResource CheckBoxBorderThemeBrush}"  StrokeThickness="{StaticResource CheckBoxBorderThemeThickness}" UseLayoutRounding="False" Width="21"/>
+                                                <Path x:Name="CheckGlyph" Data="F1 M 0,58 L 2,56 L 6,60 L 13,51 L 15,53 L 6,64 z" Fill="{StaticResource CheckBoxForegroundThemeBrush}" FlowDirection="LeftToRight" Height="14" Opacity="0" Stretch="Fill" Width="16"/>
+                                                <Rectangle x:Name="IndeterminateGlyph" Fill="{StaticResource CheckBoxForegroundThemeBrush}" Height="9" Opacity="0" UseLayoutRounding="False" Width="9"/>
+                                                <Rectangle x:Name="FocusVisualWhite" Height="27" Opacity="0" StrokeDashOffset="0.5" StrokeEndLineCap="Square" Stroke="Black" StrokeDashArray="1,1" Width="27"/>
+                                                <Rectangle x:Name="FocusVisualBlack" Height="27" Opacity="0" StrokeDashOffset="1.5" StrokeEndLineCap="Square" Stroke="Black" StrokeDashArray="1,1" Width="27"/>
+                                            </Grid>
+                                        </Border>
+                                    </Viewbox>
+                                </Grid>
+                                <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Grid.Column="1" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <DataTemplate x:Key="markerTemplate">
             <Grid Width="40" Height="25" Margin="0,0,0,0">
                 <Border BorderThickness="0.5">
@@ -49,7 +165,6 @@
                 </Border>
             </Grid>
         </DataTemplate>
-
     </common:LayoutAwarePage.Resources>
 
     <!--
@@ -58,9 +173,6 @@
         * Row 1 contains the rest of the page layout
     -->
     <Grid x:Name="grdHost" Style="{StaticResource LayoutRootStyle}" Background="{StaticResource AllBackgroundColor}">
-        <Grid.DataContext>
-            <model:StatReportViewModel/>
-        </Grid.DataContext>
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
@@ -112,74 +224,96 @@
                 <ColumnDefinition Width="360"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" Background="{StaticResource AllBackgroundWhiteColor}" Margin="10" CornerRadius="15" Padding="15">
-                <Grid Background="{StaticResource AllBackgroundColor}"
+            <Border Grid.Column="0" Background="{StaticResource AllBackgroundWhiteColor}" 
+                     Margin="10" CornerRadius="15" Padding="10">
+                <Border BorderBrush="Black" BorderThickness="1">
+                    <Grid Background="White" 
                       DataContext="{Binding Path=SelectModel}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition />
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Grid.Row="2" Foreground="Black" FontSize="24" Margin="15">年度：</TextBlock>
-                        <ComboBox  
-                            x:Name="comboYear" BorderBrush="Black" SelectedValue="{Binding Path=SelectedYear,Mode=TwoWay}"
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Grid.Row="2" Foreground="Black" FontSize="24" Margin="15">年度：</TextBlock>
+                            <ComboBox  
+                            x:Name="comboYear" BorderBrush="Black" 
+                                SelectedItem="{Binding Path=SelectedYear,Mode=TwoWay}"
                                  ItemsSource="{Binding Path=Years}" FontSize="24" Width="150"
                                   VerticalAlignment="Center">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Display}"/>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                    </StackPanel>
-                    <StackPanel Grid.Row="1" VerticalAlignment="Center" Orientation="Horizontal">
-                        <TextBlock Grid.Row="2" Foreground="Black" FontSize="24" Margin="15">月份：</TextBlock>
-                        <ComboBox 
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Display}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" VerticalAlignment="Center" Orientation="Horizontal">
+                            <TextBlock Grid.Row="2" Foreground="Black" FontSize="24" Margin="15">月份：</TextBlock>
+                            <ComboBox 
                             x:Name="comboMonth" BorderBrush="Black" FontSize="24" VerticalAlignment="Center"
                                  ItemsSource="{Binding Path=Months}"
-                                 SelectedValue="{Binding Path=SelectedMonth,Mode=TwoWay}" Width="150">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Display}"/>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                    </StackPanel>
-                    <TextBlock Grid.Row="2" Foreground="Black" FontSize="24" Margin="15,15,15,0">飞机：</TextBlock>
-                    <Border Grid.Row="3" Margin="15,0,15,0" BorderBrush="LightBlue" CornerRadius="15" BorderThickness="2">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <ItemsControl x:Name="listFlights" Grid.Row="3" Margin="15,0,15,0"  ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                 SelectedItem="{Binding Path=SelectedMonth,Mode=TwoWay}" Width="150">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Display}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <TextBlock Grid.Row="2" Foreground="Black" FontSize="24" Margin="15,15,15,0">机号：</TextBlock>
+                        <Border Grid.Row="3" Margin="15,0,15,0" BorderBrush="LightBlue" CornerRadius="15" BorderThickness="2">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <ItemsControl x:Name="listAircrafts" Grid.Row="3" Margin="15,0,15,0"  ScrollViewer.VerticalScrollBarVisibility="Visible"
                                       ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled"
                                       ScrollViewer.VerticalScrollMode="Enabled"
-                                  ItemsSource="{Binding Path=Flights}" FontSize="16">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <CheckBox IsChecked="{Binding Path=IsSelected,Mode=TwoWay}"
-                                              FontSize="20" Foreground="Black" Content="{Binding Path=FlightName}"/>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </ScrollViewer>
-                    </Border>
-                    <Border Grid.Row="4" Margin="20,10" Background="LightGray" CornerRadius="15">
-                        <Button Grid.Row="3" x:Name="btnRefresh" Command="{Binding Path=Refresh}" 
+                                  ItemsSource="{Binding Path=Aircrafts}" FontSize="16">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding Path=IsSelected,Mode=TwoWay}"
+                                              Style="{StaticResource CheckBoxStyle1}"
+                                              FontSize="20" Foreground="Black" Content="{Binding Path=AircraftNumber}"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+                        <Border Grid.Row="4" Margin="20,10" Background="LightGray" CornerRadius="15">
+                            <Button Grid.Row="3" x:Name="btnRefresh" Command="{Binding Path=Refresh}" 
                                 BorderBrush="Transparent" VerticalAlignment="Stretch" 
                                 HorizontalAlignment="Stretch">
-                            <Button.Content>
-                                <TextBlock FontSize="36" Padding="10" Foreground="Black">
+                                <Button.Content>
+                                    <TextBlock FontSize="36" Padding="10" Foreground="Black">
                                 刷新</TextBlock>
-                            </Button.Content>
-                        </Button>
-                    </Border>
-                </Grid>
+                                </Button.Content>
+                            </Button>
+                        </Border>
+                    </Grid>
+                </Border>
             </Border>
-            <Border Grid.Column="1" Background="{StaticResource AllBackgroundWhiteColor}" Margin="10" CornerRadius="15" Padding="15">
-
-                <Navigation:SfTabControl Grid.Column="1">
-                    <Navigation:SfTabItem Header="饼图">
+            <Border Grid.Column="1" Background="{StaticResource AllBackgroundWhiteColor}" 
+                    Margin="10" CornerRadius="15" Padding="15">
+                <ScrollViewer HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <ctrl:PieChartWrap Height="400" x:Name="ctrlPie" />
+                        <ctrl:StackColumnChartWrap Height="400" x:Name="ctrlStackCol"/>
+                    </StackPanel>
+                </ScrollViewer>
+                <!--<Navigation:SfTabControl Grid.Column="1" SelectedIndex="{Binding Path=IsPanel1Selected}">
+                    <Navigation:SfTabItem>
+                        <Navigation:SfTabItem.Header>
+                            <Grid Background="{Binding Path=IsPanel1Selected,
+                                Converter={StaticResource ResourceKey=converter}}">
+                                <TextBlock Foreground="Black" 
+                                           FontWeight="Bold" 
+                                           FontSize="30" FontFamily="Segoe UI" 
+                                           HorizontalAlignment="Center" Margin="0,0,0,0" Opacity="1" 
+                                           Text="饼图" 
+                                           VerticalAlignment="Top"/>
+                            </Grid>
+                        </Navigation:SfTabItem.Header>
                         <Charts1:SfChart x:Name="chart1Pie">
                             <Charts1:PieSeries EnableAnimation="True" x:Name="pieSeries" 
                                                XBindingPath="CategoryName" YBindingPath="SummaryValue">
@@ -198,7 +332,18 @@
                             </Charts1:SfChart.Legend>
                         </Charts1:SfChart>
                     </Navigation:SfTabItem>
-                    <Navigation:SfTabItem Header="柱状图">
+                    <Navigation:SfTabItem>
+                        <Navigation:SfTabItem.Header>
+                            <Grid Background="{Binding Path=IsPane21Selected,
+                                Converter={StaticResource ResourceKey=converter}}">
+                                <TextBlock Foreground="Black" 
+                                           FontWeight="Bold" 
+                                           FontSize="30" FontFamily="Segoe UI" 
+                                           HorizontalAlignment="Center" Margin="0,0,0,0" Opacity="1" 
+                                           Text="柱状图" 
+                                           VerticalAlignment="Top"/>
+                            </Grid>
+                        </Navigation:SfTabItem.Header>
                         <Controls:XamDock x:Name="xmDockContainer" Grid.Column="0"  Grid.Row="1" Grid.ColumnSpan="2"
                             Margin="10">
                             <Charts:XamDataChart x:Name="chart2StackColumns"  Grid.Column="0" 
@@ -208,119 +353,118 @@
                                     <Charts:CategoryXAxis x:Name="XAxis" Label="{}{Category}" />
                                 </Charts:XamDataChart.Axes>
                                 <Charts:XamDataChart.Series>
-                                    <!-- ========================================================================== -->
-                                    <Charts:StackedColumnSeries XAxis="{Binding ElementName=XAxis}" MarkerTemplate="{StaticResource markerTemplate}"
+                                    
+                <Charts:StackedColumnSeries XAxis="{Binding ElementName=XAxis}" MarkerTemplate="{StaticResource markerTemplate}"
                                 YAxis="{Binding ElementName=YAxis}" Legend="{Binding ElementName=xmLegend}" MarkerBrush="Red" MarkerOutline="Lime">
-                                        <Charts:StackedColumnSeries.Series>
-                                            <Charts:StackedFragmentSeries ValueMemberPath="Category1" Title="停车通电状态" MarkerBrush="Blue" MarkerOutline="#FF804141" >
-                                                <Charts:StackedFragmentSeries.MarkerTemplate>
-                                                    <DataTemplate>
-                                                        <Grid Width="40" Height="25" Margin="0,15,0,0">
-                                                            <Border BorderThickness="0.5">
-                                                                <TextBlock Margin="2"
+                    <Charts:StackedColumnSeries.Series>
+                        <Charts:StackedFragmentSeries ValueMemberPath="Category1" Title="停车通电状态" MarkerBrush="Blue" MarkerOutline="#FF804141" >
+                            <Charts:StackedFragmentSeries.MarkerTemplate>
+                                <DataTemplate>
+                                    <Grid Width="40" Height="25" Margin="0,15,0,0">
+                                        <Border BorderThickness="0.5">
+                                            <TextBlock Margin="2"
                                                Text="{Binding Item.Category1}"
                                                Foreground="Red"
                                                FontSize="14.667" VerticalAlignment="Bottom"
                                                HorizontalAlignment="Center" FontFamily="Global User Interface" />
-                                                            </Border>
-                                                        </Grid>
-                                                    </DataTemplate>
-                                                </Charts:StackedFragmentSeries.MarkerTemplate>
-                                            </Charts:StackedFragmentSeries>
-                                            <Charts:StackedFragmentSeries ValueMemberPath="Category2" Title="发动机地面开车状态" MarkerBrush="Blue" MarkerOutline="#FF804141" >
-                                                <Charts:StackedFragmentSeries.MarkerTemplate>
-                                                    <DataTemplate>
-                                                        <Grid Width="40" Height="25" Margin="0,15,0,0">
-                                                            <Border BorderThickness="0.5">
-                                                                <TextBlock Margin="2"
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </Charts:StackedFragmentSeries.MarkerTemplate>
+                        </Charts:StackedFragmentSeries>
+                        <Charts:StackedFragmentSeries ValueMemberPath="Category2" Title="发动机地面开车状态" MarkerBrush="Blue" MarkerOutline="#FF804141" >
+                            <Charts:StackedFragmentSeries.MarkerTemplate>
+                                <DataTemplate>
+                                    <Grid Width="40" Height="25" Margin="0,15,0,0">
+                                        <Border BorderThickness="0.5">
+                                            <TextBlock Margin="2"
                                                Text="{Binding Item.Category2}"
                                                Foreground="Red"
                                                FontSize="14.667" VerticalAlignment="Bottom"
                                                HorizontalAlignment="Center" FontFamily="Global User Interface" />
-                                                            </Border>
-                                                        </Grid>
-                                                    </DataTemplate>
-                                                </Charts:StackedFragmentSeries.MarkerTemplate>
-                                            </Charts:StackedFragmentSeries>
-                                            <Charts:StackedFragmentSeries ValueMemberPath="Category3" Title="正常飞行状态" MarkerBrush="Blue" MarkerOutline="#FF804141" >
-                                                <Charts:StackedFragmentSeries.MarkerTemplate>
-                                                    <DataTemplate>
-                                                        <Grid Width="40" Height="25" Margin="0,15,0,0">
-                                                            <Border BorderThickness="0.5">
-                                                                <TextBlock Margin="2"
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </Charts:StackedFragmentSeries.MarkerTemplate>
+                        </Charts:StackedFragmentSeries>
+                        <Charts:StackedFragmentSeries ValueMemberPath="Category3" Title="正常飞行状态" MarkerBrush="Blue" MarkerOutline="#FF804141" >
+                            <Charts:StackedFragmentSeries.MarkerTemplate>
+                                <DataTemplate>
+                                    <Grid Width="40" Height="25" Margin="0,15,0,0">
+                                        <Border BorderThickness="0.5">
+                                            <TextBlock Margin="2"
                                                Text="{Binding Item.Category3}"
                                                Foreground="Red"
                                                FontSize="14.667" VerticalAlignment="Bottom"
                                                HorizontalAlignment="Center" FontFamily="Global User Interface" />
-                                                            </Border>
-                                                        </Grid>
-                                                    </DataTemplate>
-                                                </Charts:StackedFragmentSeries.MarkerTemplate>
-                                            </Charts:StackedFragmentSeries>
-                                            <Charts:StackedFragmentSeries ValueMemberPath="Category4" Title="最大军用转速状态" MarkerBrush="Blue" MarkerOutline="#FF804141" >
-                                                <Charts:StackedFragmentSeries.MarkerTemplate>
-                                                    <DataTemplate>
-                                                        <Grid Width="40" Height="25" Margin="0,15,0,0">
-                                                            <Border BorderThickness="0.5">
-                                                                <TextBlock Margin="2"
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </Charts:StackedFragmentSeries.MarkerTemplate>
+                        </Charts:StackedFragmentSeries>
+                        <Charts:StackedFragmentSeries ValueMemberPath="Category4" Title="最大军用转速状态" MarkerBrush="Blue" MarkerOutline="#FF804141" >
+                            <Charts:StackedFragmentSeries.MarkerTemplate>
+                                <DataTemplate>
+                                    <Grid Width="40" Height="25" Margin="0,15,0,0">
+                                        <Border BorderThickness="0.5">
+                                            <TextBlock Margin="2"
                                                Text="{Binding Item.Category4}"
                                                Foreground="Red"
                                                FontSize="14.667" VerticalAlignment="Bottom"
                                                HorizontalAlignment="Center" FontFamily="Global User Interface" />
-                                                            </Border>
-                                                        </Grid>
-                                                    </DataTemplate>
-                                                </Charts:StackedFragmentSeries.MarkerTemplate>
-                                            </Charts:StackedFragmentSeries>
-                                        </Charts:StackedColumnSeries.Series>
-                                    </Charts:StackedColumnSeries>
-                                </Charts:XamDataChart.Series>
-                            </Charts:XamDataChart>
-                            <Charts:Legend x:Name="xmLegend" Content="StackSerie"
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </Charts:StackedFragmentSeries.MarkerTemplate>
+                        </Charts:StackedFragmentSeries>
+                    </Charts:StackedColumnSeries.Series>
+                </Charts:StackedColumnSeries>
+                </Charts:XamDataChart.Series>
+                </Charts:XamDataChart>
+                <Charts:Legend x:Name="xmLegend" Content="StackSerie"
                                 Margin="10" Controls:XamDock.Edge="InsideRight">
-                            </Charts:Legend>
-                        </Controls:XamDock>
-                    </Navigation:SfTabItem>
-                    <Navigation:SfTabItem Header="饼图对应统计表格">
-                        <Grid:SfDataGrid x:Name="sfGridPieChart"  
+                </Charts:Legend>
+                </Controls:XamDock>
+                </Navigation:SfTabItem>
+                <Navigation:SfTabItem Header="饼图对应统计表格">
+                    <Grid:SfDataGrid x:Name="sfGridPieChart"  
                             AutoGenerateColumns="False"
                                ColumnSizer="Star"
                                Margin="10,0,30,30"
                                NavigationMode="Row"
                                ItemsSource="{Binding Path=PieChartDetails}">
-                            <Grid:SfDataGrid.Columns>
-                                <Grid:GridTextColumn MappingName="CategoryName" HeaderText="状态" />
-                                <Grid:GridTextColumn MappingName="SummaryValue" HeaderText="时间"/>
-                                <Grid:GridTextColumn MappingName="Partition" HeaderText="比例"/>
-                            </Grid:SfDataGrid.Columns>
-                        </Grid:SfDataGrid>
-
-                    </Navigation:SfTabItem>
-                    <Navigation:SfTabItem Header="柱状图对应统计表格">
-                        <Grid:SfDataGrid x:Name="sfGridColumnChart"
+                        <Grid:SfDataGrid.Columns>
+                            <Grid:GridTextColumn MappingName="CategoryName" HeaderText="状态" />
+                            <Grid:GridTextColumn MappingName="SummaryValue" HeaderText="时间"/>
+                            <Grid:GridTextColumn MappingName="Partition" HeaderText="比例"/>
+                        </Grid:SfDataGrid.Columns>
+                    </Grid:SfDataGrid>
+                </Navigation:SfTabItem>
+                <Navigation:SfTabItem Header="柱状图对应统计表格">
+                    <Grid:SfDataGrid x:Name="sfGridColumnChart"
                             AutoGenerateColumns="False"
                                ColumnSizer="Star"
                                Margin="10,0,30,30"
                                NavigationMode="Row"
                                ItemsSource="{Binding Path=ColumnChartDetails}">
-                            <Grid:SfDataGrid.Columns>
-                                <Grid:GridTextColumn MappingName="CategoryName" HeaderText="状态" />
-                                <Grid:GridTextColumn MappingName="January" HeaderText="1月"/>
-                                <Grid:GridTextColumn MappingName="February" HeaderText="2月"/>
-                                <Grid:GridTextColumn MappingName="March" HeaderText="3月"/>
-                                <Grid:GridTextColumn MappingName="April" HeaderText="4月"/>
-                                <Grid:GridTextColumn MappingName="May" HeaderText="5月"/>
-                                <Grid:GridTextColumn MappingName="June" HeaderText="6月"/>
-                                <Grid:GridTextColumn MappingName="July" HeaderText="7月"/>
-                                <Grid:GridTextColumn MappingName="August" HeaderText="8月"/>
-                                <Grid:GridTextColumn MappingName="September" HeaderText="9月"/>
-                                <Grid:GridTextColumn MappingName="October" HeaderText="10月"/>
-                                <Grid:GridTextColumn MappingName="November" HeaderText="11月"/>
-                                <Grid:GridTextColumn MappingName="December" HeaderText="12月"/>
-                            </Grid:SfDataGrid.Columns>
-                        </Grid:SfDataGrid>
-                    </Navigation:SfTabItem>
-                </Navigation:SfTabControl>
+                        <Grid:SfDataGrid.Columns>
+                            <Grid:GridTextColumn MappingName="CategoryName" HeaderText="状态" />
+                            <Grid:GridTextColumn MappingName="January" HeaderText="1月"/>
+                            <Grid:GridTextColumn MappingName="February" HeaderText="2月"/>
+                            <Grid:GridTextColumn MappingName="March" HeaderText="3月"/>
+                            <Grid:GridTextColumn MappingName="April" HeaderText="4月"/>
+                            <Grid:GridTextColumn MappingName="May" HeaderText="5月"/>
+                            <Grid:GridTextColumn MappingName="June" HeaderText="6月"/>
+                            <Grid:GridTextColumn MappingName="July" HeaderText="7月"/>
+                            <Grid:GridTextColumn MappingName="August" HeaderText="8月"/>
+                            <Grid:GridTextColumn MappingName="September" HeaderText="9月"/>
+                            <Grid:GridTextColumn MappingName="October" HeaderText="10月"/>
+                            <Grid:GridTextColumn MappingName="November" HeaderText="11月"/>
+                            <Grid:GridTextColumn MappingName="December" HeaderText="12月"/>
+                        </Grid:SfDataGrid.Columns>
+                    </Grid:SfDataGrid>
+                </Navigation:SfTabItem>
+                </Navigation:SfTabControl> -->
             </Border>
         </Grid>
     </Grid>

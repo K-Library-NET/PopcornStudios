@@ -60,34 +60,73 @@ namespace AircraftDataAnalysisWinRT.Test
         {
             this.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 1,
+                Second = 1,
                 Value = 3
             });
             this.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 2,
+                Second = 2,
                 Value = 4
             });
             this.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 3,
+                Second = 3,
                 Value = 2
             });
             this.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 4,
+                Second = 4,
                 Value = 1
             });
             this.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 5,
+                Second = 5,
                 Value = 5
             });
             this.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 6,
+                Second = 6,
                 Value = 3
             });
+        }
+    }
+
+    public class Labelconvertor : IValueConverter
+    {
+        #region IValueConverter Members
+
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return String.Format("{0} %", value);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+
+    }
+
+    internal class PieChartAmount
+    {
+        public string CategoryName { get; set; }
+        public double Amount { get; set; }
+    }
+
+    internal class PieChartDataSource : ObservableCollection<PieChartAmount>
+    {
+        public PieChartDataSource()
+        {
+            //debug
+            //this.Add(new PieChartAmount() { CategoryName = "飞行状态1", Amount = 20d });
+            //this.Add(new PieChartAmount() { CategoryName = "飞行状态2", Amount = 23d });
+            //this.Add(new PieChartAmount() { CategoryName = "飞行状态3", Amount = 12d });
+            this.Add(new PieChartAmount() { CategoryName = "飞行状态1", Amount = 45.6 });
+            this.Add(new PieChartAmount() { CategoryName = "飞行状态4", Amount = 13.7 });
+            this.Add(new PieChartAmount() { CategoryName = "飞行状态3", Amount = 27.2 });
+            this.Add(new PieChartAmount() { CategoryName = "飞行状态2", Amount = 13.5 });
         }
     }
 }

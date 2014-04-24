@@ -38,6 +38,19 @@ namespace AircraftDataAnalysisWinRT.DataModel
             }
         }
 
+        public string AircraftNumber
+        {
+            get
+            {
+                return this.flight.Aircraft.AircraftNumber;
+            }
+            set
+            {
+                this.flight.Aircraft.AircraftNumber = value;
+                this.OnPropertyChanged("AircraftNumber");
+            }
+        }
+
         private string m_flightName = string.Empty;
 
         public string FlightName
@@ -147,29 +160,80 @@ namespace AircraftDataAnalysisWinRT.DataModel
                     this.flight.EndSecond = this.Header.FlightSeconds;
                     this.EndSecond = this.flight.EndSecond;
                     if (this.Header.Latitudes != null && this.Header.Longitudes != null)
-                        this.Flight.GlobeDatas = this.ToGlobeDatas(this.Header.Latitudes, this.Header.Longitudes);
+                        this.Flight.GlobeDatas = ToGlobeDatas(this.Header.Latitudes, this.Header.Longitudes);
                 }
             }
         }
 
         private GlobeData[] ToGlobeDatas(float[] Latitudes, float[] Longitudes)
         {
+            return AddFileViewModel.ToGlobeDatasStatic(Latitudes, Longitudes);
+        }
+
+        public static GlobeData[] ToGlobeDatasStatic(float[] Latitudes, float[] Longitudes)
+        {
             int max = Math.Min(Latitudes.Length, Longitudes.Length);
 
+            float latitude = float.MaxValue;
+            float longitude = float.MaxValue;
+            //float maxLatitude = float.MinValue;
+            //float maxLongitude = float.MinValue;
+            float prevlatitude = latitude;
+            float prevlongitude = longitude;
+            //float prevmaxLatitude = maxLatitude;
+            //float prevmaxLongitude = maxLongitude;
+
             List<GlobeData> dts = new List<GlobeData>();
+
+            int startIndex = 0;
+            int endIndex = max;
+
+            List<int> index = new List<int>();
 
             for (int i = 0; i < max; i++)
             {
                 GlobeData dt = new GlobeData() { Latitude = Latitudes[i], Longitude = Longitudes[i] };
 
-                if (dt.Latitude > 90 || dt.Longitude > 180)
+                if (dt.Latitude > GlobeData.MAX_LATITUDE || dt.Longitude > GlobeData.MAX_LONGITUDE
+                    || dt.Latitude < GlobeData.MIN_LATITUDE || dt.Longitude < GlobeData.MIN_LONGITUDE)
                     continue;
                 //经度大于180度不可以、纬度不能大于90
+
+                longitude = dt.Longitude;
+                latitude = dt.Latitude;
+
+                //minLatitude = Math.Min(minLatitude, dt.Latitude);
+                //minLongitude = Math.Min(minLongitude, dt.Longitude);
+                //maxLatitude = Math.Max(maxLatitude, dt.Latitude);
+                //maxLongitude = Math.Max(maxLongitude, dt.Longitude);
+
+                if (i > 0 && ((Math.Abs(latitude - prevlatitude) > 1
+                    || Math.Abs(longitude - prevlongitude) > 1)))
+                {
+                    index.Add(i);
+                }
+                prevlatitude = latitude;
+                prevlongitude = longitude;
 
                 dts.Add(dt);
             }
 
-            return dts.ToArray();
+            if (dts.Count > 0 && index.Count > 0)
+            {
+                startIndex = index[0];
+            }
+            if (index.Count > 1)
+            {
+                endIndex = index[index.Count - 1];
+            }
+            else
+            {
+                endIndex = dts.Count - startIndex;
+            }
+
+            return dts.GetRange(startIndex, endIndex - startIndex).ToArray();
+            //fix lastIndex OutOfRange bug 20140424
+            //return dts.ToArray();
         }
 
         public AsyncActionWithProgressCompletedHandler<int> Completed

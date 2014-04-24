@@ -1,18 +1,20 @@
 ﻿<common:LayoutAwarePage
     x:Name="pageRoot"
-    x:Class="AircraftDataAnalysisWinRT.MyControl.SwitchChartPanelConfirmPage"
-    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    x:Class="AircraftDataAnalysisWinRT.MyControl.SwitchChartPanelConfirmPage" 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AircraftDataAnalysisWinRT.MyControl"
     xmlns:common="using:AircraftDataAnalysisWinRT.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:datamodel="using:AircraftDataAnalysisWinRT.DataModel"
     mc:Ignorable="d">
 
     <Page.Resources>
-
         <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
+        <local:ParameterComboBoxBindingSource x:Key="parameterBindingSource"/>
+        <local:YAxisComboBoxBindingSource x:Key="yaxisBindingSource"/>
+        <datamodel:FlightAnalysisSubSwitchChartViewModel x:Key="datacontext"/>
     </Page.Resources>
 
     <!--
@@ -33,30 +35,223 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="添加/编辑参数" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
         <Grid Grid.Row="1">
-            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" Height="600" Margin="0"
-                VerticalAlignment="Center" Width="800" Background="#FF4B4B4B">
-                <Grid>
+            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Stretch" Height="600" Margin="25"
+                VerticalAlignment="Center"  Background="#FF4B4B4B">
+                <Grid Margin="25">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Grid Margin="0" Grid.Row="1">
-                        <ItemsControl Background="Transparent"
-                            ItemsSource="{Binding Path=ChartPanelCollections}"
-                             HorizontalAlignment="Center">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <RadioButton IsChecked="{Binding Path=IsCurrent,Mode=TwoWay}" 
-                                             Content="{Binding Path=Panel.PanelName}" />
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </Grid>
-                    <StackPanel HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <!--<TextBlock Margin="15,10" FontSize="24" Text="参数"/>-->
+                    <TextBlock Grid.Column="1" HorizontalAlignment="Center" FontWeight="Bold" Margin="15,10" FontSize="24" Text="参数"/>
+                    <TextBlock Grid.Column="2" HorizontalAlignment="Center" FontWeight="Bold"  Margin="15,10" FontSize="24" Text="Y轴"/>
+                    <!--<TextBlock Grid.Column="3" Margin="15,10" FontSize="24" Text="参数"/>-->
+                    <Button Grid.Row="1" Margin="10" Content="添加" HorizontalAlignment="Right" Visibility="Collapsed"/>
+                    <Button Grid.Row="2" Margin="10" Content="添加" HorizontalAlignment="Right" DataContext="{StaticResource ResourceKey=datacontext}"
+                            IsEnabled="{Binding Path=!IsSerie2Editable}" Click="btSerie2Editable_Click"/>
+                    <Button Grid.Row="3" Margin="10" Content="添加" HorizontalAlignment="Right" DataContext="{StaticResource ResourceKey=datacontext}"
+                            IsEnabled="{Binding Path=!IsSerie3Editable}" Click="btSerie3Editable_Click"/>
+                    <Button Grid.Row="4" Margin="10" Content="添加" HorizontalAlignment="Right" DataContext="{StaticResource ResourceKey=datacontext}"
+                            IsEnabled="{Binding Path=!IsSerie4Editable}" Click="btSerie4Editable_Click"/>
+                    <Button Grid.Row="5" Margin="10" Content="添加" HorizontalAlignment="Right" DataContext="{StaticResource ResourceKey=datacontext}"
+                            IsEnabled="{Binding Path=!IsSerie5Editable}" Click="btSerie5Editable_Click"/>
+                    <Button Grid.Row="6" Margin="10" Content="添加" HorizontalAlignment="Right" DataContext="{StaticResource ResourceKey=datacontext}"
+                            IsEnabled="{Binding Path=!IsSerie6Editable}" Click="btSerie6Editable_Click"/>
+                    <Button Grid.Row="7" Margin="10" Content="添加" HorizontalAlignment="Right" DataContext="{StaticResource ResourceKey=datacontext}"
+                            IsEnabled="{Binding Path=!IsSerie7Editable}" Click="btSerie7Editable_Click"/>
+
+                    <Button Grid.Row="1" Grid.Column="4" Margin="10" Content="删除" Visibility="Collapsed"/>
+                    <Button Grid.Row="2" Grid.Column="4" Margin="10" Content="删除" DataContext="{StaticResource ResourceKey=datacontext}"
+                            IsEnabled="{Binding Path=IsSerie2Editable}" Click="btSerie2UnEditable_Click"/>
+                    <Button Grid.Row="3" Grid.Column="4" Margin="10" Content="删除" DataContext="{StaticResource ResourceKey=datacontext}"
+                            IsEnabled="{Binding Path=IsSerie3Editable}" Click="btSerie3UnEditable_Click"/>
+                    <Button Grid.Row="4" Grid.Column="4" Margin="10" Content="删除" DataContext="{StaticResource ResourceKey=datacontext}"
+                            IsEnabled="{Binding Path=IsSerie4Editable}" Click="btSerie4UnEditable_Click"/>
+                    <Button Grid.Row="5" Grid.Column="4" Margin="10" Content="删除" DataContext="{StaticResource ResourceKey=datacontext}"
+                            IsEnabled="{Binding Path=IsSerie5Editable}" Click="btSerie5UnEditable_Click"/>
+                    <Button Grid.Row="6" Grid.Column="4" Margin="10" Content="删除" DataContext="{StaticResource ResourceKey=datacontext}"
+                            IsEnabled="{Binding Path=IsSerie6Editable}" Click="btSerie6UnEditable_Click"/>
+                    <Button Grid.Row="7" Grid.Column="4" Margin="10" Content="删除" DataContext="{StaticResource ResourceKey=datacontext}"
+                            IsEnabled="{Binding Path=IsSerie7Editable}" Click="btSerie7UnEditable_Click"/>
+
+                    <ComboBox Grid.Row="1" Grid.Column="1" Margin="5" VerticalAlignment="Center" IsEnabled="{Binding Path=IsSerie1Editable}" 
+                              DataContext="{StaticResource ResourceKey=datacontext}" ItemsSource="{StaticResource ResourceKey=parameterBindingSource}"
+                              SelectedValuePath="ParameterID" SelectedValue="{Binding Path=Serie1ParameterID, Mode=TwoWay}"
+                              >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="18"
+                                    Text="{Binding Path=ParameterDisplay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" VerticalAlignment="Center"  IsEnabled="{Binding Path=IsSerie2Editable}" 
+                              DataContext="{StaticResource ResourceKey=datacontext}" ItemsSource="{StaticResource ResourceKey=parameterBindingSource}"
+                              SelectedValuePath="ParameterID" SelectedValue="{Binding Path=Serie2ParameterID, Mode=TwoWay}"
+                              >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="18"
+                                    Text="{Binding Path=ParameterDisplay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox Grid.Row="3" Grid.Column="1" Margin="5" VerticalAlignment="Center"  IsEnabled="{Binding Path=IsSerie3Editable}" 
+                              DataContext="{StaticResource ResourceKey=datacontext}" ItemsSource="{StaticResource ResourceKey=parameterBindingSource}"
+                              SelectedValuePath="ParameterID" SelectedValue="{Binding Path=Serie3ParameterID, Mode=TwoWay}"
+                              >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="18"
+                                    Text="{Binding Path=ParameterDisplay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox Grid.Row="4" Grid.Column="1" Margin="5" VerticalAlignment="Center"  IsEnabled="{Binding Path=IsSerie4Editable}" 
+                              DataContext="{StaticResource ResourceKey=datacontext}" ItemsSource="{StaticResource ResourceKey=parameterBindingSource}"
+                              SelectedValuePath="ParameterID" SelectedValue="{Binding Path=Serie4ParameterID, Mode=TwoWay}"
+                              >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="18"
+                                    Text="{Binding Path=ParameterDisplay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox Grid.Row="5" Grid.Column="1" Margin="5" VerticalAlignment="Center"  IsEnabled="{Binding Path=IsSerie5Editable}" 
+                              DataContext="{StaticResource ResourceKey=datacontext}" ItemsSource="{StaticResource ResourceKey=parameterBindingSource}"
+                              SelectedValuePath="ParameterID" SelectedValue="{Binding Path=Serie5ParameterID, Mode=TwoWay}"
+                              >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="18"
+                                    Text="{Binding Path=ParameterDisplay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox Grid.Row="6" Grid.Column="1" Margin="5" VerticalAlignment="Center"  IsEnabled="{Binding Path=IsSerie6Editable}" 
+                              DataContext="{StaticResource ResourceKey=datacontext}" ItemsSource="{StaticResource ResourceKey=parameterBindingSource}"
+                              SelectedValuePath="ParameterID" SelectedValue="{Binding Path=Serie6ParameterID, Mode=TwoWay}"
+                              >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="18"
+                                    Text="{Binding Path=ParameterDisplay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox Grid.Row="7" Grid.Column="1" Margin="5" VerticalAlignment="Center"  IsEnabled="{Binding Path=IsSerie7Editable}" 
+                              DataContext="{StaticResource ResourceKey=datacontext}" ItemsSource="{StaticResource ResourceKey=parameterBindingSource}"
+                              SelectedValuePath="ParameterID" SelectedValue="{Binding Path=Serie7ParameterID, Mode=TwoWay}"
+                              >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="18"
+                                    Text="{Binding Path=ParameterDisplay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <ComboBox Grid.Row="1" Grid.Column="2" Margin="5" VerticalAlignment="Center"  IsEnabled="{Binding Path=IsSerie1Editable}" 
+                              DataContext="{StaticResource ResourceKey=datacontext}"  ItemsSource="{StaticResource ResourceKey=yaxisBindingSource}"
+                              SelectedValuePath="YAxis" SelectedValue="{Binding Path=Serie1YAxis, Mode=TwoWay}"
+                              >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="18"
+                                    Text="{Binding Path=ParameterDisplay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox Grid.Row="2" Grid.Column="2" Margin="5" VerticalAlignment="Center"  IsEnabled="{Binding Path=IsSerie2Editable}" 
+                              DataContext="{StaticResource ResourceKey=datacontext}"  ItemsSource="{StaticResource ResourceKey=yaxisBindingSource}"
+                              SelectedValuePath="YAxis" SelectedValue="{Binding Path=Serie2YAxis, Mode=TwoWay}"
+                              >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="18"
+                                    Text="{Binding Path=ParameterDisplay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox Grid.Row="3" Grid.Column="2" Margin="5" VerticalAlignment="Center"   IsEnabled="{Binding Path=IsSerie3Editable}" 
+                              DataContext="{StaticResource ResourceKey=datacontext}"  ItemsSource="{StaticResource ResourceKey=yaxisBindingSource}"
+                              SelectedValuePath="YAxis" SelectedValue="{Binding Path=Serie3YAxis, Mode=TwoWay}"
+                              >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="18"
+                                    Text="{Binding Path=ParameterDisplay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox Grid.Row="4" Grid.Column="2" Margin="5" VerticalAlignment="Center"  IsEnabled="{Binding Path=IsSerie4Editable}" 
+                              DataContext="{StaticResource ResourceKey=datacontext}"  ItemsSource="{StaticResource ResourceKey=yaxisBindingSource}"
+                              SelectedValuePath="YAxis" SelectedValue="{Binding Path=Serie4YAxis, Mode=TwoWay}"
+                              >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="18"
+                                    Text="{Binding Path=ParameterDisplay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox Grid.Row="5" Grid.Column="2" Margin="5" VerticalAlignment="Center"  IsEnabled="{Binding Path=IsSerie5Editable}" 
+                              DataContext="{StaticResource ResourceKey=datacontext}"  ItemsSource="{StaticResource ResourceKey=yaxisBindingSource}"
+                              SelectedValuePath="YAxis" SelectedValue="{Binding Path=Serie5YAxis, Mode=TwoWay}"
+                              >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="18"
+                                    Text="{Binding Path=ParameterDisplay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox Grid.Row="6" Grid.Column="2" Margin="5" VerticalAlignment="Center"  IsEnabled="{Binding Path=IsSerie6Editable}" 
+                              DataContext="{StaticResource ResourceKey=datacontext}"  ItemsSource="{StaticResource ResourceKey=yaxisBindingSource}"
+                              SelectedValuePath="YAxis" SelectedValue="{Binding Path=Serie6YAxis, Mode=TwoWay}"
+                              >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="18"
+                                    Text="{Binding Path=ParameterDisplay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox Grid.Row="7" Grid.Column="2" Margin="5" VerticalAlignment="Center"   IsEnabled="{Binding Path=IsSerie7Editable}" 
+                              DataContext="{StaticResource ResourceKey=datacontext}"  ItemsSource="{StaticResource ResourceKey=yaxisBindingSource}"
+                              SelectedValuePath="YAxis" SelectedValue="{Binding Path=Serie7YAxis, Mode=TwoWay}"
+                              >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontSize="18"
+                                    Text="{Binding Path=ParameterDisplay}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <TextBlock x:Name="errorMessageTextBlock" Grid.ColumnSpan="3" Grid.Column="1" Grid.Row="8" HorizontalAlignment="Left" Foreground="Red"
+                               FontWeight="Bold" Margin="15,10" FontSize="24" Text="{Binding Path=ErrorMessage}"
+                               Visibility="Visible"
+                                />
+                    <StackPanel HorizontalAlignment="Right" Grid.Column="4"
+                                Grid.Row="9" VerticalAlignment="Center" Orientation="Horizontal">
                         <Button x:Name="btImport" FontSize="24"  Content="确定"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                             Width="120" Margin="20,0" Click="btImport_Click"/>
@@ -64,9 +259,6 @@
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             Width="120" Margin="20,0" Click="btCancel_Click"/>
                     </StackPanel>
-                    <TextBlock Text="选择面板" HorizontalAlignment="Center" Margin="15"
-                           TextWrapping="Wrap" FontSize="24" 
-                           VerticalAlignment="Center" FontFamily="Global User Interface"/>
                 </Grid>
             </Border>
 

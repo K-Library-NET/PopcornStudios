@@ -72,7 +72,10 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         {
             if (this.rdgList.SelectedItem != null && this.rdgList.SelectedItem is ExtremumReportItemWrap)
             {
-                this.Frame.Navigate(typeof(FlightAnalysis), this.rdgList.SelectedItem as ExtremumReportItemWrap);
+                var wrap = this.rdgList.SelectedItem as ExtremumReportItemWrap;
+                AircraftDataAnalysisWinRT.Domain.FASubNavigateParameter param =
+                    this.GenerateParam(wrap);
+                this.Frame.Navigate(typeof(AircraftDataAnalysisWinRT.Domain.FlightAnalysisSub), param);
             }
         }
 
@@ -83,9 +86,36 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
                 && (e.OriginalSource as Windows.UI.Xaml.FrameworkElement).DataContext is ExtremumReportItemWrap)
             {
                 ExtremumReportItemWrap wrap = (e.OriginalSource as Windows.UI.Xaml.FrameworkElement).DataContext as ExtremumReportItemWrap;
+                //AircraftDataAnalysisWinRT.Domain.FASubNavigateParameter param =
+                //    this.GenerateParam(wrap);
 
-                this.Frame.Navigate(typeof(FlightAnalysis), wrap);
+                AircraftDataAnalysisWinRT.MyControl.SubEditChartNavigationParameter parameter
+                    = new AircraftDataAnalysisWinRT.MyControl.ExtremumReportSubEditChartNavigationParameter()
+                    {
+                        HostParameterID = wrap.ParameterID,
+                        HostParameterYAxis = FlightAnalysisSubViewYAxis.LeftYAxis,
+                        MinValueSecond = wrap.MinValueSecond,
+                        MaxValueSecond = wrap.MaxValueSecond,
+                    };
+
+                this.Frame.Navigate(typeof(AircraftDataAnalysisWinRT.Domain.FlightAnalysisSub), parameter);
             }
+        }
+
+        private AircraftDataAnalysisWinRT.Domain.FASubNavigateParameter
+            GenerateParam(ExtremumReportItemWrap wrap)
+        {
+            var param = new AircraftDataAnalysisWinRT.Domain.ExtremumReportFASubNavigateParameter()
+            {
+                HostParameterID = wrap.ParameterID,
+                DataLoader = null,
+                MinValueSecond = wrap.MinValueSecond,
+                MaxValueSecond = wrap.MaxValueSecond,
+                FlightEndSecond = ApplicationContext.Instance.CurrentFlight.EndSecond,
+                FlightStartSecond = 0
+            };
+
+            return param;
         }
 
         private void OnRowSelectedChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)

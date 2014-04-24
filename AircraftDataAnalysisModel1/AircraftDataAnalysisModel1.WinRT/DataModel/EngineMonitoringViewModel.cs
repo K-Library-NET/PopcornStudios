@@ -158,9 +158,10 @@ namespace AircraftDataAnalysisWinRT.DataModel
             set { m_flight = value; }
         }
 
-        public FlightSelectItem(Flight flight)
+        public FlightSelectItem(Flight flight, FlightSelectViewModel flightSelectViewModel)
         {
             m_flight = flight;
+            this.flightSelectViewModel = flightSelectViewModel;
         }
 
         public string FlightName
@@ -172,6 +173,8 @@ namespace AircraftDataAnalysisWinRT.DataModel
         }
 
         private bool m_isSelected = false;
+        private FlightDataEntitiesRT.Flight f;
+        private FlightSelectViewModel flightSelectViewModel;
 
         public bool IsSelected
         {
@@ -181,6 +184,23 @@ namespace AircraftDataAnalysisWinRT.DataModel
             }
             set
             {
+                if (value)
+                {
+                    int counter = 0;
+                    foreach (var f in this.flightSelectViewModel)
+                    {
+                        if (f == this)
+                            continue;
+                        if (f.IsSelected)
+                            counter++;
+                        if (counter >= 4)
+                        {
+                            this.SetProperty<bool>(ref m_isSelected, false);
+                            this.OnPropertyChanged("IsSelected");
+                            return;
+                        }
+                    }
+                }
                 this.SetProperty<bool>(ref m_isSelected, value);
             }
         }
@@ -189,8 +209,22 @@ namespace AircraftDataAnalysisWinRT.DataModel
     /// <summary>
     /// 大气总温、左发排气温度
     /// </summary>
-    public class EngineMonitoringOneViewModel
+    public class EngineMonitoringOneViewModel : AircraftDataAnalysisWinRT.Common.BindableBase
     {
+        //private bool m_isChecked = true;
+
+        //public bool IsChecked
+        //{
+        //    get
+        //    {
+        //        return m_isChecked;
+        //    }
+        //    set
+        //    {
+        //        this.SetProperty<bool>(ref m_isChecked, value);
+        //    }
+        //}
+
         private string flightID;
         public string FlightID
         {

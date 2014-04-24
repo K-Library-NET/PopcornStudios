@@ -212,5 +212,11 @@ namespace FlightDataEntitiesRT.Decisions
             get;
             set;
         }
+
+        public string SolutionInstruction
+        {
+            get;
+            set;
+        }
     }
 }

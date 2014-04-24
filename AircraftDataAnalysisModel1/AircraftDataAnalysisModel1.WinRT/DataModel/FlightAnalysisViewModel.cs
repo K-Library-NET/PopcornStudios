@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AircraftDataAnalysisModel1.WinRT.DataModel
 {
-    public class FlightAnalysisViewModel : BindableBase
+    public class FlightAnalysisViewModel : BindableBase, AircraftDataAnalysisModel1.WinRT.DataModel.IGroupVisibleObserver
     {
         public FlightAnalysisViewModel()
         {
@@ -95,107 +95,130 @@ namespace AircraftDataAnalysisModel1.WinRT.DataModel
             //2. currentPanel
             this.SelectedPanelIndex = 0;
 
-            this.Group1 = new FlightAnalysisChartGroupViewModel();
-            this.Group1.Serie1 = new FlightAnalysisChartSerieViewModel() { ParameterID = "Hp" };
-            var serie1 = this.Group1.Serie1;
+            this.Group1 = new FlightAnalysisChartGroupViewModel()
+            {
+                Serie1Definition = new SerieDefinitionViewModel() { ParameterID = "Hp" }
+            };
+            this.Group1.DataSerie = new FlightAnalysisChartSerieViewModel();
+            var serie1 = this.Group1.DataSerie;
             serie1.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 1,
+                Second = 1,
                 Value = 3
             });
             serie1.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 2,
+                Second = 2,
                 Value = 4
             });
             serie1.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 3,
+                Second = 3,
                 Value = 2
             });
             serie1.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 4,
+                Second = 4,
                 Value = 1
             });
             serie1.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 5,
+                Second = 5,
                 Value = 5
             });
             serie1.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 6,
+                Second = 6,
                 Value = 3
             });
 
-            this.Group2 = new FlightAnalysisChartGroupViewModel();
-            this.Group2.Serie2 = new FlightAnalysisChartSerieViewModel() { ParameterID = "Tt" };
-            var serie2 = this.Group2.Serie2;
+            this.Group2 = new FlightAnalysisChartGroupViewModel()
+            {
+                Serie1Definition = new SerieDefinitionViewModel() { ParameterID = "Tt" }
+            };
+            this.Group2.DataSerie = new FlightAnalysisChartSerieViewModel();
+            var serie2 = this.Group2.DataSerie;
             serie2.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 1,
+                Second = 1,
                 Value = 3
             });
             serie2.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 2,
+                Second = 2,
                 Value = 4
             });
             serie2.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 3,
+                Second = 3,
                 Value = 2
             });
             serie2.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 4,
+                Second = 4,
                 Value = 1
             });
             serie2.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 5,
+                Second = 5,
                 Value = 5
             });
             serie2.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 6,
+                Second = 6,
                 Value = 3
             });
 
-            this.Group3 = new FlightAnalysisChartGroupViewModel();
-            this.Group3.Serie3 = new FlightAnalysisChartSerieViewModel() { ParameterID = "Pt" };
-            var serie3 = this.Group3.Serie3;
+            this.Group3 = new FlightAnalysisChartGroupViewModel()
+            {
+                Serie1Definition = new SerieDefinitionViewModel() { ParameterID = "Pt" }
+            };
+            this.Group3.DataSerie = new FlightAnalysisChartSerieViewModel();
+            var serie3 = this.Group3.DataSerie;
             serie3.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 1,
+                Second = 1,
                 Value = 3
             });
             serie3.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 2,
+                Second = 2,
                 Value = 4
             });
             serie3.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 3,
+                Second = 3,
                 Value = 2
             });
             serie3.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 4,
+                Second = 4,
                 Value = 1
             });
             serie3.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 5,
+                Second = 5,
                 Value = 5
             });
             serie3.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             {
-                Label = 6,
+                Second = 6,
                 Value = 3
             });
+        }
+
+        private ObservableCollection<SerieDefinitionViewModel> m_serieDefinition = null;
+
+        public ObservableCollection<SerieDefinitionViewModel> SerieDefinitions
+        {
+            get
+            {
+                return m_serieDefinition;
+            }
+            internal set
+            {
+                this.SetProperty<ObservableCollection<SerieDefinitionViewModel>>(ref m_serieDefinition, value);
+            }
         }
 
         private ObservableCollection<PanelViewModelItem> m_panelViewItems
@@ -229,6 +252,60 @@ namespace AircraftDataAnalysisModel1.WinRT.DataModel
 
                 this.OnPropertyChanged(string.Empty);
             }
+        }
+
+        public PanelViewModelItem CurrentPanel
+        {
+            get
+            {
+                if (this.m_panelViewItems != null
+                    && this.m_selectedPanelIndex >= 0
+                    && this.m_panelViewItems.Count > this.m_selectedPanelIndex)
+                {
+                    return m_panelViewItems[this.m_selectedPanelIndex];
+                }
+                return null;
+            }
+        }
+
+        private bool m_isLoading = true;
+
+        public bool IsLoading
+        {
+            get { return m_isLoading; }
+            set
+            {
+                this.SetProperty<bool>(ref m_isLoading, value);
+                this.OnPropertyChanged("IsEnable");
+            }
+        }
+
+        public bool IsEnable
+        {
+            get
+            {
+                return !m_isLoading;
+            }
+        }
+
+        private double? m_unscaledX = null;
+
+        public string CurrentSecondDisplayStr
+        {
+            get
+            {
+                if (m_unscaledX == null)
+                    return string.Empty;
+
+                return string.Format("{0}", Math.Round(m_unscaledX.Value, 2));
+            }
+        }
+
+        private string m_preSetCurrentPanelID = string.Empty;
+
+        public void SetCurrentPanel(string p)
+        {
+            m_preSetCurrentPanelID = p;
         }
 
         /// <summary>
@@ -284,49 +361,49 @@ namespace AircraftDataAnalysisModel1.WinRT.DataModel
             {
                 case 0:
                     {
-                        this.Group1 = new FlightAnalysisChartGroupViewModel();
+                        this.Group1 = new FlightAnalysisChartGroupViewModel(this);
                         this.LoadAndAssignValue(this.Group1, groupItem, dataLoader);
                         groupViewModel = this.Group1;
                         break;
                     }
                 case 1:
                     {
-                        this.Group2 = new FlightAnalysisChartGroupViewModel();
+                        this.Group2 = new FlightAnalysisChartGroupViewModel(this);
                         this.LoadAndAssignValue(this.Group2, groupItem, dataLoader);
                         groupViewModel = this.Group2;
                         break;
                     }
                 case 2:
                     {
-                        this.Group3 = new FlightAnalysisChartGroupViewModel();
+                        this.Group3 = new FlightAnalysisChartGroupViewModel(this);
                         this.LoadAndAssignValue(this.Group3, groupItem, dataLoader);
                         groupViewModel = this.Group3;
                         break;
                     }
                 case 3:
                     {
-                        this.Group4 = new FlightAnalysisChartGroupViewModel();
+                        this.Group4 = new FlightAnalysisChartGroupViewModel(this);
                         this.LoadAndAssignValue(this.Group4, groupItem, dataLoader);
                         groupViewModel = this.Group4;
                         break;
                     }
                 case 4:
                     {
-                        this.Group5 = new FlightAnalysisChartGroupViewModel();
+                        this.Group5 = new FlightAnalysisChartGroupViewModel(this);
                         this.LoadAndAssignValue(this.Group5, groupItem, dataLoader);
                         groupViewModel = this.Group5;
                         break;
                     }
                 case 5:
                     {
-                        this.Group6 = new FlightAnalysisChartGroupViewModel();
+                        this.Group6 = new FlightAnalysisChartGroupViewModel(this);
                         this.LoadAndAssignValue(this.Group6, groupItem, dataLoader);
                         groupViewModel = this.Group6;
                         break;
                     }
                 case 6:
                     {
-                        this.Group7 = new FlightAnalysisChartGroupViewModel();
+                        this.Group7 = new FlightAnalysisChartGroupViewModel(this);
                         this.LoadAndAssignValue(this.Group7, groupItem, dataLoader);
                         groupViewModel = this.Group7;
                         break;
@@ -341,34 +418,57 @@ namespace AircraftDataAnalysisModel1.WinRT.DataModel
             KeyValuePair<string, IEnumerable<string>> groupItem,
             AircraftDataAnalysisModel1.WinRT.Domain.AircraftAnalysisDataLoader dataLoader)
         {
+            var vm = new FlightAnalysisChartSerieViewModel();
             int j = 0;
+
             foreach (var parameterID in groupItem.Value)
             {
-                var vm = new FlightAnalysisChartSerieViewModel();
-                vm.ParameterID = parameterID;
-                this.LoadSimpleDataPoints(vm, parameterID, dataLoader);
+                this.LoadSimpleDataPoints(vm, parameterID, dataLoader, j);
                 if (j == 0)
                 {
-                    groupViewModel.Serie1 = vm;
+                    groupViewModel.Serie1Definition = new SerieDefinitionViewModel(groupViewModel)
+                    {
+                        ParameterID = parameterID
+                    };
                 }
                 else if (j == 1)
                 {
-                    groupViewModel.Serie2 = vm;
+                    groupViewModel.Serie2Definition = new SerieDefinitionViewModel(groupViewModel)
+                    {
+                        ParameterID = parameterID
+                    };
                 }
                 else if (j == 2)
                 {
-                    groupViewModel.Serie3 = vm;
+                    groupViewModel.Serie3Definition = new SerieDefinitionViewModel(groupViewModel)
+                    {
+                        ParameterID = parameterID
+                    };
                 }
                 j++;
             }
+
+            groupViewModel.DataSerie = vm;
         }
 
         private void LoadSimpleDataPoints(FlightAnalysisChartSerieViewModel vm, string parameterID,
-            Domain.AircraftAnalysisDataLoader dataLoader)
+            Domain.AircraftAnalysisDataLoader dataLoader, int serieNum)
         {
             IEnumerable<ParameterRawData> rawdatas = dataLoader.GetRawData(parameterID);
             if (rawdatas == null)
                 return;
+
+            Dictionary<int, MyControl.SimpleDataPoint> pointMap = new Dictionary<int, MyControl.SimpleDataPoint>();
+
+            foreach (var v in vm)
+            {
+                if (pointMap.ContainsKey(v.Second))
+                    continue;
+
+                pointMap.Add(v.Second, v);
+            }
+
+            #region debug test
             //var serie1 = vm;
             //serie1.Add(new AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint()
             //{
@@ -401,27 +501,42 @@ namespace AircraftDataAnalysisModel1.WinRT.DataModel
             //    Value = 3
             //});
             //return;//debug
-            foreach (var rd in rawdatas)
-            {
-                vm.Add(new MyControl.SimpleDataPoint()
-                {
-                    Label = rd.Second,
-                    Value = rd.Values[0]//暂时先写死第一秒钟的值
-                });
-            }
-        }
+            #endregion
 
-        public PanelViewModelItem CurrentPanel
-        {
-            get
-            {
-                if (this.m_panelViewItems != null
-                    && this.m_selectedPanelIndex >= 0
-                    && this.m_panelViewItems.Count > this.m_selectedPanelIndex)
+            foreach (var rd in rawdatas)
+            {//暂时先写死第一秒钟的值
+                if (pointMap.ContainsKey(rd.Second))
                 {
-                    return m_panelViewItems[this.m_selectedPanelIndex];
+                    if (serieNum == 0)
+                        pointMap[rd.Second].Value1 = rd.Values[0];
+                    else if (serieNum == 1)
+                        pointMap[rd.Second].Value2 = rd.Values[0];
+                    else if (serieNum == 2)
+                        pointMap[rd.Second].Value3 = rd.Values[0];
                 }
-                return null;
+                else
+                {
+                    var point = new MyControl.SimpleDataPoint()
+                    {
+                        Second = rd.Second
+                    };
+                    if (serieNum == 0)
+                        point.Value1 = rd.Values[0];
+                    else if (serieNum == 1)
+                        point.Value2 = rd.Values[0];
+                    else if (serieNum == 2)
+                        point.Value3 = rd.Values[0];
+                    pointMap.Add(rd.Second, point);
+                }
+            }
+
+            var result = from pt in pointMap
+                         orderby pt.Key ascending
+                         select pt.Value;
+            foreach (var re in result)
+            {
+                if (!vm.Contains(re))
+                    vm.Add(re);
             }
         }
 
@@ -793,35 +908,130 @@ namespace AircraftDataAnalysisModel1.WinRT.DataModel
 
         private Task<string> m_task = null;
 
-        private void InitializeCore()
+        private async void InitializeCore()
         {
-            //1. GetChartPanels
+            //GetChartPanels
+            await InitPanelViewModel();
+
+            //2. currentPanel
+            await SetCurrentPanelCore();
+
+            //3. serie definitions
+            await FinishBySetSerieDefs();
+            System.Diagnostics.Debug.WriteLine(string.Format("End analysis ViewModel :{0} ", DateTime.Now));
+        }
+
+        private async Task InitPanelViewModel()
+        {
             var chartPanels = ApplicationContext.Instance.GetChartPanels(
                 ApplicationContext.Instance.CurrentAircraftModel);
-            this.UserThreadInvoker.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+
+            await this.UserThreadInvoker.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 new Windows.UI.Core.DispatchedHandler(
                     () =>
                     {
+                        //1. GetChartPanels and assign ViewModelItem
                         foreach (var panel in chartPanels)
                         {
                             this.m_panelViewItems.Add(new PanelViewModelItem(panel));
                         }
+                    }));
+        }
 
-                        //2. currentPanel
-                        if (!string.IsNullOrEmpty(m_preSetCurrentPanelID))
-                        {
-                            for (int j = 0; j < m_panelViewItems.Count; j++)
-                            {
-                                if (m_panelViewItems[j].PanelID == m_preSetCurrentPanelID)
+        private async Task FinishBySetSerieDefs()
+        {
+            List<SerieDefinitionViewModel> seriedefList = new List<SerieDefinitionViewModel>();
+            AddNotNullGroupDefsToList(seriedefList);
+            await this.UserThreadInvoker.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                new Windows.UI.Core.DispatchedHandler(
+                    () =>
+                    {
+                        this.SerieDefinitions = new ObservableCollection<SerieDefinitionViewModel>(seriedefList);
+                        this.SetCurrentSecondDisplay(0); 
+
+                        //4. Stop Intermediate
+                        this.IsLoading = false;
+                    }));
+        }
+
+        private async Task SetCurrentPanelCore()
+        {
+            bool selected = false;
+            if (!string.IsNullOrEmpty(m_preSetCurrentPanelID))
+            {
+                for (int j = 0; j < m_panelViewItems.Count; j++)
+                {
+                    if (m_panelViewItems[j].PanelID == m_preSetCurrentPanelID)
+                    {
+                        await this.UserThreadInvoker.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                            new Windows.UI.Core.DispatchedHandler(
+                                () =>
                                 {
                                     this.SelectedPanelIndex = j;
-                                    return;
-                                }
-                            }
-                        }
+                                }));
+                        selected = true;
+                        break;
+                    }
+                }
+            }
+            if (selected == false)
+            {
+                await this.UserThreadInvoker.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                    new Windows.UI.Core.DispatchedHandler(
+                        () =>
+                        {
+                            this.SelectedPanelIndex = 0;
+                        }));
+            }
+        }
 
-                        this.SelectedPanelIndex = 0;
-                    }));
+        private void AddNotNullGroupDefsToList(List<SerieDefinitionViewModel> seriedefList)
+        {
+            if (this.Group1 != null)
+            {
+                var group = this.Group1;
+                AddOneGroupNotNullDefsToList(seriedefList, group);
+            }
+            if (this.Group2 != null)
+            {
+                var group = this.Group2;
+                AddOneGroupNotNullDefsToList(seriedefList, group);
+            }
+            if (this.Group3 != null)
+            {
+                var group = this.Group3;
+                AddOneGroupNotNullDefsToList(seriedefList, group);
+            }
+            if (this.Group4 != null)
+            {
+                var group = this.Group4;
+                AddOneGroupNotNullDefsToList(seriedefList, group);
+            }
+            if (this.Group5 != null)
+            {
+                var group = this.Group5;
+                AddOneGroupNotNullDefsToList(seriedefList, group);
+            }
+            if (this.Group6 != null)
+            {
+                var group = this.Group6;
+                AddOneGroupNotNullDefsToList(seriedefList, group);
+            }
+            if (this.Group7 != null)
+            {
+                var group = this.Group7;
+                AddOneGroupNotNullDefsToList(seriedefList, group);
+            }
+        }
+
+        private void AddOneGroupNotNullDefsToList(List<SerieDefinitionViewModel> seriedefList, FlightAnalysisChartGroupViewModel group)
+        {
+            if (group.Serie1Definition != null)
+                seriedefList.Add(group.Serie1Definition);
+            if (group.Serie2Definition != null)
+                seriedefList.Add(group.Serie2Definition);
+            if (group.Serie3Definition != null)
+                seriedefList.Add(group.Serie3Definition);
         }
 
         private async void AwaitUserInvokeRun(Action func)
@@ -836,14 +1046,24 @@ namespace AircraftDataAnalysisModel1.WinRT.DataModel
                 m_task.Wait();
         }
 
-        private string m_preSetCurrentPanelID = string.Empty;
+        public Windows.UI.Core.CoreDispatcher UserThreadInvoker { get; set; }
 
-        public void SetCurrentPanel(string p)
+        public void SetCurrentSecondDisplay(double unscaledX)
         {
-            m_preSetCurrentPanelID = p;
+            m_unscaledX = unscaledX;
+            this.OnPropertyChanged("CurrentSecondDisplayStr");
         }
 
-        public Windows.UI.Core.CoreDispatcher UserThreadInvoker { get; set; }
+        public void RequestGroupVisibleChanged()
+        {
+            this.OnPropertyChanged("Group1");
+            this.OnPropertyChanged("Group2");
+            this.OnPropertyChanged("Group3");
+            this.OnPropertyChanged("Group4");
+            this.OnPropertyChanged("Group5");
+            this.OnPropertyChanged("Group6");
+            this.OnPropertyChanged("Group7");
+        }
     }
 
     public class PanelViewModelItem : BindableBase
@@ -912,20 +1132,27 @@ namespace AircraftDataAnalysisModel1.WinRT.DataModel
 
             List<KeyValuePair<string, IEnumerable<string>>> list
                 = new List<KeyValuePair<string, IEnumerable<string>>>();
-            List<string> kgGroup = null; //new KeyValuePair<string, IEnumerable<string>>();
+            //List<string> kgGroup = null; //new KeyValuePair<string, IEnumerable<string>>();
             List<string> t6Group = null; //new KeyValuePair<string, IEnumerable<string>>();
             List<string> nhGroup = null;//new KeyValuePair<string, IEnumerable<string>>();
             Dictionary<string, List<string>> objMap = new Dictionary<string, List<string>>();
 
-            int item = 0;
+            //int item = 0;
             foreach (var res in parameterIDs)
             {
+                //list.Add(new KeyValuePair<string, IEnumerable<string>>(
+                //    //key, 
+                //    res, new string[] { res }));
+                //continue;
+                //debug
+
                 string key = res;
-                if (res.StartsWith("KG"))
-                {
-                    key = "KG";
-                }
-                else if (res.StartsWith("T6"))
+                //if (res.StartsWith("KG"))
+                //{
+                //    key = "KG";
+                //}
+                //else
+                if (res.StartsWith("T6"))
                 {
                     key = "T6";
                 }
@@ -940,18 +1167,19 @@ namespace AircraftDataAnalysisModel1.WinRT.DataModel
                     continue;
                 }
 
-                if (key == "KG")
-                {
-                    if (kgGroup != null)
-                        kgGroup.Add(res);
-                    else
-                    {
-                        kgGroup = new List<string>();
-                        kgGroup.Add(res);
-                        list.Add(new KeyValuePair<string, IEnumerable<string>>(key, kgGroup));
-                    }
-                }
-                else if (key == "T6")
+                //if (key == "KG")
+                //{
+                //    if (kgGroup != null)
+                //        kgGroup.Add(res);
+                //    else
+                //    {
+                //        kgGroup = new List<string>();
+                //        kgGroup.Add(res);
+                //        list.Add(new KeyValuePair<string, IEnumerable<string>>(key, kgGroup));
+                //    }
+                //}
+                //else 
+                if (key == "T6")
                 {
                     if (t6Group != null)
                         t6Group.Add(res);

@@ -105,7 +105,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="批量导入架次数据——入库确认" Style="{StaticResource PageHeaderTextStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="批量导入架次数据——数据判读入库确认" Style="{StaticResource PageHeaderTextStyle}"/>
             <ProgressBar x:Name="progressBar1" Grid.ColumnSpan="2" VerticalAlignment="Top" Visibility="Collapsed" Height="10" />
         </Grid>
         <Grid Grid.Row="1" Background="{StaticResource AllBackgroundWhiteColor}" >
@@ -121,107 +121,14 @@
                 <Grid1:SfDataGrid.HeaderStyle>
                     <Style TargetType="Grid1:GridHeaderCellControl">
                         <Setter Property="Background" Value="Transparent" />
-                        <Setter Property="BorderBrush" Value="#FF5E5B5C" />
-                        <Setter Property="BorderThickness" Value="2" />
-                        <Setter Property="HorizontalContentAlignment" Value="Left" /> 
+                        <!--<Setter Property="BorderBrush" Value="#FF5E5B5C" />
+                        <Setter Property="BorderThickness" Value="1" />-->
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
                         <Setter Property="FontFamily" Value="Segoe UI" />
-                        <Setter Property="FontSize" Value="16" /> 
+                        <Setter Property="FontSize" Value="16" />
                         <Setter Property="Foreground" Value="#FF5E5B5C" />
                         <Setter Property="FontWeight" Value="SemiBold" />
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Grid1:GridHeaderCellControl">
-                                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            Padding="{TemplateBinding Padding}">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="0" MinWidth="{Binding Path=SortDirection, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource sortDirectionToWidthConverter}}" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                              VerticalAlignment="Center"
-                                              FontFamily="{TemplateBinding FontFamily}"
-                                              FontSize="{TemplateBinding FontSize}"
-                                              FontWeight="{TemplateBinding FontWeight}" />
-                                            <Grid Grid.Column="1">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="18" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-
-                                                <Path Name="path"
-                                      Width="10.84"
-                                      Height="9.87"
-                                      Margin="5,0,0,0"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"
-                                      Data="F1M753.644,-13.0589L753.736,-12.9639 753.557,-12.7816 732.137,8.63641 732.137,29.7119 756.445,5.40851 764.094,-2.24384 764.275,-2.42352 771.834,5.1286 796.137,29.4372 796.137,8.36163 774.722,-13.0589 764.181,-23.5967 753.644,-13.0589z"
-                                      Fill="#FF5E5B5C"
-                                      Stretch="Fill"
-                                      Visibility="{Binding Path=SortDirection,
-                                                           RelativeSource={RelativeSource TemplatedParent},
-                                                           ConverterParameter=Ascending,
-                                                           Converter={StaticResource sortDirectionToVisibilityConverter}}">
-                                                    <Path.RenderTransform>
-                                                        <TransformGroup>
-                                                            <TransformGroup.Children>
-                                                                <RotateTransform Angle="0" />
-                                                                <ScaleTransform ScaleX="1" ScaleY="1" />
-                                                            </TransformGroup.Children>
-                                                        </TransformGroup>
-                                                    </Path.RenderTransform>
-                                                </Path>
-
-                                                <Path Width="10.84"
-                                      Height="9.87"
-                                      Margin="5,0,0,0"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"
-                                      Data="F1M181.297,177.841L181.205,177.746 181.385,177.563 202.804,156.146 202.804,135.07 178.497,159.373 170.847,167.026 170.666,167.205 163.107,159.653 138.804,135.345 138.804,156.42 160.219,177.841 170.76,188.379 181.297,177.841z"
-                                      Fill="#FF5E5B5C"
-                                      Stretch="Fill"
-                                      Visibility="{Binding Path=SortDirection,
-                                                           RelativeSource={RelativeSource TemplatedParent},
-                                                           ConverterParameter=Decending,
-                                                           Converter={StaticResource sortDirectionToVisibilityConverter}}">
-                                                    <Path.RenderTransform>
-                                                        <TransformGroup>
-                                                            <TransformGroup.Children>
-                                                                <RotateTransform Angle="0" />
-                                                                <ScaleTransform ScaleX="1" ScaleY="1" />
-                                                            </TransformGroup.Children>
-                                                        </TransformGroup>
-                                                    </Path.RenderTransform>
-                                                </Path>
-
-                                                <TextBlock x:Name="NumberBlock"
-                                           Grid.Column="1"
-                                           Margin="0,-4,0,0"
-                                           VerticalAlignment="Center"
-                                           FontSize="10"
-                                           Foreground="{TemplateBinding Foreground}"
-                                           Text="{TemplateBinding SortNumber}"
-                                           Visibility="{TemplateBinding SortNumberVisibility}" />
-
-                                            </Grid>
-                                            <ToggleButton x:Name="Part_filterToggleButton"
-                                          Grid.Column="2"
-                                          Width="28"
-                                          Height="28"
-                                          HorizontalAlignment="Stretch"
-                                          VerticalAlignment="Stretch"
-                                          Style="{StaticResource FilterToggleButtonStyle}"
-                                          Visibility="{TemplateBinding FilterIconVisiblity}" />
-                                            <Grid1:ExcelLikeUIFilterControl x:Name="Part_ExcelLikeFilterControl" IsOpen="{Binding IsChecked, ElementName=Part_filterToggleButton, Mode=TwoWay}" />
-                                        </Grid>
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
                     </Style>
                 </Grid1:SfDataGrid.HeaderStyle>
                 <Grid1:SfDataGrid.Columns>
@@ -229,6 +136,8 @@
                                           HorizontalHeaderContentAlignment="Center" TextAlignment="Center" AllowResizing="True"/>
                     <Grid1:GridTextColumn  HorizontalHeaderContentAlignment="Center" HeaderText="文件名" MappingName="FlightName" ColumnSizer="Star" TextAlignment="Center" AllowResizing="True"/>
                     <Grid1:GridTextColumn  HorizontalHeaderContentAlignment="Center" HeaderText="时长" MappingName="EndSecond" ColumnSizer="Star" TextAlignment="Center" AllowGrouping="False" AllowResizing="True"/>
+                    <Grid1:GridTextColumn  HorizontalHeaderContentAlignment="Center" HeaderText="机号" MappingName="AircraftNumber" ColumnSizer="Star" TextAlignment="Center" AllowGrouping="False" AllowResizing="True"/>
+
                 </Grid1:SfDataGrid.Columns>
 
             </Grid1:SfDataGrid>

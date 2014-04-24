@@ -86,7 +86,7 @@
         </Grid>
         <Grid Grid.Row="1">
             <Charts:XamDataChart Grid.Column="1"  x:Name="DataChart"   CrosshairVisibility="Visible"                         
-                         PointerMoved="xamDataChart1_PointerMoved">
+                      DoubleTapped="DataChart_DoubleTapped"   PointerMoved="xamDataChart1_PointerMoved">
 
                 <!--<Charts:XamDataChart.DataContext>
                 <local:SimpleDataCollection/>
@@ -118,18 +118,18 @@
                     </Charts:NumericYAxis>
                 </Charts:XamDataChart.Axes>
                 <Charts:XamDataChart.Series>
-                    <Charts:LineSeries ValueMemberPath="Value"
+                    <Charts:LineSeries ValueMemberPath="Value" DoubleTapped="line1_DoubleTapped"
                          ItemsSource="{Binding}"  x:Name="serie1"
                          XAxis="{Binding ElementName=xmXAxis}" 
                          YAxis="{Binding ElementName=xmYAxis}" Background="Red" 
                                    Brush="DarkOrchid" Thickness="5" MarkerType="None" 
                                MarkerTemplate="{StaticResource DataTrackerTemplate}" />
-                    <Charts:LineSeries ValueMemberPath="Value"
+                    <!--<Charts:LineSeries ValueMemberPath="Value" DoubleTapped="line1_DoubleTapped"
                                    ItemsSource="{Binding}" x:Name="line1"
                          XAxis="{Binding ElementName=xmXAxis2}" 
                          YAxis="{Binding ElementName=xmYAxis2}" 
                                    Brush="{Binding ElementName=serie1,Path=Brush}" Thickness="5" MarkerType="None"   />
-                    <!--<Charts:LineSeries ValueMemberPath="Value"
+                    <Charts:LineSeries ValueMemberPath="Value"
                                    ItemsSource="{Binding}" x:Name="line2"
                          XAxis="{Binding ElementName=xmXAxis}" 
                          YAxis="{Binding ElementName=xmYAxis}" 

@@ -63,5 +63,12 @@ namespace FlightDataEntities.Decisions
             get;
             set;
         }
+
+        [DataMember]
+        public string SolutionInstruction
+        {
+            get;
+            set;
+        }
     }
 }

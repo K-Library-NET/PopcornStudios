@@ -121,4 +121,50 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="AddOrReplaceFlightGlobeDataBatch">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="flightId" nillable="true" type="xs:string" />
+        <xs:element xmlns:q16="http://schemas.datacontract.org/2004/07/FlightDataEntities" minOccurs="0" name="model" nillable="true" type="q16:AircraftModel" />
+        <xs:element minOccurs="0" name="startIndex" type="xs:int" />
+        <xs:element minOccurs="0" name="endIndex" type="xs:int" />
+        <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/FlightDataEntities" minOccurs="0" name="globedatas" nillable="true" type="q17:ArrayOfGlobeData" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddOrReplaceFlightGlobeDataBatchResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="AddOrReplaceFlightGlobeDataBatchResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddOrReplaceAircraftInstance">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q18="http://schemas.datacontract.org/2004/07/FlightDataEntities" minOccurs="0" name="instance" nillable="true" type="q18:AircraftInstance" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddOrReplaceAircraftInstanceResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="AddOrReplaceAircraftInstanceResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DeleteAircraftInstance">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q19="http://schemas.datacontract.org/2004/07/FlightDataEntities" minOccurs="0" name="instance" nillable="true" type="q19:AircraftInstance" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DeleteAircraftInstanceResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="DeleteAircraftInstanceResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 </xs:schema>

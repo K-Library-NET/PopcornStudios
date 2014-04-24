@@ -59,6 +59,9 @@ namespace AircraftDataAnalysisModel1.WinRT.Domain
                                         where !this.m_existsParameterDataConcurrent.ContainsKey(one)
                                         select one;
 
+            if (nonexistsParameterIds == null || nonexistsParameterIds.Count() <= 0)
+                return;
+
             var result = ServerHelper.GetData(this.CurrentFlight, nonexistsParameterIds.ToArray(),
                 0, this.CurrentFlight.EndSecond);
 

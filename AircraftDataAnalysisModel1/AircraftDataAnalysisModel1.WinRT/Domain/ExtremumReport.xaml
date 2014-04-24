@@ -59,7 +59,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-    </common:LayoutAwarePage.Resources> 
+    </common:LayoutAwarePage.Resources>
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
@@ -104,7 +104,8 @@
                         <TextBlock Text="添加参数" VerticalAlignment="Center" FontSize="24" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="btNavToPanel" IsEnabled="{Binding Path=IsValueSelected}" Margin="10,0" Click="OnNavToPanel">
+                <Button x:Name="btNavToPanel" Visibility="Collapsed"
+                        IsEnabled="{Binding Path=IsValueSelected}" Margin="10,0" Click="OnNavToPanel">
                     <StackPanel Orientation="Horizontal">
                         <Image Height="50" Source="../Assets/566268.png" Width="50"/>
                         <TextBlock Text="跳转到面板" VerticalAlignment="Center" FontSize="24" Margin="5,0,0,0"/>
@@ -118,7 +119,7 @@
                 </Button>
             </StackPanel>
         </Grid>
-        <Grid Margin="5,0,5,5" Grid.Row="1" Background="{StaticResource AllBackgroundWhiteColor}"> 
+        <Grid Margin="5,0,5,5" Grid.Row="1" Background="{StaticResource AllBackgroundWhiteColor}">
             <Grid1:SfDataGrid x:Name="rdgList" AutoGenerateColumns="False" Margin="0" SelectionMode="Single"
 				ItemsSource="{Binding Collection}" AllowGrouping="False" AllowDraggingColumns="True" 
                               Foreground="#FF2A2A2A"
@@ -131,17 +132,17 @@
                 <Grid1:SfDataGrid.HeaderStyle>
                     <Style TargetType="Grid1:GridHeaderCellControl">
                         <Setter Property="Background" Value="Transparent" />
-                        <Setter Property="BorderBrush" Value="#FFCEE7E7" />
-                        <Setter Property="BorderThickness" Value="0,0,1,0" />
-                        <Setter Property="HorizontalContentAlignment" Value="Left" />
-                        <Setter Property="Padding" Value="10,3,3,3" />
+                        <!--<Setter Property="BorderBrush" Value="#FFCEE7E7" />
+                        <Setter Property="BorderThickness" Value="0,0,1,0" />-->
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        <!--<Setter Property="Padding" Value="10,3,3,3" />-->
                         <Setter Property="FontFamily" Value="Segoe UI" />
                         <Setter Property="FontSize" Value="16" />
-                        <Setter Property="Margin" Value="5,0,0,0" />
+                        <!--<Setter Property="Margin" Value="5,0,0,0" />-->
                         <Setter Property="Foreground" Value="#FF5E5B5C" />
                         <Setter Property="FontWeight" Value="SemiBold" />
-
-                        <Setter Property="Template">
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <!--<Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="Grid1:GridHeaderCellControl">
                                     <Border Background="{TemplateBinding Background}"
@@ -234,7 +235,7 @@
                                     </Border>
                                 </ControlTemplate>
                             </Setter.Value>
-                        </Setter>
+                        </Setter>-->
                     </Style>
                 </Grid1:SfDataGrid.HeaderStyle>
                 <Grid1:SfDataGrid.Columns>

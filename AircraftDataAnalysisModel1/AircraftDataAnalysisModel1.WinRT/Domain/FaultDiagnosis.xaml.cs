@@ -47,6 +47,8 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
             this.DataContext = viewModel;
         }
 
+        #region old
+
         /// <summary>
         /// 使用在导航过程中传递的内容填充页。在从以前的会话
         /// 重新创建页时，也会提供任何已保存状态。
@@ -70,45 +72,47 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         {
         }
 
-        private void OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-        }
+        //private void OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        //{
+        //}
 
-        private void OnNavigateToPanelClick(object sender, RoutedEventArgs e)
-        {
-            NavigateToPanel();
-        }
+        //private void OnNavigateToPanelClick(object sender, RoutedEventArgs e)
+        //{
+        //    NavigateToPanel();
+        //}
 
-        private void NavigateToPanel()
-        {
-            if (this.rdgList.SelectedItem != null && this.rdgList.SelectedItem is DecisionWrap)
-            {
-                DecisionWrap wrap = this.rdgList.SelectedItem as DecisionWrap;
-                if (wrap.Record == null || wrap.Decision == null)
-                    return;
+        //private void NavigateToPanel()
+        //{
+        //    if (this.rdgList.SelectedItem != null && this.rdgList.SelectedItem is DecisionWrap)
+        //    {
+        //        DecisionWrap wrap = this.rdgList.SelectedItem as DecisionWrap;
+        //        if (wrap.Record == null || wrap.Decision == null)
+        //            return;
 
-                string parameterStr = this.ToParameters(wrap.Decision.RelatedParameters);
-                string seconds = string.Format("second={0}_{1}", wrap.Record.StartSecond, wrap.Record.EndSecond);
-                string urlParameters = "?type=custom&" + parameterStr + "&" + seconds;
-                //  this.Frame.Navigate(typeof(FlightAnalysis), urlParameters);
-                this.Frame.Navigate(typeof(FlightAnalysis), wrap);
-            }
-        }
+        //        string parameterStr = this.ToParameters(wrap.Decision.RelatedParameters);
+        //        string seconds = string.Format("second={0}_{1}", wrap.Record.StartSecond, wrap.Record.EndSecond);
+        //        string urlParameters = "?type=custom&" + parameterStr + "&" + seconds;
+        //        //  this.Frame.Navigate(typeof(FlightAnalysis), urlParameters);
+        //        this.Frame.Navigate(typeof(FlightAnalysis), wrap);
+        //    }
+        //}
 
-        private string ToParameters(string[] parameterIds)
-        {
-            StringBuilder builder = new StringBuilder();
-            foreach (string p1 in parameterIds)
-            {
-                if (builder.Length == 0)
-                    builder.Append("paramids=");
-                else
-                    builder.Append(',');
+        //private string ToParameters(string[] parameterIds)
+        //{
+        //    StringBuilder builder = new StringBuilder();
+        //    foreach (string p1 in parameterIds)
+        //    {
+        //        if (builder.Length == 0)
+        //            builder.Append("paramids=");
+        //        else
+        //            builder.Append(',');
 
-                builder.Append(p1);
-            }
-            return builder.ToString();
-        }
+        //        builder.Append(p1);
+        //    }
+        //    return builder.ToString();
+        //}
+
+        #endregion
 
         private void OnDoubleTapped2(object sender, DoubleTappedRoutedEventArgs e)
         {
@@ -119,9 +123,42 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
                 DecisionWrap wrap = (e.OriginalSource as Windows.UI.Xaml.FrameworkElement).DataContext as DecisionWrap;
                 if (wrap.Record != null && wrap.Decision != null)
                 {
-                    this.Frame.Navigate(typeof(FlightAnalysis), wrap);
+                    AircraftDataAnalysisWinRT.Domain.FaultDiagnosisFASubNavigateParameter param
+                        = this.GenerateParameter(wrap);
+                    this.Frame.Navigate(typeof(AircraftDataAnalysisModel1.WinRT.Domain.FaultDiagAnalysis), param);
                 }
             }
+        }
+
+        private AircraftDataAnalysisWinRT.Domain.FaultDiagnosisFASubNavigateParameter GenerateParameter(DecisionWrap wrap)
+        {
+            AircraftDataAnalysisWinRT.Domain.FaultDiagnosisFASubNavigateParameter parameter =
+                new AircraftDataAnalysisWinRT.Domain.FaultDiagnosisFASubNavigateParameter()
+                {
+                    DecisionStartSecond = wrap.Record.StartSecond,
+                    DecisionEndSecond = wrap.Record.EndSecond,
+                    DecisionHappenSecond = wrap.Record.HappenSecond,
+                    RelatedParameterIDs = wrap.Decision.RelatedParameters,
+                    DataLoader = null,
+                    FlightEndSecond = ApplicationContext.Instance.CurrentFlight.EndSecond,
+                    FlightStartSecond = 0
+                };
+
+            List<string> temp = new List<string>(wrap.Decision.RelatedParameters);
+            if (temp.Count > 0)
+            {
+                parameter.HostParameterID = temp[0];
+            }
+            if (temp.Count > 1)
+            {
+                parameter.RelatedParameterIDs = temp.GetRange(1, temp.Count - 1).ToArray();
+            }
+            else
+            {
+                parameter.RelatedParameterIDs = new string[] { };
+            }
+
+            return parameter;
         }
 
         private void OnRowSelectedChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)

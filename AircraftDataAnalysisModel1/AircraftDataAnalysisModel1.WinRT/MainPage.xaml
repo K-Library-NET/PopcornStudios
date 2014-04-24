@@ -96,7 +96,7 @@ xmlns:Navigation="using:Syncfusion.UI.Xaml.Controls.Navigation"
                                 </Navigation:SfTreeNavigator.ItemTemplate>
                             </Navigation:SfTreeNavigator>
                         </Navigation:SfTabItem>
-                        <Navigation:SfTabItem Header="机尾号">
+                        <Navigation:SfTabItem Header="机号">
                             <Navigation:SfTreeNavigator x:Name="navFlightByAircraftInstance" NavigationMode="Extended">
                                 <Navigation:SfTreeNavigator.ItemTemplate>
                                     <primitives:HierarchicalDataTemplate ItemsSource="{Binding Path=Children}">

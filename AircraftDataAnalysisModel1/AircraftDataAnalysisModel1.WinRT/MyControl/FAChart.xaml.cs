@@ -101,10 +101,10 @@ namespace AircraftDataAnalysisWinRT.MyControl
                 if (chart.DataContext != null && chart.DataContext is FAChartSubModel)
                 {
                     FAChartSubModel subModel = chart.DataContext as FAChartSubModel;
-                    FlightAnalysisSubNavigateParameter parameter = new FlightAnalysisSubNavigateParameter()
+                    FASubNavigateParameter parameter = new FASubNavigateParameter()
                     {
-                        CurrentStartSecond = ViewModel.CurrentStartSecond,
-                        CurrentEndSecond = ViewModel.CurrentEndSecond,
+                        FlightStartSecond = ViewModel.CurrentStartSecond,
+                        FlightEndSecond = ViewModel.CurrentEndSecond,
                         HostParameterID = subModel.ParameterID
                     };
 
@@ -128,10 +128,10 @@ namespace AircraftDataAnalysisWinRT.MyControl
                 if (chart.DataContext != null && chart.DataContext is FAChartSubModel)
                 {
                     FAChartSubModel subModel = chart.DataContext as FAChartSubModel;
-                    FlightAnalysisSubNavigateParameter parameter = new FlightAnalysisSubNavigateParameter()
+                    FASubNavigateParameter parameter = new FASubNavigateParameter()
                     {
-                        CurrentStartSecond = ViewModel.CurrentStartSecond,
-                        CurrentEndSecond = ViewModel.CurrentEndSecond,
+                        FlightStartSecond = ViewModel.CurrentStartSecond,
+                        FlightEndSecond = ViewModel.CurrentEndSecond,
                         HostParameterID = subModel.ParameterID
                     };
 
@@ -141,7 +141,7 @@ namespace AircraftDataAnalysisWinRT.MyControl
             }
         }
 
-        private void RequestFlightAnalysisSub(FAChartSubModel subModel, FlightAnalysisSubNavigateParameter parameter)
+        private void RequestFlightAnalysisSub(FAChartSubModel subModel, FASubNavigateParameter parameter)
         {
             if (FlightAnalysisSubNavigationRequested != null)
             {
@@ -152,7 +152,7 @@ namespace AircraftDataAnalysisWinRT.MyControl
 
         internal class FlightAnalysisSubNavigateEventArgs : EventArgs
         {
-            public FlightAnalysisSubNavigateParameter Parameter
+            public FASubNavigateParameter Parameter
             {
                 get;
                 set;

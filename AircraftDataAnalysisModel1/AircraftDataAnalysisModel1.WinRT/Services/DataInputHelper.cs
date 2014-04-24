@@ -96,6 +96,39 @@ namespace AircraftDataAnalysisWinRT.Services
             AircraftDataInput.AircraftDataInputClient client = GetClient();
             AircraftDataInput.Flight rtFlight = RTConverter.ToDataInput(flight);
 
+            var globedatas = flight.GlobeDatas;
+            var rtGlobeDatas = RTConverter.ToDataInput(globedatas);
+
+            int step = 200;
+            List<Task> taskList = new List<Task>();
+            for (int i = 0; i < rtGlobeDatas.Count; i = i + step)
+            {
+                int startIndex = i;
+                int endIndex = Math.Min(rtGlobeDatas.Count - 1, i + step - 1);
+                var range = rtGlobeDatas.Skip(i).Take(step);
+
+                var rangeArray = range.ToArray();
+                for (int j = i; j < i + step; j++)
+                {
+                    if (rangeArray.Length <= (j - i))
+                    {
+                        continue;
+                    }
+                    var r = rangeArray[j - i];
+                    r.Index = j;
+                    r.FlightID = rtFlight.FlightID;
+                    r.AircraftModelName = rtFlight.Aircraft.AircraftModel.ModelName;
+                }
+                var tt = client.AddOrReplaceFlightGlobeDataBatchAsync(flight.FlightID, rtFlight.Aircraft.AircraftModel,
+                    startIndex, endIndex, new System.Collections.ObjectModel.ObservableCollection<AircraftDataInput.GlobeData>(rangeArray));
+                taskList.Add(tt);
+            }
+
+            DataInputHelper.AddOrReplaceAircraftInstance(flight.Aircraft);
+            //20140408 add or replace AircraftInstance
+
+            Task.WaitAll(taskList.ToArray());
+
             Task<AircraftDataInput.Flight> task = client.AddOrReplaceFlightAsync(rtFlight);
             Task<FlightDataEntitiesRT.Flight> task2 = task.ContinueWith<FlightDataEntitiesRT.Flight>(
                 new Func<Task, FlightDataEntitiesRT.Flight>(
@@ -116,15 +149,19 @@ namespace AircraftDataAnalysisWinRT.Services
         /// <returns></returns>
         public static FlightDataEntitiesRT.Flight AddOrReplaceFlight(FlightDataEntitiesRT.Flight flight)
         {//TODO: test
-            AircraftDataInput.AircraftDataInputClient client = GetClient();
-            AircraftDataInput.Flight rtFlight = RTConverter.ToDataInput(flight);
+            var tt = AddOrReplaceFlightAsync(flight);
+            tt.Wait();
+            return tt.Result;
 
-            Task<AircraftDataInput.Flight> task = client.AddOrReplaceFlightAsync(rtFlight);
-            task.Wait();
-            return RTConverter.FromDataInput(task.Result);
+            //AircraftDataInput.AircraftDataInputClient client = GetClient();
+            //AircraftDataInput.Flight rtFlight = RTConverter.ToDataInput(flight);
+
+            //Task<AircraftDataInput.Flight> task = client.AddOrReplaceFlightAsync(rtFlight);
+            //task.Wait();
+            //return RTConverter.FromDataInput(task.Result);
         }
 
-        internal static void AddLevelTopFlightRecords(FlightDataEntitiesRT.Flight flight,
+        public static void AddLevelTopFlightRecords(FlightDataEntitiesRT.Flight flight,
             List<FlightDataEntitiesRT.LevelTopFlightRecord> topRecords)
         {
             AircraftDataInput.AircraftDataInputClient client = GetClient();
@@ -138,7 +175,7 @@ namespace AircraftDataAnalysisWinRT.Services
             //return RTConverter.FromDataInput(task.Result);
         }
 
-        internal static void AddFlightRawDataRelationPoints(FlightDataEntitiesRT.Flight flight,
+        public static void AddFlightRawDataRelationPoints(FlightDataEntitiesRT.Flight flight,
             List<FlightDataEntitiesRT.FlightRawDataRelationPoint> flightRawDataRelationPoints)
         {
             AircraftDataInput.AircraftDataInputClient client = GetClient();
@@ -153,7 +190,7 @@ namespace AircraftDataAnalysisWinRT.Services
             task.Wait();
         }
 
-        internal static void AddOrReplaceFlightExtreme(FlightDataEntitiesRT.Flight flight,
+        public static void AddOrReplaceFlightExtreme(FlightDataEntitiesRT.Flight flight,
             FlightDataEntitiesRT.ExtremumPointInfo[] extremumPointInfo)
         {
             AircraftDataInput.AircraftDataInputClient client = GetClient();
@@ -161,14 +198,24 @@ namespace AircraftDataAnalysisWinRT.Services
 
             var points = from one in extremumPointInfo
                          select RTConverter.ToDataInput(one);
+
+            List<AircraftDataInput.ExtremumPointInfo> pointList
+                = new List<AircraftDataInput.ExtremumPointInfo>(points);
+
+            foreach (var pt in pointList)
+            {
+                pt.AircraftNumber = flight.Aircraft.AircraftNumber;
+                pt.FlightDateTime = flight.FlightDate; 
+            }
+
             var collection = new System.Collections.ObjectModel.ObservableCollection<
-                AircraftDataInput.ExtremumPointInfo>(points);
+                AircraftDataInput.ExtremumPointInfo>(pointList);
 
             Task<string> task = client.AddOrReplaceFlightExtremeAsync(rtFlight, collection);
             task.Wait();
         }
 
-        internal static void AddFlightConditionDecisionRecordsBatch(
+        public static void AddFlightConditionDecisionRecordsBatch(
             FlightDataEntitiesRT.Flight flight, List<DecisionRecord> decisionFlightRecords)
         {
             AircraftDataInput.AircraftDataInputClient client = GetClient();
@@ -177,6 +224,26 @@ namespace AircraftDataAnalysisWinRT.Services
             var collection = RTConverter.ToDataInput(decisionFlightRecords);
 
             Task<string> task = client.AddFlightConditionDecisionRecordsBatchAsync(rtFlight, collection);
+            task.Wait();
+        }
+
+        public static void AddOrReplaceAircraftInstance(FlightDataEntitiesRT.AircraftInstance instance)
+        //FlightDataEntitiesRT.Flight flight, List<DecisionRecord> decisionFlightRecords)
+        {
+            AircraftDataInput.AircraftDataInputClient client = GetClient();
+            AircraftDataInput.AircraftInstance rtInstance = RTConverter.ToDataInput(instance);
+
+            var task = client.AddOrReplaceAircraftInstanceAsync(rtInstance);
+            task.Wait();
+        }
+
+        public static void DeleteAircraftInstance(FlightDataEntitiesRT.AircraftInstance instance)
+        //FlightDataEntitiesRT.Flight flight, List<DecisionRecord> decisionFlightRecords)
+        {
+            AircraftDataInput.AircraftDataInputClient client = GetClient();
+            AircraftDataInput.AircraftInstance rtInstance = RTConverter.ToDataInput(instance);
+
+            var task = client.DeleteAircraftInstanceAsync(rtInstance);
             task.Wait();
         }
     }

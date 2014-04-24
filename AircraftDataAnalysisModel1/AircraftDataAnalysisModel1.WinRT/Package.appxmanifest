@@ -15,13 +15,11 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="AircraftDataAnalysisWinRT.App">
-      <VisualElements DisplayName="飞行参数分析" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="飞行参数分析WinRT" ForegroundText="light" BackgroundColor="#464646" ToastCapable="true">
+      <VisualElements DisplayName="便携式飞参外场判读系统" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="飞行参数分析WinRT" ForegroundText="light" BackgroundColor="#464646" ToastCapable="true">
         <DefaultTile ShowName="logoOnly" />
         <SplashScreen Image="Assets\SplashScreen.png" />
         <InitialRotationPreference>
-          <Rotation Preference="portrait" />
           <Rotation Preference="landscape" />
-          <Rotation Preference="portraitFlipped" />
           <Rotation Preference="landscapeFlipped" />
         </InitialRotationPreference>
       </VisualElements>

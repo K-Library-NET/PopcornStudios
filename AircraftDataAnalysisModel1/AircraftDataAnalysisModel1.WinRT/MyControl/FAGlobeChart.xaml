@@ -23,14 +23,25 @@
                          VerticalZoomable="False" 
                          Margin="0">
             <ig:XamDataChart.Axes>
-                <ig:NumericXAxis x:Name="ScatterSplineXAxis"
-                                  />
-                <ig:NumericYAxis x:Name="ScatterSplineYAxis" />
+                <ig:NumericXAxis x:Name="ScatterSplineXAxis">
+                    <ig:NumericXAxis.LabelSettings>
+                        <ig:AxisLabelSettings FontSize="16"  Location="OutsideBottom" 
+                                                                           Extent="55" FontFamily="Global User Interface" 
+                                                                            Foreground="Black"/>
+                    </ig:NumericXAxis.LabelSettings>
+                </ig:NumericXAxis>
+                <ig:NumericYAxis x:Name="ScatterSplineYAxis" >
+                    <ig:NumericYAxis.LabelSettings>
+                        <ig:AxisLabelSettings FontSize="16"  Location="OutsideLeft" 
+                                                                           Extent="85" FontFamily="Global User Interface" 
+                                                                            Foreground="Black"/>
+                    </ig:NumericYAxis.LabelSettings>
+                </ig:NumericYAxis>
             </ig:XamDataChart.Axes>
             <!--Interval="10" MinimumValue="0" MaximumValue="50" ==========================================================================  LabelSettings="{StaticResource XAxisLabelSettings}" -->
             <ig:XamDataChart.Series>
                 <ig:ScatterSplineSeries ItemsSource="{StaticResource ScatterData1}"
-                                        MarkerType="None" Thickness="5"
+                                        MarkerType="None" Thickness="2" Brush="Red" 
                                         XMemberPath="Longitude" YMemberPath="Latitude"
                                         XAxis="{Binding ElementName=ScatterSplineXAxis}"
                                         YAxis="{Binding ElementName=ScatterSplineYAxis}">

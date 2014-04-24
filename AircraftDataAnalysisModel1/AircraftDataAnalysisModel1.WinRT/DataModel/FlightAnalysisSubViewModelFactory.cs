@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AircraftDataAnalysisModel1.WinRT.DataModel;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,15 +14,23 @@ namespace AircraftDataAnalysisWinRT.DataModel
             AircraftDataAnalysisWinRT.Domain.FlightAnalysisViewModelOld HostViewModel,
             FlightDataEntitiesRT.Flight flight, string hostParameterID)
         {
-            FlightAnalysisSubViewModel viewModel = new FlightAnalysisSubViewModel() { ViewModel = HostViewModel };
-            viewModel.HostParameterID = hostParameterID;
-            viewModel.CurrentStartSecond = flight.StartSecond;
-            viewModel.CurrentEndSecond = flight.EndSecond;
+            return null;
 
-            var dataEntities = AircraftDataAnalysisWinRT.Services.ServerHelper.GetData(flight, new string[] { hostParameterID },
-                flight.StartSecond, flight.EndSecond);
+            //FlightAnalysisSubViewModel viewModel = new FlightAnalysisSubViewModel() { ViewModel = HostViewModel };
+            //viewModel.HostParameterID = hostParameterID;
+            //viewModel.CurrentStartSecond = flight.StartSecond;
+            //viewModel.CurrentEndSecond = flight.EndSecond;
 
-            return viewModel;
+            //var dataEntities = AircraftDataAnalysisWinRT.Services.ServerHelper.GetData(flight, new string[] { hostParameterID },
+            //    flight.StartSecond, flight.EndSecond);
+
+            //return viewModel;
         }
+    }
+
+    public enum FlightAnalysisSubViewYAxis
+    {
+        LeftYAxis = 0,
+        RightYAxis = 1,
     }
 }

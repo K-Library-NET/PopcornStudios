@@ -1,4 +1,5 @@
-﻿using AircraftDataAnalysisWinRT.DataModel;
+﻿using AircraftDataAnalysisModel1.WinRT.DataModel;
+using AircraftDataAnalysisWinRT.DataModel;
 using AircraftDataAnalysisWinRT.Domain;
 using FlightDataEntitiesRT;
 using System;
@@ -65,17 +66,17 @@ namespace AircraftDataAnalysisWinRT.MyControl
             get { return m_subViewModel; }
             set
             {
-                if (m_subViewModel != null)
-                {
-                    m_subViewModel.RelatedParameterIDs.CollectionChanged -= RelatedParameterIDs_CollectionChanged;
-                    m_subViewModel = null;
-                }
+                //if (m_subViewModel != null)
+                //{
+                //    m_subViewModel.RelatedParameterIDs.CollectionChanged -= RelatedParameterIDs_CollectionChanged;
+                //    m_subViewModel = null;
+                //}
 
-                m_subViewModel = value;
-                if (m_subViewModel != null)
-                {
-                    m_subViewModel.RelatedParameterIDs.CollectionChanged += RelatedParameterIDs_CollectionChanged;
-                }
+                //m_subViewModel = value;
+                //if (m_subViewModel != null)
+                //{
+                //    m_subViewModel.RelatedParameterIDs.CollectionChanged += RelatedParameterIDs_CollectionChanged;
+                //}
 
                 if (this.m_loaded)
                 {
@@ -116,13 +117,13 @@ namespace AircraftDataAnalysisWinRT.MyControl
 
             List<string> colList = new List<string>();
             colList.Add("Second");//must have seconds column
-            colList.Add(this.m_subViewModel.HostParameterID);
-            if (this.m_subViewModel != null &&
-                this.m_subViewModel.RelatedParameterIDs != null
-                && this.m_subViewModel.RelatedParameterIDs.Count > 0)
-            {
-                colList.AddRange(m_subViewModel.RelatedParameterIDs);
-            }
+            //colList.Add(this.m_subViewModel.HostParameterID);
+            //if (this.m_subViewModel != null &&
+            //    this.m_subViewModel.RelatedParameterIDs != null
+            //    && this.m_subViewModel.RelatedParameterIDs.Count > 0)
+            //{
+            //    colList.AddRange(m_subViewModel.RelatedParameterIDs);
+            //}
 
             var cols = colList;
             //var cols = from one in this.m_viewModel.RelatedParameterCollection
@@ -138,8 +139,8 @@ namespace AircraftDataAnalysisWinRT.MyControl
                 else col.IsHidden = true;
             }
 
-            this.m_dataCollection = new ObservableCollection<FlightDataReading.AircraftModel1.AircraftModel1RawData>(
-                this.m_subViewModel.GetFilteredDataCollection());
+            //this.m_dataCollection = new ObservableCollection<FlightDataReading.AircraftModel1.AircraftModel1RawData>(
+            //    this.m_subViewModel.GetFilteredDataCollection());
             this.grdData.ItemsSource = m_dataCollection;
         }
 

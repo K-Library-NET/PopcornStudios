@@ -186,7 +186,8 @@ namespace AircraftDataAnalysisWinRT.Domain
                         await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High,
                             new Windows.UI.Core.DispatchedHandler(delegate()
                             {
-                                this.AddFileViewModel.Progress(prog, progressInt);
+                                if (this.AddFileViewModel.Progress != null)
+                                    this.AddFileViewModel.Progress(prog, progressInt);
                             }));
                     });
 
@@ -196,7 +197,8 @@ namespace AircraftDataAnalysisWinRT.Domain
                         await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High,
                             new Windows.UI.Core.DispatchedHandler(delegate()
                             {
-                                this.AddFileViewModel.Completed(prog, status);
+                                if (this.AddFileViewModel.Completed != null)
+                                    this.AddFileViewModel.Completed(prog, status);
                             }));
                     });
 
@@ -283,7 +285,7 @@ namespace AircraftDataAnalysisWinRT.Domain
         {
             Size size = this.canvasEWNS.RenderSize;
             float[] ews = (float[])this.AddFileViewModel.Header.Longitudes.Clone();
-            float[] nss = (float[])this.AddFileViewModel.Header.Latitudes.Clone(); 
+            float[] nss = (float[])this.AddFileViewModel.Header.Latitudes.Clone();
 
             this.canvasEWNS.CurrentFlight = this.AddFileViewModel.Flight;
             this.canvasEWNS.Render(this.canvasEWNSback.RenderSize);

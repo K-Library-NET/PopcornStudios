@@ -1139,6 +1139,12 @@ namespace FlightDataReading.AircraftModel1
             while (m_Reader.BaseStream.Length > m_Reader.BaseStream.Position + 1)
             {
                 float val = m_Reader.ReadSingle();
+
+                if (val >= 65535)
+                {
+                    val = 0;//20140424 handle 65535
+                }
+
                 resultValues.Add(val);
                 m_Reader.BaseStream.Position += (startStep - paramDef.BytesCount);//已经读了一个param，要位移就要去除它的位数
             }
@@ -1375,7 +1381,8 @@ namespace FlightDataReading.AircraftModel1
         {
             if (!string.IsNullOrEmpty(p) && p.Length >= 8)
             {
-                string sub = p.Substring(2, 6);
+                //p = p.Replace("_", "").Replace("-", "");
+                string sub = p.Substring(2, 6); 
                 DateTime dt = DateTime.ParseExact(sub, "yyMMdd", System.Globalization.CultureInfo.CurrentCulture);
 
                 //string yearStr = sub.Substring(0, 2);

@@ -59,7 +59,7 @@
     <Compile Include="AircraftInstance.cs" />
     <Compile Include="AircraftModel.cs" />
     <Compile Include="Charts\ChartPanel.cs" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="GlobeData.cs" />
     <Compile Include="Decisions\CompareOperator.cs" />
     <Compile Include="Decisions\ConditionRelation.cs" />
     <Compile Include="Decisions\Decision.cs" />

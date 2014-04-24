@@ -333,7 +333,13 @@ namespace AircraftDataAnalysisModel1.WinRT.MyControl
     public class SimpleDataPoint
     {
         public double Value { get; set; }
-        public int Label { get; set; }
+
+
+        public int Second { get; set; }
+
+        public double Value1 { get; set; }
+        public double Value2 { get; set; }
+        public double Value3 { get; set; }
     }
 
     public interface ITrackerParent

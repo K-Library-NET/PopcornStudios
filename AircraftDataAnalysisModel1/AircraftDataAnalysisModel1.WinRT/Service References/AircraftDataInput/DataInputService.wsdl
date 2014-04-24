@@ -58,6 +58,24 @@
   <wsdl:message name="IAircraftDataInput_AddFlightConditionDecisionRecordsBatch_OutputMessage">
     <wsdl:part name="parameters" element="tns:AddFlightConditionDecisionRecordsBatchResponse" />
   </wsdl:message>
+  <wsdl:message name="IAircraftDataInput_AddOrReplaceFlightGlobeDataBatch_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddOrReplaceFlightGlobeDataBatch" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftDataInput_AddOrReplaceFlightGlobeDataBatch_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddOrReplaceFlightGlobeDataBatchResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftDataInput_AddOrReplaceAircraftInstance_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddOrReplaceAircraftInstance" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftDataInput_AddOrReplaceAircraftInstance_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddOrReplaceAircraftInstanceResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftDataInput_DeleteAircraftInstance_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteAircraftInstance" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftDataInput_DeleteAircraftInstance_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteAircraftInstanceResponse" />
+  </wsdl:message>
   <wsdl:portType name="IAircraftDataInput">
     <wsdl:operation name="AddOrReplaceFlight">
       <wsdl:input wsaw:Action="http://tempuri.org/IAircraftDataInput/AddOrReplaceFlight" message="tns:IAircraftDataInput_AddOrReplaceFlight_InputMessage" />
@@ -90,6 +108,18 @@
     <wsdl:operation name="AddFlightConditionDecisionRecordsBatch">
       <wsdl:input wsaw:Action="http://tempuri.org/IAircraftDataInput/AddFlightConditionDecisionRecordsBatch" message="tns:IAircraftDataInput_AddFlightConditionDecisionRecordsBatch_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IAircraftDataInput/AddFlightConditionDecisionRecordsBatchResponse" message="tns:IAircraftDataInput_AddFlightConditionDecisionRecordsBatch_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddOrReplaceFlightGlobeDataBatch">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftDataInput/AddOrReplaceFlightGlobeDataBatch" message="tns:IAircraftDataInput_AddOrReplaceFlightGlobeDataBatch_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftDataInput/AddOrReplaceFlightGlobeDataBatchResponse" message="tns:IAircraftDataInput_AddOrReplaceFlightGlobeDataBatch_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddOrReplaceAircraftInstance">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftDataInput/AddOrReplaceAircraftInstance" message="tns:IAircraftDataInput_AddOrReplaceAircraftInstance_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftDataInput/AddOrReplaceAircraftInstanceResponse" message="tns:IAircraftDataInput_AddOrReplaceAircraftInstance_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteAircraftInstance">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftDataInput/DeleteAircraftInstance" message="tns:IAircraftDataInput_DeleteAircraftInstance_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftDataInput/DeleteAircraftInstanceResponse" message="tns:IAircraftDataInput_DeleteAircraftInstance_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IAircraftDataInput" type="tns:IAircraftDataInput">
@@ -159,6 +189,33 @@
     </wsdl:operation>
     <wsdl:operation name="AddFlightConditionDecisionRecordsBatch">
       <soap:operation soapAction="http://tempuri.org/IAircraftDataInput/AddFlightConditionDecisionRecordsBatch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddOrReplaceFlightGlobeDataBatch">
+      <soap:operation soapAction="http://tempuri.org/IAircraftDataInput/AddOrReplaceFlightGlobeDataBatch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddOrReplaceAircraftInstance">
+      <soap:operation soapAction="http://tempuri.org/IAircraftDataInput/AddOrReplaceAircraftInstance" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteAircraftInstance">
+      <soap:operation soapAction="http://tempuri.org/IAircraftDataInput/DeleteAircraftInstance" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

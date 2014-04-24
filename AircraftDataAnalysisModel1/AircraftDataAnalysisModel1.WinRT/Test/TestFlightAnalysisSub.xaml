@@ -1,0 +1,98 @@
+﻿<common:LayoutAwarePage xmlns:Controls="using:Infragistics.Controls"  
+    xmlns:ig="using:Infragistics.Controls.Charts" 
+    x:Name="pageRoot"
+    x:Class="AircraftDataAnalysisModel1.WinRT.Test.TestFlightAnalysisSub"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AircraftDataAnalysisModel1.WinRT.Test"
+    xmlns:common="using:AircraftDataAnalysisWinRT.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <local:TestStackColumnCollection x:Key="testdata"/>
+        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
+        <x:String x:Key="AppName">My Application</x:String>
+    </Page.Resources>
+
+    <!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+    <Grid Style="{StaticResource LayoutRootStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <Controls:XamDock >
+                <ig:XamDataChart x:Name="DataChart" >
+                    <ig:XamDataChart.Axes>
+                        <ig:NumericYAxis x:Name="YAxis" MinimumValue="0" Label="{}{} 秒" />
+                        <!--Interval="400"-->
+                        <ig:CategoryXAxis x:Name="XAxis" ItemsSource="{StaticResource ResourceKey=testdata}" Label="{}{MonthStr}" />
+                    </ig:XamDataChart.Axes>
+                    <ig:XamDataChart.Series>
+                        <ig:StackedColumnSeries XAxis="{Binding ElementName=XAxis}"  ItemsSource="{StaticResource ResourceKey=testdata}" 
+                                YAxis="{Binding ElementName=YAxis}"  Legend="{Binding ElementName=xmLegend}" >
+                            <ig:StackedColumnSeries.Series>
+                                <ig:StackedFragmentSeries ValueMemberPath="Condition1" 
+                                                         Title="停车通电状态" />
+                                <ig:StackedFragmentSeries ValueMemberPath="Condition2" Title="发动机地面开车状态" />
+                                <ig:StackedFragmentSeries ValueMemberPath="Condition3" Title="正常飞行状态" />
+                                <ig:StackedFragmentSeries ValueMemberPath="Condition4" Title="最大军用转速状态" />
+                            </ig:StackedColumnSeries.Series>
+                        </ig:StackedColumnSeries>
+                    </ig:XamDataChart.Series>
+                </ig:XamDataChart>
+                <ig:Legend x:Name="xmLegend"
+                   Content="Common Legend"
+                   Margin="10"
+                   Controls:XamDock.Edge="InsideRight">
+
+                </ig:Legend>
+            </Controls:XamDock>
+        </Grid>
+        <!-- Back button and page title -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}"/>
+        </Grid>
+
+        <VisualStateManager.VisualStateGroups>
+
+            <!-- Visual states reflect the application's view state -->
+            <VisualStateGroup x:Name="ApplicationViewStates">
+                <VisualState x:Name="FullScreenLandscape"/>
+                <VisualState x:Name="Filled"/>
+
+                <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
+                <VisualState x:Name="FullScreenPortrait">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+
+                <!-- The back button and title have different styles when snapped -->
+                <VisualState x:Name="Snapped">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</common:LayoutAwarePage>

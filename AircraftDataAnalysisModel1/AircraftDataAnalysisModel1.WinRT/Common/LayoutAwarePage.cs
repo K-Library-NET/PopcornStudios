@@ -356,7 +356,10 @@ namespace AircraftDataAnalysisWinRT.Common
                 // 通过将相同策略用于加载挂起状态并从缓存重新创建
                 // 放弃的页，将导航参数和保留页状态传递
                 // 给页
-                this.LoadState(e.Parameter, (Dictionary<String, Object>)frameState[this._pageKey]);
+                if (!string.IsNullOrEmpty(_pageKey) && frameState.ContainsKey(_pageKey))
+                {
+                    this.LoadState(e.Parameter, (Dictionary<String, Object>)frameState[this._pageKey]);
+                }
             }
         }
 
@@ -370,7 +373,10 @@ namespace AircraftDataAnalysisWinRT.Common
             var frameState = SuspensionManager.SessionStateForFrame(this.Frame);
             var pageState = new Dictionary<String, Object>();
             this.SaveState(pageState);
-            frameState[_pageKey] = pageState;
+            if (!string.IsNullOrEmpty(_pageKey) && frameState.ContainsKey(_pageKey))
+            {
+                frameState[_pageKey] = pageState;
+            }
         }
 
         /// <summary>

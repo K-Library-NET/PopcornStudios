@@ -1,4 +1,5 @@
-﻿using AircraftDataAnalysisWinRT.DataModel;
+﻿using AircraftDataAnalysisModel1.WinRT.DataModel;
+using AircraftDataAnalysisWinRT.DataModel;
 using AircraftDataAnalysisWinRT.Domain;
 using Infragistics.Controls.Charts;
 using System;
@@ -59,22 +60,22 @@ namespace AircraftDataAnalysisWinRT.MyControl
             get { return m_subViewModel; }
             set
             {
-                if (m_subViewModel != null)
-                {
-                    m_subViewModel.RelatedParameterIDs.CollectionChanged -= RelatedParameterIDs_CollectionChanged;
-                    m_subViewModel = null;
-                }
+                //if (m_subViewModel != null)
+                //{
+                //    m_subViewModel.RelatedParameterIDs.CollectionChanged -= RelatedParameterIDs_CollectionChanged;
+                //    m_subViewModel = null;
+                //}
 
-                m_subViewModel = value;
-                if (m_subViewModel != null)
-                {
-                    m_subViewModel.RelatedParameterIDs.CollectionChanged += RelatedParameterIDs_CollectionChanged;
-                }
+                //m_subViewModel = value;
+                //if (m_subViewModel != null)
+                //{
+                //    m_subViewModel.RelatedParameterIDs.CollectionChanged += RelatedParameterIDs_CollectionChanged;
+                //}
 
-                if (this.m_loaded)
-                {
-                    this.ResetCharts();
-                }
+                //if (this.m_loaded)
+                //{
+                //    this.ResetCharts();
+                //}
             }
         }
 
@@ -82,74 +83,74 @@ namespace AircraftDataAnalysisWinRT.MyControl
         {
             if (this.m_subViewModel != null)
             {
-                List<string> resultString1 = new List<string>();
-                resultString1.Add(this.m_subViewModel.HostParameterID);
-                if (m_subViewModel.RelatedParameterIDs != null && m_subViewModel.RelatedParameterIDs.Count > 0)
-                    resultString1.AddRange(m_subViewModel.RelatedParameterIDs);
-                //var result1 = from one in this.m_viewModel.RelatedParameterCollection
-                //              //where one.IsChecked
-                //              select one;
+                //List<string> resultString1 = new List<string>();
+                //resultString1.Add(this.m_subViewModel.HostParameterID);
+                //if (m_subViewModel.RelatedParameterIDs != null && m_subViewModel.RelatedParameterIDs.Count > 0)
+                //    resultString1.AddRange(m_subViewModel.RelatedParameterIDs);
+                ////var result1 = from one in this.m_viewModel.RelatedParameterCollection
+                ////              //where one.IsChecked
+                ////              select one;
 
-                //KG(开关量)分一组
-                //T6L、T6R分一组
-                //NHL、NHR分一组
+                ////KG(开关量)分一组
+                ////T6L、T6R分一组
+                ////NHL、NHR分一组
 
-                List<AxisDataBindingObject> objs = new List<AxisDataBindingObject>();
+                //List<AxisDataBindingObject> objs = new List<AxisDataBindingObject>();
 
-                Dictionary<string, AxisDataBindingObject> objMap = new Dictionary<string, AxisDataBindingObject>();
+                //Dictionary<string, AxisDataBindingObject> objMap = new Dictionary<string, AxisDataBindingObject>();
 
-                int item = 0;
-                foreach (var res in resultString1)
-                {
-                    string key = res;
-                    if (res.StartsWith("KG"))
-                    {
-                        key = "KG";
-                    }
-                    else if (res.StartsWith("T6"))
-                    {
-                        key = "T6";
-                    }
-                    else if (res.StartsWith("NH"))
-                    {
-                        key = "NH";
-                    }
-                    if (objMap.ContainsKey(key))
-                    {
-                        objMap[key].AddRelatedParameterID(res);
-                        //objMap[key].Add(res);
-                        continue;
-                    }
-                    else
-                    {
-                        AxisDataBindingObject obj = new AxisDataBindingObject(this.m_subViewModel.ViewModel);
-                        if (key == "KG")
-                        {
-                            obj = new KGAxisDataBindingObject(this.m_subViewModel.ViewModel);
-                        }
-                        else if (key == "T6")
-                        {
-                            obj = new T6AxisDataBindingObject(this.m_subViewModel.ViewModel);
-                        }
-                        else if (key == "NH")
-                        {
-                            obj = new NHAxisDataBindingObject(this.m_subViewModel.ViewModel);
-                        }
-                        obj.ParameterID = key;
-                        obj.Order = item;
-                        item++;
-                        //obj.Add(res);
-                        obj.AddRelatedParameterID(res);
-                        objMap.Add(key, obj);
-                        objs.Add(obj);
-                    }
-                }
+                //int item = 0;
+                //foreach (var res in resultString1)
+                //{
+                //    string key = res;
+                //    if (res.StartsWith("KG"))
+                //    {
+                //        key = "KG";
+                //    }
+                //    else if (res.StartsWith("T6"))
+                //    {
+                //        key = "T6";
+                //    }
+                //    else if (res.StartsWith("NH"))
+                //    {
+                //        key = "NH";
+                //    }
+                //    if (objMap.ContainsKey(key))
+                //    {
+                //        objMap[key].AddRelatedParameterID(res);
+                //        //objMap[key].Add(res);
+                //        continue;
+                //    }
+                //    else
+                //    {
+                //        AxisDataBindingObject obj = new AxisDataBindingObject(this.m_subViewModel.ViewModel);
+                //        if (key == "KG")
+                //        {
+                //            obj = new KGAxisDataBindingObject(this.m_subViewModel.ViewModel);
+                //        }
+                //        else if (key == "T6")
+                //        {
+                //            obj = new T6AxisDataBindingObject(this.m_subViewModel.ViewModel);
+                //        }
+                //        else if (key == "NH")
+                //        {
+                //            obj = new NHAxisDataBindingObject(this.m_subViewModel.ViewModel);
+                //        }
+                //        obj.ParameterID = key;
+                //        obj.Order = item;
+                //        item++;
+                //        //obj.Add(res);
+                //        obj.AddRelatedParameterID(res);
+                //        objMap.Add(key, obj);
+                //        objs.Add(obj);
+                //    }
+                //}
 
-                var result2 = from ob in objs
-                              orderby ob.Order ascending
-                              select ob;
+                //var result2 = from ob in objs
+                //              orderby ob.Order ascending
+                //              select ob;
 
-                return result2;
+                //return result2;
             }
 
             return new AxisDataBindingObject[] { };
@@ -171,10 +172,10 @@ namespace AircraftDataAnalysisWinRT.MyControl
 
             var axisDataBindingObject = bindingObjs.First();
             //must be at least one
-            if (axisDataBindingObject == null || m_subViewModel == null
-                || string.IsNullOrEmpty(m_subViewModel.HostParameterID)
-                || axisDataBindingObject.ParameterID != this.m_subViewModel.HostParameterID)
-                return;
+            //if (axisDataBindingObject == null || m_subViewModel == null
+            //    || string.IsNullOrEmpty(m_subViewModel.HostParameterID)
+            //    || axisDataBindingObject.ParameterID != this.m_subViewModel.HostParameterID)
+            //    return;
 
             //XamDataChart hostChart = this.BuildHostChart(axisDataBindingObject);
 

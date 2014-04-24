@@ -170,5 +170,15 @@ namespace AircraftDataAnalysisWinRT.Test
         void xamDataChart1_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
         }
+
+        private void line1_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+
+        }
+
+        private void DataChart_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+
+        }
     }
 }

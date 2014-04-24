@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace AircraftDataAnalysisWinRT.MyControl
 {
+    [Obsolete]
     public sealed partial class SwitchAircraftPanelConfirm : Page
     {
         public SwitchAircraftPanelConfirm()
@@ -24,34 +25,34 @@ namespace AircraftDataAnalysisWinRT.MyControl
             this.InitializeComponent();
         }
 
-        private Grid m_parentGrid;
-        private ChartPanelViewModel m_model;
+        //private Grid m_parentGrid;
+        //private ChartPanelViewModel m_model;
 
-        public void Show(Grid parent, ChartPanelViewModel model)
-        {
-            m_parentGrid = parent;
-            m_model = model;
+        //public void Show(Grid parent, ChartPanelViewModel model)
+        //{
+        //    m_parentGrid = parent;
+        //    m_model = model;
 
-            this.DataContext = m_model;
-            parent.Children.Insert(0, this);
-        }
+        //    this.DataContext = m_model;
+        //    parent.Children.Insert(0, this);
+        //}
 
-        public void Close()
-        {
-            this.Visibility = Visibility.Collapsed;
-            m_parentGrid.Children.Remove(this);
-        }
+        //public void Close()
+        //{
+        //    this.Visibility = Visibility.Collapsed;
+        //    m_parentGrid.Children.Remove(this);
+        //}
 
         private void btImport_Click(object sender, RoutedEventArgs e)
         {//设定面板
-            this.m_model.CurrentPanel = this.m_model.ChartPanelCollections[this.m_model.CurrentIndex].Panel;
+            //this.m_model.CurrentPanel = this.m_model.ChartPanelCollections[this.m_model.CurrentIndex].Panel;
 
-            this.Close();
+            //this.Close();
         }
 
         private void btCancel_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            //this.Close();
         }
     }
 }

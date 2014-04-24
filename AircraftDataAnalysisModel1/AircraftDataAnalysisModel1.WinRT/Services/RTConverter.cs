@@ -11,6 +11,11 @@ namespace AircraftDataAnalysisWinRT.Services
 {
     public class RTConverter
     {
+        /// <summary>
+        /// 不包含GlobeData转换，因为太大了写不进去
+        /// </summary>
+        /// <param name="flight"></param>
+        /// <returns></returns>
         internal static AircraftDataAnalysisModel1.WinRT.AircraftDataInput.Flight ToDataInput(FlightDataEntitiesRT.Flight flight)
         {
             AircraftDataInput.Flight rt = new AircraftDataInput.Flight()
@@ -25,6 +30,7 @@ namespace AircraftDataAnalysisWinRT.Services
                     AircraftNumber = flight.Aircraft.AircraftNumber,
                     LastUsed = flight.Aircraft.LastUsed
                 },
+                FlightDate = flight.FlightDate,
                 FlightID = flight.FlightID,
                 FlightName = flight.FlightName,
                 StartSecond = flight.StartSecond,
@@ -32,6 +38,22 @@ namespace AircraftDataAnalysisWinRT.Services
             };
 
             return rt;
+        }
+
+        internal static ObservableCollection<AircraftDataInput.GlobeData> ToDataInput(FlightDataEntitiesRT.GlobeData[] globeData)
+        {
+            if (globeData != null && globeData.Length > 0)
+            {
+                var objs = from one in globeData
+                           select ToDataInput(one);
+                return new ObservableCollection<AircraftDataInput.GlobeData>(objs);
+            }
+            return null;
+        }
+
+        private static AircraftDataInput.GlobeData ToDataInput(FlightDataEntitiesRT.GlobeData one)
+        {
+            return new AircraftDataInput.GlobeData() { Latitude = one.Latitude, Longitude = one.Longitude };
         }
 
         internal static FlightDataEntitiesRT.Flight FromDataInput(AircraftDataInput.Flight flight)
@@ -48,6 +70,7 @@ namespace AircraftDataAnalysisWinRT.Services
                     AircraftNumber = flight.Aircraft.AircraftNumber,
                     LastUsed = flight.Aircraft.LastUsed
                 },
+                FlightDate = flight.FlightDate,
                 FlightID = flight.FlightID,
                 FlightName = flight.FlightName,
                 StartSecond = flight.StartSecond,
@@ -133,6 +156,7 @@ namespace AircraftDataAnalysisWinRT.Services
                 StartSecond = flight.StartSecond,
                 FlightID = flight.FlightID,
                 FlightName = flight.FlightName,
+                FlightDate = flight.FlightDate,
                 Aircraft = new AircraftService.AircraftInstance()
                 {
                     AircraftModel = new AircraftService.AircraftModel()
@@ -204,6 +228,7 @@ namespace AircraftDataAnalysisWinRT.Services
                     AircraftNumber = flight.Aircraft.AircraftNumber,
                     LastUsed = flight.Aircraft.LastUsed
                 },
+                FlightDate = flight.FlightDate,
                 FlightName = flight.FlightName,
                 FlightID = flight.FlightID,
                 StartSecond = flight.StartSecond,
@@ -231,6 +256,7 @@ namespace AircraftDataAnalysisWinRT.Services
                 LastTime = one.LastTime,
                 RelatedParameters = one.RelatedParameters.ToArray(),
                 DecisionDescriptionStringTemplate = one.DecisionDescriptionStringTemplate,
+                SolutionInstruction = one.SolutionInstruction,
                 Conditions =
                 (from two in one.Conditions
                  select RTConverter.FromAircraftService(two)).ToArray()
@@ -345,7 +371,9 @@ namespace AircraftDataAnalysisWinRT.Services
                 MaxValueSecond = one.MaxValueSecond,
                 MinValue = one.MinValue,
                 MinValueSecond = one.MinValueSecond,
-                ParameterID = one.ParameterID
+                ParameterID = one.ParameterID,
+                FlightID = one.FlightID,
+                FlightDate = one.FlightDateTime
             };
 
             return info;
@@ -494,6 +522,62 @@ namespace AircraftDataAnalysisWinRT.Services
                 YAxisParameterID = one.YAxisParameterID,
                 YAxisParameterValue = one.YAxisParameterValue
             };
+        }
+
+        internal static FlightDataEntitiesRT.GlobeData FromAircraftService(AircraftService.GlobeData one)
+        {
+            return new FlightDataEntitiesRT.GlobeData() { Latitude = one.Latitude, Longitude = one.Longitude };
+        }
+
+        internal static FlightDataEntitiesRT.AircraftInstance FromAircraftService(AircraftService.AircraftInstance one)
+        {
+            if (one != null)
+            {
+                var instance = new FlightDataEntitiesRT.AircraftInstance()
+                {
+                    AircraftModel = FromAircraftService(one.AircraftModel),
+                    AircraftNumber = one.AircraftNumber,
+                    LastUsed = one.LastUsed
+                };
+
+                return instance;
+            }
+
+            return null;
+        }
+
+        internal static AircraftDataInput.AircraftInstance ToDataInput(FlightDataEntitiesRT.AircraftInstance instance)
+        {
+            if (instance != null)
+            {
+                var rtInstance = new AircraftDataInput.AircraftInstance()
+                {
+                    AircraftModel = ToDataInput(instance.AircraftModel),
+                    AircraftNumber = instance.AircraftNumber,
+                    LastUsed = instance.LastUsed
+                };
+
+                return rtInstance;
+            }
+
+            return null;
+        }
+
+        internal static AircraftDataInput.AircraftModel ToDataInput(FlightDataEntitiesRT.AircraftModel aircraftModel)
+        {
+            if (aircraftModel != null)
+            {
+                var rtModel = new AircraftDataInput.AircraftModel()
+                {
+                    Caption = aircraftModel.Caption,
+                    LastUsed = aircraftModel.LastUsed,
+                    ModelName = aircraftModel.ModelName
+                };
+
+                return rtModel;
+            }
+
+            return null;
         }
     }
 }

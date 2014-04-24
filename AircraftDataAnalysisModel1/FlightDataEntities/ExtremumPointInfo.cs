@@ -10,6 +10,12 @@ namespace FlightDataEntities
     [DataContract]
     public class ExtremumPointInfo
     {
+        public MongoDB.Bson.ObjectId Id
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// 参数ID
         /// </summary>

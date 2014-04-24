@@ -103,21 +103,27 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
             {
                 m_switcher = true;
                 m_model.IsT6LSelected = parameter.IsT6LSelected;
+                this.chartT6L.Visibility = m_model.IsT6LSelected ?
+                    Windows.UI.Xaml.Visibility.Visible : Windows.UI.Xaml.Visibility.Collapsed;
+                this.chartT6R.Visibility = m_model.IsT6LSelected ?
+                    Windows.UI.Xaml.Visibility.Collapsed : Windows.UI.Xaml.Visibility.Visible;
                 SetFlights(parameter);
 
-                int counter = 0;
+                List<IAsyncAction> acts = new List<IAsyncAction>();
+
+                this.Counter = 0;
 
                 foreach (string flightID in parameter.SelectedFlights)
                 {
                     if (m_model.ItemsMap.ContainsKey(flightID))
                     {
-                        this.AddData(flightID, counter);
-                        counter++;
+                        this.AddData(flightID, Counter);
+                        Counter++;
 
                         continue;
                     }
 
-                    this.Frame.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                    var act = this.Frame.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                         new Windows.UI.Core.DispatchedHandler(
                             delegate()
                             {
@@ -127,15 +133,25 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
 
                                 if (!string.IsNullOrEmpty(flightID))
                                 {
-                                    this.AddData(flightID, counter);
-                                    counter++;
+                                    this.AddData(flightID, Counter);
+                                    Counter++;
                                 }
                             }
                         )
                     );
+
+                    //acts.Add(act);
                 }
 
-                this.Counter = counter;
+                //if (acts.Count > 0)
+                //{
+                //    var tasks = from one in acts
+                //                select one.AsTask();
+
+                //    Task.WaitAll(tasks.ToArray());
+                //}
+                //acts[0].AsTask();
+                //this.Counter = counter;
             }
             catch (Exception ex)
             {
@@ -174,70 +190,136 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
 
         private void AddData(string flightID, int counter)
         {
-            Series serie = this.chartT6L.Series[counter % 4];
+            Series serie = this.chartT6L.Series[flightID];
             if (serie != null && serie is ScatterSeries)
             {
                 ScatterSeries serie1 = serie as ScatterSeries;
-                serie1.ItemsSource = m_model.ItemsMap[flightID].T6LViewModel;
+                if (m_model.ItemsMap.ContainsKey(flightID))
+                {
+                    serie1.ItemsSource = m_model.ItemsMap[flightID].T6LViewModel;
+                }
+                serie1.Name = flightID;
                 serie1.Title = flightID;
-                serie1.MarkerBrush = AircraftDataAnalysisGlobalPallete.Brushes[counter % 10];
-                serie1.MarkerType = PalleteMarkerTypes.MarkerTypes[counter % 10];
+                //serie1.MarkerBrush = AircraftDataAnalysisGlobalPallete.Brushes[counter % 10];
+                //serie1.MarkerType = PalleteMarkerTypes.MarkerTypes[counter % 10];
+                //serie1.SetBinding(ScatterSeries.VisibilityProperty, new Binding() { Path = new PropertyPath("IsChecked"), Converter = new BooleanVisibilityConverter() });
             }
             else
             {
-                ScatterSeries serieT6L = new ScatterSeries()
+                //ScatterSeries serieT6L = new ScatterSeries()
+                //{
+                //    XAxis = numericXAxis1,
+                //    YAxis = numericYAxis1,
+                //    XMemberPath = "XValue",
+                //    YMemberPath = "YValue"
+                //};
+                ScatterSeries serieT6L = this.GetTopNullSerie(this.chartT6L.Series, flightID);
+                //serieT6L.XAxis = numericXAxis2;
+                //serieT6L.YAxis = numericYAxis2;
+                //serieT6L.XMemberPath = "XValue";
+                //serieT6L.YMemberPath = "YValue";
+                if (serieT6L != null)
                 {
-                    XAxis = numericXAxis1,
-                    YAxis = numericYAxis1,
-                    XMemberPath = "XValue",
-                    YMemberPath = "YValue"
-                };
-                serieT6L.MarkerBrush = AircraftDataAnalysisGlobalPallete.Brushes[counter % 4];
-                serieT6L.MarkerType = PalleteMarkerTypes.MarkerTypes[counter % 4];
-                serieT6L.DataContext = m_model.ItemsMap[flightID];
-                serieT6L.ItemsSource = m_model.ItemsMap[flightID].T6LViewModel;
+                    serieT6L.MarkerBrush = AircraftDataAnalysisGlobalPallete.Brushes[counter % 4];
+                    serieT6L.MarkerType = PalleteMarkerTypes.MarkerTypes[counter % 4];
+                    //serieT6L.DataContext = m_model.ItemsMap[flightID];
 
-                this.chartT6L.Series.Add(serieT6L);
+                    if (m_model.ItemsMap.ContainsKey(flightID))
+                        serieT6L.ItemsSource = m_model.ItemsMap[flightID].T6LViewModel;
+
+                    //serieT6L.SetBinding(ScatterSeries.VisibilityProperty, new Binding() { Path = new PropertyPath("IsChecked"), Converter = new BooleanVisibilityConverter() });
+                    serieT6L.Name = flightID;
+                    serieT6L.Title = flightID;
+                    //this.chartT6L.Series.Add(serieT6L);
+                }
             }
 
-            serie = this.chartT6R.Series[counter % 4];
+            serie = this.chartT6R.Series[flightID];
             if (serie != null && serie is ScatterSeries)
             {
                 ScatterSeries serie2 = serie as ScatterSeries;
-                serie2.ItemsSource = m_model.ItemsMap[flightID].T6LViewModel;
-                serie2.MarkerBrush = AircraftDataAnalysisGlobalPallete.Brushes[(counter % 4) + 4];
-                serie2.MarkerType = PalleteMarkerTypes.MarkerTypes[(counter % 4) + 4];
+                if (m_model.ItemsMap.ContainsKey(flightID))
+                {
+                    serie2.ItemsSource = m_model.ItemsMap[flightID].T6LViewModel;
+                }
+                serie2.Name = flightID;
+                serie2.Title = flightID;
+                //serie2.MarkerBrush = AircraftDataAnalysisGlobalPallete.Brushes[(counter % 4) + 4];
+                //serie2.MarkerType = PalleteMarkerTypes.MarkerTypes[(counter % 4) + 4];
+                //serie2.SetBinding(ScatterSeries.VisibilityProperty, new Binding() { Path = new PropertyPath("IsChecked"), Converter = new BooleanVisibilityConverter() });
             }
             else
             {
-                ScatterSeries serieT6R = new ScatterSeries()
+                //ScatterSeries serieT6R = new ScatterSeries()
+                //{
+                //    XAxis = numericXAxis2,
+                //    YAxis = numericYAxis2,
+                //    XMemberPath = "XValue",
+                //    YMemberPath = "YValue"
+                //};
+                ScatterSeries serieT6R = this.GetTopNullSerie(this.chartT6R.Series, flightID);
+                //serieT6R.XAxis = numericXAxis2;
+                //serieT6R.YAxis = numericYAxis2;
+                //serieT6R.XMemberPath = "XValue";
+                //serieT6R.YMemberPath = "YValue";
+                if (serieT6R != null)
                 {
-                    XAxis = numericXAxis2,
-                    YAxis = numericYAxis2,
-                    XMemberPath = "XValue",
-                    YMemberPath = "YValue"
-                };
-                serieT6R.MarkerBrush = AircraftDataAnalysisGlobalPallete.Brushes[(counter % 4) + 4];
-                serieT6R.MarkerType = PalleteMarkerTypes.MarkerTypes[(counter % 4) + 4];
-                serieT6R.ItemsSource = m_model.ItemsMap[flightID].T6RViewModel;
+                    serieT6R.MarkerBrush = AircraftDataAnalysisGlobalPallete.Brushes[(counter % 4) + 4];
+                    serieT6R.MarkerType = PalleteMarkerTypes.MarkerTypes[(counter % 4) + 4];
 
-                this.chartT6R.Series.Add(serieT6R);
+                    if (m_model.ItemsMap.ContainsKey(flightID))
+                        serieT6R.ItemsSource = m_model.ItemsMap[flightID].T6RViewModel;
+
+                    //serieT6R.SetBinding(ScatterSeries.VisibilityProperty, new Binding() { Path = new PropertyPath("IsChecked"), Converter = new BooleanVisibilityConverter() });
+                    serieT6R.Name = flightID;
+                    serieT6R.Title = flightID;
+                    //this.chartT6R.Series.Add(serieT6R);
+                }
             }
+        }
+
+        private ScatterSeries GetTopNullSerie(SeriesCollection seriesCollection, string flightID)
+        {
+            foreach (var serie in seriesCollection)
+            {
+                if (string.IsNullOrEmpty(serie.Name) && serie is ScatterSeries)
+                    return serie as ScatterSeries;
+            }
+            return null;
         }
 
         private void RemoveData(string flightID, int counter)
         {
             try
             {
-                Series serie = this.chartT6L.Series[counter - 1 % 4];
-                if (serie != null && serie is ScatterSeries && serie.Title == flightID)
+                if (this.chartT6L.Series[flightID] != null)
                 {
-                    ScatterSeries serie1 = serie as ScatterSeries;
-                    serie1.ItemsSource = null;
-                    //m_model.ItemsMap[flightID].T6LViewModel;
-                    //serie1.Title = flightID;
-                    //serie1.MarkerBrush = AircraftDataAnalysisGlobalPallete.Brushes[counter % 10];
-                    //serie1.MarkerType = PalleteMarkerTypes.MarkerTypes[counter % 10];
+                    Series serie = this.chartT6L.Series[flightID];// this.chartT6L.Series[counter - 1 % 4];
+                    if (serie != null && serie is ScatterSeries && serie.Name == flightID)
+                    {
+                        ScatterSeries serie1 = serie as ScatterSeries;
+                        serie1.ItemsSource = null;
+                        serie1.Name = string.Empty;
+                        //m_model.ItemsMap[flightID].T6LViewModel;
+                        //serie1.Title = flightID;
+                        //serie1.MarkerBrush = AircraftDataAnalysisGlobalPallete.Brushes[counter % 10];
+                        //serie1.MarkerType = PalleteMarkerTypes.MarkerTypes[counter % 10];
+                    }
+                }
+
+                if (this.chartT6R.Series[flightID] != null)
+                {
+                    Series serie = this.chartT6R.Series[flightID];// this.chartT6L.Series[counter - 1 % 4];
+                    if (serie != null && serie is ScatterSeries && serie.Name == flightID)
+                    {
+                        ScatterSeries serie1 = serie as ScatterSeries;
+                        serie1.ItemsSource = null;
+                        serie1.Name = string.Empty;
+                        //m_model.ItemsMap[flightID].T6LViewModel;
+                        //serie1.Title = flightID;
+                        //serie1.MarkerBrush = AircraftDataAnalysisGlobalPallete.Brushes[counter % 10];
+                        //serie1.MarkerType = PalleteMarkerTypes.MarkerTypes[counter % 10];
+                    }
                 }
             }
             catch (Exception e)
@@ -261,14 +343,27 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
                 AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentAircraftModel,
                 AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.Aircraft);
 
-            foreach (var flight in flights)
+            var flightSelectItems = from f in flights
+                                    select new FlightSelectItem(f, this.m_model.FlightViewModel)
+                                    {
+                                        IsSelected =
+                                        parameter.SelectedFlights.Contains(f.FlightID)
+                                    };
+
+            var sorted = from f2 in flightSelectItems
+                         orderby f2.IsSelected descending
+                         select f2;
+
+            foreach (var flight in sorted) //flights)
             {
-                this.m_model.FlightViewModel.Add(new FlightSelectItem(flight)
-                {
-                    IsSelected =
-                    parameter.SelectedFlights.Contains(flight.FlightID)
-                    //(flight.FlightID == AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.FlightID)
-                });
+                this.m_model.FlightViewModel.Add(flight);
+
+                //this.m_model.FlightViewModel.Add(new FlightSelectItem(flight)
+                //{
+                //    IsSelected =
+                //    parameter.SelectedFlights.Contains(flight.FlightID)
+                //    //(flight.FlightID == AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.FlightID)
+                //});
             }
 
             foreach (var fl in this.m_model.FlightViewModel)
@@ -292,30 +387,40 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
                         return;
                     }
 
-                    var taskPoints = this.GetFlightRawDataRelationPointsAsync(m_model.IsT6LSelected, item.Flight.FlightID);
+                    this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                        new Windows.UI.Core.DispatchedHandler(delegate()
+                    {
+                        var pointsTemp = this.GetFlightRawDataRelationPoints(m_model.IsT6LSelected, item.Flight.FlightID);
 
-                    taskPoints.ContinueWith(new Action<Task<FlightDataEntitiesRT.FlightRawDataRelationPoint[]>>(
-                        delegate(Task<FlightDataEntitiesRT.FlightRawDataRelationPoint[]> task)
+                        this.m_model.AddItems(pointsTemp, item.Flight.FlightID, m_model.IsT6LSelected);
+
+                        if (!string.IsNullOrEmpty(item.Flight.FlightID))
                         {
-                            taskPoints.Wait();
-                            var points = taskPoints.Result;
+                            this.AddData(item.Flight.FlightID, this.Counter);
+                            this.Counter++;
+                        }
+                    }));
+                    //var taskPoints = this.GetFlightRawDataRelationPointsAsync(m_model.IsT6LSelected, item.Flight.FlightID);
 
-                            this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
-                                new Windows.UI.Core.DispatchedHandler(delegate()
-                            {
-                                this.m_model.AddItems(points, item.Flight.FlightID, m_model.IsT6LSelected);
+                    //taskPoints.ContinueWith(new Action<Task<FlightDataEntitiesRT.FlightRawDataRelationPoint[]>>(
+                    //    delegate(Task<FlightDataEntitiesRT.FlightRawDataRelationPoint[]> task)
+                    //    {
+                    //        taskPoints.Wait();
+                    //        var points = taskPoints.Result;
 
-                                if (!string.IsNullOrEmpty(item.Flight.FlightID))
-                                {
-                                    this.AddData(item.Flight.FlightID, this.Counter);
-                                    this.Counter++;
-                                }
-                            }));
-                        }));
+                    //            this.m_model.AddItems(points, item.Flight.FlightID, m_model.IsT6LSelected);
+
+                    //            if (!string.IsNullOrEmpty(item.Flight.FlightID))
+                    //            {
+                    //                this.AddData(item.Flight.FlightID, this.Counter);
+                    //                this.Counter++;
+                    //            }
+                    //        }));
                 }
                 else
                 {
                     this.RemoveData(item.Flight.FlightID, this.Counter);
+                    
                     this.Counter--;
                 }
             }

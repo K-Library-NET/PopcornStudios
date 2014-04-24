@@ -90,6 +90,30 @@
   <wsdl:message name="IAircraftService_GetExtremumPointInfosByAircraftInstance_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetExtremumPointInfosByAircraftInstanceResponse" />
   </wsdl:message>
+  <wsdl:message name="IAircraftService_GetGlobeDatas_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetGlobeDatas" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetGlobeDatas_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetGlobeDatasResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetAllAircrafts_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllAircrafts" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetAllAircrafts_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllAircraftsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetEarliestYear_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetEarliestYear" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetEarliestYear_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetEarliestYearResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetFlightConditionDecisionRecords_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetFlightConditionDecisionRecords" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetFlightConditionDecisionRecords_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetFlightConditionDecisionRecordsResponse" />
+  </wsdl:message>
   <wsdl:portType name="IAircraftService">
     <wsdl:operation name="GetCurrentAircraftModel">
       <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetCurrentAircraftModel" message="tns:IAircraftService_GetCurrentAircraftModel_InputMessage" />
@@ -142,6 +166,22 @@
     <wsdl:operation name="GetExtremumPointInfosByAircraftInstance">
       <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetExtremumPointInfosByAircraftInstance" message="tns:IAircraftService_GetExtremumPointInfosByAircraftInstance_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetExtremumPointInfosByAircraftInstanceResponse" message="tns:IAircraftService_GetExtremumPointInfosByAircraftInstance_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGlobeDatas">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetGlobeDatas" message="tns:IAircraftService_GetGlobeDatas_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetGlobeDatasResponse" message="tns:IAircraftService_GetGlobeDatas_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllAircrafts">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetAllAircrafts" message="tns:IAircraftService_GetAllAircrafts_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetAllAircraftsResponse" message="tns:IAircraftService_GetAllAircrafts_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEarliestYear">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetEarliestYear" message="tns:IAircraftService_GetEarliestYear_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetEarliestYearResponse" message="tns:IAircraftService_GetEarliestYear_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFlightConditionDecisionRecords">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetFlightConditionDecisionRecords" message="tns:IAircraftService_GetFlightConditionDecisionRecords_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetFlightConditionDecisionRecordsResponse" message="tns:IAircraftService_GetFlightConditionDecisionRecords_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IAircraftService" type="tns:IAircraftService">
@@ -256,6 +296,42 @@
     </wsdl:operation>
     <wsdl:operation name="GetExtremumPointInfosByAircraftInstance">
       <soap:operation soapAction="http://tempuri.org/IAircraftService/GetExtremumPointInfosByAircraftInstance" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGlobeDatas">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetGlobeDatas" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllAircrafts">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetAllAircrafts" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEarliestYear">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetEarliestYear" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFlightConditionDecisionRecords">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetFlightConditionDecisionRecords" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

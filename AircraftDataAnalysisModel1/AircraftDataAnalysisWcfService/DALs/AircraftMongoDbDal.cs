@@ -132,5 +132,17 @@ namespace AircraftDataAnalysisWcfService.DALs
             return database.GetCollection<FlightDataEntities.FlightRawDataRelationPoint>(
                 AircraftMongoDb.COLLECTION_FLIGHT_RAWDATA_RELATION);
         }
+
+        internal MongoCollection<GlobeData> GetFlightGlobeDataMongoCollectionByFlight(MongoDatabase database, string flightId)
+        {
+            return database.GetCollection<FlightDataEntities.GlobeData>(
+                AircraftMongoDb.COLLECTION_FLIGHT_GLOBE_DATA);
+        }
+
+        internal MongoCollection<AircraftInstance> GetAircraftInstanceCollection(MongoDatabase database)
+        {
+            return database.GetCollection<FlightDataEntities.AircraftInstance>(
+                AircraftMongoDb.COLLECTION_AIRCRAFT_INSTANCE);
+        }
     }
 }

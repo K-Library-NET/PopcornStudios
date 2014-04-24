@@ -48,25 +48,57 @@ namespace AircraftDataAnalysisWinRT.MyControl
             {
                 m_itemsSource = value;
 
-                //debug
-                return;
+                if (m_itemsSource == null)
+                    return;
 
                 BubbleDataScatterSample dataSet = this.GetDataSet();
                 if (dataSet == null)
                     return;
-                //dataSet.Clear();
-            int val = (int)dataSet.Settings.YMin;
-                int i = 0;
+                dataSet.Clear();
+                //int val =  (int)dataSet.Settings.YMin;
+                //int i = 0;
+                float maxLongitude = float.MinValue;
+                float maxLatitude = float.MinValue;
+                float minLongitude = float.MaxValue;
+                float minLatitude = float.MaxValue;
+
                 foreach (var one in m_itemsSource)
                 {
+                    maxLongitude = Math.Max(one.Longitude, maxLongitude);
+                    maxLatitude = Math.Max(one.Latitude, maxLatitude);
+                    minLongitude = Math.Min(one.Longitude, minLongitude);
+                    minLatitude = Math.Min(one.Latitude, minLatitude);
+
                     dataSet.Add(new GlobeData2()
                     //{ Latitude = one.Latitude, Longitude = one.Longitude });
                     {
-                        Longitude = BubbleDataGenerator.Random.Next(i, i + 5),
-                        Latitude = BubbleDataGenerator.Random.Next(val - 50, val + 50)
+                        Longitude = one.Longitude,// BubbleDataGenerator.Random.Next(i, i + 5),
+                        Latitude = one.Latitude// BubbleDataGenerator.Random.Next(val - 50, val + 50)
                     });
-                    i++;
+                    //i++; 
                 }
+                var xaxis = this.ScatterSplineChart.Axes["ScatterSplineXAxis"] as Infragistics.Controls.Charts.NumericXAxis;
+                var yaxis = this.ScatterSplineChart.Axes["ScatterSplineYAxis"] as Infragistics.Controls.Charts.NumericYAxis;
+
+                var xmin = minLongitude - Math.Abs(maxLongitude - minLongitude) * 0.05;
+                var xmax = maxLongitude + Math.Abs(maxLongitude - minLongitude) * 0.05;
+                var ymin = minLatitude - Math.Abs(maxLatitude - minLatitude) * 0.05;
+                var ymax = maxLatitude + Math.Abs(maxLatitude - minLatitude) * 0.05;
+
+                xmin = Math.Round(xmin, 2);
+                xmax = Math.Round(xmax, 2);
+                ymin = Math.Round(ymin, 2);
+                ymax = Math.Round(ymax, 2);
+                //xmin = Math.Floor(xmin);
+                //xmax = Math.Ceiling(xmax);
+                //ymin = Math.Floor(ymin);
+                //ymax = Math.Ceiling(ymax);
+
+                xaxis.MinimumValue = xmin;// minLongitude - Math.Abs(maxLongitude - minLongitude) * 0.05;
+                xaxis.MaximumValue = xmax;// maxLongitude + Math.Abs(maxLongitude - minLongitude) * 0.05;
+                yaxis.MinimumValue = ymin;// minLatitude - Math.Abs(maxLatitude - minLatitude) * 0.05;
+                yaxis.MaximumValue = ymax;// maxLatitude + Math.Abs(maxLatitude - minLatitude) * 0.05;
+
                 //this.ScatterSplineChart.Series[0].ItemsSource = dataSet;
                 //this.RefreshInternalItemSource();
             }
@@ -683,16 +715,16 @@ namespace AircraftDataAnalysisWinRT.MyControl
     {
         public BubbleDataScatterSample()
         {
-            _settings = new BubbleDataSettings
-            {
-                DataPoints = 50,
-                RadiusMin = 5,
-                RadiusMax = 40,
-                XMin = 0,
-                YMin = 0,
-            };
-            _settings.PropertyChanged += OnSettingsPropertyChanged;
-            this.Generate();
+            //_settings = new BubbleDataSettings
+            //{
+            //    DataPoints = 50,
+            //    RadiusMin = 5,
+            //    RadiusMax = 40,
+            //    XMin = 0,
+            //    YMin = 0,
+            //};
+            //_settings.PropertyChanged += OnSettingsPropertyChanged;
+            //this.Generate();
         }
 
         protected void Generate()

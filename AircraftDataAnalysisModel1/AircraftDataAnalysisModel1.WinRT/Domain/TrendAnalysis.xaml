@@ -167,7 +167,7 @@
             </Grid.ColumnDefinitions>
             <Border Background="White" Grid.Column="0"  CornerRadius="8" Margin="10" Padding="10" >
                 <StackPanel>
-                    <TextBlock Text="飞机：" FontSize="24" Foreground="Black"/>
+                    <TextBlock Text="机号：" FontSize="24" Foreground="Black"/>
                     <ScrollViewer VerticalScrollBarVisibility="Auto" MinWidth="200">
                         <ItemsControl x:Name="listAircrafts" Grid.Row="3" ScrollViewer.VerticalScrollBarVisibility="Visible"
                                       ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled"
@@ -190,195 +190,326 @@
                     </ScrollViewer>
                 </StackPanel>
             </Border>
-            <Border Grid.Column="1" Background="Black" CornerRadius="8" Margin="10" Padding="10" >
-                <ScrollViewer  Background="Black" VerticalScrollMode="Auto" HorizontalScrollMode="Disabled" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    <StackPanel x:Name="stackHost">
-                        <ig:XamDataChart  Height="240" x:Name="dataChartT6" CrosshairVisibility="Visible" 
+            <Border Grid.Column="1" Background="White" CornerRadius="8" Margin="10" Padding="10" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Height="5"></Grid>
+                    <ScrollViewer Grid.Row="1"
+                         VerticalScrollMode="Auto" HorizontalScrollMode="Disabled" 
+                                   VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel x:Name="stackHost">
+                            <Border Margin="5" BorderThickness="2" BorderBrush="Black">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5">左发排气温度(T6L)</TextBlock>
+                                        <TextBlock FontSize="18" DataContext="{StaticResource ViewModel}"
+                                                   Foreground="{Binding Path=T6LBrush}" FontWeight="ExtraBold" Margin="10,5">————</TextBlock>
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5" Text="  "></TextBlock>
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5">右发排气温度(T6R)</TextBlock>
+                                        <TextBlock FontSize="18" DataContext="{StaticResource ViewModel}"
+                                                   Foreground="{Binding Path=T6RBrush}" FontWeight="ExtraBold" Margin="10,5">————</TextBlock>
+                                    </StackPanel>
+                                    <ig:XamDataChart Height="240"  Grid.Row="1" 
+                                                     x:Name="dataChartT6" CrosshairVisibility="Visible" Margin="0,0,55,0"
                                           DataContext="{StaticResource ViewModel}">
-                            <!--T6L/T6R-->
-                            <ig:XamDataChart.Series>
-                                <ig:LineSeries ValueMemberPath="T6L" 
-                         ItemsSource="{Binding Path=T6Collection}" 
-                         XAxis="{Binding ElementName=xAxisT6}" 
+                                        <!--T6L/T6R-->
+                                        <ig:XamDataChart.Series>
+                                            <ig:LineSeries ValueMemberPath="T6L" 
+                         ItemsSource="{Binding Path=T6Collection}" Brush="{Binding Path=T6LBrush}"
+                         XAxis="{Binding ElementName=xAxisT6}"  Thickness="3"
                          YAxis="{Binding ElementName=yAxisT6}">
-                                </ig:LineSeries>
-                                <ig:LineSeries ValueMemberPath="T6R" 
-                         ItemsSource="{Binding Path=T6Collection}" 
-                         XAxis="{Binding ElementName=xAxisT6}" 
+                                            </ig:LineSeries>
+                                            <ig:LineSeries ValueMemberPath="T6R" 
+                         ItemsSource="{Binding Path=T6Collection}" Brush="{Binding Path=T6RBrush}"
+                         XAxis="{Binding ElementName=xAxisT6}"  Thickness="3"
                          YAxis="{Binding ElementName=yAxisT6}">
-                                </ig:LineSeries>
-                            </ig:XamDataChart.Series>
-                            <ig:XamDataChart.Axes>
-                                <ig:CategoryXAxis x:Name="xAxisT6" ItemsSource="{Binding}" Label="{}{FlightDateTime}" >
-                                    <ig:CategoryXAxis.LabelSettings >
-                                        <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
-                                    </ig:CategoryXAxis.LabelSettings>
-                                </ig:CategoryXAxis>
-                                <ig:NumericYAxis x:Name="yAxisT6" >
-                                    <ig:NumericYAxis.LabelSettings >
-                                        <ig:AxisLabelSettings Location="OutsideLeft" Extent="55" />
-                                    </ig:NumericYAxis.LabelSettings>
-                                </ig:NumericYAxis>
-                            </ig:XamDataChart.Axes>
-                        </ig:XamDataChart>
-                        <ig:XamDataChart  Height="240" x:Name="dataChartNH" CrosshairVisibility="Visible" DataContext="{StaticResource ViewModel}">
-                            <!--NHL/NHR-->
-                            <ig:XamDataChart.Series>
-                                <ig:LineSeries ValueMemberPath="NHL" 
-                         ItemsSource="{Binding Path=NHCollection}" 
+                                            </ig:LineSeries>
+                                        </ig:XamDataChart.Series>
+                                        <ig:XamDataChart.Axes>
+                                            <ig:CategoryXAxis x:Name="xAxisT6" ItemsSource="{Binding Path=T6Collection}" Label="{}{FlightDateTime}" >
+                                                <ig:CategoryXAxis.LabelSettings >
+                                                    <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
+                                                </ig:CategoryXAxis.LabelSettings>
+                                            </ig:CategoryXAxis>
+                                            <ig:NumericYAxis x:Name="yAxisT6" >
+                                                <ig:NumericYAxis.LabelSettings >
+                                                    <ig:AxisLabelSettings Location="OutsideLeft" Foreground="Black"  Extent="55" />
+                                                </ig:NumericYAxis.LabelSettings>
+                                            </ig:NumericYAxis>
+                                        </ig:XamDataChart.Axes>
+                                    </ig:XamDataChart>
+                                </Grid>
+                            </Border>
+                            <Border Margin="5" BorderThickness="2" BorderBrush="Black">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5">左发高压转速(NHL)</TextBlock>
+                                        <TextBlock FontSize="18" DataContext="{StaticResource ViewModel}"
+                                                   Foreground="{Binding Path=NHLBrush}"  FontWeight="ExtraBold" Margin="10,5">————</TextBlock>
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5" Text="  "></TextBlock>
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5">右发高压转速(NHR)</TextBlock>
+                                        <TextBlock FontSize="18" DataContext="{StaticResource ViewModel}"
+                                                   Foreground="{Binding Path=NHRBrush}"  FontWeight="ExtraBold" Margin="10,5">————</TextBlock>
+                                    </StackPanel>
+                                    <ig:XamDataChart Height="240" 
+                                                     Grid.Row="1" x:Name="dataChartNH" CrosshairVisibility="Visible" Margin="0,0,55,0"
+                                          DataContext="{StaticResource ViewModel}">
+                                        <!--NHL/NHR-->
+                                        <ig:XamDataChart.Series>
+                                            <ig:LineSeries ValueMemberPath="NHL"  Brush="{Binding Path=NHLBrush}"
+                         ItemsSource="{Binding Path=NHCollection}"  Thickness="3"
                          XAxis="{Binding ElementName=xAxisNH}" 
                          YAxis="{Binding ElementName=yAxisNH}">
-                                </ig:LineSeries>
-                                <ig:LineSeries ValueMemberPath="NHR" 
-                         ItemsSource="{Binding Path=NHCollection}" 
+                                            </ig:LineSeries>
+                                            <ig:LineSeries ValueMemberPath="NHR"  Brush="{Binding Path=NHRBrush}"
+                         ItemsSource="{Binding Path=NHCollection}"  Thickness="3"
                          XAxis="{Binding ElementName=xAxisNH}" 
                          YAxis="{Binding ElementName=yAxisNH}">
-                                </ig:LineSeries>
-                            </ig:XamDataChart.Series>
-                            <ig:XamDataChart.Axes>
-                                <ig:CategoryXAxis x:Name="xAxisNH" ItemsSource="{Binding}" Label="{}{FlightDateTime}" >
-                                    <ig:CategoryXAxis.LabelSettings >
-                                        <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
-                                    </ig:CategoryXAxis.LabelSettings>
-                                </ig:CategoryXAxis>
-                                <ig:NumericYAxis x:Name="yAxisNH" >
-                                    <ig:NumericYAxis.LabelSettings >
-                                        <ig:AxisLabelSettings Location="OutsideLeft" Extent="55" />
-                                    </ig:NumericYAxis.LabelSettings>
-                                </ig:NumericYAxis>
-                            </ig:XamDataChart.Axes>
-                        </ig:XamDataChart>
-                        <ig:XamDataChart Height="240"  x:Name="dataChartVi" CrosshairVisibility="Visible" 
+                                            </ig:LineSeries>
+                                        </ig:XamDataChart.Series>
+                                        <ig:XamDataChart.Axes>
+                                            <ig:CategoryXAxis x:Name="xAxisNH" ItemsSource="{Binding Path=NHCollection}" Label="{}{FlightDateTime}" >
+                                                <ig:CategoryXAxis.LabelSettings >
+                                                    <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
+                                                </ig:CategoryXAxis.LabelSettings>
+                                            </ig:CategoryXAxis>
+                                            <ig:NumericYAxis x:Name="yAxisNH" >
+                                                <ig:NumericYAxis.LabelSettings >
+                                                    <ig:AxisLabelSettings Location="OutsideLeft" Foreground="Black"  Extent="55" />
+                                                </ig:NumericYAxis.LabelSettings>
+                                            </ig:NumericYAxis>
+                                        </ig:XamDataChart.Axes>
+                                    </ig:XamDataChart>
+                                </Grid>
+                            </Border>
+                            <Border Margin="5" BorderThickness="2" BorderBrush="Black">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5">指示空速(Vi)</TextBlock>
+                                        <TextBlock FontSize="18" DataContext="{StaticResource ViewModel}"
+                                                   Foreground="{Binding Path=ViBrush}" FontWeight="ExtraBold" Margin="10,5">————</TextBlock>
+                                    </StackPanel>
+                                    <ig:XamDataChart Height="240" 
+                                                     Grid.Row="1"  x:Name="dataChartVi" 
+                                             CrosshairVisibility="Visible"  Margin="0,0,55,0"
                                          DataContext="{StaticResource ViewModel}">
-                            <ig:XamDataChart.Axes>
-                                <ig:CategoryXAxis x:Name="xAxisVi" ItemsSource="{Binding Path=ViCollection}" Label="{}{FlightDateTime}" >
-                                    <ig:CategoryXAxis.LabelSettings >
-                                        <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
-                                    </ig:CategoryXAxis.LabelSettings>
-                                </ig:CategoryXAxis>
-                                <ig:NumericYAxis x:Name="yAxisVi" >
-                                    <ig:NumericYAxis.LabelSettings >
-                                        <ig:AxisLabelSettings Location="OutsideLeft" Extent="55" />
-                                    </ig:NumericYAxis.LabelSettings>
-                                </ig:NumericYAxis>
-                            </ig:XamDataChart.Axes>
-                            <ig:XamDataChart.Series>
-                                <ig:LineSeries ValueMemberPath="Vi" 
-                                 ItemsSource="{Binding Path=ViCollection}"
+                                        <ig:XamDataChart.Axes>
+                                            <ig:CategoryXAxis x:Name="xAxisVi" ItemsSource="{Binding Path=ViCollection}" Label="{}{FlightDateTime}" >
+                                                <ig:CategoryXAxis.LabelSettings >
+                                                    <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
+                                                </ig:CategoryXAxis.LabelSettings>
+                                            </ig:CategoryXAxis>
+                                            <ig:NumericYAxis x:Name="yAxisVi" >
+                                                <ig:NumericYAxis.LabelSettings >
+                                                    <ig:AxisLabelSettings Location="OutsideLeft"  Foreground="Black" Extent="55" />
+                                                </ig:NumericYAxis.LabelSettings>
+                                            </ig:NumericYAxis>
+                                        </ig:XamDataChart.Axes>
+                                        <ig:XamDataChart.Series>
+                                            <ig:LineSeries ValueMemberPath="Vi"  Brush="{Binding Path=ViBrush}"
+                                 ItemsSource="{Binding Path=ViCollection}"  Thickness="3"
                                  XAxis="{Binding ElementName=xAxisVi}" 
                                  YAxis="{Binding ElementName=yAxisVi}">
-                                </ig:LineSeries>
-                            </ig:XamDataChart.Series>
-                        </ig:XamDataChart>
-                        <ig:XamDataChart Height="240" x:Name="dataChartHp" CrosshairVisibility="Visible" 
+                                            </ig:LineSeries>
+                                        </ig:XamDataChart.Series>
+                                    </ig:XamDataChart>
+                                </Grid>
+                            </Border>
+                            <Border Margin="5" BorderThickness="2" BorderBrush="Black">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5">气压高度(Hp)</TextBlock>
+                                        <TextBlock FontSize="18" DataContext="{StaticResource ViewModel}"
+                                                   Foreground="{Binding Path=HpBrush}" FontWeight="ExtraBold" Margin="10,5">————</TextBlock> 
+                                    </StackPanel>
+                                    <ig:XamDataChart Height="240" 
+                                                     Grid.Row="1" x:Name="dataChartHp" CrosshairVisibility="Visible"  Margin="0,0,55,0"
                                          DataContext="{StaticResource ViewModel}">
-                            <!--Hp-->
-                            <!--最大值（Value）-->
-                            <ig:XamDataChart.Series>
-                                <ig:LineSeries ValueMemberPath="Hp" 
-                         ItemsSource="{Binding Path=HpCollection}"
+                                        <!--Hp-->
+                                        <!--最大值（Value）-->
+                                        <ig:XamDataChart.Series>
+                                            <ig:LineSeries ValueMemberPath="Hp"  Brush="{Binding Path=HpBrush}"
+                         ItemsSource="{Binding Path=HpCollection}"  Thickness="3"
                          XAxis="{Binding ElementName=xAxisHp}" 
                          YAxis="{Binding ElementName=yAxisHp}">
-                                </ig:LineSeries>
-                            </ig:XamDataChart.Series>
-                            <ig:XamDataChart.Axes>
-                                <ig:CategoryXAxis x:Name="xAxisHp" ItemsSource="{Binding Path=HpCollection}" Label="{}{FlightDateTime}" >
-                                    <ig:CategoryXAxis.LabelSettings >
-                                        <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
-                                    </ig:CategoryXAxis.LabelSettings>
-                                </ig:CategoryXAxis>
-                                <ig:NumericYAxis x:Name="yAxisHp" >
-                                    <ig:NumericYAxis.LabelSettings >
-                                        <ig:AxisLabelSettings Location="OutsideLeft" Extent="55" />
-                                    </ig:NumericYAxis.LabelSettings>
-                                </ig:NumericYAxis>
-                            </ig:XamDataChart.Axes>
-                        </ig:XamDataChart>
-                        <ig:XamDataChart  Height="240" x:Name="dataChartKB" CrosshairVisibility="Visible" 
+                                            </ig:LineSeries>
+                                        </ig:XamDataChart.Series>
+                                        <ig:XamDataChart.Axes>
+                                            <ig:CategoryXAxis x:Name="xAxisHp" ItemsSource="{Binding Path=HpCollection}" Label="{}{FlightDateTime}" >
+                                                <ig:CategoryXAxis.LabelSettings >
+                                                    <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
+                                                </ig:CategoryXAxis.LabelSettings>
+                                            </ig:CategoryXAxis>
+                                            <ig:NumericYAxis x:Name="yAxisHp" >
+                                                <ig:NumericYAxis.LabelSettings >
+                                                    <ig:AxisLabelSettings Location="OutsideLeft"  Foreground="Black" Extent="55" />
+                                                </ig:NumericYAxis.LabelSettings>
+                                            </ig:NumericYAxis>
+                                        </ig:XamDataChart.Axes>
+                                    </ig:XamDataChart>
+                                </Grid>
+                            </Border>
+                            <Border Margin="5" BorderThickness="2" BorderBrush="Black">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5">纵向状态标志(KZB)</TextBlock>
+                                        <TextBlock FontSize="18" DataContext="{StaticResource ViewModel}"
+                                                   Foreground="{Binding Path=KZBBrush}" FontWeight="ExtraBold" Margin="10,5">————</TextBlock>
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5" Text="  "></TextBlock>
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5">横向状态标志(KCB)</TextBlock>
+                                        <TextBlock FontSize="18" DataContext="{StaticResource ViewModel}"
+                                                   Foreground="{Binding Path=KCBBrush}" FontWeight="ExtraBold" Margin="10,5">————</TextBlock> 
+                                    </StackPanel>
+                                    <ig:XamDataChart Height="240"  Grid.Row="1"
+                                                     x:Name="dataChartKB" CrosshairVisibility="Visible"  Margin="0,0,55,0"
                                           DataContext="{StaticResource ViewModel}">
-                            <!--KZB/KCB-->
-                            <ig:XamDataChart.Series>
-                                <ig:LineSeries ValueMemberPath="KZB" 
-                         ItemsSource="{Binding Path=KBCollection}" 
+                                        <!--KZB/KCB-->
+                                        <ig:XamDataChart.Series>
+                                            <ig:LineSeries ValueMemberPath="KZB"  Brush="{Binding Path=KZBBrush}"
+                         ItemsSource="{Binding Path=KBCollection}"  Thickness="3"
                          XAxis="{Binding ElementName=xAxisKB}" 
                          YAxis="{Binding ElementName=yAxisKB}">
-                                </ig:LineSeries>
-                                <ig:LineSeries ValueMemberPath="KCB" 
-                         ItemsSource="{Binding Path=KBCollection}" 
+                                            </ig:LineSeries>
+                                            <ig:LineSeries ValueMemberPath="KCB"  Brush="{Binding Path=KCBBrush}"
+                         ItemsSource="{Binding Path=KBCollection}"  Thickness="3"
                          XAxis="{Binding ElementName=xAxisKB}" 
                          YAxis="{Binding ElementName=yAxisKB}">
-                                </ig:LineSeries>
-                            </ig:XamDataChart.Series>
-                            <ig:XamDataChart.Axes>
-                                <ig:CategoryXAxis x:Name="xAxisKB" ItemsSource="{Binding}" Label="{}{FlightDateTime}" >
-                                    <ig:CategoryXAxis.LabelSettings >
-                                        <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
-                                    </ig:CategoryXAxis.LabelSettings>
-                                </ig:CategoryXAxis>
-                                <ig:NumericYAxis x:Name="yAxisKB" >
-                                    <ig:NumericYAxis.LabelSettings >
-                                        <ig:AxisLabelSettings Location="OutsideLeft" Extent="55" />
-                                    </ig:NumericYAxis.LabelSettings>
-                                </ig:NumericYAxis>
-                            </ig:XamDataChart.Axes>
-                        </ig:XamDataChart>
-                        <ig:XamDataChart Height="240"  x:Name="dataChartN" CrosshairVisibility="Visible" DataContext="{StaticResource ViewModel}">
-                            <!--Ny/Nx/Nz-->
-                            <ig:XamDataChart.Series>
-                                <ig:LineSeries ValueMemberPath="Ny" 
-                         ItemsSource="{Binding Path=NCollection}" 
-                         XAxis="{Binding ElementName=xAxisN}" 
-                         YAxis="{Binding ElementName=yAxisN}">
-                                </ig:LineSeries>
-                                <ig:LineSeries ValueMemberPath="Nx" 
-                         ItemsSource="{Binding Path=NCollection}" 
-                         XAxis="{Binding ElementName=xAxisN}" 
-                         YAxis="{Binding ElementName=yAxisN}">
-                                </ig:LineSeries>
-                                <ig:LineSeries ValueMemberPath="Nz" 
-                         ItemsSource="{Binding Path=NCollection}" 
-                         XAxis="{Binding ElementName=xAxisN}" 
-                         YAxis="{Binding ElementName=yAxisN}">
-                                </ig:LineSeries>
-                            </ig:XamDataChart.Series>
-                            <ig:XamDataChart.Axes>
-                                <ig:CategoryXAxis x:Name="xAxisN" ItemsSource="{Binding Path=NCollection}" Label="{}{FlightDateTime}" >
-                                    <ig:CategoryXAxis.LabelSettings >
-                                        <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
-                                    </ig:CategoryXAxis.LabelSettings>
-                                </ig:CategoryXAxis>
-                                <ig:NumericYAxis x:Name="yAxisN" >
-                                    <ig:NumericYAxis.LabelSettings >
-                                        <ig:AxisLabelSettings Location="OutsideLeft" Extent="55" />
-                                    </ig:NumericYAxis.LabelSettings>
-                                </ig:NumericYAxis>
-                            </ig:XamDataChart.Axes>
-                        </ig:XamDataChart>
-                        <ig:XamDataChart Height="240"  x:Name="dataChartTt" CrosshairVisibility="Visible"
+                                            </ig:LineSeries>
+                                        </ig:XamDataChart.Series>
+                                        <ig:XamDataChart.Axes>
+                                            <ig:CategoryXAxis x:Name="xAxisKB" ItemsSource="{Binding KBCollection}" Label="{}{FlightDateTime}" >
+                                                <ig:CategoryXAxis.LabelSettings >
+                                                    <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
+                                                </ig:CategoryXAxis.LabelSettings>
+                                            </ig:CategoryXAxis>
+                                            <ig:NumericYAxis x:Name="yAxisKB" >
+                                                <ig:NumericYAxis.LabelSettings >
+                                                    <ig:AxisLabelSettings Location="OutsideLeft"  Foreground="Black" Extent="55" />
+                                                </ig:NumericYAxis.LabelSettings>
+                                            </ig:NumericYAxis>
+                                        </ig:XamDataChart.Axes>
+                                    </ig:XamDataChart>
+                                </Grid>
+                            </Border>
+                            <Border Margin="5" BorderThickness="2" BorderBrush="Black">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5">法向过载(Ny)</TextBlock>
+                                        <TextBlock FontSize="18" DataContext="{StaticResource ViewModel}"
+                                                   Foreground="{Binding Path=NyBrush}"  FontWeight="ExtraBold" Margin="10,5">————</TextBlock>
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5" Text="  "></TextBlock>
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5">纵向过载(Nx)</TextBlock>
+                                        <TextBlock FontSize="18" DataContext="{StaticResource ViewModel}"
+                                                   Foreground="{Binding Path=NxBrush}"  FontWeight="ExtraBold" Margin="10,5">————</TextBlock>
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5" Text="  "></TextBlock>
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5">侧向过载(Nz)</TextBlock>
+                                        <TextBlock FontSize="18" DataContext="{StaticResource ViewModel}"
+                                                   Foreground="{Binding Path=NzBrush}"  FontWeight="ExtraBold" Margin="10,5">————</TextBlock>
+                                    </StackPanel>
+                                    <ig:XamDataChart Height="240"  Grid.Row="1"
+                                          x:Name="dataChartN" CrosshairVisibility="Visible"  Margin="0,0,55,0"
                                          DataContext="{StaticResource ViewModel}">
-                            <ig:XamDataChart.Series>
-                                <ig:LineSeries ValueMemberPath="Tt" 
-                         ItemsSource="{Binding Path=TtCollection}" 
+                                        <!--Ny/Nx/Nz-->
+                                        <ig:XamDataChart.Series>
+                                            <ig:LineSeries ValueMemberPath="Ny"  Brush="{Binding Path=NyBrush}"
+                         ItemsSource="{Binding Path=NCollection}"  Thickness="3"
+                         XAxis="{Binding ElementName=xAxisN}" 
+                         YAxis="{Binding ElementName=yAxisN}">
+                                            </ig:LineSeries>
+                                            <ig:LineSeries ValueMemberPath="Nx"  Brush="{Binding Path=NxBrush}"
+                         ItemsSource="{Binding Path=NCollection}"  Thickness="3"
+                         XAxis="{Binding ElementName=xAxisN}" 
+                         YAxis="{Binding ElementName=yAxisN}">
+                                            </ig:LineSeries>
+                                            <ig:LineSeries ValueMemberPath="Nz"  Brush="{Binding Path=NzBrush}"
+                         ItemsSource="{Binding Path=NCollection}"  Thickness="3"
+                         XAxis="{Binding ElementName=xAxisN}" 
+                         YAxis="{Binding ElementName=yAxisN}">
+                                            </ig:LineSeries>
+                                        </ig:XamDataChart.Series>
+                                        <ig:XamDataChart.Axes>
+                                            <ig:CategoryXAxis x:Name="xAxisN" ItemsSource="{Binding Path=NCollection}" Label="{}{FlightDateTime}" >
+                                                <ig:CategoryXAxis.LabelSettings >
+                                                    <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
+                                                </ig:CategoryXAxis.LabelSettings>
+                                            </ig:CategoryXAxis>
+                                            <ig:NumericYAxis x:Name="yAxisN" >
+                                                <ig:NumericYAxis.LabelSettings >
+                                                    <ig:AxisLabelSettings Location="OutsideLeft" Foreground="Black" Extent="55" />
+                                                </ig:NumericYAxis.LabelSettings>
+                                            </ig:NumericYAxis>
+                                        </ig:XamDataChart.Axes>
+                                    </ig:XamDataChart>
+                                </Grid>
+                            </Border>
+                            <Border Margin="5" BorderThickness="2" BorderBrush="Black">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                        <TextBlock FontSize="18" Foreground="Black" Margin="10,5">大气总温(Tt)</TextBlock>
+                                        <TextBlock FontSize="18" DataContext="{StaticResource ViewModel}"
+                                                   Foreground="{Binding Path=TtBrush}"  FontWeight="ExtraBold" Margin="10,5">————</TextBlock>
+                                    </StackPanel>
+                                    <ig:XamDataChart Height="240"  Grid.Row="1"
+                                                     x:Name="dataChartTt" CrosshairVisibility="Visible"  Margin="0,0,55,0"
+                                         DataContext="{StaticResource ViewModel}">
+                                        <ig:XamDataChart.Series>
+                                            <ig:LineSeries ValueMemberPath="Tt"  Brush="{Binding Path=TtBrush}"
+                         ItemsSource="{Binding Path=TtCollection}" Thickness="3"
                          XAxis="{Binding ElementName=xAxisTt}" 
                          YAxis="{Binding ElementName=yAxisTt}">
-                                </ig:LineSeries>
-                            </ig:XamDataChart.Series>
-                            <ig:XamDataChart.Axes>
-                                <ig:CategoryXAxis x:Name="xAxisTt" ItemsSource="{Binding Path=TtCollection}"  Label="{}{FlightDateTime}" >
-                                    <ig:CategoryXAxis.LabelSettings >
-                                        <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
-                                    </ig:CategoryXAxis.LabelSettings>
-                                </ig:CategoryXAxis>
-                                <ig:NumericYAxis x:Name="yAxisTt" >
-                                    <ig:NumericYAxis.LabelSettings >
-                                        <ig:AxisLabelSettings Location="OutsideLeft" Extent="55" />
-                                    </ig:NumericYAxis.LabelSettings>
-                                </ig:NumericYAxis>
-                            </ig:XamDataChart.Axes>
-                            <!--Tt-->
-                        </ig:XamDataChart>
-                    </StackPanel>
-                </ScrollViewer>
+                                            </ig:LineSeries>
+                                        </ig:XamDataChart.Series>
+                                        <ig:XamDataChart.Axes>
+                                            <ig:CategoryXAxis x:Name="xAxisTt" ItemsSource="{Binding Path=TtCollection}"  Label="{}{FlightDateTime}" >
+                                                <ig:CategoryXAxis.LabelSettings >
+                                                    <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
+                                                </ig:CategoryXAxis.LabelSettings>
+                                            </ig:CategoryXAxis>
+                                            <ig:NumericYAxis x:Name="yAxisTt" >
+                                                <ig:NumericYAxis.LabelSettings >
+                                                    <ig:AxisLabelSettings Location="OutsideLeft" Foreground="Black" Extent="55" />
+                                                </ig:NumericYAxis.LabelSettings>
+                                            </ig:NumericYAxis>
+                                        </ig:XamDataChart.Axes>
+                                        <!--Tt-->
+                                    </ig:XamDataChart>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                </Grid>
             </Border>
         </Grid>
     </Grid>

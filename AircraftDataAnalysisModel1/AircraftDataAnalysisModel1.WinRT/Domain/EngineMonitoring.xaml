@@ -13,7 +13,7 @@
 
     <common:LayoutAwarePage.Resources>
         <local:BooleanColorBrushConverter x:Key="BooleanColorBrushConverter"/>
-        <local:BooleanColorBrushConverter x:Key="BooleanVisibilityConverter"/>
+        <local:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
         <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
         <x:String x:Key="AppName">My Application</x:String>
         <Style x:Key="CheckBoxStyle1" TargetType="CheckBox">
@@ -213,7 +213,7 @@
                              DataContext="{StaticResource ResourceKey=HostViewModel}"
                             Background="{Binding Path=IsT6LSelected,Converter={StaticResource ResourceKey=BooleanColorBrushConverter}}" >
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="左发排气温度与进口总温的关系" VerticalAlignment="Center" Foreground="Black" Margin="5,0,0,0"/>
+                            <TextBlock Text="左发排气温度-进口总温" VerticalAlignment="Center" Foreground="Black" Margin="5,0,0,0"/>
                         </StackPanel>
                     </Button>
                 </Border>
@@ -221,7 +221,7 @@
                           DataContext="{StaticResource ResourceKey=HostViewModel}"
                          Background="{Binding Path=IsT6RSelected,Converter={StaticResource ResourceKey=BooleanColorBrushConverter}}" >
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="右发排气温度与进口总温的关系" VerticalAlignment="Center" Foreground="Black" Margin="5,0,0,0"/>
+                        <TextBlock Text="右发排气温度-进口总温" VerticalAlignment="Center" Foreground="Black" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Button>
                 <Border >
@@ -244,222 +244,249 @@
                     <TextBlock Text="最多可选择4个架次" FontSize="16" Margin="15" Foreground="Goldenrod" VerticalAlignment="Top" HorizontalAlignment="Right"/>
                     <Border Background="Goldenrod" Margin="10" CornerRadius="15" Grid.Row="1">
                         <Border Background="White" Margin="10" CornerRadius="5">
-                            <ItemsControl x:Name="itemsFlights"  DataContext="{StaticResource ResourceKey=HostViewModel}"
-                                          ItemsSource="{Binding Path=FlightViewModel}"
-                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                          ScrollViewer.VerticalScrollMode="Auto"
-                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                          ScrollViewer.HorizontalScrollMode="Disabled">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <CheckBox Style="{StaticResource CheckBoxStyle1}"
-                                                  IsChecked="{Binding Path=IsChecked,Mode=TwoWay}">
-                                            <CheckBox.Content>
-                                                <TextBlock Text="{Binding Path=FlightName}" FontSize="24" Foreground="Black"/>
-                                            </CheckBox.Content>
-                                        </CheckBox>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                            <ScrollViewer
+                                          VerticalScrollBarVisibility="Visible"
+                                          VerticalScrollMode="Enabled"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          HorizontalScrollMode="Disabled">
+                                <ItemsControl x:Name="itemsFlights"  DataContext="{StaticResource ResourceKey=HostViewModel}"
+                                          ItemsSource="{Binding Path=FlightViewModel}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Style="{StaticResource CheckBoxStyle1}"
+                                                  IsChecked="{Binding Path=IsSelected,Mode=TwoWay}">
+                                                <CheckBox.Content>
+                                                    <TextBlock Text="{Binding Path=FlightName}" FontSize="24" Foreground="Black"/>
+                                                </CheckBox.Content>
+                                            </CheckBox>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
                         </Border>
                     </Border>
                 </Grid>
-                <Grid Grid.Column="1">
-                    <Grid.RowDefinitions>
+                <Grid Grid.Column="1" Margin="15">
+                    <!--<Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition Height="0.1"/>
-                    </Grid.RowDefinitions>
-                    <Charts1:XamDataChart x:Name="chartT6L" 
-                                      DataContext="{StaticResource HostViewModel}" Grid.Column="1"  Margin="0,40,48,0"
+                    </Grid.RowDefinitions>-->
+                    <Grid x:Name="grdT6LDisplay"  DataContext="{StaticResource HostViewModel}" 
+                    Visibility="{Binding Path=IsT6LSelected,Converter={StaticResource ResourceKey=BooleanVisibilityConverter}}"
+                                      >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Foreground="Black" Margin="10" FontSize="18">左发排气温度</TextBlock>
+                        <TextBlock Foreground="Black" Margin="20,10,10,15" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom"
+                                   FontSize="18">进口总温</TextBlock>
+                        <Charts1:XamDataChart x:Name="chartT6L" Grid.Row="1" DataContext="{StaticResource HostViewModel}" Grid.Column="0"  Margin="0"
                                         HorizontalZoomable="False" HorizontalZoombarVisibility="Collapsed"
                                         VerticalZoomable="False" VerticalZoombarVisibility="Collapsed" >
-                        <Charts1:XamDataChart.Axes>
-                            <Charts1:NumericXAxis x:Name="numericXAxis1" Foreground="Black">
-                                <Charts1:NumericXAxis.LabelSettings>
-                                    <Charts1:AxisLabelSettings Location="OutsideLeft" Visibility="Visible" FontSize="18" Extent="40" />
-                                </Charts1:NumericXAxis.LabelSettings>
-                            </Charts1:NumericXAxis>
-                            <Charts1:NumericYAxis x:Name="numericYAxis1" Foreground="Black">
-                                <Charts1:NumericYAxis.LabelSettings>
-                                    <Charts1:AxisLabelSettings Location="OutsideTop" Visibility="Visible"  Extent="50" FontSize="18" FontFamily="Global User Interface"/>
-                                </Charts1:NumericYAxis.LabelSettings>
-                            </Charts1:NumericYAxis>
-                        </Charts1:XamDataChart.Axes>
-                        <Charts1:XamDataChart.Series>
-                            <Charts1:ScatterSeries x:Name="serie1" 
+                            <Charts1:XamDataChart.Axes>
+                                <Charts1:NumericXAxis x:Name="numericXAxis1" Foreground="Black" MaximumValue="40" MinimumValue="-10">
+                                    <Charts1:NumericXAxis.LabelSettings>
+                                        <Charts1:AxisLabelSettings Location="OutsideLeft" Visibility="Visible"
+                                                                   Foreground="Black" FontSize="18" Extent="40" />
+                                    </Charts1:NumericXAxis.LabelSettings>
+                                </Charts1:NumericXAxis>
+                                <Charts1:NumericYAxis x:Name="numericYAxis1" Foreground="Black" MaximumValue="700" MinimumValue="200">
+                                    <Charts1:NumericYAxis.LabelSettings>
+                                        <Charts1:AxisLabelSettings Location="OutsideTop" Visibility="Visible" 
+                                                                   Foreground="Black" Extent="50" FontSize="18" FontFamily="Global User Interface"/>
+                                    </Charts1:NumericYAxis.LabelSettings>
+                                </Charts1:NumericYAxis>
+                            </Charts1:XamDataChart.Axes>
+                            <Charts1:XamDataChart.Series>
+                                <Charts1:ScatterSeries 
                                                     XAxis="{Binding ElementName=numericXAxis1}"
                                                     YAxis="{Binding ElementName=numericYAxis1}"
                                                     XMemberPath="XValue"
                                                     YMemberPath="YValue" >
-                                <Charts1:ScatterSeries.ToolTip>
-                                    <StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="大气总温: " />
-                                            <TextBlock Text="{Binding Item.XValue}" />
+                                    <Charts1:ScatterSeries.ToolTip>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="大气总温: " />
+                                                <TextBlock Text="{Binding Item.XValue}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="左发排气温度: " />
+                                                <TextBlock Text="{Binding Item.YValue}" />
+                                            </StackPanel>
                                         </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="左发排气温度: " />
-                                            <TextBlock Text="{Binding Item.YValue}" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Charts1:ScatterSeries.ToolTip>
-                            </Charts1:ScatterSeries>
-                            <Charts1:ScatterSeries  x:Name="serie2" 
+                                    </Charts1:ScatterSeries.ToolTip>
+                                </Charts1:ScatterSeries>
+                                <Charts1:ScatterSeries  
                                                     XAxis="{Binding ElementName=numericXAxis1}"
                                                     YAxis="{Binding ElementName=numericYAxis1}"
                                                     XMemberPath="XValue"
                                                     YMemberPath="YValue" >
-                                <Charts1:ScatterSeries.ToolTip>
-                                    <StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="大气总温: " />
-                                            <TextBlock Text="{Binding Item.XValue}" />
+                                    <Charts1:ScatterSeries.ToolTip>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="大气总温: " />
+                                                <TextBlock Text="{Binding Item.XValue}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="左发排气温度: " />
+                                                <TextBlock Text="{Binding Item.YValue}" />
+                                            </StackPanel>
                                         </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="左发排气温度: " />
-                                            <TextBlock Text="{Binding Item.YValue}" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Charts1:ScatterSeries.ToolTip>
-                            </Charts1:ScatterSeries>
-                            <Charts1:ScatterSeries  x:Name="serie3" 
+                                    </Charts1:ScatterSeries.ToolTip>
+                                </Charts1:ScatterSeries>
+                                <Charts1:ScatterSeries  
                                                     XAxis="{Binding ElementName=numericXAxis1}"
                                                     YAxis="{Binding ElementName=numericYAxis1}"
                                                     XMemberPath="XValue"
                                                     YMemberPath="YValue" >
-                                <Charts1:ScatterSeries.ToolTip>
-                                    <StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="大气总温: " />
-                                            <TextBlock Text="{Binding Item.XValue}" />
+                                    <Charts1:ScatterSeries.ToolTip>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="大气总温: " />
+                                                <TextBlock Text="{Binding Item.XValue}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="左发排气温度: " />
+                                                <TextBlock Text="{Binding Item.YValue}" />
+                                            </StackPanel>
                                         </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="左发排气温度: " />
-                                            <TextBlock Text="{Binding Item.YValue}" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Charts1:ScatterSeries.ToolTip>
-                            </Charts1:ScatterSeries>
-                            <Charts1:ScatterSeries  x:Name="serie4" 
+                                    </Charts1:ScatterSeries.ToolTip>
+                                </Charts1:ScatterSeries>
+                                <Charts1:ScatterSeries  
                                                     XAxis="{Binding ElementName=numericXAxis1}"
                                                     YAxis="{Binding ElementName=numericYAxis1}"
                                                     XMemberPath="XValue"
                                                     YMemberPath="YValue" >
-                                <Charts1:ScatterSeries.ToolTip>
-                                    <StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="大气总温: " />
-                                            <TextBlock Text="{Binding Item.XValue}" />
+                                    <Charts1:ScatterSeries.ToolTip>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="大气总温: " />
+                                                <TextBlock Text="{Binding Item.XValue}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="左发排气温度: " />
+                                                <TextBlock Text="{Binding Item.YValue}" />
+                                            </StackPanel>
                                         </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="左发排气温度: " />
-                                            <TextBlock Text="{Binding Item.YValue}" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Charts1:ScatterSeries.ToolTip>
-                            </Charts1:ScatterSeries>
-                        </Charts1:XamDataChart.Series>
-                    </Charts1:XamDataChart>
-                    <Charts1:XamDataChart x:Name="chartT6R" Grid.Row="1" Visibility="Collapsed"
-                                      DataContext="{StaticResource HostViewModel}"  Grid.Column="1"
-                                        HorizontalZoomable="False" HorizontalZoombarVisibility="Collapsed" Margin="0,40,48,0"
+                                    </Charts1:ScatterSeries.ToolTip>
+                                </Charts1:ScatterSeries>
+                            </Charts1:XamDataChart.Series>
+                        </Charts1:XamDataChart>
+                    </Grid>
+                    <Grid x:Name="grdT6RDisplay"  DataContext="{StaticResource HostViewModel}" 
+                         Visibility="{Binding Path=IsT6RSelected,Converter={StaticResource ResourceKey=BooleanVisibilityConverter}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Foreground="Black" Margin="10" FontSize="18">右发排气温度</TextBlock>
+                        <TextBlock Foreground="Black" Margin="20,10,10,15" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom"
+                                   FontSize="18">进口总温</TextBlock>
+                        <Charts1:XamDataChart x:Name="chartT6R" Grid.Row="1" 
+                                      DataContext="{StaticResource HostViewModel}"  Grid.Column="0"
+                                        HorizontalZoomable="False" HorizontalZoombarVisibility="Collapsed" Margin="0"
                                         VerticalZoomable="False" VerticalZoombarVisibility="Collapsed" >
-                        <!--Visibility="{Binding Path=IsT6RSelected,Converter={StaticResource ResourceKey=BooleanVisibilityConverter}}"-->
-                        <Charts1:XamDataChart.Axes>
-                            <Charts1:NumericXAxis x:Name="numericXAxis2" Foreground="Black">
-                                <Charts1:NumericXAxis.LabelSettings>
-                                    <Charts1:AxisLabelSettings Location="OutsideLeft" Visibility="Visible" FontSize="18" Extent="40" FontFamily="Global User Interface" />
-                                </Charts1:NumericXAxis.LabelSettings>
-                            </Charts1:NumericXAxis>
-                            <Charts1:NumericYAxis x:Name="numericYAxis2"  Foreground="Black">
-                                <Charts1:NumericYAxis.LabelSettings>
-                                    <Charts1:AxisLabelSettings Location="OutsideTop" Visibility="Visible"  Extent="50" FontSize="18" FontFamily="Global User Interface"/>
-                                </Charts1:NumericYAxis.LabelSettings>
-                            </Charts1:NumericYAxis>
-                        </Charts1:XamDataChart.Axes>
-                        <Charts1:XamDataChart.Series>
-                            <Charts1:ScatterSeries ItemsSource="{Binding Path=T6RViewModel}"
+                            <Charts1:XamDataChart.Axes>
+                                <Charts1:NumericXAxis x:Name="numericXAxis2" Foreground="Black" MaximumValue="40" MinimumValue="-10">
+                                    <Charts1:NumericXAxis.LabelSettings>
+                                        <Charts1:AxisLabelSettings 
+                                        Location="OutsideLeft" Visibility="Visible" Foreground="Black"
+                                        FontSize="18" Extent="40" FontFamily="Global User Interface" />
+                                    </Charts1:NumericXAxis.LabelSettings>
+                                </Charts1:NumericXAxis>
+                                <Charts1:NumericYAxis x:Name="numericYAxis2"  Foreground="Black" MaximumValue="700" MinimumValue="201">
+                                    <Charts1:NumericYAxis.LabelSettings>
+                                        <Charts1:AxisLabelSettings 
+                                        Location="OutsideTop" Visibility="Visible"  Foreground="Black"
+                                        Extent="50" FontSize="18" FontFamily="Global User Interface"/>
+                                    </Charts1:NumericYAxis.LabelSettings>
+                                </Charts1:NumericYAxis>
+                            </Charts1:XamDataChart.Axes>
+                            <Charts1:XamDataChart.Series>
+                                <Charts1:ScatterSeries 
                                                     XAxis="{Binding ElementName=numericXAxis2}"
                                                     YAxis="{Binding ElementName=numericYAxis2}"
-                                                    XMemberPath="XValue" MarkerBrush="Red"
-                                                    YMemberPath="YValue"
-                                                    Resolution="10"
-                                                    LegendItemBadgeTemplate="{StaticResource HighDensityLegendItemBadge}" MarkerType="Pyramid" >
-                                <Charts1:ScatterSeries.ToolTip>
-                                    <StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="大气总温: " />
-                                            <TextBlock Text="{Binding Item.XValue}" />
+                                                    XMemberPath="XValue" 
+                                                    YMemberPath="YValue"  >
+                                    <Charts1:ScatterSeries.ToolTip>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="大气总温: " />
+                                                <TextBlock Text="{Binding Item.XValue}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="右发排气温度: " />
+                                                <TextBlock Text="{Binding Item.YValue}" />
+                                            </StackPanel>
                                         </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="右发排气温度: " />
-                                            <TextBlock Text="{Binding Item.YValue}" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Charts1:ScatterSeries.ToolTip>
-                            </Charts1:ScatterSeries>
-                            <Charts1:ScatterSeries ItemsSource="{Binding Path=T6RViewModel}"
+                                    </Charts1:ScatterSeries.ToolTip>
+                                </Charts1:ScatterSeries>
+                                <Charts1:ScatterSeries 
                                                     XAxis="{Binding ElementName=numericXAxis2}"
                                                     YAxis="{Binding ElementName=numericYAxis2}"
-                                                    XMemberPath="XValue" MarkerBrush="Red"
-                                                    YMemberPath="YValue"
-                                                    Resolution="10"
-                                                    LegendItemBadgeTemplate="{StaticResource HighDensityLegendItemBadge}" MarkerType="Pyramid" >
-                                <Charts1:ScatterSeries.ToolTip>
-                                    <StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="大气总温: " />
-                                            <TextBlock Text="{Binding Item.XValue}" />
+                                                    XMemberPath="XValue"  
+                                                    YMemberPath="YValue" >
+                                    <Charts1:ScatterSeries.ToolTip>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="大气总温: " />
+                                                <TextBlock Text="{Binding Item.XValue}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="右发排气温度: " />
+                                                <TextBlock Text="{Binding Item.YValue}" />
+                                            </StackPanel>
                                         </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="右发排气温度: " />
-                                            <TextBlock Text="{Binding Item.YValue}" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Charts1:ScatterSeries.ToolTip>
-                            </Charts1:ScatterSeries>
-                            <Charts1:ScatterSeries ItemsSource="{Binding Path=T6RViewModel}"
+                                    </Charts1:ScatterSeries.ToolTip>
+                                </Charts1:ScatterSeries>
+                                <Charts1:ScatterSeries  
                                                     XAxis="{Binding ElementName=numericXAxis2}"
                                                     YAxis="{Binding ElementName=numericYAxis2}"
-                                                    XMemberPath="XValue" MarkerBrush="Red"
-                                                    YMemberPath="YValue"
-                                                    Resolution="10"
-                                                    LegendItemBadgeTemplate="{StaticResource HighDensityLegendItemBadge}" MarkerType="Pyramid" >
-                                <Charts1:ScatterSeries.ToolTip>
-                                    <StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="大气总温: " />
-                                            <TextBlock Text="{Binding Item.XValue}" />
+                                                    XMemberPath="XValue"  
+                                                    YMemberPath="YValue"  >
+                                    <Charts1:ScatterSeries.ToolTip>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="大气总温: " />
+                                                <TextBlock Text="{Binding Item.XValue}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="右发排气温度: " />
+                                                <TextBlock Text="{Binding Item.YValue}" />
+                                            </StackPanel>
                                         </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="右发排气温度: " />
-                                            <TextBlock Text="{Binding Item.YValue}" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Charts1:ScatterSeries.ToolTip>
-                            </Charts1:ScatterSeries>
-                            <Charts1:ScatterSeries ItemsSource="{Binding Path=T6RViewModel}"
+                                    </Charts1:ScatterSeries.ToolTip>
+                                </Charts1:ScatterSeries>
+                                <Charts1:ScatterSeries  
                                                     XAxis="{Binding ElementName=numericXAxis2}"
                                                     YAxis="{Binding ElementName=numericYAxis2}"
-                                                    XMemberPath="XValue" MarkerBrush="Red"
-                                                    YMemberPath="YValue"
-                                                    Resolution="10"
-                                                    LegendItemBadgeTemplate="{StaticResource HighDensityLegendItemBadge}" MarkerType="Pyramid" >
-                                <Charts1:ScatterSeries.ToolTip>
-                                    <StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="大气总温: " />
-                                            <TextBlock Text="{Binding Item.XValue}" />
+                                                    XMemberPath="XValue" 
+                                                    YMemberPath="YValue"  >
+                                    <Charts1:ScatterSeries.ToolTip>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="大气总温: " />
+                                                <TextBlock Text="{Binding Item.XValue}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="右发排气温度: " />
+                                                <TextBlock Text="{Binding Item.YValue}" />
+                                            </StackPanel>
                                         </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="右发排气温度: " />
-                                            <TextBlock Text="{Binding Item.YValue}" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Charts1:ScatterSeries.ToolTip>
-                            </Charts1:ScatterSeries>
-                        </Charts1:XamDataChart.Series>
-                    </Charts1:XamDataChart>
+                                    </Charts1:ScatterSeries.ToolTip>
+                                </Charts1:ScatterSeries>
+                            </Charts1:XamDataChart.Series>
+                        </Charts1:XamDataChart>
+                    </Grid>
                 </Grid>
             </Grid>
         </Grid>

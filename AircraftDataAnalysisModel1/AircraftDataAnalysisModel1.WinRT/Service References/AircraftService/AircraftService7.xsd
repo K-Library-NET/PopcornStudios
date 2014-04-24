@@ -193,4 +193,66 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="GetGlobeDatas">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="flightID" nillable="true" type="xs:string" />
+        <xs:element xmlns:q28="http://schemas.datacontract.org/2004/07/FlightDataEntities" minOccurs="0" name="model" nillable="true" type="q28:AircraftModel" />
+        <xs:element minOccurs="0" name="startIndex" type="xs:int" />
+        <xs:element minOccurs="0" name="endIndex" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetGlobeDatasResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q29="http://schemas.datacontract.org/2004/07/FlightDataEntities" minOccurs="0" name="GetGlobeDatasResult" nillable="true" type="q29:ArrayOfGlobeData" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllAircrafts">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q30="http://schemas.datacontract.org/2004/07/FlightDataEntities" minOccurs="0" name="model" nillable="true" type="q30:AircraftModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllAircraftsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q31="http://schemas.datacontract.org/2004/07/FlightDataEntities" minOccurs="0" name="GetAllAircraftsResult" nillable="true" type="q31:ArrayOfAircraftInstance" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetEarliestYear">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q32="http://schemas.datacontract.org/2004/07/FlightDataEntities" minOccurs="0" name="model" nillable="true" type="q32:AircraftModel" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetEarliestYearResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetEarliestYearResult" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetFlightConditionDecisionRecords">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q33="http://schemas.datacontract.org/2004/07/FlightDataEntities" minOccurs="0" name="model" nillable="true" type="q33:AircraftModel" />
+        <xs:element minOccurs="0" name="startYearMonth" type="xs:dateTime" />
+        <xs:element minOccurs="0" name="endYearMonth" type="xs:dateTime" />
+        <xs:element xmlns:q34="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="aircraftNumbers" nillable="true" type="q34:ArrayOfstring" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetFlightConditionDecisionRecordsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q35="http://schemas.datacontract.org/2004/07/FlightDataEntities.Decisions" minOccurs="0" name="GetFlightConditionDecisionRecordsResult" nillable="true" type="q35:ArrayOfDecisionRecord" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 </xs:schema>
