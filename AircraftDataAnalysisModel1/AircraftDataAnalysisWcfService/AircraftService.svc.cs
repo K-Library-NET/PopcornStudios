@@ -295,5 +295,20 @@ namespace AircraftDataAnalysisWcfService
                 return new FlightDataEntities.Decisions.DecisionRecord[] { };
             }
         }
+
+        public string GetAppConfigValue(string appKey)
+        {
+            try
+            {
+                LogHelper.Info("AircraftService.GetAppConfigValue Requested.", null);
+                AircraftServiceBll bll = new AircraftServiceBll();
+                return bll.GetAppConfigValue(appKey);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("AircraftService.GetAppConfigValue", e);
+                return e.Message;
+            }
+        }
     }
 }

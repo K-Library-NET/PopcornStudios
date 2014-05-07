@@ -1847,6 +1847,9 @@ namespace AircraftDataAnalysisModel1.WinRT.AircraftService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IAircraftService/GetFlightConditionDecisionRecords", ReplyAction="http://tempuri.org/IAircraftService/GetFlightConditionDecisionRecordsResponse")]
         System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisModel1.WinRT.AircraftService.DecisionRecord>> GetFlightConditionDecisionRecordsAsync(AircraftDataAnalysisModel1.WinRT.AircraftService.AircraftModel model, System.DateTime startYearMonth, System.DateTime endYearMonth, System.Collections.ObjectModel.ObservableCollection<string> aircraftNumbers);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IAircraftService/GetAppConfigValue", ReplyAction="http://tempuri.org/IAircraftService/GetAppConfigValueResponse")]
+        System.Threading.Tasks.Task<string> GetAppConfigValueAsync(string appKey);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -1958,6 +1961,10 @@ namespace AircraftDataAnalysisModel1.WinRT.AircraftService {
         
         public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisModel1.WinRT.AircraftService.DecisionRecord>> GetFlightConditionDecisionRecordsAsync(AircraftDataAnalysisModel1.WinRT.AircraftService.AircraftModel model, System.DateTime startYearMonth, System.DateTime endYearMonth, System.Collections.ObjectModel.ObservableCollection<string> aircraftNumbers) {
             return base.Channel.GetFlightConditionDecisionRecordsAsync(model, startYearMonth, endYearMonth, aircraftNumbers);
+        }
+        
+        public System.Threading.Tasks.Task<string> GetAppConfigValueAsync(string appKey) {
+            return base.Channel.GetAppConfigValueAsync(appKey);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync() {

@@ -152,6 +152,8 @@ namespace AircraftDataAnalysisWinRT.Domain
             if (this.AddFileViewModel == null)
                 return;
 
+            //TODO: 数据校验
+
             this.AddFileViewModel.Progress += new AsyncActionProgressHandler<int>(this.OnProgressChanged);
             this.AddFileViewModel.Completed += new AsyncActionWithProgressCompletedHandler<int>(this.OnCompleted);
 

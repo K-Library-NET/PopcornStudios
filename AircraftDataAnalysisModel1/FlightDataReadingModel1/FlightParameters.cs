@@ -15,6 +15,19 @@ namespace FlightDataEntitiesRT
         }
 
         public int BytesCount { get; set; }
+
+        public string[] ToParameterIDs()
+        {
+            if (Parameters != null && Parameters.Length > 0)
+            {
+                var result = from one in this.Parameters
+                             where one.ParameterID != "(NULL)" 
+                             select one.ParameterID;
+                return result.ToArray();
+            }
+
+            return new string[] { };
+        }
     }
 
     public class ByteIndex

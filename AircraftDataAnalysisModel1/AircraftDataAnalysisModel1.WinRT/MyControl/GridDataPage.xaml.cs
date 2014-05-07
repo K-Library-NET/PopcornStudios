@@ -1,9 +1,13 @@
-﻿using AircraftDataAnalysisWinRT.Domain;
+﻿using AircraftDataAnalysisModel1.WinRT.Domain;
+using AircraftDataAnalysisWinRT.Domain;
+using FlightDataReading.AircraftModel1;
+using FlightDataReadingModel1.AircraftModel1;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -59,63 +63,163 @@ namespace AircraftDataAnalysisWinRT.MyControl
                 return;
             }
 
+            var para = e.Parameter as GridDataDisplayArg;
+
             base.OnNavigatedTo(e);
 
-            this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
-                new Windows.UI.Core.DispatchedHandler(
-                    delegate()
-                    {
-                        GridDataDisplayArg arg = e.Parameter as GridDataDisplayArg;
-
-                        this.m_viewModel = arg.ViewModel;
-                        this.ReBindColumns(arg.ParameterIDs);
-                        this.sfDataPager.Source = this.ToSubset(
-                            m_viewModel.RawDatas, arg.StartSecond, arg.EndSecond);
-                    }));
-        }
-
-        private IEnumerable<FlightDataReading.AircraftModel1.AircraftModel1RawData> ToSubset(
-            IEnumerable<FlightDataReading.AircraftModel1.AircraftModel1RawData> collection,
-            int startSecond, int endSecond)
-        {
-            var result = from one in collection
-                         where one.Second >= startSecond && one.Second <= endSecond
-                         select one;
-            return result;
-        }
-
-        private void ReBindColumns(string[] parameterIDs)
-        {
-            for (int i = 1; i < this.grdData.Columns.Count; i++)
+            Task.Run(new Action(() =>
             {
-                var col = this.grdData.Columns[i];
-                if (!parameterIDs.Contains(col.MappingName))
-                    col.IsHidden = true;
+                AircraftModel1RawDataCollection collection = this.GenerateDataCollection(para);
+
+                this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                    new Windows.UI.Core.DispatchedHandler(() =>
+                    {
+                        this.DataContext = collection;
+                        this.ProgressBar1.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                        this.ProgressBar1.IsIndeterminate = false;
+                    }));
+            }));
+            //this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+            //    new Windows.UI.Core.DispatchedHandler(
+            //        delegate()
+            //        {
+            //            GridDataDisplayArg arg = e.Parameter as GridDataDisplayArg;
+
+            //            this.m_viewModel = arg.ViewModel;
+            //            this.ReBindColumns(arg.ParameterIDs);
+            //            this.sfDataPager.Source = this.ToSubset(
+            //                m_viewModel.RawDatas, arg.StartSecond, arg.EndSecond);
+            //        }));
+        }
+
+        private AircraftModel1RawDataCollection GenerateDataCollection(GridDataDisplayArg gridDataDisplayArg)
+        {
+            if (gridDataDisplayArg == null || gridDataDisplayArg.ParameterIDs == null
+                || gridDataDisplayArg.ParameterIDs.Length <= 0)
+                return null;
+
+            var dataloader = gridDataDisplayArg.DataLoader;
+
+            if (dataloader == null)
+                dataloader = this.GetDataLoader();
+
+            Task<string> dataResult = dataloader.LoadRawDataAsync(gridDataDisplayArg.ParameterIDs);
+
+            //dataResult.Wait();
+
+            List<FlightDataEntitiesRT.ParameterRawData> dts = new List<FlightDataEntitiesRT.ParameterRawData>();
+
+            Dictionary<int, AircraftModel1RawData> secondsMap = new Dictionary<int, AircraftModel1RawData>();
+            for (int i = 0; i < dataloader.CurrentFlight.EndSecond; i++)
+            {
+                secondsMap.Add(i, new AircraftModel1RawData() { Second = i });
             }
+
+            AircraftModel1RawDataBuilder builder = new AircraftModel1RawDataBuilder();
+
+            foreach (var p in gridDataDisplayArg.ParameterIDs)
+            {
+                var rawDt = dataloader.GetRawData(p);
+
+                if (rawDt != null && rawDt.Count() > 0)
+                {
+                    foreach (var rt in rawDt)
+                    {
+                        if (!secondsMap.ContainsKey(rt.Second))
+                            continue;
+
+                        var rawDataItem = secondsMap[rt.Second];
+
+                        builder.AssignValueExt(rawDataItem, rt);
+                    }
+                }
+                // dts.AddRange(rawDt);
+            }
+
+            var changecd = from item in secondsMap
+                           orderby item.Key ascending
+                           select item.Value;
+
+            return new AircraftModel1RawDataCollection(changecd);
+
+            //dts.Sort(new Comparison<FlightDataEntitiesRT.ParameterRawData>(
+            //    delegate(FlightDataEntitiesRT.ParameterRawData a, FlightDataEntitiesRT.ParameterRawData b)
+            //    {
+            //        if (a != null && b != null)
+            //        {
+            //            return a.Second - b.Second;
+            //        }
+            //        if (a == null && b != null)
+            //            return -1;
+            //        if (a != null && b == null)
+            //            return 1;
+            //        return 0;
+            //    }));
+
+            //return new AircraftModel1RawDataCollection(dts);
         }
 
-        private FlightDataEntitiesRT.FlightParameter[] GetFlightParameters()
+        //private IEnumerable<FlightDataReading.AircraftModel1.AircraftModel1RawData> ToSubset(
+        //    IEnumerable<FlightDataReading.AircraftModel1.AircraftModel1RawData> collection,
+        //    int startSecond, int endSecond)
+        //{
+        //    var result = from one in collection
+        //                 where one.Second >= startSecond && one.Second <= endSecond
+        //                 select one;
+        //    return result;
+        //}
+
+        //private void ReBindColumns(string[] parameterIDs)
+        //{
+        //    for (int i = 1; i < this.grdData.Columns.Count; i++)
+        //    {
+        //        var col = this.grdData.Columns[i];
+        //        if (!parameterIDs.Contains(col.MappingName))
+        //            col.IsHidden = true;
+        //    }
+        //}
+
+        //private FlightDataEntitiesRT.FlightParameter[] GetFlightParameters()
+        //{
+        //    var flightParameters = ApplicationContext.Instance.GetFlightParameters(
+        //        ApplicationContext.Instance.CurrentAircraftModel);
+
+        //    var result = from one in flightParameters.Parameters
+        //                 where one.ParameterID != "(NULL)" && this.ExistsParameter(one.ParameterID)
+        //                 && m_viewModel.RelatedParameterSelected(one.ParameterID)
+        //                 select one;
+
+        //    return result.ToArray();
+        //}
+
+        //private bool ExistsParameter(string p)
+        //{
+        //    if (this.m_viewModel.AllParameterIDs.Contains(p))
+        //        return true;
+        //    return false;
+        //}
+
+        private AircraftAnalysisDataLoader GetDataLoader()
         {
-            var flightParameters = ApplicationContext.Instance.GetFlightParameters(
-                ApplicationContext.Instance.CurrentAircraftModel);
-
-            var result = from one in flightParameters.Parameters
-                         where one.ParameterID != "(NULL)" && this.ExistsParameter(one.ParameterID)
-                         && m_viewModel.RelatedParameterSelected(one.ParameterID)
-                         select one;
-
-            return result.ToArray();
+            if (this.DataLoader == null)
+            {
+                this.DataLoader = new AircraftAnalysisDataLoader()
+                {
+                    CurrentFlight = ApplicationContext.Instance.CurrentFlight,
+                    CurrentAircraftModel = ApplicationContext.Instance.CurrentAircraftModel
+                };
+            }
+            return this.DataLoader;
         }
 
-        private bool ExistsParameter(string p)
+        public AircraftDataAnalysisModel1.WinRT.Domain.AircraftAnalysisDataLoader DataLoader
         {
-            if (this.m_viewModel.AllParameterIDs.Contains(p))
-                return true;
-            return false;
+            get;
+            set;
         }
     }
 
-    internal class GridDataDisplayArg
+    public class GridDataDisplayArg
     {
         public int StartSecond
         {
@@ -135,7 +239,7 @@ namespace AircraftDataAnalysisWinRT.MyControl
             set;
         }
 
-        public FlightAnalysisViewModelOld ViewModel
+        public AircraftDataAnalysisModel1.WinRT.Domain.AircraftAnalysisDataLoader DataLoader
         {
             get;
             set;

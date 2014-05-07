@@ -152,7 +152,7 @@
                 </MyControl:VisibilityItem>
             </MyControl:TrackingGrid>
         </DataTemplate>
-        <datamodel:FaultDiagAnalysisViewModel x:Key="datacontext"/> 
+        <datamodel:FaultDiagAnalysisViewModel x:Key="datacontext"/>
     </common:LayoutAwarePage.Resources>
 
     <!--
@@ -201,11 +201,6 @@
                      Visibility="{Binding Path=IsLoading,Converter={StaticResource ResourceKey=booleanVisibilityConverter}}"
                      Foreground="White"
                      VerticalAlignment="Top" Height="20">
-            <!--<ProgressBar.Style>
-                <Style TargetType="ProgressBar">
-                    <Setter Property="Pink"
-                </Style>
-            </ProgressBar.Style>-->
         </ProgressBar>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -213,7 +208,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="飞行分析" DoubleTapped="On1DoubleTapped"
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{Binding Path=AppName,ElementName=pageRoot}" DoubleTapped="On1DoubleTapped"
                        Style="{StaticResource PageHeaderTextStyle}"/>
             <Button Grid.Column="1" x:Name="btHome" Margin="10,0" HorizontalAlignment="Right"
                     BorderBrush="{StaticResource AllBorderColor}" 
@@ -404,126 +399,177 @@
                         <StackPanel Margin="0,0,25,0">
                             <Border Margin="5" BorderBrush="Black" BorderThickness="1" 
                                     Visibility="{Binding Path=Group1,Converter={StaticResource ResourceKey=nullgroupconverter}}">
-                                <Grid DoubleTapped="On1DoubleTapped">
-                                    <Charts1:XamDataChart  x:Name="tracker1" Height="240"  Tapped="item_Tapped" DoubleTapped="On1DoubleTapped"
-                                DataContext="{Binding Path=Group1}" CrosshairVisibility="Visible" IsDoubleTapEnabled="True"
-                                PointerMoved="xamDataChart1_PointerMoved">
-                                        <!--<Charts1:XamDataChart.DataContext>
-                                    <test:TestSimpleDataSource/>
-                                </Charts1:XamDataChart.DataContext>-->
-                                        <Charts1:XamDataChart.Axes>
-                                            <Charts1:CategoryXAxis x:Name="xm1XAxis" 
-                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
-                                                <Charts1:CategoryXAxis.LabelSettings >
-                                                    <Charts1:AxisLabelSettings Extent="35" Foreground="Black"/>
-                                                </Charts1:CategoryXAxis.LabelSettings>
-                                            </Charts1:CategoryXAxis>
-                                            <Charts1:NumericYAxis x:Name="xm1YAxis" >
-                                                <Charts1:NumericYAxis.LabelSettings >
-                                                    <Charts1:AxisLabelSettings Location="OutsideLeft" 
+                                <Charts1:XamDataChart  x:Name="tracker1" Height="240"  Tapped="item_Tapped" DoubleTapped="On1DoubleTapped"
+                                        DataContext="{Binding Path=Group1}" CrosshairVisibility="Visible" IsDoubleTapEnabled="True"
+                                        PointerMoved="xamDataChart1_PointerMoved">
+                                    <Charts1:XamDataChart.Axes>
+                                        <Charts1:CategoryXAxis x:Name="xm1XAxis" 
+                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second} 秒" >
+                                            <Charts1:CategoryXAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Extent="35" Foreground="Black"/>
+                                            </Charts1:CategoryXAxis.LabelSettings>
+                                        </Charts1:CategoryXAxis>
+                                        <Charts1:NumericYAxis x:Name="xm1YAxis" Stroke="Red" CrossingAxis="{Binding ElementName=xm1XAxis}" CrossingValue="1000" >
+                                            <Charts1:NumericYAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Location="OutsideLeft" 
                                                                            Extent="55" FontFamily="Global User Interface" 
                                                                             Foreground="Black"/>
-                                                </Charts1:NumericYAxis.LabelSettings>
-                                            </Charts1:NumericYAxis>
-                                            <!--<Charts1:NumericYAxis x:Name="xmYAxis2" Stroke="Red" CrossingValue="4"
-                                        CrossingAxis="{Binding ElementName=xm1XAxis2}">
-                                        <Charts1:NumericYAxis.LabelSettings >
-                                            <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
-                                        </Charts1:NumericYAxis.LabelSettings>
-                                    </Charts1:NumericYAxis>-->
-                                        </Charts1:XamDataChart.Axes>
-                                        <Charts1:XamDataChart.Series>
-                                            <!--Visibility="{Binding Path=Serie1Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                        Visibility="{Binding Path=Serie2Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                         Visibility="{Binding Path=Serie3Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                            -->
-                                            <Charts1:LineSeries ValueMemberPath="Value1" 
+                                            </Charts1:NumericYAxis.LabelSettings>
+                                        </Charts1:NumericYAxis>
+                                        <Charts1:CategoryXAxis x:Name="xm1XAxis2" 
+                                                ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                            <Charts1:CategoryXAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Extent="5" Location="OutsideTop" Foreground="White"/>
+                                            </Charts1:CategoryXAxis.LabelSettings>
+                                        </Charts1:CategoryXAxis>
+                                        <Charts1:NumericYAxis x:Name="xm1YAxis2" Stroke="Blue" CrossingValue="2000"
+                                                CrossingAxis="{Binding ElementName=xm1XAxis2}">
+                                            <!--MaximumValue="{Binding Path=MaximumValue,ElementName=xm1YAxis}"
+                                                              MinimumValue="{Binding Path=MinimumValue,ElementName=xm1YAxis}"-->
+                                            <Charts1:NumericYAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
+                                            </Charts1:NumericYAxis.LabelSettings>
+                                        </Charts1:NumericYAxis>
+                                    </Charts1:XamDataChart.Axes>
+                                    <Charts1:XamDataChart.Series>
+                                        <Charts1:LineSeries  x:Name="serie11" ValueMemberPath="Value1" 
                                                             Visibility="{Binding Path=Serie1Visibility,Mode=TwoWay}"
                                                             Brush="{Binding Path=Serie1Definition.ForegroundBrush}"
-                                          x:Name="serie11" ItemsSource="{Binding Path=DataSerie}"
+                                         ItemsSource="{Binding Path=DataSerie}"
                                          XAxis="{Binding ElementName=xm1XAxis}" 
                                          YAxis="{Binding ElementName=xm1YAxis}" 
                                               Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" 
                                                             DoubleTapped="OnSerieDoubleTapped">
-                                                <!--
-                                            <Charts1:LineSeries.ItemsSource>
-                                                <test:TestSimpleDataSource/>
-                                            </Charts1:LineSeries.ItemsSource>-->
-                                            </Charts1:LineSeries>
-                                            <Charts1:LineSeries ValueMemberPath="Value2"  
+                                        </Charts1:LineSeries>
+                                        <Charts1:LineSeries  x:Name="serie11mock" ValueMemberPath="Value1" 
+                                                            Visibility="{Binding Path=Serie1Visibility,Mode=TwoWay}"
+                                                            Brush="{Binding Path=Serie1Definition.ForegroundBrush}" 
+                                         ItemsSource="{Binding Path=DataSerie}"
+                                         XAxis="{Binding ElementName=xm1XAxis2}" 
+                                         YAxis="{Binding ElementName=xm1YAxis2}" 
+                                              Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" 
+                                                            DoubleTapped="OnSerieDoubleTapped">
+                                            <!-- 通过Mock，强行使得最大值最小值的红蓝线crossingvalue出现-->
+                                        </Charts1:LineSeries>
+                                        <Charts1:LineSeries x:Name="serie12" ValueMemberPath="Value2"  
                                                             Visibility="{Binding Path=Serie2Visibility,Mode=TwoWay}"
                                                              Brush="{Binding Path=Serie2Definition.ForegroundBrush}"
-                                   ItemsSource="{Binding Path=DataSerie}" x:Name="serie12"
+                                   ItemsSource="{Binding Path=DataSerie}"
                                          XAxis="{Binding ElementName=xm1XAxis}" 
                                          YAxis="{Binding ElementName=xm1YAxis}"  
                                                Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
-                                            <Charts1:LineSeries ValueMemberPath="Value3" 
+                                        <Charts1:LineSeries x:Name="serie12mock" ValueMemberPath="Value2"  
+                                                            Visibility="{Binding Path=Serie2Visibility,Mode=TwoWay}"
+                                                             Brush="{Binding Path=Serie2Definition.ForegroundBrush}"
+                                   ItemsSource="{Binding Path=DataSerie}"
+                                         XAxis="{Binding ElementName=xm1XAxis2}" 
+                                         YAxis="{Binding ElementName=xm1YAxis2}"  
+                                               Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie13" ValueMemberPath="Value3" 
                                                             Visibility="{Binding Path=Serie3Visibility,Mode=TwoWay}"
                                                            Brush="{Binding Path=Serie3Definition.ForegroundBrush}"
-                                   ItemsSource="{Binding Path=DataSerie}" x:Name="serie13"
+                                   ItemsSource="{Binding Path=DataSerie}"
                                          XAxis="{Binding ElementName=xm1XAxis}" 
                                          YAxis="{Binding ElementName=xm1YAxis}"  
                                                         Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
-                                        </Charts1:XamDataChart.Series>
-                                    </Charts1:XamDataChart>
-                                </Grid>
+                                        <Charts1:LineSeries x:Name="serie13mock" ValueMemberPath="Value3" 
+                                                            Visibility="{Binding Path=Serie3Visibility,Mode=TwoWay}"
+                                                           Brush="{Binding Path=Serie3Definition.ForegroundBrush}"
+                                   ItemsSource="{Binding Path=DataSerie}"
+                                         XAxis="{Binding ElementName=xm1XAxis2}" 
+                                         YAxis="{Binding ElementName=xm1YAxis2}"  
+                                                        Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                    </Charts1:XamDataChart.Series>
+                                </Charts1:XamDataChart>
                             </Border>
                             <Border Margin="5" BorderBrush="Black" BorderThickness="1"
                                     Visibility="{Binding Path=Group2,Converter={StaticResource ResourceKey=nullgroupconverter}}">
                                 <Charts1:XamDataChart  x:Name="tracker2" Height="240" Tapped="item_Tapped"  
-                                DataContext="{Binding Path=Group2}"  CrosshairVisibility="Visible"             
-                                PointerMoved="xamDataChart2_PointerMoved">
+                                        DataContext="{Binding Path=Group2}"  CrosshairVisibility="Visible"             
+                                        PointerMoved="xamDataChart2_PointerMoved">
                                     <Charts1:XamDataChart.Axes>
                                         <Charts1:CategoryXAxis x:Name="xm2XAxis" 
-                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second} 秒" >
                                             <Charts1:CategoryXAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Extent="35" 
                                                                             Foreground="Black"/>
                                             </Charts1:CategoryXAxis.LabelSettings>
                                         </Charts1:CategoryXAxis>
-                                        <Charts1:NumericYAxis x:Name="xm2YAxis"   >
+                                        <Charts1:NumericYAxis x:Name="xm2YAxis" Stroke="Red" CrossingAxis="{Binding ElementName=xm2XAxis}" CrossingValue="1000" >
                                             <Charts1:NumericYAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Location="OutsideLeft" Extent="55" 
                                                                            FontFamily="Global User Interface" 
                                                                             Foreground="Black"/>
                                             </Charts1:NumericYAxis.LabelSettings>
                                         </Charts1:NumericYAxis>
-                                        <!--<Charts1:NumericYAxis x:Name="xmYAxis2" Stroke="Red" CrossingValue="4"
-                                        CrossingAxis="{Binding ElementName=xm1XAxis2}">
-                                        <Charts1:NumericYAxis.LabelSettings >
-                                            <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
-                                        </Charts1:NumericYAxis.LabelSettings>
-                                    </Charts1:NumericYAxis>-->
+                                        <Charts1:CategoryXAxis x:Name="xm2XAxis2" 
+                                                ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                            <Charts1:CategoryXAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Extent="5" Location="OutsideTop" Foreground="White"/>
+                                            </Charts1:CategoryXAxis.LabelSettings>
+                                        </Charts1:CategoryXAxis>
+                                        <Charts1:NumericYAxis x:Name="xm2YAxis2" Stroke="Blue" CrossingValue="2000"
+                                                CrossingAxis="{Binding ElementName=xm2XAxis2}">
+                                            <!--MaximumValue="{Binding Path=MaximumValue,ElementName=xm2YAxis}"
+                                                              MinimumValue="{Binding Path=MinimumValue,ElementName=xm2YAxis}"-->
+                                            <Charts1:NumericYAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
+                                            </Charts1:NumericYAxis.LabelSettings>
+                                        </Charts1:NumericYAxis>
                                     </Charts1:XamDataChart.Axes>
                                     <Charts1:XamDataChart.Series>
-                                        <!-- Visibility="{Binding Path=Serie3Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                              Visibility="{Binding Path=Serie2Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                            Visibility="{Binding Path=Serie1Definition,Converter={StaticResource ResourceKey=nullconverter}}"-->
-                                        <Charts1:LineSeries ValueMemberPath="Value1" 
+                                        <Charts1:LineSeries x:Name="serie21" ValueMemberPath="Value1" 
                                                             Visibility="{Binding Path=Serie1Visibility,Mode=TwoWay}"
                                                             Brush="{Binding Path=Serie1Definition.ForegroundBrush}"
-                                         ItemsSource="{Binding Path=DataSerie}"  x:Name="serie21"
+                                         ItemsSource="{Binding Path=DataSerie}" 
                                          XAxis="{Binding ElementName=xm2XAxis}" 
                                          YAxis="{Binding ElementName=xm2YAxis}"  
                                               Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
-                                        <Charts1:LineSeries ValueMemberPath="Value2"                                
+                                        <Charts1:LineSeries x:Name="serie21mock" ValueMemberPath="Value1" 
+                                                            Visibility="{Binding Path=Serie1Visibility,Mode=TwoWay}"
+                                                            Brush="{Binding Path=Serie1Definition.ForegroundBrush}"
+                                         ItemsSource="{Binding Path=DataSerie}" 
+                                         XAxis="{Binding ElementName=xm2XAxis2}" 
+                                         YAxis="{Binding ElementName=xm2YAxis2}"  
+                                              Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie22" ValueMemberPath="Value2"                                
                                                             Visibility="{Binding Path=Serie2Visibility,Mode=TwoWay}"
                                                           Brush="{Binding Path=Serie2Definition.ForegroundBrush}"
-                                   ItemsSource="{Binding Path=DataSerie}" x:Name="serie22"
+                                        ItemsSource="{Binding Path=DataSerie}"
                                          XAxis="{Binding ElementName=xm2XAxis}" 
                                          YAxis="{Binding ElementName=xm2YAxis}"  
                                                Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
-                                        <Charts1:LineSeries ValueMemberPath="Value3" 
+                                        <Charts1:LineSeries x:Name="serie22mock" ValueMemberPath="Value2"                                
+                                                            Visibility="{Binding Path=Serie2Visibility,Mode=TwoWay}"
+                                                          Brush="{Binding Path=Serie2Definition.ForegroundBrush}"
+                                        ItemsSource="{Binding Path=DataSerie}"
+                                         XAxis="{Binding ElementName=xm2XAxis2}" 
+                                         YAxis="{Binding ElementName=xm2YAxis2}"  
+                                               Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie23" ValueMemberPath="Value3" 
                                                             Visibility="{Binding Path=Serie3Visibility,Mode=TwoWay}"
                                                            Brush="{Binding Path=Serie3Definition.ForegroundBrush}"
-                                   ItemsSource="{Binding Path=DataSerie}" x:Name="serie23"
+                                        ItemsSource="{Binding Path=DataSerie}"
                                          XAxis="{Binding ElementName=xm2XAxis}" 
                                          YAxis="{Binding ElementName=xm2YAxis}"  
+                                                        Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie23mock" ValueMemberPath="Value3" 
+                                                            Visibility="{Binding Path=Serie3Visibility,Mode=TwoWay}"
+                                                           Brush="{Binding Path=Serie3Definition.ForegroundBrush}"
+                                        ItemsSource="{Binding Path=DataSerie}"
+                                         XAxis="{Binding ElementName=xm2XAxis2}" 
+                                         YAxis="{Binding ElementName=xm2YAxis2}"  
                                                         Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
                                     </Charts1:XamDataChart.Series>
@@ -532,56 +578,85 @@
                             <Border Margin="5" BorderBrush="Black" BorderThickness="1"
                                     Visibility="{Binding Path=Group3,Converter={StaticResource ResourceKey=nullgroupconverter}}">
                                 <Charts1:XamDataChart  x:Name="tracker3" Height="240" Tapped="item_Tapped"   
-                                DataContext="{Binding Path=Group3}"    CrosshairVisibility="Visible"          
-                                PointerMoved="xamDataChart3_PointerMoved">
+                                    DataContext="{Binding Path=Group3}"    CrosshairVisibility="Visible"          
+                                    PointerMoved="xamDataChart3_PointerMoved">
                                     <Charts1:XamDataChart.Axes>
                                         <Charts1:CategoryXAxis x:Name="xm3XAxis" 
-                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second} 秒" >
                                             <Charts1:CategoryXAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Extent="35" 
                                                                             Foreground="Black"/>
                                             </Charts1:CategoryXAxis.LabelSettings>
                                         </Charts1:CategoryXAxis>
-                                        <Charts1:NumericYAxis x:Name="xm3YAxis"   >
+                                        <Charts1:NumericYAxis x:Name="xm3YAxis" Stroke="Red" CrossingAxis="{Binding ElementName=xm3XAxis}" CrossingValue="1000" >
                                             <Charts1:NumericYAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Location="OutsideLeft" Extent="55" 
                                                                            FontFamily="Global User Interface" 
                                                                             Foreground="Black"/>
                                             </Charts1:NumericYAxis.LabelSettings>
                                         </Charts1:NumericYAxis>
-                                        <!--<Charts1:NumericYAxis x:Name="xmYAxis2" Stroke="Red" CrossingValue="4"
-                                        CrossingAxis="{Binding ElementName=xm1XAxis2}">
-                                        <Charts1:NumericYAxis.LabelSettings >
-                                            <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
-                                        </Charts1:NumericYAxis.LabelSettings>
-                                    </Charts1:NumericYAxis>-->
+                                        <Charts1:CategoryXAxis x:Name="xm3XAxis2" 
+                                                ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                            <Charts1:CategoryXAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Extent="5" Location="OutsideTop" Foreground="White"/>
+                                            </Charts1:CategoryXAxis.LabelSettings>
+                                        </Charts1:CategoryXAxis>
+                                        <Charts1:NumericYAxis x:Name="xm3YAxis2" Stroke="Blue" CrossingValue="2000"
+                                                CrossingAxis="{Binding ElementName=xm3XAxis2}">
+                                            <!--MaximumValue="{Binding Path=MaximumValue,ElementName=xm3YAxis}"
+                                                              MinimumValue="{Binding Path=MinimumValue,ElementName=xm3YAxis}"-->
+                                            <Charts1:NumericYAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
+                                            </Charts1:NumericYAxis.LabelSettings>
+                                        </Charts1:NumericYAxis>
                                     </Charts1:XamDataChart.Axes>
                                     <Charts1:XamDataChart.Series>
-                                        <!--Visibility="{Binding Path=Serie3Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                            Visibility="{Binding Path=Serie2Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                             Visibility="{Binding Path=Serie1Definition,Converter={StaticResource ResourceKey=nullconverter}}"-->
-                                        <Charts1:LineSeries ValueMemberPath="Value1" 
+                                        <Charts1:LineSeries x:Name="serie31" ValueMemberPath="Value1" 
                                                             Visibility="{Binding Path=Serie1Visibility,Mode=TwoWay}"
                                                             Brush="{Binding Path=Serie1Definition.ForegroundBrush}"
-                                         ItemsSource="{Binding Path=DataSerie}"  x:Name="serie31"
-                                         XAxis="{Binding ElementName=xm3XAxis}" 
-                                         YAxis="{Binding ElementName=xm3YAxis}"  
+                                             ItemsSource="{Binding Path=DataSerie}" 
+                                             XAxis="{Binding ElementName=xm3XAxis}" 
+                                             YAxis="{Binding ElementName=xm3YAxis}"  
                                               Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
-                                        <Charts1:LineSeries ValueMemberPath="Value2" 
+                                        <Charts1:LineSeries x:Name="serie31mock" ValueMemberPath="Value1" 
+                                                            Visibility="{Binding Path=Serie1Visibility,Mode=TwoWay}"
+                                                            Brush="{Binding Path=Serie1Definition.ForegroundBrush}"
+                                             ItemsSource="{Binding Path=DataSerie}" 
+                                             XAxis="{Binding ElementName=xm3XAxis2}" 
+                                             YAxis="{Binding ElementName=xm3YAxis2}"  
+                                              Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie32" ValueMemberPath="Value2" 
                                                             Visibility="{Binding Path=Serie2Visibility,Mode=TwoWay}"
                                                            Brush="{Binding Path=Serie2Definition.ForegroundBrush}"
-                                   ItemsSource="{Binding Path=DataSerie}" x:Name="serie32"
+                                   ItemsSource="{Binding Path=DataSerie}"
                                          XAxis="{Binding ElementName=xm3XAxis}" 
                                          YAxis="{Binding ElementName=xm3YAxis}"  
                                                Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
-                                        <Charts1:LineSeries ValueMemberPath="Value3" 
+                                        <Charts1:LineSeries x:Name="serie32mock" ValueMemberPath="Value2" 
+                                                            Visibility="{Binding Path=Serie2Visibility,Mode=TwoWay}"
+                                                           Brush="{Binding Path=Serie2Definition.ForegroundBrush}"
+                                   ItemsSource="{Binding Path=DataSerie}"
+                                         XAxis="{Binding ElementName=xm3XAxis2}" 
+                                         YAxis="{Binding ElementName=xm3YAxis2}"  
+                                               Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie33" ValueMemberPath="Value3" 
                                                             Visibility="{Binding Path=Serie3Visibility,Mode=TwoWay}"
                                                             Brush="{Binding Path=Serie3Definition.ForegroundBrush}"
-                                   ItemsSource="{Binding Path=DataSerie}" x:Name="serie33"
+                                   ItemsSource="{Binding Path=DataSerie}"
                                          XAxis="{Binding ElementName=xm3XAxis}" 
                                          YAxis="{Binding ElementName=xm3YAxis}"  
+                                                        Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie33mock" ValueMemberPath="Value3" 
+                                                            Visibility="{Binding Path=Serie3Visibility,Mode=TwoWay}"
+                                                            Brush="{Binding Path=Serie3Definition.ForegroundBrush}"
+                                   ItemsSource="{Binding Path=DataSerie}"
+                                         XAxis="{Binding ElementName=xm3XAxis2}" 
+                                         YAxis="{Binding ElementName=xm3YAxis2}"  
                                                         Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
                                     </Charts1:XamDataChart.Series>
@@ -590,56 +665,85 @@
                             <Border Margin="5" BorderBrush="Black" BorderThickness="1"
                                     Visibility="{Binding Path=Group4,Converter={StaticResource ResourceKey=nullgroupconverter}}">
                                 <Charts1:XamDataChart  x:Name="tracker4" Height="240" Tapped="item_Tapped"    
-                                DataContext="{Binding Path=Group4}"     CrosshairVisibility="Visible"        
-                                PointerMoved="xamDataChart4_PointerMoved">
+                                    DataContext="{Binding Path=Group4}"     CrosshairVisibility="Visible"        
+                                    PointerMoved="xamDataChart4_PointerMoved">
                                     <Charts1:XamDataChart.Axes>
                                         <Charts1:CategoryXAxis x:Name="xm4XAxis" 
-                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second} 秒" >
                                             <Charts1:CategoryXAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Extent="35" 
                                                                             Foreground="Black"/>
                                             </Charts1:CategoryXAxis.LabelSettings>
                                         </Charts1:CategoryXAxis>
-                                        <Charts1:NumericYAxis x:Name="xm4YAxis"   >
+                                        <Charts1:NumericYAxis x:Name="xm4YAxis" Stroke="Red" CrossingAxis="{Binding ElementName=xm4XAxis}" CrossingValue="1000" >
                                             <Charts1:NumericYAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Location="OutsideLeft" Extent="55" 
                                                                            FontFamily="Global User Interface" 
                                                                             Foreground="Black"/>
                                             </Charts1:NumericYAxis.LabelSettings>
                                         </Charts1:NumericYAxis>
-                                        <!--<Charts1:NumericYAxis x:Name="xmYAxis2" Stroke="Red" CrossingValue="4"
-                                        CrossingAxis="{Binding ElementName=xm1XAxis2}">
-                                        <Charts1:NumericYAxis.LabelSettings >
-                                            <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
-                                        </Charts1:NumericYAxis.LabelSettings>
-                                    </Charts1:NumericYAxis>-->
+                                        <Charts1:CategoryXAxis x:Name="xm4XAxis2" 
+                                                ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                            <Charts1:CategoryXAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Extent="5" Location="OutsideTop" Foreground="White"/>
+                                            </Charts1:CategoryXAxis.LabelSettings>
+                                        </Charts1:CategoryXAxis>
+                                        <Charts1:NumericYAxis x:Name="xm4YAxis2" Stroke="Blue" CrossingValue="2000"
+                                                CrossingAxis="{Binding ElementName=xm4XAxis2}">
+                                            <!--MaximumValue="{Binding Path=MaximumValue,ElementName=xm4YAxis}"
+                                                              MinimumValue="{Binding Path=MinimumValue,ElementName=xm4YAxis}"-->
+                                            <Charts1:NumericYAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
+                                            </Charts1:NumericYAxis.LabelSettings>
+                                        </Charts1:NumericYAxis>
                                     </Charts1:XamDataChart.Axes>
                                     <Charts1:XamDataChart.Series>
-                                        <!-- Visibility="{Binding Path=Serie3Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                            Visibility="{Binding Path=Serie2Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                            Visibility="{Binding Path=Serie1Definition,Converter={StaticResource ResourceKey=nullconverter}}"-->
-                                        <Charts1:LineSeries ValueMemberPath="Value1" 
+                                        <Charts1:LineSeries  x:Name="serie41" ValueMemberPath="Value1" 
                                                             Visibility="{Binding Path=Serie1Visibility,Mode=TwoWay}"
                                                             Brush="{Binding Path=Serie1Definition.ForegroundBrush}"
-                                         ItemsSource="{Binding Path=DataSerie}"  x:Name="serie41"
-                                         XAxis="{Binding ElementName=xm4XAxis}" 
-                                         YAxis="{Binding ElementName=xm4YAxis}"  
-                                              Thickness="3" MarkerType="None" 
-                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
-                                        <Charts1:LineSeries ValueMemberPath="Value2" 
+                                                 ItemsSource="{Binding Path=DataSerie}"
+                                                 XAxis="{Binding ElementName=xm4XAxis}" 
+                                                 YAxis="{Binding ElementName=xm4YAxis}"  
+                                                  Thickness="3" MarkerType="None" 
+                                               MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries  x:Name="serie41mock" ValueMemberPath="Value1" 
+                                                            Visibility="{Binding Path=Serie1Visibility,Mode=TwoWay}"
+                                                            Brush="{Binding Path=Serie1Definition.ForegroundBrush}"
+                                                 ItemsSource="{Binding Path=DataSerie}"
+                                                 XAxis="{Binding ElementName=xm4XAxis2}" 
+                                                 YAxis="{Binding ElementName=xm4YAxis2}"  
+                                                  Thickness="3" MarkerType="None" 
+                                               MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie42" ValueMemberPath="Value2" 
                                                             Visibility="{Binding Path=Serie2Visibility,Mode=TwoWay}"
                                                            Brush="{Binding Path=Serie2Definition.ForegroundBrush}"
-                                   ItemsSource="{Binding Path=DataSerie}" x:Name="serie42"
-                                         XAxis="{Binding ElementName=xm4XAxis}" 
-                                         YAxis="{Binding ElementName=xm4YAxis}"  
-                                               Thickness="3" MarkerType="None" 
+                                            ItemsSource="{Binding Path=DataSerie}"
+                                             XAxis="{Binding ElementName=xm4XAxis}" 
+                                             YAxis="{Binding ElementName=xm4YAxis}"  
+                                                   Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
-                                        <Charts1:LineSeries ValueMemberPath="Value3" 
+                                        <Charts1:LineSeries x:Name="serie42mock" ValueMemberPath="Value2" 
+                                                            Visibility="{Binding Path=Serie2Visibility,Mode=TwoWay}"
+                                                           Brush="{Binding Path=Serie2Definition.ForegroundBrush}"
+                                            ItemsSource="{Binding Path=DataSerie}"
+                                             XAxis="{Binding ElementName=xm4XAxis2}" 
+                                             YAxis="{Binding ElementName=xm4YAxis2}"  
+                                                   Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie43" ValueMemberPath="Value3" 
                                                             Visibility="{Binding Path=Serie3Visibility,Mode=TwoWay}"
                                                             Brush="{Binding Path=Serie3Definition.ForegroundBrush}"
-                                   ItemsSource="{Binding Path=DataSerie}" x:Name="serie43"
+                                        ItemsSource="{Binding Path=DataSerie}"
                                          XAxis="{Binding ElementName=xm4XAxis}" 
                                          YAxis="{Binding ElementName=xm4YAxis}"  
+                                                        Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie43mock" ValueMemberPath="Value3" 
+                                                            Visibility="{Binding Path=Serie3Visibility,Mode=TwoWay}"
+                                                            Brush="{Binding Path=Serie3Definition.ForegroundBrush}"
+                                        ItemsSource="{Binding Path=DataSerie}"
+                                         XAxis="{Binding ElementName=xm4XAxis2}" 
+                                         YAxis="{Binding ElementName=xm4YAxis2}"  
                                                         Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
                                     </Charts1:XamDataChart.Series>
@@ -648,56 +752,85 @@
                             <Border Margin="5" BorderBrush="Black" BorderThickness="1"
                                     Visibility="{Binding Path=Group5,Converter={StaticResource ResourceKey=nullgroupconverter}}">
                                 <Charts1:XamDataChart  x:Name="tracker5" Height="240" Tapped="item_Tapped"    
-                                DataContext="{Binding Path=Group5}"     CrosshairVisibility="Visible"        
-                                PointerMoved="xamDataChart5_PointerMoved">
+                                    DataContext="{Binding Path=Group5}"     CrosshairVisibility="Visible"        
+                                    PointerMoved="xamDataChart5_PointerMoved">
                                     <Charts1:XamDataChart.Axes>
                                         <Charts1:CategoryXAxis x:Name="xm5XAxis" 
-                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second} 秒" >
                                             <Charts1:CategoryXAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Extent="35" 
                                                                             Foreground="Black"/>
                                             </Charts1:CategoryXAxis.LabelSettings>
                                         </Charts1:CategoryXAxis>
-                                        <Charts1:NumericYAxis x:Name="xm5YAxis"   >
+                                        <Charts1:NumericYAxis x:Name="xm5YAxis" Stroke="Red" CrossingAxis="{Binding ElementName=xm5XAxis}" CrossingValue="1000" >
                                             <Charts1:NumericYAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Location="OutsideLeft" 
                                                                            Extent="55" FontFamily="Global User Interface" 
                                                                             Foreground="Black"/>
                                             </Charts1:NumericYAxis.LabelSettings>
                                         </Charts1:NumericYAxis>
-                                        <!--<Charts1:NumericYAxis x:Name="xmYAxis2" Stroke="Red" CrossingValue="4"
-                                        CrossingAxis="{Binding ElementName=xm1XAxis2}">
-                                        <Charts1:NumericYAxis.LabelSettings >
-                                            <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
-                                        </Charts1:NumericYAxis.LabelSettings>
-                                    </Charts1:NumericYAxis>-->
+                                        <Charts1:CategoryXAxis x:Name="xm5XAxis2" 
+                                                ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                            <Charts1:CategoryXAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Extent="5" Location="OutsideTop" Foreground="White"/>
+                                            </Charts1:CategoryXAxis.LabelSettings>
+                                        </Charts1:CategoryXAxis>
+                                        <Charts1:NumericYAxis x:Name="xm5YAxis2" Stroke="Blue" CrossingValue="2000"
+                                                CrossingAxis="{Binding ElementName=xm5XAxis2}">
+                                            <!--MaximumValue="{Binding Path=MaximumValue,ElementName=xm5YAxis}"
+                                                              MinimumValue="{Binding Path=MinimumValue,ElementName=xm5YAxis}"-->
+                                            <Charts1:NumericYAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
+                                            </Charts1:NumericYAxis.LabelSettings>
+                                        </Charts1:NumericYAxis>
                                     </Charts1:XamDataChart.Axes>
                                     <Charts1:XamDataChart.Series>
-                                        <!--Visibility="{Binding Path=Serie2Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                             Visibility="{Binding Path=Serie3Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                            Visibility="{Binding Path=Serie1Definition,Converter={StaticResource ResourceKey=nullconverter}}"-->
-                                        <Charts1:LineSeries ValueMemberPath="Value1" 
+                                        <Charts1:LineSeries x:Name="serie51" ValueMemberPath="Value1" 
                                                             Visibility="{Binding Path=Serie1Visibility,Mode=TwoWay}"
                                                             Brush="{Binding Path=Serie1Definition.ForegroundBrush}"
-                                         ItemsSource="{Binding Path=DataSerie}"  x:Name="serie51"
-                                         XAxis="{Binding ElementName=xm5XAxis}" 
-                                         YAxis="{Binding ElementName=xm5YAxis}"  
+                                             ItemsSource="{Binding Path=DataSerie}" 
+                                             XAxis="{Binding ElementName=xm5XAxis}" 
+                                             YAxis="{Binding ElementName=xm5YAxis}"  
                                               Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
-                                        <Charts1:LineSeries ValueMemberPath="Value2" 
+                                        <Charts1:LineSeries x:Name="serie51mock" ValueMemberPath="Value1" 
+                                                            Visibility="{Binding Path=Serie1Visibility,Mode=TwoWay}"
+                                                            Brush="{Binding Path=Serie1Definition.ForegroundBrush}"
+                                             ItemsSource="{Binding Path=DataSerie}" 
+                                             XAxis="{Binding ElementName=xm5XAxis2}" 
+                                             YAxis="{Binding ElementName=xm5YAxis2}"  
+                                              Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie52" ValueMemberPath="Value2" 
                                                             Visibility="{Binding Path=Serie2Visibility,Mode=TwoWay}"
                                                             Brush="{Binding Path=Serie2Definition.ForegroundBrush}"
-                                   ItemsSource="{Binding Path=DataSerie}" x:Name="serie52"
+                                         ItemsSource="{Binding Path=DataSerie}"
                                          XAxis="{Binding ElementName=xm5XAxis}" 
                                          YAxis="{Binding ElementName=xm5YAxis}"  
                                                Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
-                                        <Charts1:LineSeries ValueMemberPath="Value3" 
+                                        <Charts1:LineSeries x:Name="serie52mock" ValueMemberPath="Value2" 
+                                                            Visibility="{Binding Path=Serie2Visibility,Mode=TwoWay}"
+                                                            Brush="{Binding Path=Serie2Definition.ForegroundBrush}"
+                                         ItemsSource="{Binding Path=DataSerie}"
+                                         XAxis="{Binding ElementName=xm5XAxis2}" 
+                                         YAxis="{Binding ElementName=xm5YAxis}"  
+                                               Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie53" ValueMemberPath="Value3" 
                                                             Visibility="{Binding Path=Serie3Visibility,Mode=TwoWay}"
                                                            Brush="{Binding Path=Serie3Definition.ForegroundBrush}"
-                                   ItemsSource="{Binding Path=DataSerie}" x:Name="serie53"
+                                        ItemsSource="{Binding Path=DataSerie}"
                                          XAxis="{Binding ElementName=xm5XAxis}" 
                                          YAxis="{Binding ElementName=xm5YAxis}"  
+                                                        Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie53mock" ValueMemberPath="Value3" 
+                                                            Visibility="{Binding Path=Serie3Visibility,Mode=TwoWay}"
+                                                           Brush="{Binding Path=Serie3Definition.ForegroundBrush}"
+                                        ItemsSource="{Binding Path=DataSerie}"
+                                         XAxis="{Binding ElementName=xm5XAxis2}" 
+                                         YAxis="{Binding ElementName=xm5YAxis2}"  
                                                         Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
                                     </Charts1:XamDataChart.Series>
@@ -706,56 +839,85 @@
                             <Border Margin="5" BorderBrush="Black" BorderThickness="1"
                                     Visibility="{Binding Path=Group6,Converter={StaticResource ResourceKey=nullgroupconverter}}">
                                 <Charts1:XamDataChart  x:Name="tracker6" Height="240" Tapped="item_Tapped"         
-                                DataContext="{Binding Path=Group6}"    CrosshairVisibility="Visible"    
-                                PointerMoved="xamDataChart6_PointerMoved">
+                                    DataContext="{Binding Path=Group6}"    CrosshairVisibility="Visible"    
+                                    PointerMoved="xamDataChart6_PointerMoved">
                                     <Charts1:XamDataChart.Axes>
                                         <Charts1:CategoryXAxis x:Name="xm6XAxis" 
-                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second} 秒" >
                                             <Charts1:CategoryXAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Extent="35" 
                                                                             Foreground="Black"/>
                                             </Charts1:CategoryXAxis.LabelSettings>
                                         </Charts1:CategoryXAxis>
-                                        <Charts1:NumericYAxis x:Name="xm6YAxis"   >
+                                        <Charts1:NumericYAxis x:Name="xm6YAxis"  Stroke="Red" CrossingAxis="{Binding ElementName=xm6XAxis}" CrossingValue="1000" >
                                             <Charts1:NumericYAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Location="OutsideLeft" 
                                                                            Extent="55" FontFamily="Global User Interface" 
                                                                             Foreground="Black"/>
                                             </Charts1:NumericYAxis.LabelSettings>
                                         </Charts1:NumericYAxis>
-                                        <!--<Charts1:NumericYAxis x:Name="xmYAxis2" Stroke="Red" CrossingValue="4"
-                                        CrossingAxis="{Binding ElementName=xm1XAxis2}">
-                                        <Charts1:NumericYAxis.LabelSettings >
-                                            <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
-                                        </Charts1:NumericYAxis.LabelSettings>
-                                    </Charts1:NumericYAxis>
-                                        Visibility="{Binding Path=Serie2Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                            Visibility="{Binding Path=Serie3Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                                                                     Visibility="{Binding Path=Serie1Definition,Converter={StaticResource ResourceKey=nullconverter}}"-->
+                                        <Charts1:CategoryXAxis x:Name="xm6XAxis2" 
+                                                ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                            <Charts1:CategoryXAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Extent="5" Location="OutsideTop" Foreground="White"/>
+                                            </Charts1:CategoryXAxis.LabelSettings>
+                                        </Charts1:CategoryXAxis>
+                                        <Charts1:NumericYAxis x:Name="xm6YAxis2" Stroke="Blue" CrossingValue="2000"
+                                                CrossingAxis="{Binding ElementName=xm6XAxis2}">
+                                            <!--MaximumValue="{Binding Path=MaximumValue,ElementName=xm6YAxis}"
+                                                              MinimumValue="{Binding Path=MinimumValue,ElementName=xm6YAxis}"-->
+                                            <Charts1:NumericYAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
+                                            </Charts1:NumericYAxis.LabelSettings>
+                                        </Charts1:NumericYAxis>
                                     </Charts1:XamDataChart.Axes>
                                     <Charts1:XamDataChart.Series>
-                                        <Charts1:LineSeries ValueMemberPath="Value1" 
+                                        <Charts1:LineSeries x:Name="serie61" ValueMemberPath="Value1" 
                                                             Visibility="{Binding Path=Serie1Visibility,Mode=TwoWay}"
                                                             Brush="{Binding Path=Serie1Definition.ForegroundBrush}"
-                                         ItemsSource="{Binding Path=DataSerie}"  x:Name="serie61"
-                                         XAxis="{Binding ElementName=xm6XAxis}" 
-                                         YAxis="{Binding ElementName=xm6YAxis}"  
+                                             ItemsSource="{Binding Path=DataSerie}" 
+                                             XAxis="{Binding ElementName=xm6XAxis}" 
+                                             YAxis="{Binding ElementName=xm6YAxis}"  
                                               Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
-                                        <Charts1:LineSeries ValueMemberPath="Value2" 
+                                        <Charts1:LineSeries x:Name="serie61mock" ValueMemberPath="Value1" 
+                                                            Visibility="{Binding Path=Serie1Visibility,Mode=TwoWay}"
+                                                            Brush="{Binding Path=Serie1Definition.ForegroundBrush}"
+                                             ItemsSource="{Binding Path=DataSerie}" 
+                                             XAxis="{Binding ElementName=xm6XAxis2}" 
+                                             YAxis="{Binding ElementName=xm6YAxis2}"  
+                                              Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie62" ValueMemberPath="Value2" 
                                                             Visibility="{Binding Path=Serie2Visibility,Mode=TwoWay}"
                                                            Brush="{Binding Path=Serie2Definition.ForegroundBrush}"
-                                        ItemsSource="{Binding Path=DataSerie}" x:Name="serie62"
-                                         XAxis="{Binding ElementName=xm6XAxis}" 
-                                         YAxis="{Binding ElementName=xm6YAxis}"  
+                                            ItemsSource="{Binding Path=DataSerie}"
+                                             XAxis="{Binding ElementName=xm6XAxis}" 
+                                             YAxis="{Binding ElementName=xm6YAxis}"  
                                                Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
-                                        <Charts1:LineSeries ValueMemberPath="Value3" 
+                                        <Charts1:LineSeries x:Name="serie62mock" ValueMemberPath="Value2" 
+                                                            Visibility="{Binding Path=Serie2Visibility,Mode=TwoWay}"
+                                                           Brush="{Binding Path=Serie2Definition.ForegroundBrush}"
+                                            ItemsSource="{Binding Path=DataSerie}"
+                                             XAxis="{Binding ElementName=xm6XAxis2}" 
+                                             YAxis="{Binding ElementName=xm6YAxis2}"  
+                                               Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie63" ValueMemberPath="Value3" 
                                                             Visibility="{Binding Path=Serie3Visibility,Mode=TwoWay}"
                                                             Brush="{Binding Path=Serie3Definition.ForegroundBrush}"
-                                        ItemsSource="{Binding Path=DataSerie}" x:Name="serie63"
-                                         XAxis="{Binding ElementName=xm6XAxis}" 
-                                         YAxis="{Binding ElementName=xm6YAxis}"  
+                                                ItemsSource="{Binding Path=DataSerie}"
+                                                 XAxis="{Binding ElementName=xm6XAxis}" 
+                                                 YAxis="{Binding ElementName=xm6YAxis}"  
+                                                        Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie63mock" ValueMemberPath="Value3" 
+                                                            Visibility="{Binding Path=Serie3Visibility,Mode=TwoWay}"
+                                                            Brush="{Binding Path=Serie3Definition.ForegroundBrush}"
+                                                ItemsSource="{Binding Path=DataSerie}"
+                                                 XAxis="{Binding ElementName=xm6XAxis2}" 
+                                                 YAxis="{Binding ElementName=xm6YAxis2}"  
                                                         Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
                                     </Charts1:XamDataChart.Series>
@@ -768,48 +930,81 @@
                                 PointerMoved="xamDataChart7_PointerMoved">
                                     <Charts1:XamDataChart.Axes>
                                         <Charts1:CategoryXAxis x:Name="xm7XAxis" 
-                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second} 秒" >
                                             <Charts1:CategoryXAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Extent="35" 
                                                                             Foreground="Black"/>
                                             </Charts1:CategoryXAxis.LabelSettings>
                                         </Charts1:CategoryXAxis>
-                                        <Charts1:NumericYAxis x:Name="xm7YAxis"  >
+                                        <Charts1:NumericYAxis x:Name="xm7YAxis"  Stroke="Red" CrossingAxis="{Binding ElementName=xm7XAxis}" CrossingValue="1000" >
                                             <Charts1:NumericYAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Location="OutsideLeft" 
                                                                            Extent="55" FontFamily="Global User Interface" 
                                                                             Foreground="Black"/>
                                             </Charts1:NumericYAxis.LabelSettings>
                                         </Charts1:NumericYAxis>
+                                        <Charts1:CategoryXAxis x:Name="xm7XAxis2" 
+                                                ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                            <Charts1:CategoryXAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Extent="5" Location="OutsideTop" Foreground="White"/>
+                                            </Charts1:CategoryXAxis.LabelSettings>
+                                        </Charts1:CategoryXAxis>
+                                        <Charts1:NumericYAxis x:Name="xm7YAxis2" Stroke="Blue" CrossingValue="2000"
+                                                CrossingAxis="{Binding ElementName=xm7XAxis2}">
+                                            <!--MaximumValue="{Binding Path=MaximumValue,ElementName=xm7YAxis}"
+                                                              MinimumValue="{Binding Path=MinimumValue,ElementName=xm7YAxis}"-->
+                                            <Charts1:NumericYAxis.LabelSettings >
+                                                <Charts1:AxisLabelSettings Location="OutsideRight" Extent="55" FontFamily="Global User Interface" />
+                                            </Charts1:NumericYAxis.LabelSettings>
+                                        </Charts1:NumericYAxis>
                                     </Charts1:XamDataChart.Axes>
                                     <Charts1:XamDataChart.Series>
-                                        <!--Visibility="{Binding Path=Serie1Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                        Visibility="{Binding Path=Serie2Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                            Visibility="{Binding Path=Serie3Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                            
-                                        -->
-                                        <Charts1:LineSeries ValueMemberPath="Value1" 
+                                        <Charts1:LineSeries  x:Name="serie71" ValueMemberPath="Value1" 
                                                             Visibility="{Binding Path=Serie1Visibility,Mode=TwoWay}"
                                                             Brush="{Binding Path=Serie1Definition.ForegroundBrush}"
-                                         ItemsSource="{Binding Path=DataSerie}"  x:Name="serie71"
-                                         XAxis="{Binding ElementName=xm7XAxis}" 
-                                         YAxis="{Binding ElementName=xm7YAxis}"  
+                                             ItemsSource="{Binding Path=DataSerie}"
+                                             XAxis="{Binding ElementName=xm7XAxis}" 
+                                             YAxis="{Binding ElementName=xm7YAxis}"  
                                               Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
-                                        <Charts1:LineSeries ValueMemberPath="Value2" 
+                                        <Charts1:LineSeries  x:Name="serie71mock" ValueMemberPath="Value1" 
+                                                            Visibility="{Binding Path=Serie1Visibility,Mode=TwoWay}"
+                                                            Brush="{Binding Path=Serie1Definition.ForegroundBrush}"
+                                             ItemsSource="{Binding Path=DataSerie}"
+                                             XAxis="{Binding ElementName=xm7XAxis2}" 
+                                             YAxis="{Binding ElementName=xm7YAxis2}"  
+                                              Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie72" ValueMemberPath="Value2" 
                                                             Visibility="{Binding Path=Serie2Visibility,Mode=TwoWay}"
                                                             Brush="{Binding Path=Serie2Definition.ForegroundBrush}"
-                                   ItemsSource="{Binding Path=DataSerie}" x:Name="serie72"
-                                         XAxis="{Binding ElementName=xm7XAxis}" 
-                                         YAxis="{Binding ElementName=xm7YAxis}"  
+                                            ItemsSource="{Binding Path=DataSerie}"
+                                             XAxis="{Binding ElementName=xm7XAxis}" 
+                                             YAxis="{Binding ElementName=xm7YAxis}"  
                                                Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
-                                        <Charts1:LineSeries ValueMemberPath="Value3" 
+                                        <Charts1:LineSeries x:Name="serie72mock" ValueMemberPath="Value2" 
+                                                            Visibility="{Binding Path=Serie2Visibility,Mode=TwoWay}"
+                                                            Brush="{Binding Path=Serie2Definition.ForegroundBrush}"
+                                            ItemsSource="{Binding Path=DataSerie}"
+                                             XAxis="{Binding ElementName=xm7XAxis2}" 
+                                             YAxis="{Binding ElementName=xm7YAxis2}"  
+                                               Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie73" ValueMemberPath="Value3" 
                                                             Visibility="{Binding Path=Serie3Visibility,Mode=TwoWay}"
                                                             Brush="{Binding Path=Serie3Definition.ForegroundBrush}"
-                                   ItemsSource="{Binding Path=DataSerie}" x:Name="serie73"
-                                         XAxis="{Binding ElementName=xm7XAxis}" 
-                                         YAxis="{Binding ElementName=xm7YAxis}"  
+                                            ItemsSource="{Binding Path=DataSerie}"
+                                             XAxis="{Binding ElementName=xm7XAxis}" 
+                                             YAxis="{Binding ElementName=xm7YAxis}"  
+                                                        Thickness="3" MarkerType="None" 
+                                           MarkerTemplate="{StaticResource DataTrackerTemplate}" />
+                                        <Charts1:LineSeries x:Name="serie73mock" ValueMemberPath="Value3" 
+                                                            Visibility="{Binding Path=Serie3Visibility,Mode=TwoWay}"
+                                                            Brush="{Binding Path=Serie3Definition.ForegroundBrush}"
+                                            ItemsSource="{Binding Path=DataSerie}"
+                                             XAxis="{Binding ElementName=xm7XAxis2}" 
+                                             YAxis="{Binding ElementName=xm7YAxis2}"  
                                                         Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
                                     </Charts1:XamDataChart.Series>

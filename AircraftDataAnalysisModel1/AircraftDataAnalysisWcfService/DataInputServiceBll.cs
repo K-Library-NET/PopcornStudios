@@ -74,7 +74,7 @@ namespace AircraftDataAnalysisWcfService
                         value.EndSecond = flight.EndSecond;
                         value.StartSecond = flight.StartSecond;
                         value.FlightDate = flight.FlightDate;
-                        
+
                         modelCollection.Save(value);
 
                         flightResult = value;
@@ -138,6 +138,34 @@ namespace AircraftDataAnalysisWcfService
             return string.Empty;
         }
 
+        internal string DeleteFlight(Flight flight)
+        {
+            using (AircraftMongoDbDal dal = new AircraftMongoDbDal())
+            {
+                MongoServer mongoServer = dal.GetMongoServer();
+                //不用判断是否为空，必须不能为空才能继续，否则内部要抛异常
+                try
+                {
+                    MongoDatabase database = mongoServer.GetDatabase(AircraftMongoDb.DATABASE_COMMON);
+                    if (database != null)
+                    {
+                        MongoCollection<Flight> modelCollection
+                            = database.GetCollection<Flight>(AircraftMongoDb.COLLECTION_FLIGHT);
+                        ////删除架次
+                        IMongoQuery q1 = Query.EQ("FlightID", new MongoDB.Bson.BsonString(flight.FlightID));
+                        var writeResult = modelCollection.Remove(q1);
+                    }
+                }
+                catch (Exception e)
+                {
+                    LogHelper.Error("DeleteFlight", e);
+                    return e.Message;
+                }
+            }
+
+            return string.Empty;
+        }
+
         /// <summary>
         /// 删除一个架次相关记录，这是记录，需要重新定位数据库和Collection
         /// </summary>
@@ -179,7 +207,12 @@ namespace AircraftDataAnalysisWcfService
                     //删除FlightRawDataRelationPoint记录
                     MongoCollection<FlightDataEntities.ExtremumPointInfo> modelCollection5
                         = dal.GetFlightExtremeMongoCollectionByFlight(database, flight);
-                    modelCollection4.Remove(flightIdQuery);
+                    modelCollection5.Remove(flightIdQuery);
+
+                    //删除FlightExtreme记录
+                    MongoCollection<FlightDataEntities.ExtremumPointInfo> modelCollection6
+                        = dal.GetFlightExtremeMongoCollectionByFlight(database, flight);
+                    modelCollection6.Remove(flightIdQuery);
                 }
             }
             catch (Exception e)

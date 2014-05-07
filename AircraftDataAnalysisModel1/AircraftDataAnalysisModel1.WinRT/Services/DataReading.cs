@@ -193,6 +193,9 @@ namespace AircraftDataAnalysisWinRT.Services
                 ds.ParameterObjects = parameterObjects;
             }
 
+            string ViRelatedParameterIDs = ServerHelper.GetAppConfigValue(
+                "ViRelatedParameterIDs", ApplicationContext.Instance.AircraftServiceURL);
+            string[] virelatedParameterArray = ViRelatedParameterIDs.Split(',');
 
             Dictionary<Decision, Decision> hasHappendMap = new Dictionary<Decision, Decision>();
             Dictionary<FlightConditionDecision, FlightConditionDecision> hasFlightHappendMap
@@ -216,22 +219,86 @@ namespace AircraftDataAnalysisWinRT.Services
 
             this.PercentCurrent = 5;
 
+            Dictionary<string, double> prevValueMap = new Dictionary<string, double>();
+            //处理Vi=1000的脉冲情况
+            int ddtIsVi1000First = int.MaxValue;
+            int ddtIsViLast = -1;
+            for (int i = startSecond; //i < Math.Min(this.Header.FlightSeconds , endSecond); i++)
+                i < this.Header.FlightSeconds; i++)//debug
+            {
+                ParameterRawData[] datas = m_rawDataExtractor.GetDataBySecond(i);
+
+                bool isVi1000 = this.IsVi1000(datas);
+                if (isVi1000)
+                {
+                    ddtIsVi1000First = Math.Min(ddtIsVi1000First, i);
+                    ddtIsViLast = Math.Max(ddtIsViLast, i);
+                }
+            }
+
             for (int i = startSecond; i < Math.Min(this.Header.FlightSeconds, endSecond); i++)
             {
                 ParameterRawData[] datas = m_rawDataExtractor.GetDataBySecond(i);
 
+                bool isVi1000 = this.IsVi1000(datas);
+                //if (isVi1000)
+                //{
+                //    ddtIsVi1000First = Math.Min(ddtIsVi1000First, i);
+                //    ddtIsViLast = Math.Max(ddtIsViLast, i);
+                //}
+
                 foreach (var ddt in datas)
                 {
-                    if (ddt.ParameterID == "NHL" && ddt.Second < (this.Header.FlightSeconds / 10)
-                        && ddt.Values[0] >= 65535F)
+                    for (int p = 0; p < ddt.Values.Length; p++)
                     {
-                        ddt.Values[0] = 0;
-                    }//左发高压转速在头10%和末尾10%，有可能出现65535的情况，使得曲线显示有异常
-                    if (ddt.ParameterID == "NHL" && ddt.Second > (9 * this.Header.FlightSeconds / 10)
-                        && ddt.Values[0] >= 65535F)
+                        //if (isVi1000 && prevValueMap.ContainsKey(ddt.ParameterID)) 
+                        //    //&& virelatedParameterArray.Contains(ddt.ParameterID))
+                        //{
+                        //    ddt.Values[p] = (float)prevValueMap[ddt.ParameterID];
+                        //}
+
+                        if (isVi1000 && ddt.ParameterID != "Et") //飞行秒数千万别修正
+                            // && !prevValueMap.ContainsKey(ddt.ParameterID))
+                        {
+                            if (ddtIsVi1000First <= 0)
+                            {
+                                //第一秒
+                                ddt.Values[p] = this.TryGetParameterValue(
+                                    m_rawDataExtractor.GetDataBySecond(ddtIsViLast + 1), ddt.ParameterID,
+                                    ddt.Values[p]);
+                            }
+                            else
+                            {
+                                ddt.Values[p] = this.TryGetParameterValue(
+                                    m_rawDataExtractor.GetDataBySecond(ddtIsVi1000First - 1), ddt.ParameterID,
+                                    ddt.Values[p]);
+                            }
+                        }
+
+                        if (ddt.Values[p] >= 65535F)
+                            ddt.Values[p] = 0;
+                        else
+                            ddt.Values[p] = Convert.ToSingle(Math.Round(ddt.Values[0], 2));
+                    }
+
+                    if (prevValueMap.ContainsKey(ddt.ParameterID))
                     {
-                        ddt.Values[0] = 0;
-                    }//这种情况目前写死去掉
+                        prevValueMap[ddt.ParameterID] = ddt.Values[0];
+                    }
+                    else
+                    {
+                        prevValueMap.Add(ddt.ParameterID, ddt.Values[0]);
+                    }
+                    //if (ddt.ParameterID == "NHL" && ddt.Second < (this.Header.FlightSeconds / 10)
+                    //    && ddt.Values[0] >= 65535F)
+                    //{
+                    //    ddt.Values[0] = 0;
+                    //}//左发高压转速在头10%和末尾10%，有可能出现65535的情况，使得曲线显示有异常
+                    //if (ddt.ParameterID == "NHL" && ddt.Second > (9 * this.Header.FlightSeconds / 10)
+                    //    && ddt.Values[0] >= 65535F)
+                    //{
+                    //    ddt.Values[0] = 0;
+                    //}//这种情况目前写死去掉
                 }
 
                 if (previewModel != null && previewModel.RawDataRowViewModel != null)
@@ -338,6 +405,7 @@ namespace AircraftDataAnalysisWinRT.Services
                                     FlightID = Flight.FlightID,
                                     EventLevel = fde.EventLevel,
                                     StartSecond = fde.ActiveStartSecond,
+                                    HappenSecond = fde.HappenedSecond,
                                     EndSecond = fde.ActiveEndSecond,
                                     DecisionID = fde.DecisionID,
                                     DecisionName = fde.DecisionName,
@@ -358,7 +426,8 @@ namespace AircraftDataAnalysisWinRT.Services
                             FlightID = Flight.FlightID,
                             EventLevel = decisionKey.EventLevel,
                             StartSecond = decisionKey.ActiveStartSecond,
-                            EndSecond = decisionKey.ActiveEndSecond,
+                            HappenSecond = decisionKey.HappenedSecond,
+                            EndSecond = Flight.EndSecond, //decisionKey.ActiveEndSecond,
                             DecisionID = decisionKey.DecisionID,
                             DecisionName = decisionKey.DecisionName,
                         };
@@ -518,6 +587,41 @@ namespace AircraftDataAnalysisWinRT.Services
 
             if (this.Completed != null)
                 this.Completed(this, AsyncStatus.Completed);
+        }
+
+        private float TryGetParameterValue(ParameterRawData[] parameterRawData, string p1, float p2)
+        {
+            if (parameterRawData != null && parameterRawData.Length > 0)
+            {
+                foreach (var f in parameterRawData)
+                {
+                    if (f.ParameterID == p1 && f.Values != null && f.Values.Length > 0)
+                    {
+                        return f.Values[0];
+                    }
+                }
+            }
+            return p2;
+        }
+
+        private bool IsVi1000(ParameterRawData[] datas)
+        {
+            foreach (var f in datas)
+            {
+                if (f.ParameterID == "Vi")
+                {
+                    if (f.Values[0] == 1000)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private void PutInServer(List<LevelTopFlightRecord> topRecords, Flight flight,

@@ -416,7 +416,7 @@
                                 </Charts1:XamDataChart.DataContext>-->
                                         <Charts1:XamDataChart.Axes>
                                             <Charts1:CategoryXAxis x:Name="xm1XAxis" 
-                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second} 秒" >
                                                 <Charts1:CategoryXAxis.LabelSettings >
                                                     <Charts1:AxisLabelSettings Extent="35" Foreground="Black"/>
                                                 </Charts1:CategoryXAxis.LabelSettings>
@@ -481,7 +481,7 @@
                                 PointerMoved="xamDataChart2_PointerMoved">
                                     <Charts1:XamDataChart.Axes>
                                         <Charts1:CategoryXAxis x:Name="xm2XAxis" 
-                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second} 秒" >
                                             <Charts1:CategoryXAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Extent="35" 
                                                                             Foreground="Black"/>
@@ -539,7 +539,7 @@
                                 PointerMoved="xamDataChart3_PointerMoved">
                                     <Charts1:XamDataChart.Axes>
                                         <Charts1:CategoryXAxis x:Name="xm3XAxis" 
-                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second} 秒" >
                                             <Charts1:CategoryXAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Extent="35" 
                                                                             Foreground="Black"/>
@@ -597,7 +597,7 @@
                                 PointerMoved="xamDataChart4_PointerMoved">
                                     <Charts1:XamDataChart.Axes>
                                         <Charts1:CategoryXAxis x:Name="xm4XAxis" 
-                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second} 秒" >
                                             <Charts1:CategoryXAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Extent="35" 
                                                                             Foreground="Black"/>
@@ -655,7 +655,7 @@
                                 PointerMoved="xamDataChart5_PointerMoved">
                                     <Charts1:XamDataChart.Axes>
                                         <Charts1:CategoryXAxis x:Name="xm5XAxis" 
-                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second} 秒" >
                                             <Charts1:CategoryXAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Extent="35" 
                                                                             Foreground="Black"/>
@@ -713,7 +713,7 @@
                                 PointerMoved="xamDataChart6_PointerMoved">
                                     <Charts1:XamDataChart.Axes>
                                         <Charts1:CategoryXAxis x:Name="xm6XAxis" 
-                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second} 秒" >
                                             <Charts1:CategoryXAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Extent="35" 
                                                                             Foreground="Black"/>
@@ -771,7 +771,7 @@
                                 PointerMoved="xamDataChart7_PointerMoved">
                                     <Charts1:XamDataChart.Axes>
                                         <Charts1:CategoryXAxis x:Name="xm7XAxis" 
-                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
+                                                               ItemsSource="{Binding Path=DataSerie}" Label="{}{Second} 秒" >
                                             <Charts1:CategoryXAxis.LabelSettings >
                                                 <Charts1:AxisLabelSettings Extent="35" 
                                                                             Foreground="Black"/>

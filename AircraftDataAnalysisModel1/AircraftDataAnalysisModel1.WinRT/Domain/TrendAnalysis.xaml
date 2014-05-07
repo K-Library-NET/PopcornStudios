@@ -233,7 +233,7 @@
                                             </ig:LineSeries>
                                         </ig:XamDataChart.Series>
                                         <ig:XamDataChart.Axes>
-                                            <ig:CategoryXAxis x:Name="xAxisT6" ItemsSource="{Binding Path=T6Collection}" Label="{}{FlightDateTime}" >
+                                            <ig:CategoryXAxis x:Name="xAxisT6" ItemsSource="{Binding Path=T6Collection}" Label="{}{FlightDateStr}" >
                                                 <ig:CategoryXAxis.LabelSettings >
                                                     <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
                                                 </ig:CategoryXAxis.LabelSettings>
@@ -279,7 +279,7 @@
                                             </ig:LineSeries>
                                         </ig:XamDataChart.Series>
                                         <ig:XamDataChart.Axes>
-                                            <ig:CategoryXAxis x:Name="xAxisNH" ItemsSource="{Binding Path=NHCollection}" Label="{}{FlightDateTime}" >
+                                            <ig:CategoryXAxis x:Name="xAxisNH" ItemsSource="{Binding Path=NHCollection}" Label="{}{FlightDateStr}" >
                                                 <ig:CategoryXAxis.LabelSettings >
                                                     <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
                                                 </ig:CategoryXAxis.LabelSettings>
@@ -309,7 +309,7 @@
                                              CrosshairVisibility="Visible"  Margin="0,0,55,0"
                                          DataContext="{StaticResource ViewModel}">
                                         <ig:XamDataChart.Axes>
-                                            <ig:CategoryXAxis x:Name="xAxisVi" ItemsSource="{Binding Path=ViCollection}" Label="{}{FlightDateTime}" >
+                                            <ig:CategoryXAxis x:Name="xAxisVi" ItemsSource="{Binding Path=ViCollection}" Label="{}{FlightDateStr}" >
                                                 <ig:CategoryXAxis.LabelSettings >
                                                     <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
                                                 </ig:CategoryXAxis.LabelSettings>
@@ -354,7 +354,7 @@
                                             </ig:LineSeries>
                                         </ig:XamDataChart.Series>
                                         <ig:XamDataChart.Axes>
-                                            <ig:CategoryXAxis x:Name="xAxisHp" ItemsSource="{Binding Path=HpCollection}" Label="{}{FlightDateTime}" >
+                                            <ig:CategoryXAxis x:Name="xAxisHp" ItemsSource="{Binding Path=HpCollection}" Label="{}{FlightDateStr}" >
                                                 <ig:CategoryXAxis.LabelSettings >
                                                     <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
                                                 </ig:CategoryXAxis.LabelSettings>
@@ -400,7 +400,7 @@
                                             </ig:LineSeries>
                                         </ig:XamDataChart.Series>
                                         <ig:XamDataChart.Axes>
-                                            <ig:CategoryXAxis x:Name="xAxisKB" ItemsSource="{Binding KBCollection}" Label="{}{FlightDateTime}" >
+                                            <ig:CategoryXAxis x:Name="xAxisKB" ItemsSource="{Binding KBCollection}" Label="{}{FlightDateStr}" >
                                                 <ig:CategoryXAxis.LabelSettings >
                                                     <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
                                                 </ig:CategoryXAxis.LabelSettings>
@@ -455,7 +455,7 @@
                                             </ig:LineSeries>
                                         </ig:XamDataChart.Series>
                                         <ig:XamDataChart.Axes>
-                                            <ig:CategoryXAxis x:Name="xAxisN" ItemsSource="{Binding Path=NCollection}" Label="{}{FlightDateTime}" >
+                                            <ig:CategoryXAxis x:Name="xAxisN" ItemsSource="{Binding Path=NCollection}" Label="{}{FlightDateStr}" >
                                                 <ig:CategoryXAxis.LabelSettings >
                                                     <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
                                                 </ig:CategoryXAxis.LabelSettings>
@@ -491,7 +491,7 @@
                                             </ig:LineSeries>
                                         </ig:XamDataChart.Series>
                                         <ig:XamDataChart.Axes>
-                                            <ig:CategoryXAxis x:Name="xAxisTt" ItemsSource="{Binding Path=TtCollection}"  Label="{}{FlightDateTime}" >
+                                            <ig:CategoryXAxis x:Name="xAxisTt" ItemsSource="{Binding Path=TtCollection}"  Label="{}{FlightDateStr}" >
                                                 <ig:CategoryXAxis.LabelSettings >
                                                     <ig:AxisLabelSettings Location="OutsideBottom" Foreground="Red" Extent="35" />
                                                 </ig:CategoryXAxis.LabelSettings>

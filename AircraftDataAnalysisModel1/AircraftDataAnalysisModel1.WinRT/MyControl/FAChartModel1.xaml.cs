@@ -327,49 +327,9 @@ namespace AircraftDataAnalysisWinRT.MyControl
         #region old
 
         [Obsolete("Old")]
-        class ParameterRawDataWrap
-        {
-            private FlightDataEntitiesRT.ParameterRawData rawData;
-
-            public ParameterRawDataWrap(FlightDataEntitiesRT.ParameterRawData obj)
-            {
-                this.rawData = obj;
-            }
-
-            public int Second
-            {
-                get
-                {
-                    return rawData.Second;
-                }
-            }
-
-            public float Value
-            {
-                get
-                {
-                    return rawData.Values[0];
-                }
-            }
-        }
-
-        [Obsolete("Old")]
         void m_viewModel_FilterDataChanged(object sender, EventArgs e)
         {
             //this.OnViewModelChanged();
-        }
-
-        [Obsolete("Old")]
-        private ObservableCollection<ParameterRawDataWrap> ToWrapObjs(
-             ObservableCollection<FlightDataEntitiesRT.ParameterRawData> rawdatas)
-        {
-            var result = from one in rawdatas
-                         select new ParameterRawDataWrap(one);
-
-            if (result != null && result.Count() > 0)
-                return new ObservableCollection<ParameterRawDataWrap>(result);//result.Take(1000));//DEBUG，为了速度
-
-            return new ObservableCollection<ParameterRawDataWrap>();
         }
 
         [Obsolete("Old")]

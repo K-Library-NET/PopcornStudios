@@ -22,6 +22,12 @@
   <wsdl:message name="IAircraftDataInput_DeleteExistsData_OutputMessage">
     <wsdl:part name="parameters" element="tns:DeleteExistsDataResponse" />
   </wsdl:message>
+  <wsdl:message name="IAircraftDataInput_DeleteFlight_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteFlight" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftDataInput_DeleteFlight_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteFlightResponse" />
+  </wsdl:message>
   <wsdl:message name="IAircraftDataInput_AddDecisionRecordsBatch_InputMessage">
     <wsdl:part name="parameters" element="tns:AddDecisionRecordsBatch" />
   </wsdl:message>
@@ -85,6 +91,10 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IAircraftDataInput/DeleteExistsData" message="tns:IAircraftDataInput_DeleteExistsData_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IAircraftDataInput/DeleteExistsDataResponse" message="tns:IAircraftDataInput_DeleteExistsData_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation name="DeleteFlight">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftDataInput/DeleteFlight" message="tns:IAircraftDataInput_DeleteFlight_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftDataInput/DeleteFlightResponse" message="tns:IAircraftDataInput_DeleteFlight_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="AddDecisionRecordsBatch">
       <wsdl:input wsaw:Action="http://tempuri.org/IAircraftDataInput/AddDecisionRecordsBatch" message="tns:IAircraftDataInput_AddDecisionRecordsBatch_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IAircraftDataInput/AddDecisionRecordsBatchResponse" message="tns:IAircraftDataInput_AddDecisionRecordsBatch_OutputMessage" />
@@ -135,6 +145,15 @@
     </wsdl:operation>
     <wsdl:operation name="DeleteExistsData">
       <soap:operation soapAction="http://tempuri.org/IAircraftDataInput/DeleteExistsData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteFlight">
+      <soap:operation soapAction="http://tempuri.org/IAircraftDataInput/DeleteFlight" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

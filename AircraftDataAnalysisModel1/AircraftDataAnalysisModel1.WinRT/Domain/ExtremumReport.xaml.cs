@@ -98,7 +98,9 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
                         MaxValueSecond = wrap.MaxValueSecond,
                     };
 
-                this.Frame.Navigate(typeof(AircraftDataAnalysisWinRT.Domain.FlightAnalysisSub), parameter);
+                this.Frame.Navigate(typeof(AircraftDataAnalysisWinRT.Domain.FlightAnalysisSubLite),
+                    //typeof(AircraftDataAnalysisWinRT.Domain.FlightAnalysisSub), 
+                    parameter);
             }
         }
 

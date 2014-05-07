@@ -549,7 +549,21 @@ namespace AircraftDataAnalysisWinRT.MyControl
         public AircraftDataAnalysisModel1.WinRT.Domain.AircraftAnalysisDataLoader DataLoader { get; set; }
     }
 
-    public class ExtremumReportSubEditChartNavigationParameter : SubEditChartNavigationParameter
+    interface ISecondRangeDataLoaderNavigator : IDataLoaderNavigator
+    {
+        int MinValueSecond { get; set; }
+
+        int MaxValueSecond { get; set; }
+    }
+
+    public class ExtremumReportSubEditChartNavigationParameter : SubEditChartNavigationParameter, ISecondRangeDataLoaderNavigator
+    {
+        public int MinValueSecond { get; set; }
+
+        public int MaxValueSecond { get; set; }
+    }
+
+    public class FaultDiagSubEditChartNavigationParameter : SubEditChartNavigationParameter, ISecondRangeDataLoaderNavigator
     {
         public int MinValueSecond { get; set; }
 

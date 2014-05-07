@@ -113,7 +113,7 @@
     <Compile Include="AircraftModel1RawDataLite.cs" />
     <Compile Include="BaseFunction.cs" />
     <Compile Include="Charts\ChartPanel.cs" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="AircraftModel1RawDataCollection.cs" />
     <Compile Include="DataColumn.cs" />
     <Compile Include="DataPointReducer.cs" />
     <Compile Include="DataRow.cs" />

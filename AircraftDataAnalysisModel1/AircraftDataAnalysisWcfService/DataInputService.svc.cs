@@ -43,6 +43,21 @@ namespace AircraftDataAnalysisWcfService
             }
         }
 
+        public string DeleteFlight(FlightDataEntities.Flight flight)
+        {
+            try
+            {
+                LogHelper.Info("DataInputService.DeleteFlight Requested.", null);
+                DataInputServiceBll bll = new DataInputServiceBll();
+                return bll.DeleteFlight(flight);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error("DeleteFlight", ex);
+                return ex.Message;
+            } 
+        }
+
         public string AddDecisionRecordsBatch(FlightDataEntities.Flight flight, FlightDataEntities.Decisions.DecisionRecord[] records)
         {
             try

@@ -70,6 +70,8 @@ namespace AircraftDataAnalysisWinRT.Domain
             {
                 this.m_addFileModels.Clear();
 
+                bool allCorrect = true;
+
                 foreach (var file in files)
                 {
                     var aircraftModel = AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentAircraftModel;
@@ -78,10 +80,13 @@ namespace AircraftDataAnalysisWinRT.Domain
                     FlightDataEntitiesRT.IFlightRawDataExtractor extractor = null;
                     FlightDataEntitiesRT.Flight currentFlight = null;
 
-                    CreateTempCurrentFlight(file, aircraftModel, flightParameter, ref extractor, ref currentFlight);
+                    bool correct = CreateTempCurrentFlight(file, aircraftModel, flightParameter, ref extractor, ref currentFlight);
 
                     AddFileViewModel model = new AddFileViewModel(currentFlight, file, extractor,
                         aircraftModel, flightParameter);
+                    model.IsTempFlightParseError = !correct;
+                    allCorrect = allCorrect & correct;
+
                     model.InitLoadHeader();
                     if (model.Header != null)
                     {
@@ -91,6 +96,9 @@ namespace AircraftDataAnalysisWinRT.Domain
                     }
                     this.m_addFileModels.Add(model);
                 }
+
+                if (allCorrect == false)
+                    this.tbMessage1.Visibility = Windows.UI.Xaml.Visibility.Visible;
 
                 rgdItems.ItemsSource = this.m_addFileModels;
             }
@@ -108,30 +116,33 @@ namespace AircraftDataAnalysisWinRT.Domain
         /// <param name="flightParameter"></param>
         /// <param name="extractor"></param>
         /// <param name="currentFlight"></param>
-        private void CreateTempCurrentFlight(StorageFile file, FlightDataEntitiesRT.AircraftModel aircraftModel, FlightDataEntitiesRT.FlightParameters flightParameter, ref FlightDataEntitiesRT.IFlightRawDataExtractor extractor, ref FlightDataEntitiesRT.Flight currentFlight)
+        private bool CreateTempCurrentFlight(StorageFile file, FlightDataEntitiesRT.AircraftModel aircraftModel, FlightDataEntitiesRT.FlightParameters flightParameter, ref FlightDataEntitiesRT.IFlightRawDataExtractor extractor, ref FlightDataEntitiesRT.Flight currentFlight)
         {
-            if (aircraftModel != null && !string.IsNullOrEmpty(aircraftModel.ModelName))
-            {
-                //if (aircraftModel.ModelName == "F4D")
-                //{
-                var result = FlightDataReading.AircraftModel1.FlightRawDataExtractorFactory
-                    .CreateFlightRawDataExtractor(file, flightParameter);
-                extractor = result;
-                //}
-            }
-            currentFlight = new FlightDataEntitiesRT.Flight()
-            {
-                Aircraft = new FlightDataEntitiesRT.AircraftInstance()
-                {
-                    AircraftModel = aircraftModel,
-                    AircraftNumber = (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).ParseAircraftNumber(file.Name),
-                    LastUsed = DateTime.Now
-                },
-                StartSecond = 0,
-                FlightName = file.Name,
-                FlightDate = (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).ParseDate(file.Name),
-                FlightID = this.RemoveIllegalChars(file.DisplayName)
-            };
+            return PStudio.WinApp.Aircraft.FDAPlatform.MainPage.BuildTempFlightByRule(file, aircraftModel,
+                flightParameter, ref extractor, ref currentFlight);
+
+            //if (aircraftModel != null && !string.IsNullOrEmpty(aircraftModel.ModelName))
+            //{
+            //    //if (aircraftModel.ModelName == "F4D")
+            //    //{
+            //    var result = FlightDataReading.AircraftModel1.FlightRawDataExtractorFactory
+            //        .CreateFlightRawDataExtractor(file, flightParameter);
+            //    extractor = result;
+            //    //}
+            //}
+            //currentFlight = new FlightDataEntitiesRT.Flight()
+            //{
+            //    Aircraft = new FlightDataEntitiesRT.AircraftInstance()
+            //    {
+            //        AircraftModel = aircraftModel,
+            //        AircraftNumber = (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).ParseAircraftNumber(file.Name),
+            //        LastUsed = DateTime.Now
+            //    },
+            //    StartSecond = 0,
+            //    FlightName = file.Name,
+            //    FlightDate = (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).ParseDate(file.Name),
+            //    FlightID = this.RemoveIllegalChars(file.DisplayName)
+            //};
         }
 
         private string RemoveIllegalChars(string p)

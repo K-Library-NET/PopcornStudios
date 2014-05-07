@@ -1,4 +1,4 @@
-﻿<common:LayoutAwarePage
+﻿<common:LayoutAwarePage xmlns:Grid="using:Syncfusion.UI.Xaml.Grid"  xmlns:Navigation="using:Syncfusion.UI.Xaml.Controls.Navigation" 
     x:Name="pageRoot"
     x:Class="AircraftDataAnalysisWinRT.AddFilePage"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
@@ -8,9 +8,91 @@
     xmlns:common="using:AircraftDataAnalysisWinRT.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
-
+    mc:Ignorable="d"
+      xmlns:primitives="using:Syncfusion.UI.Xaml.Primitives">
     <Page.Resources>
+        <primitives:HierarchicalDataTemplate x:Key="template2" ItemsSource="{Binding Path=Children}">
+            <DataTemplate>
+                <StackPanel>
+                    <TextBlock Text="{Binding Path=Caption}" FontSize="18" Foreground="Black"
+                                                                    VerticalAlignment="Center" Margin="18,0,0,0"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <primitives:HierarchicalDataTemplate.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Path=Caption}" FontSize="20"
+                                                                  FontWeight="Bold" Foreground="Blue"
+                                                                    VerticalAlignment="Center" Margin="18,0,0,0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </primitives:HierarchicalDataTemplate.ItemTemplate>
+        </primitives:HierarchicalDataTemplate>
+
+        <!--<Grid:SortDirectionToVisibilityConverter x:Key="sortDirectionToVisibilityConverter" />
+        <Grid:SortDirectionToWidthConverter x:Key="sortDirectionToWidthConverter" />
+        <Style x:Key="FilterToggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup>
+                                    <VisualState x:Name="Filtered">
+                                        <Storyboard BeginTime="0">
+                                            <ObjectAnimationUsingKeyFrames BeginTime="0"
+                                                                       Duration="1"
+                                                                       Storyboard.TargetName="path"
+                                                                       Storyboard.TargetProperty="Data">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="M2.1299944,9.9798575L55.945994,9.9798575 35.197562,34.081179 35.197562,62.672859 23.428433,55.942383 23.428433,33.52121z M1.3001332,0L56.635813,0C57.355887,0,57.935946,0.5891428,57.935946,1.3080959L57.935946,2.8258877C57.935946,3.5448422,57.355887,4.133985,56.635813,4.133985L1.3001332,4.133985C0.58005941,4.133985,-2.3841858E-07,3.5448422,0,2.8258877L0,1.3080959C-2.3841858E-07,0.5891428,0.58005941,0,1.3001332,0z" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="UnFiltered">
+                                        <Storyboard BeginTime="0">
+                                            <ObjectAnimationUsingKeyFrames BeginTime="0"
+                                                                       Duration="1"
+                                                                       Storyboard.TargetName="path"
+                                                                       Storyboard.TargetProperty="Data">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="M0,0 L118.49799,0 L72.811813,53.068943 L72.811813,116.02525 L46.897243,101.20534 L46.897243,51.835941 z" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}"
+                                Background="Transparent">
+                                <Path Name="path"
+                                  Margin="4"
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Bottom"
+                                  Data="M0,0 L118.49799,0 L72.811813,53.068943 L72.811813,116.02525 L46.897243,101.20534 L46.897243,51.835941 z"
+                                  Fill="Gray"
+                                  Opacity="0.8"
+                                  Stretch="Fill" />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>-->
+        <primitives:HierarchicalDataTemplate ItemsSource="{Binding Models}"  x:Key="Template">
+            <DataTemplate>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Header}" Foreground="Red" VerticalAlignment="Center" Margin="18 0 0 0"/>
+                    <TextBlock Text="{Binding Count}" Margin="5 0 0 0" VerticalAlignment="Center"></TextBlock>
+                </StackPanel>
+            </DataTemplate>
+            <primitives:HierarchicalDataTemplate.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding Header}" VerticalAlignment="Center" Margin="18 0 0 0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </primitives:HierarchicalDataTemplate.ItemTemplate>
+        </primitives:HierarchicalDataTemplate>
     </Page.Resources>
 
     <!--
@@ -19,11 +101,14 @@
         * Row 1 contains the rest of the page layout
     -->
     <Grid Style="{StaticResource LayoutRootStyle}">
+        <Grid.DataContext>
+            <local:TreeViewModel />
+
+        </Grid.DataContext>
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
         <!-- Back button and page title -->
         <Grid>
             <Grid.ColumnDefinitions>
@@ -44,9 +129,45 @@
                 <ColumnDefinition Width="120"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="1" Text="{Binding Path=Description}"/>
+
             <Button Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left"
                     Visibility="{Binding Path=ImportDataVisibility}" Content="确定导入" Margin="15"
                     Click="ImportModelData_Click"/>
+            <Border Grid.Column="2" Background="White" Padding="15" >
+                <!--ColumnSizer="Star"-->
+                <Grid:SfDataGrid x:Name="grid" AllowFrozenGroupHeaders="True"
+                               AllowGrouping="True" AllowResizingColumns="True"
+                               AutoExpandGroups="True" AutoGenerateColumns="False"
+                                SelectionChanged="grid_SelectionChanged" 
+                               NavigationMode="Row" ShowColumnWhenGrouped="False" 
+                    Background="White" Foreground="#FF2A2A2A" AllowSorting="False"   
+                         AllowDraggingColumns="True" ColumnSizer="AutoWithLastColumnFill"
+                          BorderBrush="#FFC8E3E3" BorderThickness="1" RowSelectionBrush="#FFdff3f4"
+                              GroupRowSelectionBrush="#FFdff3f4"
+                            >
+                    <Grid:SfDataGrid.HeaderStyle>
+                        <Style TargetType="Grid:GridHeaderCellControl">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="BorderBrush" Value="#FF5E5B5C" />
+                            <Setter Property="BorderThickness" Value="2" />
+                            <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            <Setter Property="FontFamily" Value="Segoe UI" />
+                            <Setter Property="FontSize" Value="16" />
+                            <Setter Property="Foreground" Value="#FF5E5B5C" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                        </Style>
+                    </Grid:SfDataGrid.HeaderStyle>
+                    <Grid:SfDataGrid.GroupColumnDescriptions>
+                        <!--ItemsSource="{Binding YearlySalesDetails}"-->
+                        <Grid:GroupColumnDescription ColumnName="YearMonth"  />
+                    </Grid:SfDataGrid.GroupColumnDescriptions>
+
+                    <Grid:SfDataGrid.Columns>
+                        <Grid:GridTextColumn MappingName="Caption" HeaderText="架次" />
+                        <Grid:GridTextColumn HorizontalHeaderContentAlignment="Center"  HeaderText="年-月" MappingName="YearMonth" />
+                    </Grid:SfDataGrid.Columns>
+                </Grid:SfDataGrid>
+            </Border>
         </Grid>
         <VisualStateManager.VisualStateGroups>
 

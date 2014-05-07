@@ -33,6 +33,22 @@ namespace AircraftDataAnalysisModel1.WinRT.DataModel
         {
         }
 
+        public bool IsParameterCanAdd
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public bool IsParameterCanRemove
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public string HostParameterTitleStr
         {
             get
@@ -169,7 +185,7 @@ namespace AircraftDataAnalysisModel1.WinRT.DataModel
             this.LoadDatas(parameter);
             ////GetChartPanels
             //await InitPanelViewModel();
-            await this.DebugSetZoomMode(parameter);
+            //await this.DebugSetZoomMode(parameter);
             ////2. currentPanel
             //await SetCurrentPanelCore();
 

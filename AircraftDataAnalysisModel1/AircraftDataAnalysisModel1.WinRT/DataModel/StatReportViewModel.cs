@@ -28,17 +28,46 @@ namespace AircraftDataAnalysisWinRT.DataModel
             set;
         }
 
-        public void RefreshData()
+        public async void RefreshData()
         {
             DateTime startMonth = this.GetStartMonth();
             DateTime endMonth = this.GetEndMonth();
             string[] aircraftNumbers = this.AircraftNumbers();
 
+            Dictionary<string, FlightDataEntitiesRT.Flight> flightMap = new Dictionary<string, FlightDataEntitiesRT.Flight>();
+
+            var flightTask = Task.Run(new Action(() =>
+            {
+                List<FlightDataEntitiesRT.Flight> flights = new List<FlightDataEntitiesRT.Flight>();
+                foreach (var f in aircraftNumbers)
+                {
+                    var fls = ServerHelper.GetAllFlights(ApplicationContext.Instance.CurrentAircraftModel,
+                           new FlightDataEntitiesRT.AircraftInstance()
+                           {
+                               AircraftModel = ApplicationContext.Instance.CurrentAircraftModel,
+                               AircraftNumber = f
+                           });
+                    if (fls != null && fls.Count() > 0)
+                    {
+                        flights.AddRange(fls);
+                    }
+                }
+
+                var reduced = from r in flights
+                              select new KeyValuePair<string, FlightDataEntitiesRT.Flight>(r.FlightID, r);
+                foreach (var rs in reduced)
+                {
+                    if (!flightMap.ContainsKey(rs.Key))
+                        flightMap.Add(rs.Key, rs.Value);
+                }
+            }));
+
             var decisionRecords = ServerHelper.GetFlightConditionDecisionRecords(
                 ApplicationContext.Instance.CurrentAircraftModel,
                 startMonth, endMonth, aircraftNumbers);
 
-            DataModel.ReloadDecisionRecords(decisionRecords);
+            await flightTask;
+            DataModel.ReloadDecisionRecords(decisionRecords, flightMap);
         }
 
         private string[] AircraftNumbers()
@@ -56,7 +85,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
 
                         return result.ToArray();
                     }
-                    return new string[] { };
+                    // return new string[] { };
                 }
 
                 if (this.SelectModel.Aircrafts.Count > 1)
@@ -85,9 +114,12 @@ namespace AircraftDataAnalysisWinRT.DataModel
                 }
                 else if (this.SelectModel.SelectedYear != null)
                 {
-                    int year = this.SelectModel.SelectedYear.Year;
-                    int month = 12;
-                    return new DateTime(year, month, 1);
+                    int year = this.SelectModel.SelectedYear.Year + 1;
+                    int month = 1;// 12;
+                    var temp = new DateTime(year, month, 1);
+                    temp = temp.AddSeconds(-1);
+
+                    return temp;
                 }
             }
             else

@@ -96,6 +96,7 @@ namespace AircraftDataAnalysisWinRT.Domain
             rootViewModel.UserThreadInvoker = this.Dispatcher;
             rootViewModel.HostParameterID = parameter.HostParameterID;
 
+
             if (parameter is ExtremumReportSubEditChartNavigationParameter)
             {
                 ExtremumReportSubEditChartNavigationParameter extParameter = parameter as ExtremumReportSubEditChartNavigationParameter;
@@ -186,7 +187,7 @@ namespace AircraftDataAnalysisWinRT.Domain
         }
     }
 
-    [Obsolete]
+    //[Obsolete]
     class FASubNavigateParameter
     {
         public string HostParameterID
@@ -202,7 +203,7 @@ namespace AircraftDataAnalysisWinRT.Domain
         public int FlightEndSecond { get; set; }
     }
 
-    [Obsolete]
+    //[Obsolete]
     class ExtremumReportFASubNavigateParameter : FASubNavigateParameter
     {
 
@@ -211,9 +212,21 @@ namespace AircraftDataAnalysisWinRT.Domain
         public int MaxValueSecond { get; set; }
     }
 
-    [Obsolete]
+    //[Obsolete]
     class FaultDiagnosisFASubNavigateParameter : FASubNavigateParameter
     {
+        public string DecisionID
+        {
+            get;
+            set;
+        }
+
+        public string DecisionName
+        {
+            get;
+            set;
+        }
+
         public string[] RelatedParameterIDs { get; set; }
 
         public int DecisionStartSecond { get; set; }

@@ -63,6 +63,21 @@ namespace AircraftDataAnalysisWinRT.DataModel
             }
         }
 
+        private DateTime m_flightDate = DateTime.Now;
+
+        public DateTime FlightDate
+        {
+            get
+            {
+                return this.Flight.FlightDate;
+            }
+            set
+            {
+                this.SetProperty<DateTime>(ref m_flightDate, value);
+                this.Flight.FlightDate = value;
+            }
+        }
+
         private int m_endSecond = 0;
 
         public int EndSecond
@@ -208,7 +223,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
                 //maxLongitude = Math.Max(maxLongitude, dt.Longitude);
 
                 if (i > 0 && ((Math.Abs(latitude - prevlatitude) > 1
-                    || Math.Abs(longitude - prevlongitude) > 1)))
+                    || Math.Abs(longitude - prevlongitude) > 1)) && latitude > 0.01 && longitude > 0.01)
                 {
                     index.Add(i);
                 }
@@ -228,10 +243,42 @@ namespace AircraftDataAnalysisWinRT.DataModel
             }
             else
             {
-                endIndex = dts.Count - startIndex;
+                if (startIndex < dts.Count / 2)
+                {
+                    endIndex = dts.Count - 1;// -startIndex;
+                }
+                else
+                {
+                    endIndex = startIndex;
+                    startIndex = 0;
+                }
             }
 
-            return dts.GetRange(startIndex, endIndex - startIndex).ToArray();
+            for (int i = startIndex; i >= 0; i--)
+            {
+                GlobeData gb = dts[i];
+                if (i - 1 >= 0)
+                {
+                    dts[i - 1].Latitude = gb.Latitude;
+                    dts[i - 1].Longitude = gb.Longitude;
+                }
+            }
+
+            for (int i = endIndex; i < dts.Count; i++)
+            {
+                GlobeData gb = dts[i];
+                if (i + 1 < dts.Count)
+                {
+                    dts[i + 1].Latitude = gb.Latitude;
+                    dts[i + 1].Longitude = gb.Longitude;
+                }
+            }
+
+
+            //if (endIndex > startIndex && endIndex < dts.Count)
+            //    return dts.GetRange(startIndex, endIndex - startIndex).ToArray();
+
+            return dts.ToArray();
             //fix lastIndex OutOfRange bug 20140424
             //return dts.ToArray();
         }
@@ -480,5 +527,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
 
             return null;
         }
+
+        public bool IsTempFlightParseError { get; set; }
     }
 }

@@ -29,7 +29,17 @@ namespace AircraftDataAnalysisWinRT.DataModel
         public DateTime FlightDateTime
         {
             get { return m_flightDateTime; }
-            set { this.SetProperty<DateTime>(ref m_flightDateTime, value); }
+            set
+            {
+                this.SetProperty<DateTime>(ref m_flightDateTime, value);
+                this.OnPropertyChanged("FlightDateStr");
+            }
+        }
+
+        public string FlightDateStr
+        {
+            get { return m_flightDateTime.ToString("yyyyMM"); }
+            // set { this.SetProperty<DateTime>(ref m_flightDateTime, value); } 
         }
 
         private double m_Value = 0;

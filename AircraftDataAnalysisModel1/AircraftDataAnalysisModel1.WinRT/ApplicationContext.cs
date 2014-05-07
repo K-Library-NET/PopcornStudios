@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AircraftDataAnalysisWinRT
 {
-    public class ApplicationContext
+    public class ApplicationContext : System.ComponentModel.INotifyPropertyChanged
     {
         private ApplicationContext()
         {
@@ -16,10 +16,22 @@ namespace AircraftDataAnalysisWinRT
             //this.AircraftServiceURL = "http://42.96.198.241/AircraftDataAnalysisWcfService/AircraftService.svc";
 
             //使用本机IIS服务（不是VS调试器），去掉下面两行注释
-            //this.DataInputServiceURL = "http://localhost/AircraftDataAnalysisWcfService/DataInputService.svc";
-            //this.AircraftServiceURL = "http://localhost/AircraftDataAnalysisWcfService/AircraftService.svc";
+            this.DataInputServiceURL = "http://localhost/AircraftDataAnalysisWcfService/DataInputService.svc";
+            this.AircraftServiceURL = "http://localhost/AircraftDataAnalysisWcfService/AircraftService.svc";
 
             //上面四行全部注释，那就是使用VS调试器
+
+            this.Init();
+        }
+
+        private void Init()
+        {
+            string value = ServerHelper.GetAppConfigValue("IsShowGridEnable", this.AircraftServiceURL);
+            if (value != null && value.Equals(bool.TrueString, StringComparison.CurrentCultureIgnoreCase))
+            {
+                m_isShowGridEnable = true;
+            }
+            else { m_isShowGridEnable = false; }
         }
 
         public string AircraftServiceURL { get; set; }
@@ -37,9 +49,76 @@ namespace AircraftDataAnalysisWinRT
             }
         }
 
-        public FlightDataEntitiesRT.Flight CurrentFlight { get; set; }
+        private FlightDataEntitiesRT.Flight m_currentFlight = null;
+
+        public FlightDataEntitiesRT.Flight CurrentFlight
+        {
+            get
+            {
+                return m_currentFlight;
+            }
+            set
+            {
+                m_currentFlight = value;
+
+                if (this.m_currentFlight != null)
+                {
+                    var rec = ServerHelper.GetDecisionRecords(m_currentFlight);
+                    if (rec != null && rec.Count() > 0)
+                    {
+                        m_isCurrentFlightHasFault = true;
+                    }
+                    else
+                    {
+                        m_isCurrentFlightHasFault = false;
+                    }
+                }
+                else
+                {
+                    m_isCurrentFlightHasFault = false;
+                }
+
+                this.OnPropertyChanged("CurrentFlight");
+                this.OnPropertyChanged("IsCurrentFlightNoFault");
+                this.OnPropertyChanged("IsCurrentFlightFault");
+            }
+        }
+
+        private void OnPropertyChanged(string prop)
+        {
+            if (this.PropertyChanged != null)
+                this.PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(prop));
+        }
 
         public FlightDataEntitiesRT.AircraftModel CurrentAircraftModel { get; set; }
+
+        private bool m_isShowGridEnable = false;
+
+        public bool IsShowGridEnable
+        {
+            get
+            {
+                return m_isShowGridEnable;
+            }
+        }
+
+        public bool IsCurrentFlightNoFault
+        {
+            get
+            {
+                return !IsCurrentFlightFault;
+            }
+        }
+
+        private bool m_isCurrentFlightHasFault = false;
+
+        public bool IsCurrentFlightFault
+        {
+            get
+            {
+                return m_isCurrentFlightHasFault;
+            }
+        }
 
         private Dictionary<string, object> m_objectMap = new Dictionary<string, object>();
 
@@ -195,5 +274,7 @@ namespace AircraftDataAnalysisWinRT
         {
             return string.Format("FlightViewModel: {0}", flightID);
         }
+
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
     }
 }

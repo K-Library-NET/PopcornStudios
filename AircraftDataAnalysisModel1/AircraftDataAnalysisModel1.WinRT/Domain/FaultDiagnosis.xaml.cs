@@ -121,12 +121,12 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
                 && (e.OriginalSource as Windows.UI.Xaml.FrameworkElement).DataContext is DecisionWrap)
             {
                 DecisionWrap wrap = (e.OriginalSource as Windows.UI.Xaml.FrameworkElement).DataContext as DecisionWrap;
-                if (wrap.Record != null && wrap.Decision != null)
-                {
-                    AircraftDataAnalysisWinRT.Domain.FaultDiagnosisFASubNavigateParameter param
-                        = this.GenerateParameter(wrap);
-                    this.Frame.Navigate(typeof(AircraftDataAnalysisModel1.WinRT.Domain.FaultDiagAnalysis), param);
-                }
+                //if (wrap.Record != null && wrap.Decision != null)
+                //{
+                AircraftDataAnalysisWinRT.Domain.FaultDiagnosisFASubNavigateParameter param
+                    = this.GenerateParameter(wrap);
+                this.Frame.Navigate(typeof(AircraftDataAnalysisModel1.WinRT.Domain.FaultDiagAnalysis), param);
+                //}
             }
         }
 
@@ -135,13 +135,15 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
             AircraftDataAnalysisWinRT.Domain.FaultDiagnosisFASubNavigateParameter parameter =
                 new AircraftDataAnalysisWinRT.Domain.FaultDiagnosisFASubNavigateParameter()
                 {
-                    DecisionStartSecond = wrap.Record.StartSecond,
-                    DecisionEndSecond = wrap.Record.EndSecond,
-                    DecisionHappenSecond = wrap.Record.HappenSecond,
+                    DecisionStartSecond = wrap.Record == null ? 0 : wrap.Record.StartSecond,
+                    DecisionEndSecond = wrap.Record == null ? 0 : wrap.Record.EndSecond,
+                    DecisionHappenSecond = wrap.Record == null ? 0 : wrap.Record.HappenSecond,
                     RelatedParameterIDs = wrap.Decision.RelatedParameters,
                     DataLoader = null,
                     FlightEndSecond = ApplicationContext.Instance.CurrentFlight.EndSecond,
-                    FlightStartSecond = 0
+                    FlightStartSecond = 0,
+                    DecisionID = wrap.DecisionID,
+                    DecisionName = wrap.Decision.DecisionName,
                 };
 
             List<string> temp = new List<string>(wrap.Decision.RelatedParameters);

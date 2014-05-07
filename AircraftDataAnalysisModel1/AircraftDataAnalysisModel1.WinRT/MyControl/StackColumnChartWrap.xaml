@@ -17,19 +17,89 @@
         <Controls:XamDock >
             <ig:XamDataChart x:Name="DataChart" >
                 <ig:XamDataChart.Axes>
-                    <ig:NumericYAxis x:Name="YAxis"  MinimumValue="0" Label="{}{} 秒" />
+                    <ig:NumericYAxis x:Name="YAxis"  MinimumValue="0" Label="{}{} 秒" >
+                        <ig:NumericYAxis.LabelSettings>
+                            <ig:AxisLabelSettings Foreground="Black" FontSize="14"/>
+                        </ig:NumericYAxis.LabelSettings>
+                    </ig:NumericYAxis>
                     <!--Interval="400"-->
-                    <ig:CategoryXAxis x:Name="XAxis" ItemsSource="{StaticResource ResourceKey=datacontext}" Label="{}{MonthStr}" />
+                    <ig:CategoryXAxis x:Name="XAxis" ItemsSource="{StaticResource ResourceKey=datacontext}" 
+                                      Label="{}{MonthStr}" >
+                        <ig:CategoryXAxis.LabelSettings>
+                            <ig:AxisLabelSettings Extent="35" Foreground="Black" FontSize="14"/>
+                        </ig:CategoryXAxis.LabelSettings>
+                    </ig:CategoryXAxis>
                 </ig:XamDataChart.Axes>
                 <ig:XamDataChart.Series>
-                    <ig:StackedColumnSeries XAxis="{Binding ElementName=XAxis}"  ItemsSource="{StaticResource ResourceKey=datacontext}" 
+                    <ig:StackedColumnSeries XAxis="{Binding ElementName=XAxis}" 
+                                            ItemsSource="{StaticResource ResourceKey=datacontext}" 
                                 YAxis="{Binding ElementName=YAxis}"  Legend="{Binding ElementName=xmLegend}" >
                         <ig:StackedColumnSeries.Series>
                             <ig:StackedFragmentSeries ValueMemberPath="Condition1" 
-                                                         Title="停车通电状态" />
-                            <ig:StackedFragmentSeries ValueMemberPath="Condition2" Title="发动机地面开车状态" />
-                            <ig:StackedFragmentSeries ValueMemberPath="Condition3" Title="正常飞行状态" />
-                            <ig:StackedFragmentSeries ValueMemberPath="Condition4" Title="最大军用转速状态" />
+                                                         Title="停车通电状态" >
+                                <ig:StackedFragmentSeries.MarkerTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,0,0">
+                                            <Border CornerRadius="5" Background="#72010101" 
+                                   BorderBrush="DimGray" BorderThickness="0.5">
+                                                <!--Note: Text property of TextBlock is bound to
+                                   property of items that make up the data source -->
+                                                <TextBlock Margin="2" Text="{Binding Item.Condition1}" 
+                                         Foreground="DarkGoldenrod" FontSize="14" 
+                                         HorizontalAlignment="Center" />
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ig:StackedFragmentSeries.MarkerTemplate>
+                            </ig:StackedFragmentSeries>
+                            <ig:StackedFragmentSeries ValueMemberPath="Condition2" Title="发动机地面开车状态">
+                                <ig:StackedFragmentSeries.MarkerTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,0,0">
+                                            <Border CornerRadius="5" Background="#72010101" 
+                                   BorderBrush="DimGray" BorderThickness="0.5">
+                                                <!--Note: Text property of TextBlock is bound to
+                                   property of items that make up the data source -->
+                                                <TextBlock Margin="2" Text="{Binding Item.Condition2}" 
+                                         Foreground="Red" FontSize="14" 
+                                         HorizontalAlignment="Center" />
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ig:StackedFragmentSeries.MarkerTemplate>
+                            </ig:StackedFragmentSeries>
+                            <ig:StackedFragmentSeries ValueMemberPath="Condition3" Title="正常飞行状态" >
+                                <ig:StackedFragmentSeries.MarkerTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,0,0">
+                                            <Border CornerRadius="5" Background="#72010101" 
+                                   BorderBrush="DimGray" BorderThickness="0.5">
+                                                <!--Note: Text property of TextBlock is bound to
+                                   property of items that make up the data source -->
+                                                <TextBlock Margin="2" Text="{Binding Item.Condition3}" 
+                                         Foreground="Blue" FontSize="14" 
+                                         HorizontalAlignment="Center" />
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ig:StackedFragmentSeries.MarkerTemplate>
+                            </ig:StackedFragmentSeries>
+                            <ig:StackedFragmentSeries ValueMemberPath="Condition4" Title="最大军用转速状态" >
+                                <ig:StackedFragmentSeries.MarkerTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,0,0">
+                                            <Border CornerRadius="5" Background="#72010101" 
+                                   BorderBrush="DimGray" BorderThickness="0.5">
+                                                <!--Note: Text property of TextBlock is bound to
+                                   property of items that make up the data source -->
+                                                <TextBlock Margin="2" Text="{Binding Item.Condition4}" 
+                                         Foreground="Violet" FontSize="14" 
+                                         HorizontalAlignment="Center" />
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ig:StackedFragmentSeries.MarkerTemplate>
+                            </ig:StackedFragmentSeries>
                         </ig:StackedColumnSeries.Series>
                     </ig:StackedColumnSeries>
                 </ig:XamDataChart.Series>

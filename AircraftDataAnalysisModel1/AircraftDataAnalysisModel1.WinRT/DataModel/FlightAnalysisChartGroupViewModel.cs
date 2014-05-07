@@ -279,5 +279,14 @@ namespace AircraftDataAnalysisModel1.WinRT.DataModel
     public class FlightAnalysisChartSerieViewModel
         : ObservableCollection<AircraftDataAnalysisModel1.WinRT.MyControl.SimpleDataPoint>
     {
+        public FlightAnalysisChartSerieViewModel()
+            : base()
+        {
+        }
+
+        public FlightAnalysisChartSerieViewModel(IEnumerable<MyControl.SimpleDataPoint> sorted) :
+            base(sorted)
+        {
+        }
     }
 }

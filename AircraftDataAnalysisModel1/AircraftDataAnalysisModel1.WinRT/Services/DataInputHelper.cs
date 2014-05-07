@@ -205,7 +205,7 @@ namespace AircraftDataAnalysisWinRT.Services
             foreach (var pt in pointList)
             {
                 pt.AircraftNumber = flight.Aircraft.AircraftNumber;
-                pt.FlightDateTime = flight.FlightDate; 
+                pt.FlightDateTime = flight.FlightDate;
             }
 
             var collection = new System.Collections.ObjectModel.ObservableCollection<
@@ -245,6 +245,21 @@ namespace AircraftDataAnalysisWinRT.Services
 
             var task = client.DeleteAircraftInstanceAsync(rtInstance);
             task.Wait();
+        }
+
+        public static void DeleteFlight(FlightDataEntitiesRT.Flight currentFlight)
+        {
+            Task<string> task = DeleteFlightAsync(currentFlight);
+            task.Wait();
+        }
+
+        public static Task<string> DeleteFlightAsync(FlightDataEntitiesRT.Flight flight)
+        {
+            AircraftDataInput.AircraftDataInputClient client = GetClient();
+            var rtInstance = RTConverter.ToDataInput(flight);
+
+            var task = client.DeleteFlightAsync(rtInstance);
+            return task;
         }
     }
 }

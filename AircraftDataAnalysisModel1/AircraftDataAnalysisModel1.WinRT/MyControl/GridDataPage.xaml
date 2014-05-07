@@ -67,14 +67,11 @@
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
         <VisualStateManager.VisualStateGroups>
-
             <!-- Visual states reflect the application's view state -->
             <VisualStateGroup x:Name="ApplicationViewStates">
                 <VisualState x:Name="FullScreenLandscape"/>
                 <VisualState x:Name="Filled"/>
-
                 <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
                 <VisualState x:Name="FullScreenPortrait">
                     <Storyboard>
@@ -105,7 +102,9 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="数据表格" Style="{StaticResource PageHeaderTextStyle}"/>
+            <ProgressBar Grid.Column="0" Grid.ColumnSpan="2" Visibility="Visible"
+			    x:Name="ProgressBar1"  IsIndeterminate="True"  Height="15" Margin="0,0,0,0" VerticalAlignment="Top" />
         </Grid>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
@@ -119,8 +118,9 @@
                          AllowDraggingColumns="True" ColumnSizer="AutoWithLastColumnFill"
                           BorderBrush="#FFC8E3E3" BorderThickness="1" RowSelectionBrush="#FFdff3f4"
                               GroupRowSelectionBrush="#FFdff3f4"
-                               ItemsSource="{Binding ElementName=sfDataPager,
-                                                     Path=PagedSource}">
+                             ItemsSource="{Binding}" >
+                <!--ItemsSource="{Binding ElementName=sfDataPager,
+                                                     Path=PagedSource}">-->
                 <Grid:SfDataGrid.HeaderStyle>
                     <Style TargetType="Grid:GridHeaderCellControl">
                         <Setter Property="Background" Value="Transparent" />
@@ -131,7 +131,7 @@
                         <Setter Property="FontSize" Value="16" />
                         <Setter Property="Foreground" Value="#FF5E5B5C" />
                         <Setter Property="FontWeight" Value="SemiBold" />
-                        <Setter Property="Template">
+                        <!--<Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="Grid:GridHeaderCellControl">
                                     <Border Background="{TemplateBinding Background}"
@@ -224,7 +224,7 @@
                                     </Border>
                                 </ControlTemplate>
                             </Setter.Value>
-                        </Setter>
+                        </Setter>-->
                     </Style>
                 </Grid:SfDataGrid.HeaderStyle>
                 <Grid:SfDataGrid.Columns>
@@ -285,9 +285,9 @@
                 </Grid:SfDataGrid.Columns>
             </Grid:SfDataGrid>
             <datapager:SfDataPager x:Name="sfDataPager"
-                                   Grid.Row="1"
+                                   Grid.Row="1" Visibility="Collapsed"
                                    Height="80"
-                                   Margin="0,-15,0,0"
+                                   Margin="0"
                                    HorizontalContentAlignment="Right"
                                    AccentBackground="#FF53C3D5"
                                    AccentForeground="White"

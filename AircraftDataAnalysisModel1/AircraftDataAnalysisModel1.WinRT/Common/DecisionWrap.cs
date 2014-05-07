@@ -124,5 +124,18 @@ namespace AircraftDataAnalysisWinRT.Common
                 return string.Format(template, this.Decision.DecisionName, "(此故障未发生)");
             }
         }
+
+        public string DecisionHelpContent
+        {
+            get
+            {
+                if (this.Decision != null)
+                {
+                    return this.Decision.SolutionInstruction;
+                }
+
+                return string.Empty;
+            }
+        }
     }
 }

@@ -1,0 +1,276 @@
+﻿<common:LayoutAwarePage
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PStudio.WinApp.Aircraft.FDAPlatform.Domain"
+    xmlns:common="using:AircraftDataAnalysisWinRT.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Grid="using:Syncfusion.UI.Xaml.Grid"
+    x:Name="pageRoot"
+    x:Class="AircraftDataAnalysisWinRT.Domain.FlightAnalysisSubLite"
+    mc:Ignorable="d" xmlns:Controls="using:Infragistics.Controls"  xmlns:Charts="using:Infragistics.Controls.Charts" 
+    >
+    <!--DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Mode=Self}}"-->
+    <common:LayoutAwarePage.Resources>
+        <Style x:Key="CheckBoxStyle1" TargetType="CheckBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource CheckBoxContentForegroundThemeBrush}"/>
+            <Setter Property="Padding" Value="2,3,0,0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontSize" Value="{StaticResource ControlContentThemeFontSize}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPointerOverBackgroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPointerOverBorderThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPointerOverForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="IndeterminateGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPointerOverForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPressedBackgroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPressedBorderThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPressedForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="IndeterminateGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxPressedForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxDisabledBackgroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxDisabledBorderThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxDisabledForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="IndeterminateGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxDisabledForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource CheckBoxContentDisabledForegroundThemeBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="CheckStates">
+                                    <VisualState x:Name="Checked">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CheckGlyph"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unchecked"/>
+                                    <VisualState x:Name="Indeterminate">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="IndeterminateGlyph"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="FocusStates">
+                                    <VisualState x:Name="Focused">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisualWhite"/>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisualBlack"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unfocused"/>
+                                    <VisualState x:Name="PointerFocused"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Name="panel" Width="{Binding ElementName=ContentPresenter, Path=ActualHeight}"  VerticalAlignment="Top" HorizontalAlignment="Left">
+                                    <Viewbox>
+                                        <Border BorderBrush="Black" BorderThickness="2">
+                                            <Grid>
+                                                <Rectangle x:Name="NormalRectangle" Fill="{StaticResource CheckBoxBackgroundThemeBrush}" Height="21" Stroke="{StaticResource CheckBoxBorderThemeBrush}"  StrokeThickness="{StaticResource CheckBoxBorderThemeThickness}" UseLayoutRounding="False" Width="21"/>
+                                                <Path x:Name="CheckGlyph" Data="F1 M 0,58 L 2,56 L 6,60 L 13,51 L 15,53 L 6,64 z" Fill="{StaticResource CheckBoxForegroundThemeBrush}" FlowDirection="LeftToRight" Height="14" Opacity="0" Stretch="Fill" Width="16"/>
+                                                <Rectangle x:Name="IndeterminateGlyph" Fill="{StaticResource CheckBoxForegroundThemeBrush}" Height="9" Opacity="0" UseLayoutRounding="False" Width="9"/>
+                                                <Rectangle x:Name="FocusVisualWhite" Height="27" Opacity="0" StrokeDashOffset="0.5" StrokeEndLineCap="Square" Stroke="Black" StrokeDashArray="1,1" Width="27"/>
+                                                <Rectangle x:Name="FocusVisualBlack" Height="27" Opacity="0" StrokeDashOffset="1.5" StrokeEndLineCap="Square" Stroke="Black" StrokeDashArray="1,1" Width="27"/>
+                                            </Grid>
+                                        </Border>
+                                    </Viewbox>
+                                </Grid>
+                                <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Grid.Column="1" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <local:BooleanColorBrushConverter x:Key="BooleanColorBrushConverter"/>
+        <local:BooleanVisibilityConverter x:Name="booleanVisibilityConverter"/>
+        <local:NullVisibilityValueConverter x:Name="nullconverter"/>
+        <local:BooleanColorBrushConverter x:Key="converter"/>
+        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
+        <x:String x:Key="AppName">曲线对比分析</x:String>
+    </common:LayoutAwarePage.Resources>
+
+    <!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+    <Grid Style="{StaticResource LayoutRootStyle}" x:Name="grdHost" Background="{StaticResource AllBackgroundColor}" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <VisualStateManager.VisualStateGroups>
+
+            <!-- Visual states reflect the application's view state -->
+            <VisualStateGroup x:Name="ApplicationViewStates">
+                <VisualState x:Name="FullScreenLandscape"/>
+                <VisualState x:Name="Filled"/>
+
+                <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
+                <VisualState x:Name="FullScreenPortrait">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+
+                <!-- The back button and title have different styles when snapped -->
+                <VisualState x:Name="Snapped">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <!-- Back button and page title -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <ProgressBar x:Name="progbar1"  Grid.ColumnSpan="2"
+                     IsIndeterminate="True" Visibility="Visible" Foreground="White"
+                     VerticalAlignment="Top" Height="20">
+            </ProgressBar>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{Binding Path=AppName,ElementName=pageRoot}"
+                       Style="{StaticResource PageHeaderTextStyle}"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <!--<ColumnDefinition Width="300"/>-->
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="1" Margin="10" Background="White" CornerRadius="15">
+                <Controls:XamDock>
+                    <Charts:XamDataChart Grid.Column="1" x:Name="tracker1" 
+                                 VerticalZoombarVisibility="Visible" HorizontalZoombarVisibility="Visible"
+                                VerticalZoomable="True" HorizontalZoomable="True"
+                                >
+                        <Charts:XamDataChart.Axes>
+                            <Charts:CategoryXAxis x:Name="xm1XAxis1" 
+                          ItemsSource="{Binding}" Label="{}{Second}" >
+                                <Charts:CategoryXAxis.LabelSettings >
+                                    <Charts:AxisLabelSettings Extent="35" FontSize="24"  Foreground="Black"/>
+                                </Charts:CategoryXAxis.LabelSettings>
+                            </Charts:CategoryXAxis>
+                            <Charts:CategoryXAxis x:Name="xm1XAxis2" 
+                            ItemsSource="{Binding}" Label="{}{Second}" >
+                                <Charts:CategoryXAxis.LabelSettings >
+                                    <Charts:AxisLabelSettings Extent="5" Location="OutsideTop" Foreground="White"/>
+                                </Charts:CategoryXAxis.LabelSettings>
+                            </Charts:CategoryXAxis>
+                            <Charts:NumericYAxis x:Name="xm1YAxis1" Stroke="Red" 
+                                                      CrossingAxis="{Binding ElementName=xm1XAxis1}" CrossingValue="-1" >
+                                <Charts:NumericYAxis.LabelSettings >
+                                    <Charts:AxisLabelSettings Location="OutsideLeft" 
+                                                                           Extent="80" FontFamily="Global User Interface" 
+                                                         FontSize="24" Foreground="Black"/>
+                                </Charts:NumericYAxis.LabelSettings>
+                            </Charts:NumericYAxis>
+                            <Charts:NumericYAxis x:Name="xm1YAxis2" Stroke="Blue" CrossingValue="-1"
+                                        CrossingAxis="{Binding ElementName=xm1XAxis2}">
+                                <Charts:NumericYAxis.LabelSettings >
+                                    <Charts:AxisLabelSettings x:Name="yaxis2LabelSetting"
+                                        Location="OutsideRight" Extent="55" Foreground="DarkViolet"
+                                                           FontSize="24" FontFamily="Global User Interface" />
+                                </Charts:NumericYAxis.LabelSettings>
+                            </Charts:NumericYAxis>
+                        </Charts:XamDataChart.Axes>
+                        <Charts:XamDataChart.Series>
+                            <Charts:LineSeries x:Name="addParamSerie" MarkerType="None" 
+                                               ItemsSource="{Binding Path=ChartViewModel}" ValueMemberPath="Value"
+                                                Visibility="{Binding Path=CompareParameterSerieVisibility}"/>
+                        </Charts:XamDataChart.Series>
+                    </Charts:XamDataChart>
+                    <Charts:Legend x:Name="TitleLegend"  FontSize="24"
+                        Margin="20" Controls:XamDock.HorizontalDockAlignment="Left" 
+                                   Controls:XamDock.VerticalDockAlignment="Top"
+                                  Controls:XamDock.Edge="OutsideTop" Orientation="Vertical" >
+                        <!--Content="Legend"-->
+                        <!--VerticalAlignment="Top" HorizontalAlignment="Right"-->
+                    </Charts:Legend>
+                    <Grid Controls:XamDock.Edge="OutsideTop"  Controls:XamDock.HorizontalDockAlignment="Right" 
+                                   Controls:XamDock.VerticalDockAlignment="Top">
+                        <StackPanel Orientation="Horizontal" x:Name="stackAddParam">
+                            <CheckBox Margin="0,0,0,0" x:Name="cbAddParameter" 
+                                  IsChecked="{Binding Path=IsAddCompareParameterEnable,Mode=TwoWay}" 
+                                      Style="{StaticResource CheckBoxStyle1}">
+                                <CheckBox.Content>
+                                    <TextBlock Foreground="Black" FontSize="24" Text="新增/删除一个曲线"/>
+                                </CheckBox.Content>
+                            </CheckBox>
+                            <ComboBox x:Name="cbSelectParameter" Foreground="Black" FontSize="24" Width="240" Margin="15"
+                                      IsEnabled="{Binding Path=IsChecked,ElementName=cbAddParameter}"
+                                      ItemsSource="{Binding Path=ComboBoxParameterIDSource}"
+                                      SelectedValue="{Binding Path=SelectedParameterID,Mode=TwoWay}"
+                                     VerticalAlignment="Center" SelectedValuePath="ParameterID" DisplayMemberPath="Caption">
+                            </ComboBox>
+                        </StackPanel>
+                        <!--<Border Background="Lavender" CornerRadius="15" Margin="25">
+                            <Grid Width="200" Height="85"></Grid>
+                        </Border>-->
+                    </Grid>
+                </Controls:XamDock>
+            </Border>
+        </Grid>
+    </Grid>
+</common:LayoutAwarePage>

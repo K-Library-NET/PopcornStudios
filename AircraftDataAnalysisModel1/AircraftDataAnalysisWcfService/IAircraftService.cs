@@ -127,5 +127,8 @@ namespace AircraftDataAnalysisWcfService
         [OperationContract]
         FlightDataEntities.Decisions.DecisionRecord[] GetFlightConditionDecisionRecords(AircraftModel model,
              DateTime startYearMonth, DateTime endYearMonth, string[] aircraftNumbers);
+
+        [OperationContract]
+        string GetAppConfigValue(string appKey);
     }
 }

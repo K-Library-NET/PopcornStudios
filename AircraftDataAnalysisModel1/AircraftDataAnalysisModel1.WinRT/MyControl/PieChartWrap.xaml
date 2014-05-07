@@ -20,7 +20,7 @@
                        Text="{Binding Converter={StaticResource labelconverter}}" FontSize="18" FontFamily="Segoe UI" 
                        Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Top" Opacity="0.5"></TextBlock>
         </DataTemplate>
-
+        <local:PieChartAmountCategoryConverter x:Key="catNameConverter"/>
         <DataTemplate x:Key="legend">
             <StackPanel Orientation="Horizontal">
                 <Grid Margin="10,0,0,0">
@@ -30,8 +30,8 @@
                     </Grid.ColumnDefinitions>
                     <Rectangle Width="15" Height="15" Fill="{Binding Interior}"></Rectangle>
                     <TextBlock Margin="5,5,5,0" FontSize="18"
-                               Grid.Column="1" Text="{Binding Item.CategoryName}"
-                               Foreground="Black"></TextBlock>
+                               Grid.Column="1" Text="{Binding Path=Item.CategoryName}"
+                               Foreground="Black"></TextBlock><!--Converter={StaticResource catNameConverter}-->
                 </Grid>
             </StackPanel>
         </DataTemplate>
@@ -47,10 +47,10 @@
             </chart:SfChart.Header>
             <chart:SfChart.Legend>
                 <chart:ChartLegend  CornerRadius="0" ItemTemplate="{StaticResource legend}" 
-                                        CheckBoxVisibility="Visible" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        CheckBoxVisibility="Visible" BorderThickness="1" />
             </chart:SfChart.Legend>
             <chart:PieSeries EnableAnimation="True" x:Name="pieSeries" ItemsSource="{StaticResource ResourceKey=datacontext}"
-                                 XBindingPath="CategoryName" Label="数据统计" YBindingPath="Amount">
+                                 XBindingPath="CategoryName" Label="数据统计" YBindingPath="Amount" HorizontalAlignment="Left">
                 <chart:PieSeries.AdornmentsInfo>
                     <chart:ChartAdornmentInfo AdornmentsPosition="Bottom"  HorizontalAlignment="Center" VerticalAlignment="Center" 
                                                   ConnectorLineStyle="{StaticResource lineStyle}" ShowConnectorLine="True" 

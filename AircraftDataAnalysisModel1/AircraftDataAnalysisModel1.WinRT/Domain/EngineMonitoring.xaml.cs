@@ -420,7 +420,7 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
                 else
                 {
                     this.RemoveData(item.Flight.FlightID, this.Counter);
-                    
+
                     this.Counter--;
                 }
             }

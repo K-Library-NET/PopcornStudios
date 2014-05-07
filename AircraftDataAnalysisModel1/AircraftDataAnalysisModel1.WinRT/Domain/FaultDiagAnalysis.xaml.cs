@@ -27,7 +27,7 @@ namespace AircraftDataAnalysisModel1.WinRT.Domain
     /// 基本页，提供大多数应用程序通用的特性。
     /// </summary>
     public sealed partial class FaultDiagAnalysis : AircraftDataAnalysisWinRT.Common.LayoutAwarePage,
-        AircraftDataAnalysisModel1.WinRT.MyControl.ITrackerParent
+        AircraftDataAnalysisModel1.WinRT.MyControl.ITrackerParent, System.ComponentModel.INotifyPropertyChanged
     {
         public FaultDiagAnalysis()
         {
@@ -40,6 +40,20 @@ namespace AircraftDataAnalysisModel1.WinRT.Domain
             m_charts.Add(this.tracker5);
             m_charts.Add(this.tracker6);
             m_charts.Add(this.tracker7);
+        }
+
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+
+        private string m_appName = "故障诊断";
+
+        private string m_decisionSuffix = string.Empty;
+
+        public string AppName
+        {
+            get
+            {
+                return m_appName + m_decisionSuffix;
+            }
         }
 
         #region tracking point function
@@ -360,12 +374,14 @@ namespace AircraftDataAnalysisModel1.WinRT.Domain
                 if (vm.Serie1Visibility == Windows.UI.Xaml.Visibility.Visible)
                 {
                     var parameterIDHost = vm.Serie1Definition.ParameterID;
-                    AircraftDataAnalysisWinRT.MyControl.SubEditChartNavigationParameter parameter
-                        = new AircraftDataAnalysisWinRT.MyControl.SubEditChartNavigationParameter()
+                    AircraftDataAnalysisWinRT.MyControl.FaultDiagSubEditChartNavigationParameter parameter
+                        = new AircraftDataAnalysisWinRT.MyControl.FaultDiagSubEditChartNavigationParameter()
                         {
                             HostParameterID = parameterIDHost,
                             DataLoader = this.GetRootViewModel().DataLoader,
                             HostParameterYAxis = FlightAnalysisSubViewYAxis.LeftYAxis,
+                            MinValueSecond = this.FaultEndSecond,
+                            MaxValueSecond = this.FaultStartSecond,
                         };
 
                     List<AircraftDataAnalysisWinRT.MyControl.SubEditChartNavigationParameter.RelatedParameterInfo> infos
@@ -396,7 +412,8 @@ namespace AircraftDataAnalysisModel1.WinRT.Domain
                         parameter.RelatedParameterIDs = infos.ToArray();
                     }
 
-                    this.Frame.Navigate(typeof(FlightAnalysisSub), parameter);
+                    this.Frame.Navigate(typeof(FlightAnalysisSubLite), //typeof(FlightAnalysisSub), 
+                        parameter);
                 }
             }
         }
@@ -423,15 +440,17 @@ namespace AircraftDataAnalysisModel1.WinRT.Domain
                 {
                     navPara = e.Parameter as FaultDiagnosisFASubNavigateParameter;
 
+                    this.FaultStartSecond = navPara.DecisionStartSecond;
+                    this.FaultEndSecond = navPara.DecisionEndSecond;
+
+                    this.m_decisionSuffix = "——" + navPara.DecisionName;
+
                     rootViewModel.SetCurrentParameters(navPara.HostParameterID,
                         navPara.RelatedParameterIDs, navPara.FlightStartSecond,
                         navPara.FlightEndSecond, navPara.DecisionStartSecond,
                         navPara.DecisionEndSecond, navPara.DecisionHappenSecond);
 
-                    //if (!string.IsNullOrEmpty(navPara.SelectedPanelID))
-                    //{
-                    //    rootViewModel.SetCurrentPanel(navPara.SelectedPanelID);
-                    //}
+                    SetCrossingValueAsync(navPara);
                 }
             }
 
@@ -456,6 +475,28 @@ namespace AircraftDataAnalysisModel1.WinRT.Domain
             {
                 System.Diagnostics.Debug.WriteLine("Completed");
             }));
+        }
+
+        private void SetCrossingValueAsync(FaultDiagnosisFASubNavigateParameter navPara)
+        {
+            this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                new Windows.UI.Core.DispatchedHandler(() =>
+                {
+                    (this.tracker1.Axes["xm1YAxis"] as NumericYAxis).CrossingValue = navPara.DecisionStartSecond;
+                    (this.tracker1.Axes["xm1YAxis2"] as NumericYAxis).CrossingValue = navPara.DecisionEndSecond;
+                    (this.tracker2.Axes["xm2YAxis"] as NumericYAxis).CrossingValue = navPara.DecisionStartSecond;
+                    (this.tracker2.Axes["xm2YAxis2"] as NumericYAxis).CrossingValue = navPara.DecisionEndSecond;
+                    (this.tracker3.Axes["xm3YAxis"] as NumericYAxis).CrossingValue = navPara.DecisionStartSecond;
+                    (this.tracker3.Axes["xm3YAxis2"] as NumericYAxis).CrossingValue = navPara.DecisionEndSecond;
+                    (this.tracker4.Axes["xm4YAxis"] as NumericYAxis).CrossingValue = navPara.DecisionStartSecond;
+                    (this.tracker4.Axes["xm4YAxis2"] as NumericYAxis).CrossingValue = navPara.DecisionEndSecond;
+                    (this.tracker5.Axes["xm5YAxis"] as NumericYAxis).CrossingValue = navPara.DecisionStartSecond;
+                    (this.tracker5.Axes["xm5YAxis2"] as NumericYAxis).CrossingValue = navPara.DecisionEndSecond;
+                    (this.tracker6.Axes["xm6YAxis"] as NumericYAxis).CrossingValue = navPara.DecisionStartSecond;
+                    (this.tracker6.Axes["xm6YAxis2"] as NumericYAxis).CrossingValue = navPara.DecisionEndSecond;
+                    (this.tracker7.Axes["xm7YAxis"] as NumericYAxis).CrossingValue = navPara.DecisionStartSecond;
+                    (this.tracker7.Axes["xm7YAxis2"] as NumericYAxis).CrossingValue = navPara.DecisionEndSecond;
+                }));
         }
 
         private AircraftDataAnalysisModel1.WinRT.DataModel.FaultDiagAnalysisViewModel GetRootViewModel()
@@ -546,5 +587,9 @@ namespace AircraftDataAnalysisModel1.WinRT.Domain
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
         }
+
+        public int FaultStartSecond { get; set; }
+
+        public int FaultEndSecond { get; set; }
     }
 }

@@ -239,7 +239,7 @@
                     </Style>
                 </Grid1:SfDataGrid.HeaderStyle>
                 <Grid1:SfDataGrid.Columns>
-                    <Grid1:GridTextColumn HeaderText="序号" MappingName="Number" AllowEditing="False" HorizontalHeaderContentAlignment="Center" TextAlignment="Center" />
+                    <Grid1:GridTextColumn HeaderText="序号" MappingName="Number" AllowEditing="False" HorizontalHeaderContentAlignment="Center" TextAlignment="Center" Width="1" />
                     <Grid1:GridTextColumn HeaderText="参数名称" MappingName="ParameterCaption" AllowEditing="False" HorizontalHeaderContentAlignment="Center" TextAlignment="Center" />
                     <Grid1:GridTextColumn HeaderText="极大值" MappingName="MaxValue" AllowEditing="False" HorizontalHeaderContentAlignment="Center" TextAlignment="Center" />
                     <Grid1:GridTextColumn HeaderText="秒值" MappingName="MaxValueSecond" AllowEditing="False" HorizontalHeaderContentAlignment="Center" TextAlignment="Center" />

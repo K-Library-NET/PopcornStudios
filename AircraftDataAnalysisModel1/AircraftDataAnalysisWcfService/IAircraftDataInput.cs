@@ -25,6 +25,10 @@ namespace AircraftDataAnalysisWcfService
         string DeleteExistsData(
             FlightDataEntities.Flight flight);
 
+        [OperationContract]
+        string DeleteFlight(
+            FlightDataEntities.Flight flight);
+
         /// <summary>
         /// 写入判据记录（批量）
         /// 没法单个UpdateOrAdd，只能之前先删掉

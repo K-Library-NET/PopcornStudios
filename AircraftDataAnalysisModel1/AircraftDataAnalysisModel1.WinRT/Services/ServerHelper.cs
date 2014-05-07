@@ -635,5 +635,23 @@ namespace AircraftDataAnalysisWinRT.Services
 
             //return new FlightDataEntitiesRT.Decisions.DecisionRecord[] { };
         }
+
+        internal static string GetAppConfigValue(string appKey, string url)
+        {
+            var client = new AircraftService.AircraftServiceClient();
+
+            if (!string.IsNullOrEmpty(url))
+            {
+                client =
+                new AircraftService.AircraftServiceClient(
+                AircraftService.AircraftServiceClient.EndpointConfiguration.BasicHttpBinding_IAircraftService,
+                url);
+            }
+            //AircraftService.AircraftServiceClient client = GetClient();
+            var result = client.GetAppConfigValueAsync(appKey);
+            result.Wait();
+            client.CloseAsync();
+            return result.Result;
+        }
     }
 }

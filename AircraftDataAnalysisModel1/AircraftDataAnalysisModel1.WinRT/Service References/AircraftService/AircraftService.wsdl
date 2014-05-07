@@ -114,6 +114,12 @@
   <wsdl:message name="IAircraftService_GetFlightConditionDecisionRecords_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetFlightConditionDecisionRecordsResponse" />
   </wsdl:message>
+  <wsdl:message name="IAircraftService_GetAppConfigValue_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAppConfigValue" />
+  </wsdl:message>
+  <wsdl:message name="IAircraftService_GetAppConfigValue_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAppConfigValueResponse" />
+  </wsdl:message>
   <wsdl:portType name="IAircraftService">
     <wsdl:operation name="GetCurrentAircraftModel">
       <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetCurrentAircraftModel" message="tns:IAircraftService_GetCurrentAircraftModel_InputMessage" />
@@ -182,6 +188,10 @@
     <wsdl:operation name="GetFlightConditionDecisionRecords">
       <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetFlightConditionDecisionRecords" message="tns:IAircraftService_GetFlightConditionDecisionRecords_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetFlightConditionDecisionRecordsResponse" message="tns:IAircraftService_GetFlightConditionDecisionRecords_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAppConfigValue">
+      <wsdl:input wsaw:Action="http://tempuri.org/IAircraftService/GetAppConfigValue" message="tns:IAircraftService_GetAppConfigValue_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAircraftService/GetAppConfigValueResponse" message="tns:IAircraftService_GetAppConfigValue_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IAircraftService" type="tns:IAircraftService">
@@ -332,6 +342,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetFlightConditionDecisionRecords">
       <soap:operation soapAction="http://tempuri.org/IAircraftService/GetFlightConditionDecisionRecords" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAppConfigValue">
+      <soap:operation soapAction="http://tempuri.org/IAircraftService/GetAppConfigValue" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

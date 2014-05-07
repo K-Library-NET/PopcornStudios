@@ -1,4 +1,4 @@
-﻿<common:LayoutAwarePage
+﻿<common:LayoutAwarePage xmlns:Input="using:Syncfusion.UI.Xaml.Controls.Input" 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AircraftDataAnalysisWinRT.Domain"
@@ -9,7 +9,8 @@
     x:Name="pageRoot"
     x:Class="AircraftDataAnalysisWinRT.Domain.ImportAircraftBatchConfirm"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Mode=Self}}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    xmlns:local2="using:PStudio.WinApp.Aircraft.FDAPlatform.Domain">
 
     <common:LayoutAwarePage.Resources>
         <Grid1:SortDirectionToVisibilityConverter x:Key="sortDirectionToVisibilityConverter" />
@@ -60,6 +61,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <local2:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
     </common:LayoutAwarePage.Resources>
 
     <Grid Style="{StaticResource LayoutRootStyle}" Background="{StaticResource AllBackgroundColor}">
@@ -112,6 +114,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid1:SfDataGrid x:Name="rgdItems"  AutoGenerateColumns="False" 
                               AllowResizingColumns="True" AllowDraggingColumns="True"
@@ -133,21 +136,31 @@
                 </Grid1:SfDataGrid.HeaderStyle>
                 <Grid1:SfDataGrid.Columns>
                     <Grid1:GridTextColumn HeaderText="架次名称" MappingName="FlightID" ColumnSizer="Star" 
-                                          HorizontalHeaderContentAlignment="Center" TextAlignment="Center" AllowResizing="True"/>
+                                          HorizontalHeaderContentAlignment="Center" TextAlignment="Center" AllowResizing="True" AllowEditing="False"/>
                     <Grid1:GridTextColumn  HorizontalHeaderContentAlignment="Center" HeaderText="文件名" MappingName="FlightName" ColumnSizer="Star" TextAlignment="Center" AllowResizing="True"/>
-                    <Grid1:GridTextColumn  HorizontalHeaderContentAlignment="Center" HeaderText="时长" MappingName="EndSecond" ColumnSizer="Star" TextAlignment="Center" AllowGrouping="False" AllowResizing="True"/>
+                    <Grid1:GridTextColumn  HorizontalHeaderContentAlignment="Center" HeaderText="时长" MappingName="EndSecond" ColumnSizer="Star" TextAlignment="Center" AllowGrouping="False" AllowResizing="True" AllowEditing="False"/>
                     <Grid1:GridTextColumn  HorizontalHeaderContentAlignment="Center" HeaderText="机号" MappingName="AircraftNumber" ColumnSizer="Star" TextAlignment="Center" AllowGrouping="False" AllowResizing="True"/>
-
+                    <Grid1:GridTemplateColumn HorizontalHeaderContentAlignment="Center" HeaderText="飞行日期" MappingName="FlightDate" 
+                                              ColumnSizer="Star" TextAlignment="Center" AllowGrouping="False" 
+                        AllowResizing="True">
+                        <Grid1:GridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Input:SfDatePicker Value="{Binding FlightDate,Mode=TwoWay}"
+                           BorderBrush="Gray" SelectorFormatString="y:m:d" />
+                            </DataTemplate>
+                        </Grid1:GridTemplateColumn.CellTemplate>
+                    </Grid1:GridTemplateColumn>
                 </Grid1:SfDataGrid.Columns>
-
             </Grid1:SfDataGrid>
-            <StackPanel HorizontalAlignment="Right" Margin="15" VerticalAlignment="Bottom" Orientation="Horizontal" Grid.Row="1">
-                <Button FontSize="24" MinWidth="150" MinHeight="52" BorderBrush="{StaticResource AllBackgroundColor}" Content="确定导入" Foreground="Black" Click="Button_Click" Margin="15"/>
-                <Button FontSize="24" MinWidth="150" MinHeight="52" BorderBrush="{StaticResource AllBackgroundColor}" Foreground="Black" Content="取消" Click="OncancelImportclicked" Margin="15"/>
+            <TextBlock Grid.Row="1" x:Name="tbMessage1" Margin="15,0,400,0" VerticalAlignment="Center" 
+                       Visibility="Collapsed"
+                       FontSize="24" Text="部分架次无法通过文件名正确解析架次信息，请手工编辑确认。" Foreground="Red" />
+            <StackPanel HorizontalAlignment="Right" Margin="15,0" VerticalAlignment="Bottom" Orientation="Horizontal" Grid.Row="2">
+                <Button FontSize="24" MinWidth="150" MinHeight="52" BorderBrush="{StaticResource AllBackgroundColor}" Content="确定导入" Foreground="Black" Click="Button_Click" Margin="15,5,15,15"/>
+                <Button FontSize="24" MinWidth="150" MinHeight="52" BorderBrush="{StaticResource AllBackgroundColor}" Foreground="Black" Content="取消" Click="OncancelImportclicked" Margin="15,5,15,15"/>
             </StackPanel>
-            <TextBlock Grid.Row="1" x:Name="tbMessage" Margin="15,0,400,0" VerticalAlignment="Center" 
+            <TextBlock Grid.Row="2" x:Name="tbMessage" Margin="15,0,400,0" VerticalAlignment="Center" 
                        FontSize="24" Text="批量导入需要一些时间，请耐心等待。" Foreground="Black" />
-
         </Grid>
     </Grid>
 </common:LayoutAwarePage>

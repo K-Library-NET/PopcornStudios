@@ -171,24 +171,60 @@
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="0" CornerRadius="15" Padding="10" Margin="5" Background="White" BorderBrush="White"
                     DataContext="{StaticResource ResourceKey=datacontext}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid Margin="25,10" x:Name="leftPanelGrid">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" x:Name="leftPanelRow1"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <!--<RowDefinition Height="Auto" x:Name="leftPanelRow1"/>
                             <RowDefinition x:Name="leftPanelRow2" Height="1"></RowDefinition>
-                            <!--Height="{Binding Path=IsTrackMode,Converter={StaticResource ResourceKey=BooleanRowHeightConverter}}"/>-->
+                             Height="{Binding Path=IsTrackMode,Converter={StaticResource ResourceKey=BooleanRowHeightConverter}}"/>
                             <RowDefinition x:Name="leftPanelRow3" Height="{Binding Path=IsZoomMode,Converter={StaticResource ResourceKey=BooleanRowHeightConverter}}"/>
-                            <RowDefinition x:Name="leftPanelRow4" Height="Auto"/>
+                            <RowDefinition x:Name="leftPanelRow4" Height="Auto"/>-->
                         </Grid.RowDefinitions>
-                        <Grid>
+                        <CheckBox Margin="15" x:Name="cbAddParameter" Visibility="Collapsed"
+                                  IsChecked="True" Style="{StaticResource CheckBoxStyle1}">
+                            <CheckBox.Content>
+                                <TextBlock Foreground="Black" FontSize="28" Text="增加参数"/>
+                            </CheckBox.Content>
+                        </CheckBox>
+                        <TextBlock Margin="15,0" Text="参数：" FontSize="28" Foreground="Black"/>
+                        <Grid Margin="15,0,15,15" Grid.Row="1">
+                            <ComboBox x:Name="cbSelectParameter" Foreground="Black" FontSize="28"
+                                      IsEnabled="{Binding Path=IsParameterCanAdd,ElementName=cbAddParameter}"
+                            >
+                            </ComboBox>
+                        </Grid>
+                        <Border Margin="15" Grid.Row="2" Background="LightGray" CornerRadius="15" 
+                                Visibility="{Binding Path=IsParameterCanAdd,
+                                Converter={StaticResource booleanVisibilityConverter}}">
+                            <Button HorizontalAlignment="Stretch" BorderBrush="Transparent"
+                                    >
+                                <Button.Content>
+                                    <TextBlock Text="增加参数" HorizontalAlignment="Center" Foreground="Black" FontSize="28"/>
+                                </Button.Content>
+                            </Button>
+                        </Border>
+                        <Border Margin="15" Grid.Row="3" Background="LightGray" CornerRadius="15" 
+                                Visibility="{Binding Path=IsParameterCanRemove,
+                                Converter={StaticResource booleanVisibilityConverter}}">
+                            <Button HorizontalAlignment="Stretch" BorderBrush="Transparent" >
+                                <Button.Content>
+                                    <TextBlock Text="删除参数" HorizontalAlignment="Center" Foreground="Black" FontSize="28"/>
+                                </Button.Content>
+                            </Button>
+                        </Border>
+                        <!--<Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
@@ -229,7 +265,7 @@
                                        Text="{Binding Path=CurrentSecondDisplayStr}" HorizontalAlignment="Right"
                                        VerticalAlignment="Bottom"
                                                Foreground="Black"/>
-                                <!--Text="{Binding Path=SecondDisplayStr}"-->
+                                Text="{Binding Path=SecondDisplayStr}" 
                             </Grid>
                             <ItemsControl Grid.Row="1" x:Name="panelParameterListCtrl" DataContext="{StaticResource ResourceKey=datacontext}"
                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled"
@@ -287,14 +323,14 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                        </Grid>
-                    </Grid>
-                    <Border Margin="45,25,45,25" Grid.Row="1" Background="LightGray" CornerRadius="25">
+                        </Grid>-->
+                        <!--<Border Margin="45,25,45,25" Grid.Row="1" Background="LightGray" CornerRadius="25">
                         <Button BorderBrush="Transparent" VerticalAlignment="Center"
                                 Click="btnEditParameters_Click" HorizontalAlignment="Stretch" Grid.Row="1">
                             <TextBlock Text="新增/编辑参数" Foreground="Black" FontSize="28"></TextBlock>
                         </Button>
-                    </Border>
+                    </Border>-->
+                    </Grid>
                 </Grid>
             </Border>
             <Border Grid.Column="1" CornerRadius="15" Padding="10" Margin="5" Background="White" BorderBrush="White"
@@ -303,9 +339,9 @@
                     <Border Grid.Row="0" Margin="5" BorderBrush="Black" BorderThickness="1" >
                         <!-- Visibility 写死，必须显示
                         Visibility="{Binding Path=SerieGroup,Converter={StaticResource ResourceKey=nullconverter}}"-->
-                        <Charts1:XamDataChart x:Name="tracker1" 
+                        <Charts1:XamDataChart x:Name="tracker1" VerticalZoombarVisibility="Visible" HorizontalZoombarVisibility="Visible"
                                 VerticalZoomable="{Binding Path=IsZoomMode}" HorizontalZoomable="{Binding Path=IsZoomMode}"
-                                DataContext="{Binding Source={StaticResource ResourceKey=datacontext}, Path=SerieGroup}">
+                                ><!--DataContext="{Binding Source={StaticResource ResourceKey=datacontext}, Path=SerieGroup}"-->
                             <Charts1:XamDataChart.Axes>
                                 <Charts1:CategoryXAxis x:Name="xm1XAxis1" 
                                                                ItemsSource="{Binding Path=DataSerie}" Label="{}{Second}" >
@@ -335,21 +371,22 @@
                                 </Charts1:NumericYAxis>
                             </Charts1:XamDataChart.Axes>
                             <Charts1:XamDataChart.Series>
+                                <!--Visibility="{Binding Path=Serie1Definition,Converter={StaticResource ResourceKey=nullconverter}}"-->
                                 <Charts1:LineSeries ValueMemberPath="Value1" 
-                                            Visibility="{Binding Path=Serie1Definition,Converter={StaticResource ResourceKey=nullconverter}}"
-                                                            Brush="{Binding Path=Serie1Definition.ForegroundBrush}"
+                                             Visibility="Collapsed"                
+                                                    Brush="{Binding Path=Serie1Definition.ForegroundBrush}"
                                           x:Name="serie11" ItemsSource="{Binding Path=DataSerie}"
                                          XAxis="{Binding ElementName=xm1XAxis1}" 
                                          YAxis="{Binding ElementName=xm1YAxis1}" 
                                               Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" >
                                 </Charts1:LineSeries>
-                                <Charts1:LineSeries ValueMemberPath="Value2"  
-                                            Visibility="{Binding Path=Serie2Definition,Converter={StaticResource ResourceKey=nullconverter}}"
+                                <!--Visibility="{Binding Path=Serie2Definition,Converter={StaticResource ResourceKey=nullconverter}}"-->
+                                <Charts1:LineSeries ValueMemberPath="Value2"  Visibility="{Binding Path=Serie2Visibility,Mode=TwoWay}"
                                                             Brush="{Binding Path=Serie2Definition.ForegroundBrush}"
                                    ItemsSource="{Binding Path=DataSerie}" x:Name="serie12"
-                                         XAxis="{Binding ElementName=xm1XAxis2}" 
-                                         YAxis="{Binding ElementName=xm1YAxis2}"  
+                                         XAxis="{Binding ElementName=xm1XAxis1}" 
+                                         YAxis="{Binding ElementName=xm1YAxis1}"  
                                                Thickness="3" MarkerType="None" 
                                            MarkerTemplate="{StaticResource DataTrackerTemplate}" />
                                 <Charts1:LineSeries ValueMemberPath="Value3" 

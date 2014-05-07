@@ -1170,8 +1170,8 @@ namespace AircraftDataAnalysisWcfService
                         new SubCondition(){ ParameterID = "KG6", Operator = CompareOperator.Equal , ParameterValue = 1},
                          new SubCondition(){ ParameterID = "KG8", Operator = CompareOperator.Equal , ParameterValue=1},
                      }},
-                     new Decision(){ DecisionID = "030", DecisionName="着陆时襟翼未放", EventLevel = 1, LastTime = 1, 
-                     DecisionDescriptionStringTemplate = "dT=##dT@s≥1s",
+                     new Decision(){ DecisionID = "030", DecisionName="着陆时襟翼未放", EventLevel = 1, LastTime = 20, 
+                     DecisionDescriptionStringTemplate = "dT=##dT@s≥20s",
                       //dT=0s≥1s
                       SolutionInstruction = "（1）向飞行人员了解情况；（2）机务人员检查襟翼工作情况",
                      RelatedParameters =new string[]{  "Vi","NHL","NHR","KG5","KG6","KG8"},
@@ -2153,6 +2153,26 @@ namespace AircraftDataAnalysisWcfService
             }
 
             return new DecisionRecord[] { };
+        }
+
+        internal string GetAppConfigValue(string appKey)
+        {
+            try
+            {
+                if (ConfigurationManager.AppSettings[appKey] != null)
+                {
+                    return ConfigurationManager.AppSettings[appKey];
+                }
+
+                return string.Empty;
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("GetFlightConditionDecisionRecords", e);
+                return e.Message;
+            }
+
+            return string.Empty;
         }
     }
 }

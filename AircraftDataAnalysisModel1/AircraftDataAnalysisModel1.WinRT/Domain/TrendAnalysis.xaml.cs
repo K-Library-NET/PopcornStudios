@@ -336,6 +336,7 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         //    return list;
         //}
 
+        [Obsolete]
         private System.Collections.ObjectModel.ObservableCollection<RelatedParameterViewModel> GetRelateds()
         {
             var flightParameters = ApplicationContext.Instance.GetFlightParameters(
@@ -351,6 +352,7 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
             return new System.Collections.ObjectModel.ObservableCollection<RelatedParameterViewModel>(result);
         }
 
+        [Obsolete]
         private IEnumerable<FlightDataReading.AircraftModel1.AircraftModel1RawData> GetRawDatas(DataTable dataTable)
         {
             List<FlightDataReading.AircraftModel1.AircraftModel1RawData> list =
@@ -365,6 +367,7 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
             return list;
         }
 
+        [Obsolete]
         private FlightDataReading.AircraftModel1.AircraftModel1RawData GetDataItem(DataRow r)
         {
             FlightDataReading.AircraftModel1.AircraftModel1RawData dt = new FlightDataReading.AircraftModel1.AircraftModel1RawData();

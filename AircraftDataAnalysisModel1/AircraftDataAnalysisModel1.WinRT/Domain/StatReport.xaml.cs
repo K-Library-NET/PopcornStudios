@@ -67,6 +67,7 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
             this.listAircrafts.DataContext = context.SelectModel;
             //this.DataContext = this.GetDataContext();
             this.btnRefresh.DataContext = context.SelectModel;
+            this.btnRefresh.Click += btnRefresh_Click;
             //Old Test
             //System.Diagnostics.Debug.WriteLine(string.Format("Start:{0}", DateTime.Now));
             //FlightAnalysisViewModel viewModel = new FlightAnalysisViewModel();
@@ -83,6 +84,11 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
             ////this.grdHost.ItemsSource = this.GetRawDatas(
             ////    m_viewModel.GridData);
             //System.Diagnostics.Debug.WriteLine(string.Format("end:{0}", DateTime.Now));
+        }
+
+        void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            this.stackGraphics.Children.Clear();
         }
 
         private StatReportViewModel SetDataContext()
@@ -108,11 +114,15 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
         {
             if (e.PropertyName == "PieChartDataSource")
             {
-                this.ctrlPie.DataSource = this.m_datacontext.DataModel.PieChartDataSource;
+                var ctrlPie1 = new AircraftDataAnalysisModel1.WinRT.MyControl.PieChartWrap() { Height = 400 };
+                ctrlPie1.DataSource = this.m_datacontext.DataModel.PieChartDataSource;
+                this.stackGraphics.Children.Add(ctrlPie1);
             }
-            else if (e.PropertyName == "PieChartDataSource")
+            else if (e.PropertyName == "StackColumnCollection")
             {
-                this.ctrlStackCol.DataSource = this.m_datacontext.DataModel.StackColumnCollection;
+                var ctrlStackCol1 = new AircraftDataAnalysisModel1.WinRT.MyControl.StackColumnChartWrap() { Height = 400 };
+                ctrlStackCol1.DataSource = this.m_datacontext.DataModel.StackColumnCollection;
+                this.stackGraphics.Children.Add(ctrlStackCol1);
             }
             //throw new NotImplementedException();
         }

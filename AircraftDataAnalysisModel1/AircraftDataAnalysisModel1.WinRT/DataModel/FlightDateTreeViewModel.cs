@@ -12,7 +12,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
     /// <summary>
     /// 按照日期构造树形
     /// </summary>
-    public class FlightDateTreeViewModel : AircraftDataAnalysisWinRT.Common.BindableBase
+    public class FlightDateTreeViewModel : AircraftDataAnalysisWinRT.Common.BindableBase, IFlightTreeNode
     {
         private IEnumerable<Flight> m_flights;
 
@@ -39,6 +39,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
                     FlightGroupNode dateNode = new FlightGroupNode()
                     {
                         Caption = gpdt.Key,
+                        Parent = this,
                         Children = new ObservableCollection<IFlightTreeNode>(flightNodes)
                     };
                     this.m_nodes.Add(dateNode);
@@ -54,6 +55,53 @@ namespace AircraftDataAnalysisWinRT.DataModel
             {
                 return m_nodes;
             }
+        }
+
+        public IFlightTreeNode FindNodeByFlight(Flight flight)
+        {
+            if (flight != null && !string.IsNullOrEmpty(flight.FlightID)
+                && this.m_nodes != null && this.m_nodes.Count > 0)
+            {
+                foreach (IFlightTreeNode nd in this.m_nodes)
+                {
+                    if (nd.Children != null && nd.Children.Count > 0)
+                    {
+                        foreach (var child in nd.Children)
+                        {
+                            if (child is FlightViewNode)
+                            {
+                                FlightViewNode fnode = child as FlightViewNode;
+                                if (fnode.Flight != null && fnode.Flight.FlightID == flight.FlightID)
+                                    return fnode;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public string Caption
+        {
+            get { return string.Empty; }
+        }
+
+        public IFlightTreeNode Parent
+        {
+            get
+            {
+                return null;
+            }
+            set
+            {
+
+            }
+        }
+
+        public ObservableCollection<IFlightTreeNode> Children
+        {
+            get { return this.m_nodes; }
         }
     }
 
@@ -86,6 +134,12 @@ namespace AircraftDataAnalysisWinRT.DataModel
                         Caption = gpdt.Key,
                         Children = new ObservableCollection<IFlightTreeNode>(flightNodes)
                     };
+
+                    foreach (var c in dateNode.Children)
+                    {
+                        c.Parent = dateNode;
+                    }
+
                     this.m_nodes.Add(dateNode);
                 }
             }
@@ -99,6 +153,31 @@ namespace AircraftDataAnalysisWinRT.DataModel
             {
                 return m_nodes;
             }
+        }
+
+        public IFlightTreeNode FindNodeByFlight(Flight flight)
+        {
+            if (flight != null && !string.IsNullOrEmpty(flight.FlightID)
+                && this.m_nodes != null && this.m_nodes.Count > 0)
+            {
+                foreach (IFlightTreeNode nd in this.m_nodes)
+                {
+                    if (nd.Children != null && nd.Children.Count > 0)
+                    {
+                        foreach (var child in nd.Children)
+                        {
+                            if (child is FlightViewNode)
+                            {
+                                FlightViewNode fnode = child as FlightViewNode;
+                                if (fnode.Flight != null && fnode.Flight.FlightID == flight.FlightID)
+                                    return fnode;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
     }
 
@@ -116,9 +195,26 @@ namespace AircraftDataAnalysisWinRT.DataModel
             }
         }
 
+        private string m_caption2 = string.Empty;
+
+        public string YearMonth
+        {
+            get { return m_caption2; }
+            internal set
+            {
+                this.SetProperty<string>(ref m_caption2, value);
+            }
+        }
+
+        private IFlightTreeNode m_parent = null;
+
         public IFlightTreeNode Parent
         {
-            get { return null; }
+            get { return m_parent; }
+            set
+            {
+                this.SetProperty<IFlightTreeNode>(ref m_parent, value);
+            }
         }
 
         public ObservableCollection<IFlightTreeNode> Children
@@ -141,6 +237,12 @@ namespace AircraftDataAnalysisWinRT.DataModel
 
         private Flight m_flight = null;
 
+        public Flight Flight
+        {
+            get { return m_flight; }
+            set { m_flight = value; }
+        }
+
         public string Caption
         {
             get { return m_flight.FlightName; }
@@ -148,8 +250,8 @@ namespace AircraftDataAnalysisWinRT.DataModel
 
         public IFlightTreeNode Parent
         {
-            get { throw new NotImplementedException(); }
-            internal set
+            get { return m_parent; }
+            set
             {
                 this.SetProperty<IFlightTreeNode>(ref m_parent, value);
             }
@@ -175,6 +277,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
         IFlightTreeNode Parent
         {
             get;
+            set;
         }
 
         ObservableCollection<IFlightTreeNode> Children

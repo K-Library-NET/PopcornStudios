@@ -47,12 +47,14 @@ namespace AircraftDataAnalysisWinRT.DataModel
             set;
         }
 
-        internal void ReloadDecisionRecords(FlightDataEntitiesRT.Decisions.DecisionRecord[] decisionRecords)
+        internal void ReloadDecisionRecords(FlightDataEntitiesRT.Decisions.DecisionRecord[] decisionRecords,
+            Dictionary<string, FlightDataEntitiesRT.Flight> flightMap)
         {
             SetBindPieChart(decisionRecords);
             StackColumnCollection colCollection = new StackColumnCollection();
             var grouped2 = from one in decisionRecords
-                           group one by this.GetFlightMonthStr(one.FlightID) into gp2
+                           group one by this.GetFlightMonthStr(one.FlightID, flightMap) into gp2
+                           orderby gp2.Key ascending
                            select gp2;
 
             foreach (var gpitem in grouped2)
@@ -99,6 +101,7 @@ namespace AircraftDataAnalysisWinRT.DataModel
         {
             AircraftDataAnalysisModel1.WinRT.MyControl.PieChartDataSource pieSource =
                 new AircraftDataAnalysisModel1.WinRT.MyControl.PieChartDataSource();
+            pieSource.Clear();
             var grouped1 = from one in decisionRecords
                            group one by one.DecisionID into gp1
                            select gp1;
@@ -120,17 +123,50 @@ namespace AircraftDataAnalysisWinRT.DataModel
                 pieSource.Add(amount);
             }
 
+            double total = Convert.ToDouble(pieSource.Sum<PieChartAmount>(new Func<PieChartAmount, decimal?>(
+                delegate(PieChartAmount am)
+                {
+                    return Convert.ToDecimal(am.Amount);
+                })));
+
+            foreach (var ps in pieSource)
+            {
+                ps.Amount = Math.Round(100 * (ps.Amount / total), 2);
+            }
             this.PieChartDataSource = pieSource;
         }
 
-        private string GetFlightMonthStr(string flightID)
+        private string GetFlightMonthStr(string flightID, Dictionary<string, FlightDataEntitiesRT.Flight> flightMap)
         {
-            throw new NotImplementedException();
+            if (flightMap.ContainsKey(flightID))
+            {
+                DateTime dt = flightMap[flightID].FlightDate;
+                return dt.ToString("yyyyMM");
+            }
+
+            return flightID;
         }
 
         private string GetCategoryName(string p)
         {
-            throw new NotImplementedException();
+            if (p == "1")
+            {
+                return "停车通电状态";
+            }
+            else if (p == "2")
+            {
+                return "发动机地面开车状态";
+            }
+            else if (p == "3")
+            {
+                return "正常飞行状态";
+            }
+            else if (p == "4")
+            {
+                return "最大军用转速状态";
+            }
+
+            return "(未知)";
         }
 
         public AircraftDataAnalysisModel1.WinRT.MyControl.PieChartDataSource PieChartDataSource

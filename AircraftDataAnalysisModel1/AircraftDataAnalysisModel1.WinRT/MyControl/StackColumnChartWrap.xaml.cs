@@ -97,7 +97,7 @@ namespace AircraftDataAnalysisModel1.WinRT.MyControl
         public StackColumnCollection()
         {
             //debug
-            DebugInit();
+            //DebugInit();
         }
 
         private void DebugInit()

@@ -49,6 +49,11 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform
             base.OnNavigatedTo(e);
             this.Loaded += MainPage_Loaded;
             this.Unloaded += MainPage_Unloaded;
+
+            this.btShowGrid.DataContext = ApplicationContext.Instance;
+            this.borderFault.DataContext = ApplicationContext.Instance;
+            this.borderNoFault.DataContext = ApplicationContext.Instance;
+
             this.ProgressBar1.Visibility = Windows.UI.Xaml.Visibility.Visible;
             this.ProgressBar1.IsIndeterminate = true;
             //System.Diagnostics.Debug.WriteLine(string.Format("Main navigated:{0}", DateTime.Now));//DEBUG
@@ -70,13 +75,16 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform
                          new Windows.UI.Core.DispatchedHandler(() =>
                          {
                              //debug: write flightDates
-                             this.DebugWriteFlightDates(flights);
+                             //this.DebugWriteFlightDates(flights);
 
                              this.grdFlights.ItemsSource = flights;
                              this.m_dateViewModel = new FlightDateTreeViewModel(flights);
                              this.m_aircraftInstanceViewModel = new FlightAircraftInstanceTreeViewModel(flights);
-                             this.navFlightByDate.ItemsSource = m_dateViewModel.Nodes;
-                             this.navFlightByAircraftInstance.ItemsSource = m_aircraftInstanceViewModel.Nodes;
+                             this.navFlightByDate.DataContext = m_dateViewModel;
+                             this.navFlightByDate.ItemsSource = m_dateViewModel.Children;
+                             //.ItemsSource = m_dateViewModel.Nodes;
+                             this.navFlightByAircraftInstance.DataContext = m_aircraftInstanceViewModel;
+                             //.ItemsSource = m_aircraftInstanceViewModel.Nodes;
                              this.ProgressBar1.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                              this.ProgressBar1.IsIndeterminate = false;
                              SetCurrentFlight();
@@ -130,9 +138,11 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform
                     var flights = this.grdFlights.ItemsSource as IEnumerable<FlightDataEntitiesRT.Flight>;
                     if (flights != null && flights.Count() > 0 && ApplicationContext.Instance.CurrentFlight == null)
                     {
+                        m_switcher = false;
                         this.grdFlights.SelectedIndex = 0;
-
-                        this.scMap.CurrentFlight = this.grdFlights.SelectedItem as FlightDataEntitiesRT.Flight;
+                        m_switcher = true;
+                        var selectedFlightItem = this.grdFlights.SelectedItem as FlightDataEntitiesRT.Flight;
+                        this.SetCurrentFlight(selectedFlightItem, this.grdFlights);
                     }
                     else if (flights != null && flights.Count() > 0 && ApplicationContext.Instance.CurrentFlight != null)
                     {
@@ -144,9 +154,10 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform
                                 return false;
                             }));
 
+                        m_switcher = false;
                         this.grdFlights.SelectedItem = f;
-
-                        this.scMap.CurrentFlight = f;
+                        m_switcher = true;
+                        this.SetCurrentFlight(f, this.grdFlights);
                     }
                 }
             }
@@ -154,6 +165,41 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform
             {
                 LogHelper.Error(ex);
             }
+        }
+
+        private void SetCurrentFlight(FlightDataEntitiesRT.Flight flight, object sender)
+        {
+            this.m_switcher = false;
+            AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight = flight;
+            if (sender != null)
+            {
+                if (sender != this.grdFlights)
+                {
+                    this.grdFlights.SelectedItem = flight;
+                }
+                if (sender != this.navFlightByDate)
+                {
+                    IFlightTreeNode node = this.m_dateViewModel.FindNodeByFlight(flight);
+                    this.navFlightByDate.SelectedItem = node;
+                }
+                if (sender != this.navFlightByAircraftInstance)
+                {
+                    IFlightTreeNode node = this.m_aircraftInstanceViewModel.FindNodeByFlight(flight);
+                    this.navFlightByAircraftInstance.SelectedItem = node;
+                }
+            }
+
+            if (AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.GlobeDatas == null
+                || AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.GlobeDatas.Length == 0)
+            {
+                AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.GlobeDatas = ServerHelper.GetFlightGlobeDatas(
+                    AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentAircraftModel,
+                    AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.FlightID,
+                    AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.EndSecond);
+            }
+
+            this.scMap.CurrentFlight = flight;//this.grdFlights.SelectedItem as FlightDataEntitiesRT.Flight;
+            this.m_switcher = true;
         }
 
         void MainPage_Unloaded(object sender, RoutedEventArgs e)
@@ -205,7 +251,32 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform
 
         private void btDelete_Click(object sender, RoutedEventArgs e)
         {
+            //this.Frame.Navigate(typeof(FlightAnalysisSubLite), // new ExtremumReportSubEditChartNavigationParameter()
+            //    new SubEditChartNavigationParameter()
+            //{
+            //    DataLoader = new AircraftDataAnalysisModel1.WinRT.Domain.AircraftAnalysisDataLoader()
+            //    {
+            //        CurrentAircraftModel =
+            //            ApplicationContext.Instance.CurrentAircraftModel,
+            //        CurrentFlight = ApplicationContext.Instance.CurrentFlight,
+            //    },
+            //    HostParameterID = "Nx",
+            //    HostParameterYAxis = FlightAnalysisSubViewYAxis.LeftYAxis,
+            //    RelatedParameterIDs = new SubEditChartNavigationParameter.RelatedParameterInfo[]
+            //    {
+            //         new SubEditChartNavigationParameter.RelatedParameterInfo(){ RelatedParameterID = "T6L",
+            //              YAxis = FlightAnalysisSubViewYAxis.RightYAxis},
+            //         new SubEditChartNavigationParameter.RelatedParameterInfo(){ RelatedParameterID = "T6R",
+            //             YAxis = FlightAnalysisSubViewYAxis.RightYAxis},
+            //    }
+            //    //MaxValueSecond = 1000,
+            //    //MinValueSecond = 2000,
+            //});
 
+            //this.Frame.Navigate(typeof(AddFilePage));
+
+            //debug:
+            this.Frame.Navigate(typeof(AircraftDataAnalysisModel1.WinRT.DeleteFlightConfirm));
         }
 
         private void btSelect_Click(object sender, RoutedEventArgs e)
@@ -229,10 +300,11 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform
                 FlightDataEntitiesRT.IFlightRawDataExtractor extractor = null;
                 FlightDataEntitiesRT.Flight currentFlight = null;
 
-                CreateTempCurrentFlight(file, aircraftModel, flightParameter, ref extractor, ref currentFlight);
+                bool correct = CreateTempCurrentFlight(file, aircraftModel, flightParameter, ref extractor, ref currentFlight);
 
                 AddFileViewModel model = new AddFileViewModel(currentFlight, file, extractor,
                     aircraftModel, flightParameter);
+                model.IsTempFlightParseError = !correct;
 
                 this.Frame.Navigate(typeof(AircraftDataAnalysisWinRT.Domain.ImportLoadConfirmPage), model);
                 //20131029 liangdawen
@@ -266,8 +338,17 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform
         /// <param name="flightParameter"></param>
         /// <param name="extractor"></param>
         /// <param name="currentFlight"></param>
-        private void CreateTempCurrentFlight(StorageFile file, FlightDataEntitiesRT.AircraftModel aircraftModel, FlightDataEntitiesRT.FlightParameters flightParameter, ref FlightDataEntitiesRT.IFlightRawDataExtractor extractor, ref FlightDataEntitiesRT.Flight currentFlight)
+        private bool CreateTempCurrentFlight(StorageFile file, FlightDataEntitiesRT.AircraftModel aircraftModel,
+            FlightDataEntitiesRT.FlightParameters flightParameter, ref FlightDataEntitiesRT.IFlightRawDataExtractor extractor,
+            ref FlightDataEntitiesRT.Flight currentFlight)
         {
+            return BuildTempFlightByRule(file, aircraftModel, flightParameter, ref extractor, ref currentFlight);
+        }
+
+        public static bool BuildTempFlightByRule(StorageFile file, FlightDataEntitiesRT.AircraftModel aircraftModel, FlightDataEntitiesRT.FlightParameters flightParameter, ref FlightDataEntitiesRT.IFlightRawDataExtractor extractor, ref FlightDataEntitiesRT.Flight currentFlight)
+        {
+            bool correct = true;
+
             if (aircraftModel != null && !string.IsNullOrEmpty(aircraftModel.ModelName))
             {
                 //if (aircraftModel.ModelName == "F4D")
@@ -277,56 +358,112 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform
                 extractor = result;
                 //}
             }
+
+            var aircraft = new FlightDataEntitiesRT.AircraftInstance()
+            {
+                AircraftModel = aircraftModel,
+                LastUsed = DateTime.Now
+            };
+            try
+            {
+                var aircraftNumber = (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).ParseAircraftNumber(file.Name);
+                aircraft.AircraftNumber = aircraftNumber;
+            }
+            catch
+            {
+                correct = false;
+            }
+
             currentFlight = new FlightDataEntitiesRT.Flight()
             {
-                Aircraft = new FlightDataEntitiesRT.AircraftInstance()
-                {
-                    AircraftModel = aircraftModel,
-                    AircraftNumber = (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).ParseAircraftNumber(file.Name),
-                    LastUsed = DateTime.Now
-                },
+                Aircraft = aircraft,
                 StartSecond = 0,
                 FlightName = file.Name,
-                FlightDate = (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).ParseDate(file.Name),
-                FlightID = this.RemoveIllegalChars(file.DisplayName)
+                FlightID = RemoveFlightPHYFileIllegalChars(file.DisplayName)
             };
+
+            try
+            {
+                currentFlight.FlightDate = (extractor as FlightDataReading.AircraftModel1.FlightDataReadingHandler).ParseDate(file.Name);
+            }
+            catch
+            {
+                correct = false;
+            }
+            return correct;
         }
 
-        private string RemoveIllegalChars(string p)
+        private static string RemoveFlightPHYFileIllegalChars(string p)
         {
             StringBuilder builder = new StringBuilder();
             foreach (char c in p)
             {
-                if (char.IsNumber(c))
+                if (char.IsNumber(c) || c == '-')
                     builder.Append(c);
+                else break;
             }
             return builder.ToString();
         }
 
         private void OnCurrentFlightChanged(object sender, SelectionChangedEventArgs e)
-        {
+        {//防止消息循环
+            if (m_switcher == false)
+                return;
+
             if (this.grdFlights.SelectedItem != null && this.grdFlights.SelectedItem is FlightDataEntitiesRT.Flight)
             {
-                AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight
-                    = this.grdFlights.SelectedItem as FlightDataEntitiesRT.Flight;
-
-                if (AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.GlobeDatas == null
-                    || AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.GlobeDatas.Length == 0)
-                {
-                    AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.GlobeDatas = ServerHelper.GetFlightGlobeDatas(
-                        AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentAircraftModel,
-                        AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.FlightID,
-                        AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight.EndSecond);
-                }
-
-                this.scMap.CurrentFlight = AircraftDataAnalysisWinRT.ApplicationContext.Instance.CurrentFlight;
+                this.SetCurrentFlight(this.grdFlights.SelectedItem as FlightDataEntitiesRT.Flight, this.grdFlights);
             }
         }
 
         private void dialogArea_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-
             System.Diagnostics.Debug.WriteLine("Double Tapped:+" + sender.GetHashCode().ToString());
+        }
+
+        private void OnCurrentFlightChanged2(object sender, SelectionChangedEventArgs e)
+        {//防止消息循环
+            if (m_switcher == false)
+                return;
+
+            if (this.navFlightByDate.SelectedItem != null && this.navFlightByDate.SelectedItem is FlightViewNode)
+            {
+                this.SetCurrentFlight((this.navFlightByDate.SelectedItem as FlightViewNode).Flight, this.navFlightByDate);
+            }
+        }
+
+        private void OnCurrentFlightChanged3(object sender, SelectionChangedEventArgs e)
+        {//防止消息循环
+            if (m_switcher == false)
+                return;
+
+            if (this.navFlightByAircraftInstance.SelectedItem != null && this.navFlightByAircraftInstance.SelectedItem is FlightViewNode)
+            {
+                this.SetCurrentFlight((this.navFlightByAircraftInstance.SelectedItem as FlightViewNode).Flight, this.navFlightByAircraftInstance);
+            }
+        }
+
+        private bool m_switcher = true;
+
+        private void btShowGridClick_Click(object sender, RoutedEventArgs e)
+        {
+            if (ApplicationContext.Instance.CurrentFlight != null)
+            {
+                this.Frame.Navigate(typeof(AircraftDataAnalysisWinRT.MyControl.GridDataPage),
+                    new GridDataDisplayArg()
+                    {
+                        EndSecond = ApplicationContext.Instance.CurrentFlight.EndSecond,
+                        DataLoader = new AircraftDataAnalysisModel1.WinRT.Domain.AircraftAnalysisDataLoader()
+                        {
+                            CurrentAircraftModel = ApplicationContext.Instance.CurrentAircraftModel,
+                            CurrentFlight = ApplicationContext.Instance.CurrentFlight
+                        },
+                        ParameterIDs = ApplicationContext.Instance.GetFlightParameters(
+                        ApplicationContext.Instance.CurrentAircraftModel).ToParameterIDs(),
+                        StartSecond = 0
+                    });
+            }
+
         }
     }
 }

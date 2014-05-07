@@ -282,20 +282,20 @@
                             <ColumnDefinition/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Foreground="Black" Margin="10" FontSize="18">左发排气温度</TextBlock>
+                        <TextBlock Foreground="Black" Margin="10" FontSize="18">进口总温</TextBlock>
                         <TextBlock Foreground="Black" Margin="20,10,10,15" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom"
-                                   FontSize="18">进口总温</TextBlock>
+                                   FontSize="18">左发排气温度</TextBlock>
                         <Charts1:XamDataChart x:Name="chartT6L" Grid.Row="1" DataContext="{StaticResource HostViewModel}" Grid.Column="0"  Margin="0"
                                         HorizontalZoomable="False" HorizontalZoombarVisibility="Collapsed"
                                         VerticalZoomable="False" VerticalZoombarVisibility="Collapsed" >
                             <Charts1:XamDataChart.Axes>
-                                <Charts1:NumericXAxis x:Name="numericXAxis1" Foreground="Black" MaximumValue="40" MinimumValue="-10">
+                                <Charts1:NumericXAxis x:Name="numericXAxis1" Foreground="Black" MaximumValue="700" MinimumValue="0" >
                                     <Charts1:NumericXAxis.LabelSettings>
                                         <Charts1:AxisLabelSettings Location="OutsideLeft" Visibility="Visible"
                                                                    Foreground="Black" FontSize="18" Extent="40" />
                                     </Charts1:NumericXAxis.LabelSettings>
                                 </Charts1:NumericXAxis>
-                                <Charts1:NumericYAxis x:Name="numericYAxis1" Foreground="Black" MaximumValue="700" MinimumValue="200">
+                                <Charts1:NumericYAxis x:Name="numericYAxis1" Foreground="Black" MaximumValue="60" MinimumValue="-10">
                                     <Charts1:NumericYAxis.LabelSettings>
                                         <Charts1:AxisLabelSettings Location="OutsideTop" Visibility="Visible" 
                                                                    Foreground="Black" Extent="50" FontSize="18" FontFamily="Global User Interface"/>
@@ -306,17 +306,17 @@
                                 <Charts1:ScatterSeries 
                                                     XAxis="{Binding ElementName=numericXAxis1}"
                                                     YAxis="{Binding ElementName=numericYAxis1}"
-                                                    XMemberPath="XValue"
-                                                    YMemberPath="YValue" >
+                                                    XMemberPath="YValue"
+                                                    YMemberPath="XValue" >
                                     <Charts1:ScatterSeries.ToolTip>
                                         <StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="大气总温: " />
-                                                <TextBlock Text="{Binding Item.XValue}" />
+                                                <TextBlock Text="{Binding Item.YValue}" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="左发排气温度: " />
-                                                <TextBlock Text="{Binding Item.YValue}" />
+                                                <TextBlock Text="{Binding Item.XValue}" />
                                             </StackPanel>
                                         </StackPanel>
                                     </Charts1:ScatterSeries.ToolTip>
@@ -324,17 +324,17 @@
                                 <Charts1:ScatterSeries  
                                                     XAxis="{Binding ElementName=numericXAxis1}"
                                                     YAxis="{Binding ElementName=numericYAxis1}"
-                                                    XMemberPath="XValue"
-                                                    YMemberPath="YValue" >
+                                                    XMemberPath="YValue"
+                                                    YMemberPath="XValue" >
                                     <Charts1:ScatterSeries.ToolTip>
                                         <StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="大气总温: " />
-                                                <TextBlock Text="{Binding Item.XValue}" />
+                                                <TextBlock Text="{Binding Item.YValue}" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="左发排气温度: " />
-                                                <TextBlock Text="{Binding Item.YValue}" />
+                                                <TextBlock Text="{Binding Item.XValue}" />
                                             </StackPanel>
                                         </StackPanel>
                                     </Charts1:ScatterSeries.ToolTip>
@@ -342,17 +342,17 @@
                                 <Charts1:ScatterSeries  
                                                     XAxis="{Binding ElementName=numericXAxis1}"
                                                     YAxis="{Binding ElementName=numericYAxis1}"
-                                                    XMemberPath="XValue"
-                                                    YMemberPath="YValue" >
+                                                    XMemberPath="YValue"
+                                                    YMemberPath="XValue" >
                                     <Charts1:ScatterSeries.ToolTip>
                                         <StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="大气总温: " />
-                                                <TextBlock Text="{Binding Item.XValue}" />
+                                                <TextBlock Text="{Binding Item.YValue}" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="左发排气温度: " />
-                                                <TextBlock Text="{Binding Item.YValue}" />
+                                                <TextBlock Text="{Binding Item.XValue}" />
                                             </StackPanel>
                                         </StackPanel>
                                     </Charts1:ScatterSeries.ToolTip>
@@ -360,17 +360,17 @@
                                 <Charts1:ScatterSeries  
                                                     XAxis="{Binding ElementName=numericXAxis1}"
                                                     YAxis="{Binding ElementName=numericYAxis1}"
-                                                    XMemberPath="XValue"
-                                                    YMemberPath="YValue" >
+                                                    XMemberPath="YValue"
+                                                    YMemberPath="XValue" >
                                     <Charts1:ScatterSeries.ToolTip>
                                         <StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="大气总温: " />
-                                                <TextBlock Text="{Binding Item.XValue}" />
+                                                <TextBlock Text="{Binding Item.YValue}" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="左发排气温度: " />
-                                                <TextBlock Text="{Binding Item.YValue}" />
+                                                <TextBlock Text="{Binding Item.XValue}" />
                                             </StackPanel>
                                         </StackPanel>
                                     </Charts1:ScatterSeries.ToolTip>
@@ -388,22 +388,22 @@
                             <ColumnDefinition/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Foreground="Black" Margin="10" FontSize="18">右发排气温度</TextBlock>
+                        <TextBlock Foreground="Black" Margin="10" FontSize="18">进口总温</TextBlock>
                         <TextBlock Foreground="Black" Margin="20,10,10,15" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom"
-                                   FontSize="18">进口总温</TextBlock>
+                                   FontSize="18">右发排气温度</TextBlock>
                         <Charts1:XamDataChart x:Name="chartT6R" Grid.Row="1" 
                                       DataContext="{StaticResource HostViewModel}"  Grid.Column="0"
                                         HorizontalZoomable="False" HorizontalZoombarVisibility="Collapsed" Margin="0"
                                         VerticalZoomable="False" VerticalZoombarVisibility="Collapsed" >
                             <Charts1:XamDataChart.Axes>
-                                <Charts1:NumericXAxis x:Name="numericXAxis2" Foreground="Black" MaximumValue="40" MinimumValue="-10">
+                                <Charts1:NumericXAxis x:Name="numericXAxis2" Foreground="Black" MaximumValue="700" MinimumValue="0">
                                     <Charts1:NumericXAxis.LabelSettings>
                                         <Charts1:AxisLabelSettings 
                                         Location="OutsideLeft" Visibility="Visible" Foreground="Black"
                                         FontSize="18" Extent="40" FontFamily="Global User Interface" />
                                     </Charts1:NumericXAxis.LabelSettings>
                                 </Charts1:NumericXAxis>
-                                <Charts1:NumericYAxis x:Name="numericYAxis2"  Foreground="Black" MaximumValue="700" MinimumValue="201">
+                                <Charts1:NumericYAxis x:Name="numericYAxis2"  Foreground="Black" MaximumValue="60" MinimumValue="-10">
                                     <Charts1:NumericYAxis.LabelSettings>
                                         <Charts1:AxisLabelSettings 
                                         Location="OutsideTop" Visibility="Visible"  Foreground="Black"
@@ -415,17 +415,17 @@
                                 <Charts1:ScatterSeries 
                                                     XAxis="{Binding ElementName=numericXAxis2}"
                                                     YAxis="{Binding ElementName=numericYAxis2}"
-                                                    XMemberPath="XValue" 
-                                                    YMemberPath="YValue"  >
+                                                    XMemberPath="YValue" 
+                                                    YMemberPath="XValue"  >
                                     <Charts1:ScatterSeries.ToolTip>
                                         <StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="大气总温: " />
-                                                <TextBlock Text="{Binding Item.XValue}" />
+                                                <TextBlock Text="{Binding Item.YValue}" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="右发排气温度: " />
-                                                <TextBlock Text="{Binding Item.YValue}" />
+                                                <TextBlock Text="{Binding Item.XValue}" />
                                             </StackPanel>
                                         </StackPanel>
                                     </Charts1:ScatterSeries.ToolTip>
@@ -433,17 +433,17 @@
                                 <Charts1:ScatterSeries 
                                                     XAxis="{Binding ElementName=numericXAxis2}"
                                                     YAxis="{Binding ElementName=numericYAxis2}"
-                                                    XMemberPath="XValue"  
-                                                    YMemberPath="YValue" >
+                                                    XMemberPath="YValue"  
+                                                    YMemberPath="XValue" >
                                     <Charts1:ScatterSeries.ToolTip>
                                         <StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="大气总温: " />
-                                                <TextBlock Text="{Binding Item.XValue}" />
+                                                <TextBlock Text="{Binding Item.YValue}" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="右发排气温度: " />
-                                                <TextBlock Text="{Binding Item.YValue}" />
+                                                <TextBlock Text="{Binding Item.XValue}" />
                                             </StackPanel>
                                         </StackPanel>
                                     </Charts1:ScatterSeries.ToolTip>
@@ -451,17 +451,17 @@
                                 <Charts1:ScatterSeries  
                                                     XAxis="{Binding ElementName=numericXAxis2}"
                                                     YAxis="{Binding ElementName=numericYAxis2}"
-                                                    XMemberPath="XValue"  
-                                                    YMemberPath="YValue"  >
+                                                    XMemberPath="YValue"  
+                                                    YMemberPath="XValue"  >
                                     <Charts1:ScatterSeries.ToolTip>
                                         <StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="大气总温: " />
-                                                <TextBlock Text="{Binding Item.XValue}" />
+                                                <TextBlock Text="{Binding Item.YValue}" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="右发排气温度: " />
-                                                <TextBlock Text="{Binding Item.YValue}" />
+                                                <TextBlock Text="{Binding Item.XValue}" />
                                             </StackPanel>
                                         </StackPanel>
                                     </Charts1:ScatterSeries.ToolTip>
@@ -469,17 +469,17 @@
                                 <Charts1:ScatterSeries  
                                                     XAxis="{Binding ElementName=numericXAxis2}"
                                                     YAxis="{Binding ElementName=numericYAxis2}"
-                                                    XMemberPath="XValue" 
-                                                    YMemberPath="YValue"  >
+                                                    XMemberPath="YValue" 
+                                                    YMemberPath="XValue"  >
                                     <Charts1:ScatterSeries.ToolTip>
                                         <StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="大气总温: " />
-                                                <TextBlock Text="{Binding Item.XValue}" />
+                                                <TextBlock Text="{Binding Item.YValue}" />
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="右发排气温度: " />
-                                                <TextBlock Text="{Binding Item.YValue}" />
+                                                <TextBlock Text="{Binding Item.XValue}" />
                                             </StackPanel>
                                         </StackPanel>
                                     </Charts1:ScatterSeries.ToolTip>

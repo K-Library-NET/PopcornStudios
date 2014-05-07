@@ -124,7 +124,7 @@
     <Compile Include="DataModel\DataCommon.cs" />
     <Compile Include="DataModel\DecisionRecordFlightAnalysisViewModel.cs" />
     <Compile Include="DataModel\EngineMonitoringViewModel.cs" />
-    <Compile Include="DataModel\ExtremumInfoFlightAnalysisViewModel.cs" />
+    <Compile Include="DataModel\FlightAnalysisSubLiteViewModel.cs" />
     <Compile Include="DataModel\ExtremumReportViewModel.cs" />
     <Compile Include="DataModel\FaultDiagnosisViewModel.cs" />
     <Compile Include="DataModel\FlightAnalysisChartGroupSubExtendedViewModel.cs" />
@@ -159,9 +159,9 @@
     <Compile Include="Domain\FlightAnalysisSub.xaml.cs">
       <DependentUpon>FlightAnalysisSub.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Domain\FlightAnalysisViewModelOld.cs" />
-    <Compile Include="Domain\GridDataPage.xaml.cs">
-      <DependentUpon>GridDataPage.xaml</DependentUpon>
+    <Compile Include="DataModel\FlightAnalysisViewModelOld.cs" />
+    <Compile Include="Domain\FlightAnalysisSubLite.xaml.cs">
+      <DependentUpon>FlightAnalysisSubLite.xaml</DependentUpon>
     </Compile>
     <Compile Include="Domain\IDataLoaderNavigator.cs" />
     <Compile Include="Domain\ImportAircraftBatchConfirm.xaml.cs">
@@ -176,7 +176,7 @@
     <Compile Include="Domain\TrendAnalysis.xaml.cs">
       <DependentUpon>TrendAnalysis.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Domain\TrendAnalysisViewModel.cs" />
+    <Compile Include="DataModel\TrendAnalysisViewModel.cs" />
     <Compile Include="FastDataReadings\BasicStepSecondsHandler.cs" />
     <Compile Include="FastDataReadings\DecisionStepSecondsHandler.cs" />
     <Compile Include="FastDataReadings\DeleteExistsHandler.cs" />
@@ -220,8 +220,8 @@
     <Compile Include="MyControl\StackColumnChartWrap.xaml.cs">
       <DependentUpon>StackColumnChartWrap.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MyControl\SwitchAircraftPanelConfirm.xaml.cs">
-      <DependentUpon>SwitchAircraftPanelConfirm.xaml</DependentUpon>
+    <Compile Include="MyControl\DeleteFlightConfirm.xaml.cs">
+      <DependentUpon>DeleteFlightConfirm.xaml</DependentUpon>
     </Compile>
     <Compile Include="MyControl\SwitchChartPanelConfirmPage.xaml.cs">
       <DependentUpon>SwitchChartPanelConfirmPage.xaml</DependentUpon>
@@ -452,7 +452,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Domain\GridDataPage.xaml">
+    <Page Include="Domain\FlightAnalysisSubLite.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -512,7 +512,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MyControl\SwitchAircraftPanelConfirm.xaml">
+    <Page Include="MyControl\DeleteFlightConfirm.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

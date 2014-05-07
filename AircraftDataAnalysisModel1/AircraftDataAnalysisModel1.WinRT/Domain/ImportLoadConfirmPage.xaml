@@ -1,7 +1,8 @@
-﻿<common:LayoutAwarePage
+﻿<common:LayoutAwarePage xmlns:Input="using:Syncfusion.UI.Xaml.Controls.Input" 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AircraftDataAnalysisWinRT.Domain"
+    xmlns:local2="using:PStudio.WinApp.Aircraft.FDAPlatform.Domain"
     xmlns:common="using:AircraftDataAnalysisWinRT.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -62,7 +63,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
+        <local2:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
     </common:LayoutAwarePage.Resources>
 
     <!--
@@ -130,6 +131,8 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -139,20 +142,29 @@
                 </Grid.RowDefinitions>
                 <TextBlock HorizontalAlignment="Right" Margin="10,5" TextWrapping="Wrap" Text="架次名称：" VerticalAlignment="Center" FontSize="24" Foreground="Black"/>
                 <TextBlock HorizontalAlignment="Right" Margin="10,5" Grid.Row="1" TextWrapping="Wrap" Text="时长：" VerticalAlignment="Center" FontSize="24" Foreground="Black" />
-                <TextBox Grid.Column="1" Margin="10,0" VerticalAlignment="Center"  MaxLength="50" FontSize="24" Text="{Binding FlightName}" BorderBrush="Gray"/>
-                <TextBox Grid.Column="1" Margin="10,0" Grid.Row="1" MaxLength="50" VerticalAlignment="Center" FontSize="24" Text="{Binding EndSecond}" BorderBrush="Gray"/>
+                <TextBox Grid.Column="1" Margin="10,0" VerticalAlignment="Center" Grid.ColumnSpan="3"
+                         MaxLength="50" FontSize="24" Text="{Binding FlightName,Mode=TwoWay}" BorderBrush="Gray"/>
+                <TextBox Grid.Column="1" Margin="10,0" Grid.Row="1" MaxLength="50" IsEnabled="False" VerticalAlignment="Center" 
+                         FontSize="24" Text="{Binding EndSecond,Mode=TwoWay}" BorderBrush="Gray"/>
 
                 <!--20140326 add aircraftInstance ID-->
-                <TextBlock HorizontalAlignment="Right" Margin="10,5" Grid.Row="2" TextWrapping="Wrap" Text="机号：" VerticalAlignment="Center" FontSize="24" Foreground="Black" />
-                <TextBox Grid.Column="1" Grid.Row="2" Margin="10,0" VerticalAlignment="Center"  MaxLength="50" FontSize="24" Text="{Binding AircraftNumber}" BorderBrush="Gray"/>
+                <TextBlock HorizontalAlignment="Right" Margin="10,5" Grid.Row="1"
+                           Grid.Column="2" TextWrapping="Wrap" Text="机号：" VerticalAlignment="Center" FontSize="24" Foreground="Black" />
+                <TextBox Grid.Column="3" Grid.Row="1" Margin="10,0" VerticalAlignment="Center" 
+                         MaxLength="50" FontSize="24" Text="{Binding AircraftNumber,Mode=TwoWay}" BorderBrush="Gray"/>
 
-                <Grid Grid.ColumnSpan="2" Grid.Row="3" Margin="10">
+                <TextBlock HorizontalAlignment="Right" Margin="10,5" Grid.Row="2" TextWrapping="Wrap"
+                           Text="飞行日期：" VerticalAlignment="Center" FontSize="24" Foreground="Black" />
+                <Input:SfDatePicker Grid.Column="1" Grid.Row="2" Margin="10,0" x:Name="datePicker1"
+                                    VerticalAlignment="Center" Grid.ColumnSpan="3" Value="{Binding FlightDate,Mode=TwoWay}"
+                          FontSize="24" BorderBrush="Gray" SelectorFormatString="y:m:d" />
+                <Grid Grid.ColumnSpan="4" Grid.Row="3" Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <TextBlock FontSize="24" HorizontalAlignment="Center" Text="数据预览" Foreground="Black"/>
-                    <Grid1:SfDataGrid Grid.ColumnSpan="2" 
+                    <Grid1:SfDataGrid Grid.ColumnSpan="4" 
 						x:Name="grdPreviewData"  Grid.Row="1" AllowResizingColumns="True" AllowSorting="False"
                                        AllowGrouping="False" AllowFiltering="False" AllowDraggingColumns="True"
                       Foreground="#FF2A2A2A"
@@ -163,9 +175,9 @@
                         <Grid1:SfDataGrid.HeaderStyle>
                             <Style TargetType="Grid1:GridHeaderCellControl">
                                 <Setter Property="Background" Value="Transparent" />
-                                <Setter Property="HorizontalContentAlignment" Value="Center" /> 
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
                                 <Setter Property="FontFamily" Value="Segoe UI" />
-                                <Setter Property="FontSize" Value="16" /> 
+                                <Setter Property="FontSize" Value="16" />
                                 <Setter Property="Foreground" Value="#FF5E5B5C" />
                                 <Setter Property="FontWeight" Value="SemiBold" />
                             </Style>
@@ -185,6 +197,11 @@
                     <my:FAGlobeChart  x:Name="canvasEWNS" />
                 </Grid>
             </Grid>
+            <StackPanel HorizontalAlignment="Left" Height="44" Margin="20,0,0,0"
+                        Visibility="{Binding Path=IsTempFlightParseError,Converter={StaticResource ResourceKey=BooleanVisibilityConverter}}"
+                        Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center" Orientation="Horizontal">
+                <TextBlock Foreground="Red" Text="无法通过文件名正确解析架次信息，请手工编辑确认。" FontSize="24"/>
+            </StackPanel>
             <StackPanel HorizontalAlignment="Right" Height="44" Margin="104,0,0,0" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center" Orientation="Horizontal">
                 <Button x:Name="btImport" Foreground="Black" BorderBrush="{StaticResource AllBackgroundColor}" Content="入库" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="100" Margin="20,0" Click="btImport_Click"/>
                 <Button x:Name="btCancel" Foreground="Black" BorderBrush="{StaticResource AllBackgroundColor}" Content="取消" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="100" Margin="20,0" Click="btCancel_Click"/>

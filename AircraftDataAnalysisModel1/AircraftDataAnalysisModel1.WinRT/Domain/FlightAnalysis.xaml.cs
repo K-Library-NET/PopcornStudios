@@ -398,7 +398,8 @@ namespace PStudio.WinApp.Aircraft.FDAPlatform.Domain
                         parameter.RelatedParameterIDs = infos.ToArray();
                     }
 
-                    this.Frame.Navigate(typeof(FlightAnalysisSub), parameter);
+                    this.Frame.Navigate(typeof(FlightAnalysisSubLite), //typeof(FlightAnalysisSub), 
+                        parameter);
                 }
             }
         }

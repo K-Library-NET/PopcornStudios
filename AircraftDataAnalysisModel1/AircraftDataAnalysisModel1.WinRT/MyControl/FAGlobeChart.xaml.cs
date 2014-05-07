@@ -93,6 +93,16 @@ namespace AircraftDataAnalysisWinRT.MyControl
                 //xmax = Math.Ceiling(xmax);
                 //ymin = Math.Floor(ymin);
                 //ymax = Math.Ceiling(ymax);
+                if (xmin >= xmax)
+                {
+                    xmin = Math.Min(xmin, xmax) - 0.01;
+                    xmax = Math.Max(xmin, xmax) + 0.01;
+                }
+                if (ymin >= ymax)
+                {
+                    ymin = Math.Min(ymin, ymax) + 0.01;
+                    ymax = Math.Max(ymin, ymax) + 0.01;
+                }
 
                 xaxis.MinimumValue = xmin;// minLongitude - Math.Abs(maxLongitude - minLongitude) * 0.05;
                 xaxis.MaximumValue = xmax;// maxLongitude + Math.Abs(maxLongitude - minLongitude) * 0.05;
@@ -237,8 +247,8 @@ namespace AircraftDataAnalysisWinRT.MyControl
 
             if (endLoc > startLoc)
             {
-                ews = ews.Skip(startLoc).Take(endLoc - startLoc).ToArray();
-                nss = nss.Skip(startLoc).Take(endLoc - startLoc).ToArray();
+                ews = ews.Skip(startLoc).Take(endLoc - startLoc + 1).ToArray();
+                nss = nss.Skip(startLoc).Take(endLoc - startLoc + 1).ToArray();
             }
 
             float minEws = ews.Min();
@@ -251,8 +261,16 @@ namespace AircraftDataAnalysisWinRT.MyControl
 
             absRangeEws = maxEws - minEws;
 
-            var newEws = from one in ews
-                         select Convert.ToSingle(size.Width * ((one - minEws) / absRangeEws));
+            if (absRangeEws < 0.001)
+            {
+                //ews = newEws.ToArray();
+            }
+            else
+            {
+                var newEws = from one in ews
+                             select Convert.ToSingle(size.Width * ((one - minEws) / absRangeEws));
+                ews = newEws.ToArray();
+            }
 
             float minNss = nss.Min();
             float maxNss = nss.Max();
@@ -264,11 +282,16 @@ namespace AircraftDataAnalysisWinRT.MyControl
 
             absRangeNss = maxNss - minNss;
 
-            var newNss = from one in nss
-                         select Convert.ToSingle(size.Width * ((one - minNss) / absRangeNss));
+            if (absRangeNss < 0.001)
+            {
+            }
+            else
+            {
+                var newNss = from one in nss
+                             select Convert.ToSingle(size.Width * ((one - minNss) / absRangeNss));
 
-            ews = newEws.ToArray();
-            nss = newNss.ToArray();
+                nss = newNss.ToArray();
+            }
         }
 
         private PolyBezierSegment CreateSegments(float[] ews, float[] nss)

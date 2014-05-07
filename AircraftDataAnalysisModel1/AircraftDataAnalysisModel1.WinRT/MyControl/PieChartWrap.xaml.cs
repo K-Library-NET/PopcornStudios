@@ -65,6 +65,11 @@ namespace AircraftDataAnalysisModel1.WinRT.MyControl
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            if (value != null && value is double)
+            {
+                return String.Format("{0} %", ((double)value).ToString("F2"));
+            }
+
             return String.Format("{0} %", value);
         }
 
@@ -78,7 +83,13 @@ namespace AircraftDataAnalysisModel1.WinRT.MyControl
 
     public class PieChartAmount
     {
-        public string CategoryName { get; set; }
+        private string m_catName = string.Empty;
+        public string CategoryName
+        {
+            get { return m_catName; }
+            set { m_catName = value; }
+        }
+
         public double Amount { get; set; }
     }
 
@@ -95,10 +106,28 @@ namespace AircraftDataAnalysisModel1.WinRT.MyControl
             //this.Add(new PieChartAmount() { CategoryName = "飞行状态1", Amount = 20d });
             //this.Add(new PieChartAmount() { CategoryName = "飞行状态2", Amount = 23d });
             //this.Add(new PieChartAmount() { CategoryName = "飞行状态3", Amount = 12d });
-            this.Add(new PieChartAmount() { CategoryName = "飞行状态1", Amount = 45.6 });
-            this.Add(new PieChartAmount() { CategoryName = "飞行状态4", Amount = 13.7 });
-            this.Add(new PieChartAmount() { CategoryName = "飞行状态3", Amount = 27.2 });
-            this.Add(new PieChartAmount() { CategoryName = "飞行状态2", Amount = 13.5 });
+            //this.Add(new PieChartAmount() { CategoryName = "停车通电状态", Amount = 0.2 });
+            //this.Add(new PieChartAmount() { CategoryName = "发动机地面开车状态", Amount = 8.2 });
+            //this.Add(new PieChartAmount() { CategoryName = "正常飞行状态", Amount = 88.7 });
+            //this.Add(new PieChartAmount() { CategoryName = "最大军用转速状态", Amount = 2.8 });
+        }
+    }
+
+    internal class PieChartAmountCategoryConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is PieChartAmount)
+            {
+                return (value as PieChartAmount).CategoryName;
+            }
+
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
         }
     }
 }

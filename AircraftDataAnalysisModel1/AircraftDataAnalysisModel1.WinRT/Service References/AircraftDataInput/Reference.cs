@@ -1105,6 +1105,9 @@ namespace AircraftDataAnalysisModel1.WinRT.AircraftDataInput {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IAircraftDataInput/DeleteExistsData", ReplyAction="http://tempuri.org/IAircraftDataInput/DeleteExistsDataResponse")]
         System.Threading.Tasks.Task<string> DeleteExistsDataAsync(AircraftDataAnalysisModel1.WinRT.AircraftDataInput.Flight flight);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IAircraftDataInput/DeleteFlight", ReplyAction="http://tempuri.org/IAircraftDataInput/DeleteFlightResponse")]
+        System.Threading.Tasks.Task<string> DeleteFlightAsync(AircraftDataAnalysisModel1.WinRT.AircraftDataInput.Flight flight);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IAircraftDataInput/AddDecisionRecordsBatch", ReplyAction="http://tempuri.org/IAircraftDataInput/AddDecisionRecordsBatchResponse")]
         System.Threading.Tasks.Task<string> AddDecisionRecordsBatchAsync(AircraftDataAnalysisModel1.WinRT.AircraftDataInput.Flight flight, System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisModel1.WinRT.AircraftDataInput.DecisionRecord> records);
         
@@ -1183,6 +1186,10 @@ namespace AircraftDataAnalysisModel1.WinRT.AircraftDataInput {
         
         public System.Threading.Tasks.Task<string> DeleteExistsDataAsync(AircraftDataAnalysisModel1.WinRT.AircraftDataInput.Flight flight) {
             return base.Channel.DeleteExistsDataAsync(flight);
+        }
+        
+        public System.Threading.Tasks.Task<string> DeleteFlightAsync(AircraftDataAnalysisModel1.WinRT.AircraftDataInput.Flight flight) {
+            return base.Channel.DeleteFlightAsync(flight);
         }
         
         public System.Threading.Tasks.Task<string> AddDecisionRecordsBatchAsync(AircraftDataAnalysisModel1.WinRT.AircraftDataInput.Flight flight, System.Collections.ObjectModel.ObservableCollection<AircraftDataAnalysisModel1.WinRT.AircraftDataInput.DecisionRecord> records) {
