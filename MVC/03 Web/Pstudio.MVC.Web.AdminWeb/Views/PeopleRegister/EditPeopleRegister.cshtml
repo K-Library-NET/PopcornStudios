@@ -1,0 +1,136 @@
+﻿
+@{
+    ViewBag.Title = "EditPeopleRegister";
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="btn-toolbar" style="text-align:center">
+            <a href="@Url.Action("PeopleRegisterList", "PeopleRegister")" style="margin-right:50px;" class="btn blue" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="get" data-ajax="true">
+                <i class="icon-save"></i>保存
+            </a>
+            <a href="@Url.Action("PeopleRegisterList", "PeopleRegister")" class="btn" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="get" data-ajax="true">
+                返回
+            </a>
+            <div class="btn-group">
+            </div>
+        </div>
+        <div class="well">
+            @if (Request["action"] == "create")
+            {
+                <div class="tab-content" id="myTabContent">
+                    <form id="tab">
+                        <label>
+                            姓名
+                        </label>
+                        <input type="text" value="张三">
+                        <label>
+                            性别
+                        </label>
+                        <select name="DropDownTimezone" id="DropDownTimezone">
+                            <option value="-12.0">男</option>
+                            <option value="-11.0">女</option>
+                        </select>
+                        <label>
+                            身份证
+                        </label>
+                        <input type="text" value="79599287">
+                        <label>
+                            手机号码
+                        </label>
+                        <input type="text" value="12345678">
+                        <label>
+                            电子邮箱
+                        </label>
+                        <input type="text" value="12345@163.com">
+
+                        <label>
+                            家庭住址
+                        </label>
+                        <textarea rows="3">广州、罗岗、科学城</textarea>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#home" data-toggle="tab">基本资料</a></li>
+                    <li><a href="#profile" data-toggle="tab">密码</a></li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane active" id="home">
+                        <form id="tab">
+                            <label>
+                                姓名
+                            </label>
+                            <input type="text" value="张三">
+                            <label>
+                                性别
+                            </label>
+                            <select name="DropDownTimezone" id="DropDownTimezone">
+                                <option value="-12.0">男</option>
+                                <option value="-11.0">女</option>
+                            </select>
+                            <label>
+                                身份证
+                            </label>
+                            <input type="text" value="79599287">
+                            <label>
+                                手机号码
+                            </label>
+                            <input type="text" value="12345678">
+                            <label>
+                                电子邮箱
+                            </label>
+                            <input type="text" value="12345@163.com">
+
+                            <label>
+                                家庭住址
+                            </label>
+                            <textarea rows="3">广州、罗岗、科学城</textarea>
+                        </form>
+                    </div>
+                    <div class="tab-pane" id="profile">
+                        <form id="tab2">
+                            <label>
+                                新密码
+                            </label>
+                            <input type="password">
+                            <div>
+                                <button class="btn blue">
+                                    更新
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+        <div tabindex="-1" class="modal small hide fade" id="myModal" role="dialog" aria-hidden="true" aria-labelledby="myModalLabel">
+            <div class="modal-header">
+                <button class="close" aria-hidden="true" type="button" data-dismiss="modal">
+                    ×
+                </button>
+                <h3 id="myModalLabel">
+                    删除确认
+                </h3>
+            </div>
+            <div class="modal-body">
+                <p class="error-text">
+                    <i class="icon-warning-sign modal-icon"></i>你确认要删除这个用户吗?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" aria-hidden="true" data-dismiss="modal">
+                    取消
+                </button>
+                <button class="btn btn-danger" data-dismiss="modal">
+                    删除
+                </button>
+            </div>
+        </div>
+        <footer>
+            <hr>
+        </footer>
+
+    </div>
+</div>

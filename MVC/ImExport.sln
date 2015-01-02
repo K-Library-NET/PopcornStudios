@@ -1,0 +1,157 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00 Refercnce", "00 Refercnce", "{50852C54-2670-4573-9CD1-964D7F0B9137}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 Common", "01 Common", "{6037BF85-FD9C-49DA-9183-A4E2C80CA950}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02 Domain", "02 Domain", "{B2B976D9-5669-44F9-AE01-109227BC7426}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03 Web", "03 Web", "{BE2C1232-B68C-4DB1-A88B-AE983E9047E4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04 Service", "04 Service", "{E18B77E5-AA05-489B-8AEF-7483DB26763B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pstudio.MVC.Common.Unity", "01 Common\Pstudio.MVC.Common.Unity\Pstudio.MVC.Common.Unity.csproj", "{44A7E396-230F-47ED-B3E8-37674A52AD80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pstudio.MVC.Web.AdminWeb", "03 Web\Pstudio.MVC.Web.AdminWeb\Pstudio.MVC.Web.AdminWeb.csproj", "{5157F165-96F0-4C55-B937-666F64CEEB31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pstudio.MVC.NTSvr.ApplyNTSvr", "04 Service\Pstudio.MVC.NTSrv.ApplyNTSvr\Pstudio.MVC.NTSvr.ApplyNTSvr.csproj", "{A730F6A0-F187-4939-9C17-E30B699F2B55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pstudio.MVC.NTSvr.AdminNTSvr", "04 Service\Pstudio.MVC.NTSvr.AdminNTSvr\Pstudio.MVC.NTSvr.AdminNTSvr.csproj", "{866E2FA0-2311-41F7-B809-AEF128D8D47C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pstudio.MVC.NTSvr.AdminWcfCore", "04 Service\Pstudio.MVC.NTSvr.AdminWcfCore\Pstudio.MVC.NTSvr.AdminWcfCore.csproj", "{DFF28B53-5C34-4EE2-8B84-3A3798D20173}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pstudio.MVC.NTSvr.ApplyWcfCore", "04 Service\Pstudio.MVC.NTSvr.ApplyWcfCore\Pstudio.MVC.NTSvr.ApplyWcfCore.csproj", "{8FA1B055-2A2D-4002-8463-21B3A57FD81B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05 Test", "05 Test", "{2ABC8408-D002-4E2D-B10A-E25B7D6AF49A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pstudio.MVC.NTSvr.AdminNTSvrDebug", "05 Test\Pstudio.MVC.NTSvr.AdminNTSvrDebug\Pstudio.MVC.NTSvr.AdminNTSvrDebug.csproj", "{1E2E8160-1EF9-4AFD-B95E-C4A6DC286CC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pstudio.MVC.NTSvr.ApplyNTSvrDebug", "05 Test\Pstudio.MVC.NTSvr.ApplyNTSvrDebug\Pstudio.MVC.NTSvr.ApplyNTSvrDebug.csproj", "{6B62323E-55CD-4053-A9BD-B7558034B3D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DALFactory", "02 Domain\DALFactory\DALFactory.csproj", "{4950F84C-6C18-4ED3-8629-B3BB063C9902}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pstudio.MVC.Web.ApplyWeb", "03 Web\Pstudio.MVC.Web.ApplyWeb\Pstudio.MVC.Web.ApplyWeb.csproj", "{6375C6F6-C77F-43CA-A259-E12B9FA6D87C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pstudio.MVC.Entities", "02 Domain\Pstudio.MVC.Entities\Pstudio.MVC.Entities.csproj", "{6893B9B0-B102-4E35-AFD8-0A123EC3A99A}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 12
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://pstudio.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = 01\u0020Common\\Pstudio.MVC.Common.Unity\\Pstudio.MVC.Common.Unity.csproj
+		SccProjectTopLevelParentUniqueName1 = ImExport.sln
+		SccProjectName1 = 01\u0020Common/Pstudio.MVC.Common.Unity
+		SccLocalPath1 = 01\u0020Common\\Pstudio.MVC.Common.Unity
+		SccProjectUniqueName2 = 03\u0020Web\\Pstudio.MVC.Web.AdminWeb\\Pstudio.MVC.Web.AdminWeb.csproj
+		SccProjectTopLevelParentUniqueName2 = ImExport.sln
+		SccProjectName2 = 03\u0020Web/Pstudio.MVC.Web.AdminWeb
+		SccLocalPath2 = 03\u0020Web\\Pstudio.MVC.Web.AdminWeb
+		SccProjectUniqueName3 = 04\u0020Service\\Pstudio.MVC.NTSrv.ApplyNTSvr\\Pstudio.MVC.NTSvr.ApplyNTSvr.csproj
+		SccProjectTopLevelParentUniqueName3 = ImExport.sln
+		SccProjectName3 = 04\u0020Service/Pstudio.MVC.NTSrv.ApplyNTSvr
+		SccLocalPath3 = 04\u0020Service\\Pstudio.MVC.NTSrv.ApplyNTSvr
+		SccProjectUniqueName4 = 04\u0020Service\\Pstudio.MVC.NTSvr.AdminNTSvr\\Pstudio.MVC.NTSvr.AdminNTSvr.csproj
+		SccProjectTopLevelParentUniqueName4 = ImExport.sln
+		SccProjectName4 = 04\u0020Service/Pstudio.MVC.NTSvr.AdminNTSvr
+		SccLocalPath4 = 04\u0020Service\\Pstudio.MVC.NTSvr.AdminNTSvr
+		SccProjectUniqueName5 = 04\u0020Service\\Pstudio.MVC.NTSvr.AdminWcfCore\\Pstudio.MVC.NTSvr.AdminWcfCore.csproj
+		SccProjectTopLevelParentUniqueName5 = ImExport.sln
+		SccProjectName5 = 04\u0020Service/Pstudio.MVC.NTSvr.AdminWcfCore
+		SccLocalPath5 = 04\u0020Service\\Pstudio.MVC.NTSvr.AdminWcfCore
+		SccProjectUniqueName6 = 04\u0020Service\\Pstudio.MVC.NTSvr.ApplyWcfCore\\Pstudio.MVC.NTSvr.ApplyWcfCore.csproj
+		SccProjectTopLevelParentUniqueName6 = ImExport.sln
+		SccProjectName6 = 04\u0020Service/Pstudio.MVC.NTSvr.ApplyWcfCore
+		SccLocalPath6 = 04\u0020Service\\Pstudio.MVC.NTSvr.ApplyWcfCore
+		SccProjectUniqueName7 = 05\u0020Test\\Pstudio.MVC.NTSvr.AdminNTSvrDebug\\Pstudio.MVC.NTSvr.AdminNTSvrDebug.csproj
+		SccProjectTopLevelParentUniqueName7 = ImExport.sln
+		SccProjectName7 = 05\u0020Test/Pstudio.MVC.NTSvr.AdminNTSvrDebug
+		SccLocalPath7 = 05\u0020Test\\Pstudio.MVC.NTSvr.AdminNTSvrDebug
+		SccProjectUniqueName8 = 05\u0020Test\\Pstudio.MVC.NTSvr.ApplyNTSvrDebug\\Pstudio.MVC.NTSvr.ApplyNTSvrDebug.csproj
+		SccProjectTopLevelParentUniqueName8 = ImExport.sln
+		SccProjectName8 = 05\u0020Test/Pstudio.MVC.NTSvr.ApplyNTSvrDebug
+		SccLocalPath8 = 05\u0020Test\\Pstudio.MVC.NTSvr.ApplyNTSvrDebug
+		SccProjectUniqueName9 = 02\u0020Domain\\DALFactory\\DALFactory.csproj
+		SccProjectTopLevelParentUniqueName9 = ImExport.sln
+		SccProjectName9 = 02\u0020Domain/DALFactory
+		SccLocalPath9 = 02\u0020Domain\\DALFactory
+		SccProjectUniqueName10 = 03\u0020Web\\Pstudio.MVC.Web.ApplyWeb\\Pstudio.MVC.Web.ApplyWeb.csproj
+		SccProjectTopLevelParentUniqueName10 = ImExport.sln
+		SccProjectName10 = 03\u0020Web/Pstudio.MVC.Web.ApplyWeb
+		SccLocalPath10 = 03\u0020Web\\Pstudio.MVC.Web.ApplyWeb
+		SccProjectUniqueName11 = 02\u0020Domain\\Pstudio.MVC.Entities\\Pstudio.MVC.Entities.csproj
+		SccProjectTopLevelParentUniqueName11 = ImExport.sln
+		SccProjectName11 = 02\u0020Domain/Pstudio.MVC.Entities
+		SccLocalPath11 = 02\u0020Domain\\Pstudio.MVC.Entities
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{44A7E396-230F-47ED-B3E8-37674A52AD80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44A7E396-230F-47ED-B3E8-37674A52AD80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44A7E396-230F-47ED-B3E8-37674A52AD80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44A7E396-230F-47ED-B3E8-37674A52AD80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5157F165-96F0-4C55-B937-666F64CEEB31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5157F165-96F0-4C55-B937-666F64CEEB31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5157F165-96F0-4C55-B937-666F64CEEB31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5157F165-96F0-4C55-B937-666F64CEEB31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A730F6A0-F187-4939-9C17-E30B699F2B55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A730F6A0-F187-4939-9C17-E30B699F2B55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A730F6A0-F187-4939-9C17-E30B699F2B55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A730F6A0-F187-4939-9C17-E30B699F2B55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{866E2FA0-2311-41F7-B809-AEF128D8D47C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{866E2FA0-2311-41F7-B809-AEF128D8D47C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{866E2FA0-2311-41F7-B809-AEF128D8D47C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{866E2FA0-2311-41F7-B809-AEF128D8D47C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFF28B53-5C34-4EE2-8B84-3A3798D20173}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFF28B53-5C34-4EE2-8B84-3A3798D20173}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFF28B53-5C34-4EE2-8B84-3A3798D20173}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFF28B53-5C34-4EE2-8B84-3A3798D20173}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FA1B055-2A2D-4002-8463-21B3A57FD81B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FA1B055-2A2D-4002-8463-21B3A57FD81B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FA1B055-2A2D-4002-8463-21B3A57FD81B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FA1B055-2A2D-4002-8463-21B3A57FD81B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E2E8160-1EF9-4AFD-B95E-C4A6DC286CC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E2E8160-1EF9-4AFD-B95E-C4A6DC286CC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E2E8160-1EF9-4AFD-B95E-C4A6DC286CC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E2E8160-1EF9-4AFD-B95E-C4A6DC286CC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B62323E-55CD-4053-A9BD-B7558034B3D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B62323E-55CD-4053-A9BD-B7558034B3D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B62323E-55CD-4053-A9BD-B7558034B3D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B62323E-55CD-4053-A9BD-B7558034B3D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4950F84C-6C18-4ED3-8629-B3BB063C9902}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4950F84C-6C18-4ED3-8629-B3BB063C9902}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4950F84C-6C18-4ED3-8629-B3BB063C9902}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4950F84C-6C18-4ED3-8629-B3BB063C9902}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6375C6F6-C77F-43CA-A259-E12B9FA6D87C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6375C6F6-C77F-43CA-A259-E12B9FA6D87C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6375C6F6-C77F-43CA-A259-E12B9FA6D87C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6375C6F6-C77F-43CA-A259-E12B9FA6D87C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6893B9B0-B102-4E35-AFD8-0A123EC3A99A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6893B9B0-B102-4E35-AFD8-0A123EC3A99A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6893B9B0-B102-4E35-AFD8-0A123EC3A99A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6893B9B0-B102-4E35-AFD8-0A123EC3A99A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{44A7E396-230F-47ED-B3E8-37674A52AD80} = {6037BF85-FD9C-49DA-9183-A4E2C80CA950}
+		{5157F165-96F0-4C55-B937-666F64CEEB31} = {BE2C1232-B68C-4DB1-A88B-AE983E9047E4}
+		{A730F6A0-F187-4939-9C17-E30B699F2B55} = {E18B77E5-AA05-489B-8AEF-7483DB26763B}
+		{866E2FA0-2311-41F7-B809-AEF128D8D47C} = {E18B77E5-AA05-489B-8AEF-7483DB26763B}
+		{DFF28B53-5C34-4EE2-8B84-3A3798D20173} = {E18B77E5-AA05-489B-8AEF-7483DB26763B}
+		{8FA1B055-2A2D-4002-8463-21B3A57FD81B} = {E18B77E5-AA05-489B-8AEF-7483DB26763B}
+		{1E2E8160-1EF9-4AFD-B95E-C4A6DC286CC1} = {2ABC8408-D002-4E2D-B10A-E25B7D6AF49A}
+		{6B62323E-55CD-4053-A9BD-B7558034B3D3} = {2ABC8408-D002-4E2D-B10A-E25B7D6AF49A}
+		{4950F84C-6C18-4ED3-8629-B3BB063C9902} = {B2B976D9-5669-44F9-AE01-109227BC7426}
+		{6375C6F6-C77F-43CA-A259-E12B9FA6D87C} = {BE2C1232-B68C-4DB1-A88B-AE983E9047E4}
+		{6893B9B0-B102-4E35-AFD8-0A123EC3A99A} = {B2B976D9-5669-44F9-AE01-109227BC7426}
+	EndGlobalSection
+EndGlobal

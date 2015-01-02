@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{784707C6-EC3E-42EA-96A6-849C7FC79E4E}</ProjectGuid>
+    <ProjectGuid>{EBDCE0B9-BCBE-404D-8769-C877050DF55B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FlightDataEntities</RootNamespace>
@@ -35,14 +35,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Bson, Version=1.8.3.9, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="MongoDB.Bson">
       <HintPath>..\packages\mongocsharpdriver.1.8.3\lib\net35\MongoDB.Bson.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Driver, Version=1.8.3.9, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="MongoDB.Driver">
       <HintPath>..\packages\mongocsharpdriver.1.8.3\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -61,25 +59,26 @@
     <Compile Include="AircraftInstance.cs" />
     <Compile Include="AircraftModel.cs" />
     <Compile Include="Charts\ChartPanel.cs" />
+    <Compile Include="GlobeData.cs" />
     <Compile Include="Decisions\CompareOperator.cs" />
-    <Compile Include="Decisions\FlightConditionDecision.cs" />
-    <Compile Include="Decisions\SubConditionType.cs" />
     <Compile Include="Decisions\ConditionRelation.cs" />
-    <Compile Include="Decisions\DecisionRecord.cs" />
     <Compile Include="Decisions\Decision.cs" />
+    <Compile Include="Decisions\DecisionRecord.cs" />
+    <Compile Include="Decisions\FlightConditionDecision.cs" />
     <Compile Include="Decisions\SubCondition.cs" />
+    <Compile Include="Decisions\SubConditionType.cs" />
     <Compile Include="ExtremumPointInfo.cs" />
+    <Compile Include="ExtremumReportDefinition.cs" />
+    <Compile Include="ExtremumReportItemDefinition.cs" />
     <Compile Include="Flight.cs" />
     <Compile Include="FlightParameter.cs" />
     <Compile Include="FlightRawData.cs" />
-    <Compile Include="ExtremumReportDefinition.cs" />
-    <Compile Include="ExtremumReportItemDefinition.cs" />
     <Compile Include="FlightRawDataRelationPoint.cs" />
     <Compile Include="Level1FlightRecord.cs" />
     <Compile Include="Level2FlightRecord.cs" />
     <Compile Include="LevelTopFlightRecord.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LogHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reports\StatConditionReportRecord.cs" />
   </ItemGroup>
   <ItemGroup>

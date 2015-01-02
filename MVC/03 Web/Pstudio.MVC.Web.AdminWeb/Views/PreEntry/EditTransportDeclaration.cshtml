@@ -1,0 +1,318 @@
+﻿
+@{
+    ViewBag.Title = "EditTransportDeclaration";
+}
+<div class="row-fluid">
+    <div class="span12" id="navigation">
+        @*@Html.Partial("_Theme")*@
+        <h3 class="page-title">
+            <span>编辑运输工具申报信息</span>　@*<small>介绍</small>*@
+        </h3>
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <span>首页</span>
+                <i class="icon-angle-right"></i>
+            </li>
+            <li>
+                <span>菜单组</span>
+                <i class="icon-angle-right"></i>
+            </li>
+            <li><span>菜单</span></li>
+        </ul>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="btn-toolbar" style="text-align:center">
+            <a href="@Url.Action("TransportDeclarationList", "PreEntry")" style="margin-right:50px;" class="btn blue" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="get" data-ajax="true">
+                <i class="icon-save"></i>保存
+            </a>
+            <a href="@Url.Action("TransportDeclarationList", "PreEntry")" class="btn" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="get" data-ajax="true">
+                返回
+            </a>
+            <div class="btn-group">
+            </div>
+        </div>
+        <div class="well">
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane active in" id="home">
+                    <form id="tab">
+                        <table class="table table-bordered table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label>车牌号码</label>
+                                    </td>
+                                    <td>
+                                        <label>车辆备案编号</label>
+                                    </td>
+                                    <td>
+                                        <label>驾驶员姓名</label>
+                                    </td>
+                                    <td colspan="2">
+                                        <label>车辆国籍</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                    <td colspan="2">
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>进出境互市点</label>
+                                    </td>
+                                    <td>
+                                        <label>进境时间</label>
+                                    </td>
+                                    <td>
+                                        <label>出境时间</label>
+                                    </td>
+                                    <td>
+                                        <label>车主姓名</label>
+                                    </td>
+                                    <td>
+                                        <label>联系电话</label>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5">
+                                        <label>行驶路线及停放位置摘要：</label>
+                                        <textarea class="input-xlarge" cols="3">不知道 不明了 不想要</textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>货物品名</label>
+                                    </td>
+                                    <td>
+                                        <label>原产地</label>
+                                    </td>
+                                    <td>
+                                        <label>数量</label>
+                                    </td>
+                                    <td>
+                                        <label>货主或经营企业签名或盖章及联系电话</label>
+                                    </td>
+                                    <td>
+                                        <label>货主身份证号或经营企业营业执照编号</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5">
+                                        <span>运输工具负责人签名：</span>
+                                        <input type="text" value="12345" class="input-xlarge" /><br />
+                                        <span>日期：</span>
+                                        <input type="text" value="12345" class="input-xlarge" /><br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5">
+                                        <label>检查机关签注：</label>
+                                        <textarea class="input-xlarge" cols="3">不知道 不明了 不想要</textarea>
+                                        <br />
+                                        <span>关员签名：</span>
+                                        <input type="text" value="12345" class="input-xlarge" /><br />
+                                        <span>日期：</span>
+                                        <input type="text" value="12345" class="input-xlarge" /><br />
+                                    </td>
+                                </tr> 
+
+
+
+
+
+
+
+
+
+                                <tr>
+                                    <td rowspan="3">运输工具信息</td>
+                                    <td>
+                                        <label>车牌号码/船号</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>车辆/船舶备案编号</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>停靠位置/卸货地点</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="100">监装监卸货物信息</td>
+                                    <td>
+                                        <label>监装、卸开始时间</label>
+                                    </td>
+                                    <td>
+                                        @Html.TextBox("startDate", null, new { @class = "m-wrap small" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>监装、卸结束时间</label>
+                                    </td>
+                                    <td>
+                                        @Html.TextBox("endDate", null, new { @class = "m-wrap small" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>商品</label>
+                                    </td>
+                                    <td>
+                                        <label>数量</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>土豆</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="9" class="input-xlarge" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>马铃薯</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="8" class="input-xlarge" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            监装、卸货物情况
+                                        </label>
+                                    </td>
+                                    <td colspan="2">
+                                        <textarea class="input-xlarge" cols="3">不知道 不明了 不想要</textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            海关批注栏
+                                        </label>
+                                    </td>
+                                    <td colspan="2">
+                                        <div>
+                                            <textarea class="input-xlarge" cols="3">不知道 不明了 不想要</textarea>
+                                            <div style="margin-right:10px; margin-left:auto;">
+                                                <span>经办人员：</span><input type="text" value="54321" class="input-xlarge" /><br />
+                                                <span>日期：</span><input type="text" value="54321" class="input-xlarge" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    ×
+                </button>
+                <h3 id="myModalLabel">
+                    删除确认
+                </h3>
+            </div>
+            <div class="modal-body">
+                <p class="error-text">
+                    <i class="icon-warning-sign modal-icon"></i>你确认要删除吗?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">
+                    取消
+                </button>
+                <button class="btn btn-danger" data-dismiss="modal">
+                    删除
+                </button>
+            </div>
+        </div>
+        <footer>
+            <hr>
+        </footer>
+
+    </div>
+</div>
+

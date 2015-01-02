@@ -1,0 +1,167 @@
+﻿
+@{
+    ViewBag.Title = "PeopleRegisterList";
+}
+<div class="row-fluid">
+    <div class="span12" id="navigation">
+        @*@Html.Partial("_Theme")*@
+        <h3 class="page-title">
+            <span>边民登记</span>　@*<small>介绍</small>*@
+        </h3>
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <span>首页</span>
+                <i class="icon-angle-right"></i>
+            </li>
+            <li>
+                <span>日常办公</span>
+                <i class="icon-angle-right"></i>
+            </li>
+            <li><span>边民登记</span></li>
+        </ul>
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="span4">
+        <div>
+            <a class="btn red" id="delete" href="javascript:;"><i class="icon-trash icon-white"></i> 删除</a>
+            <a href="@Url.Action("EditPeopleRegister", "PeopleRegister", new { id = 9 })?action=create" title="新增" class="btn blue thickbox" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="get" data-ajax="true">
+                <i class="icon-plus icon-white"></i>
+                新增
+            </a>
+        </div>
+    </div>
+    <div class="span8">
+        <form id="search" action="/PreEntry/IdentityRecordList" method="get">
+            <div class="dataTables_filter">
+                <label>
+                    <a href="@Url.Action("PeopleRegisterList", "PeopleRegister")" style="margin-right:50px;" class="btn" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="get" data-ajax="true">
+                        搜索
+                        <i class="icon-search"></i>
+                    </a>
+                    @*<button class="btn" type="submit">搜索 <i class="icon-search"></i></button>*@
+                </label>
+                <label>
+                    <span>身份证号：</span>
+                    <input name="carNum" class="m-wrap small" id="carNum" type="text" value="">
+                </label>
+                <label>
+                    <span>姓名：</span>
+                    <input name="fadongjiNum" class="m-wrap small" id="fadongjiNum" type="text" value="">
+                </label>
+            </div>
+        </form>
+    </div>
+</div>
+<form id="mainForm" action="/Account/User/Delete" method="post">
+    <table class="table table-striped table-hover ">
+        <thead>
+            <tr>
+                <th style="width: 8px;">
+                    <div class="checker" id="uniform-checkall"><span><input class="group-checkable" id="checkall" style="opacity: 0;" type="checkbox"></span></div>
+                </th>
+                <th>
+                    姓名
+                </th>
+                <th>
+                    性别
+                </th>
+                <th>
+                    身份证
+                </th>
+                <th>
+                    手机号码
+                </th>
+                <th>
+                    电子邮箱
+                </th>
+                <th>
+                    操作
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="checker" id="uniform-undefined"><span><input name="ids" class="checkboxes" style="opacity: 0;" type="checkbox" value="7"></span></div>
+                </td>
+                <td>
+                    张三
+                </td>
+                <td>
+                    男
+                </td>
+                <td>
+                    123456789
+                </td>
+                <td>
+                    987654321
+                </td>
+                <td>
+                    123@163.com
+                </td>
+                <td>
+                    <a href="@Url.Action("EditPeopleRegister", "PeopleRegister")" title="编辑" class="btn mini purple thickbox" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="get" data-ajax="true">
+                        <i class="icon-edit"></i>
+                        编辑
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="checker" id="uniform-undefined"><span><input name="ids" class="checkboxes" style="opacity: 0;" type="checkbox" value="6"></span></div>
+                </td>
+                <td>
+                    王五
+                </td>
+                <td>
+                    男
+                </td>
+                <td>
+                    93464863622
+                </td>
+                <td>
+                    135345234566
+                </td>
+                <td>
+                    234@qq.com
+                </td>
+                <td>
+                    <a title="编辑用户资料" class="btn mini purple thickbox" href="#">
+                        <i class="icon-edit"></i>
+                        编辑
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="checker" id="uniform-undefined"><span><input name="ids" class="checkboxes" style="opacity: 0;" type="checkbox" value="4"></span></div>
+                </td>
+                <td>
+                    李四
+                </td>
+                <td>
+                    女
+                </td>
+                <td>
+                    2123
+                </td>
+                <td>
+                    121111111111132
+                </td>
+                <td>
+                    jfasdflj@qq.com
+                </td>
+                <td>
+                    <a title="编辑用户资料" class="btn mini purple thickbox" href="#">
+                        <i class="icon-edit"></i>
+                        编辑
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+

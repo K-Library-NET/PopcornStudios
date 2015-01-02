@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>边民互市贸易</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    <link href="@Url.StaticFile("/assets/bootstrap/css/bootstrap.min.css")" rel="stylesheet" />
+    <link href="@Url.StaticFile("/assets/css/metro.css")" rel="stylesheet" />
+    <link href="@Url.StaticFile("/assets/bootstrap/css/bootstrap-responsive.min.css")" rel="stylesheet" />
+    <link href="@Url.StaticFile("/assets/font-awesome/css/font-awesome.css")" rel="stylesheet" />
+    <link href="@Url.StaticFile("/assets/css/style.css")" rel="stylesheet" />
+    <link href="@Url.StaticFile("/assets/css/style_responsive.css")" rel="stylesheet" />
+    <link href="@Url.StaticFile("/assets/css/style_default.css")" rel="stylesheet" id="style_color" />
+    <link href="@Url.StaticFile("/assets/fancybox/source/jquery.fancybox.css")" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="@Url.StaticFile("/assets/uniform/css/uniform.default.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.StaticFile("/assets/chosen-bootstrap/chosen/chosen.css")" />
+    <link rel="stylesheet" href="@Url.StaticFile("/assets/data-tables/DT_bootstrap.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.StaticFile("/assets/uniform/css/uniform.default.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.StaticFile("/assets/jquery-ui/jquery-ui-1.10.1.custom.min.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.StaticFile("/content/styles/admin.main.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.StaticFile("/content/styles/jquery.thickbox.css")" />
+    <link href="@Url.StaticFile("/assets/css/theme.css")" rel="stylesheet" id="style_color" />
+    @RenderSection("PageSpecificStyleSheetIncludes", required: false)
+    <style type="text/css">
+        .underlineText {
+            border-color: #000000 #FF3333 #000000 #FF33FF;border-width: 0pt;border-right-width: 0pt;border-bottom-width: 1pt;width:270px;
+        }
+        .custextarea {
+            width: 100%;
+            height: 50px;
+        }
+        .textareadiv {
+            margin-right: 10px;
+        }
+     </style>
+</head>
+<body class="fixed-top">
+    <div class="header navbar navbar-inverse navbar-fixed-top">
+        @Html.Partial("_Header")
+    </div>
+    <div class="page-container row-fluid">
+        @Html.Partial("_Menu")
+        <div class="page-content">
+            <div id="portlet-config" class="modal hide">
+                <div class="modal-header">
+                    <button data-dismiss="modal" class="close" type="button"></button>
+                    <h3>portlet Settings</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Here will be a configuration form</p>
+                </div>
+            </div>
+            <div id="mainContent" class="container-fluid">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    @Html.Partial("_Footer")
+    <script type="text/javascript">
+    </script>
+    <!-- Load javascripts at bottom, this will reduce page load time -->
+    <script src="@Url.StaticFile("/assets/js/jquery-1.8.3.min.js")"></script>
+    <script src="@Url.StaticFile("/assets/breakpoints/breakpoints.js")"></script>
+    <script src="@Url.StaticFile("/assets/bootstrap/js/bootstrap.min.js")"></script>
+    <script src="@Url.StaticFile("/assets/js/jquery.blockui.js")"></script>
+    <script src="@Url.StaticFile("/assets/js/jquery.cookie.js")"></script>
+    <script type="text/javascript" src="@Url.StaticFile("/assets/uniform/jquery.uniform.min.js")"></script>
+    <script type="text/javascript" src="@Url.StaticFile("/assets/data-tables/jquery.dataTables.js")"></script>
+    <script type="text/javascript" src="@Url.StaticFile("/assets/data-tables/DT_bootstrap.js")"></script>
+    @*<script type="text/javascript" src="@Url.StaticFile("/assets/js/jquery.pulsate.min.js")"></script>	*@
+    <script type="text/javascript" src="@Url.StaticFile("/assets/js/app.js")"></script>
+    <script type="text/javascript" src="@Url.StaticFile("/content/scripts/jquery.thickbox.js")"></script>
+    <script type="text/javascript" src="@Url.StaticFile("/assets/jquery-ui/jquery-ui-1.10.1.custom.min.js")"></script>
+    <script type="text/javascript" src="@Url.StaticFile("/content/scripts/jquery.numeric.js")"></script>
+    <script type="text/javascript" src="@Url.StaticFile("/content/scripts/jquery.ui.datapicker-zh-CN.js")"></script>
+    <script type="text/javascript" src="@Url.StaticFile("/content/scripts/admin.main.js")"></script>
+    <script type="text/javascript" src="@Url.StaticFile("/content/scripts/jquery.unobtrusive-ajax.min.js")"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            // initiate layout and plugins
+            App.init();
+        });
+        var myElememtFlag;
+        function menuSlect(obj) {
+            if (obj != myElememtFlag) {
+                $("#ulMenu li").each(function(i)
+                {
+                    if (this != $(obj).parent().parent().get(0)) {
+                        $(this).removeClass("active");
+                        $(this).children("a").children(".selected").remove();
+                    }
+                })
+                $(obj).addClass("active");
+                if (!$(obj).parent().parent().hasClass("active"))
+                {
+                    $(obj).parent().parent().addClass("active");
+                    $(obj).parent().parent().children("a").append("<span class='selected'></span>")
+                }
+                myElememtFlag = obj;
+            }
+        }
+        function updateMenuDaoHang()
+        {
+
+        }
+    </script>
+    @RenderSection("PageSpecificJavascriptIncludes", required: false)
+</body>
+</html>

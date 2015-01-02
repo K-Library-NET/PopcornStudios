@@ -1,0 +1,1108 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Faults>
+  <!--<Fault title="起飞时仰角大" duratioin="1" EventLevel="2"
+        EventHandling="（1）通知训练部门（2）机务人员查看飞机腹鳍是否擦伤"
+         Remark="起飞时仰角大于11°，左右发高压转速大于95%，起落架放下，持续时间1秒">
+    <ParameterCondition ParameterKey="60_-1" condition="大于" value="11"/>
+    <ParameterCondition ParameterKey="223_-1" condition="大于" value="95"/>
+    <ParameterCondition ParameterKey="225_-1" condition="大于" value="95"/>
+    <ParameterCondition ParameterKey="108_13" condition="等于" value="1"/>
+  </Fault>-->
+
+  <Fault title="起飞后未收起起落架" duratioin="1" EventLevel="1"
+       EventHandling="（1）向飞行员了解当时情况（2）检查起落架收放系统" 
+         Remark="空速大于500Km/h，左右发高压转速大于90%，左右起落架放下，持续时间1秒">
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="500"/>
+    <ParameterCondition ParameterKey="223_-1" condition="大于" value="90"/>
+    <ParameterCondition ParameterKey="225_-1" condition="大于" value="90"/>
+    <ParameterCondition ParameterKey="108_13" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="剩余油量600升" duratioin="2" EventLevel="2"
+       EventHandling="（1）向飞行员了解当时情况（2）进行加输油检查" 
+         Remark="左右发高压转速大于50%，剩余油量600升告警，持续时间2秒">
+    <ParameterCondition ParameterKey="223_-1" condition="大于" value="50"/>
+    <ParameterCondition ParameterKey="225_-1" condition="大于" value="50"/>
+    <ParameterCondition ParameterKey="240_2" condition="等于" value="1"/>
+  </Fault>
+
+  <!--<Fault title="左发防冰接通" duratioin="1" EventLevel="2"
+     EventHandling="更换左防冰压差开关或左防冰电磁阀"
+       Remark="左右发高压转速大于50%，左发防冰接通，持续时间1秒">
+    <ParameterCondition ParameterKey="223_-1" condition="大于" value="50"/>
+    <ParameterCondition ParameterKey="225_-1" condition="大于" value="50"/>
+    <ParameterCondition ParameterKey="227_8" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="右发防冰接通" duratioin="1" EventLevel="2"
+   EventHandling="更换右防冰压差开关或右防冰电磁阀"
+     Remark="左右发高压转速大于50%，左发防冰接通，持续时间1秒">
+    <ParameterCondition ParameterKey="223_-1" condition="大于" value="50"/>
+    <ParameterCondition ParameterKey="225_-1" condition="大于" value="50"/>
+    <ParameterCondition ParameterKey="227_9" condition="等于" value="1"/>
+  </Fault>-->
+
+  <Fault title="左发转速达到99%" duratioin="10" EventLevel="1"
+ EventHandling="调整左发动机转速"
+   Remark="空速大于100Km/h，左发高压转速大于99%，持续时间10秒">
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="100"/>
+    <ParameterCondition ParameterKey="223_-1" condition="大于" value="99"/>    
+  </Fault>
+
+  <Fault title="右发转速达到99%" duratioin="10" EventLevel="1"
+ EventHandling="调整右发动机转速"
+ Remark="空速大于100Km/h，右发高压转速大于99%，持续时间10秒">
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="100"/>
+    <ParameterCondition ParameterKey="225_-1" condition="大于" value="99"/>
+  </Fault>
+
+  <Fault title="左发转速超转" duratioin="1" EventLevel="1"
+ EventHandling="调整左发动机转速"
+ Remark="空速大于100Km/h，左发高压转速大于101%，持续时间1秒">
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="100"/>
+    <ParameterCondition ParameterKey="223_-1" condition="大于" value="101"/>
+  </Fault>
+
+  <Fault title="右发转速超转" duratioin="1" EventLevel="1"
+ EventHandling="调整右发动机转速"
+ Remark="空速大于100Km/h，左发高压转速大于101%，持续时间1秒">
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="100"/>
+    <ParameterCondition ParameterKey="223_-1" condition="大于" value="101"/>
+  </Fault>
+
+  <Fault title="发动机中间转速超时" duratioin="1800" EventLevel="1"
+ EventHandling="提醒飞行人员使用发动机"
+ Remark="空速大于100Km/h，左发高压转速大于94.7%，持续时间1800秒">
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="100"/>
+    <ParameterCondition ParameterKey="223_-1" condition="大于" value="94.7"/>
+    <ParameterCondition ParameterKey="225_-1" condition="大于" value="94.7"/>
+  </Fault>
+
+  <Fault title="发动机最大军用转速超时" duratioin="720" EventLevel="1"
+ EventHandling="提醒飞行人员使用发动机"
+ Remark="空速大于100Km/h，左发高压转速大于96%，持续时间720秒">
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="100"/>
+    <ParameterCondition ParameterKey="223_-1" condition="大于" value="96"/>
+    <ParameterCondition ParameterKey="225_-1" condition="大于" value="96"/>
+  </Fault>
+
+  <Fault title="空中左发停车" duratioin="1" EventLevel="1"
+ EventHandling="（1）向飞行员了解当时情况（2）机务人员加强左发动机检查"
+ Remark="空速大于100Km/h，右发高压转速大于53%，左发高压转速小于50%，起落架收起，持续时间1秒">
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="100"/>
+    <ParameterCondition ParameterKey="225_-1" condition="大于" value="53"/>
+    <ParameterCondition ParameterKey="223_-1" condition="小于" value="50"/>
+    <ParameterCondition ParameterKey="108_13" condition="等于" value="0"/>
+  </Fault>
+  
+  <Fault title="空中右发停车" duratioin="1" EventLevel="1"
+ EventHandling="（1）向飞行员了解当时情况（2）机务人员加强右发动机检查"
+ Remark="空速大于100Km/h，左发高压转速大于53%，右发高压转速小于50%，起落架收起，持续时间1秒">
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="100"/>
+    <ParameterCondition ParameterKey="223_-1" condition="大于" value="53"/>
+    <ParameterCondition ParameterKey="225_-1" condition="小于" value="50"/>
+    <ParameterCondition ParameterKey="108_13" condition="等于" value="0"/>
+  </Fault>
+
+  <Fault title="空速超限" duratioin="1" EventLevel="1"
+ EventHandling="（1）向飞行员了解当时情况（2）根据飞机的高度、总温和气象条件，判断实际表速（3）检查空速表和大气数据系统"
+ Remark="空速大于1250Km/h，起落架收起，持续时间1秒">
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="1250"/>    
+    <ParameterCondition ParameterKey="108_13" condition="等于" value="0"/>
+    <ParameterCondition ParameterKey="210_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="215_-1" condition="is" value="0"/>    
+  </Fault>
+
+  <Fault title="高度超限" duratioin="1" EventLevel="1"
+ EventHandling="（1）向飞行员了解当时情况（2）检查大气数据系统"
+ Remark="气压高度大于15200m，空速大于100Km/h，起落架收起，持续时间1秒">
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="100"/>
+    <ParameterCondition ParameterKey="210_-1" condition="大于" value="15200"/>
+    <ParameterCondition ParameterKey="108_13" condition="等于" value="0"/>
+  </Fault>
+
+  <Fault title="马赫数超限" duratioin="1" EventLevel="1"
+ EventHandling="（1）向飞行员了解当时情况（2）检查大气数据系统"
+ Remark="空速大于150Km/h，马赫数大于1.7，起落架收起，持续时间1秒">
+    <ParameterCondition ParameterKey="212_-1" condition="大于" value="1.7"/>
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="150"/>
+    <ParameterCondition ParameterKey="108_13" condition="等于" value="0"/>
+  </Fault>
+
+  <Fault title="着陆时仰角过大" duratioin="1" EventLevel="1"
+  EventHandling="（1）通知飞行人员（2）机务人员查看飞机腹鳍是否擦伤"
+  Remark="仰角大于11°，左右发高压转速小于70%，起落架放下，持续时间1秒">
+      <ParameterCondition ParameterKey="60_-1" condition="大于" value="11"/>
+      <ParameterCondition ParameterKey="223_-1" condition="小于" value="70"/>
+      <ParameterCondition ParameterKey="225_-1" condition="小于" value="70"/>
+      <ParameterCondition ParameterKey="108_13" condition="等于" value="1"/>
+    </Fault>
+
+  <Fault title="零载荷超过2秒" duratioin="2" EventLevel="2"
+ EventHandling="（1）检查发动机和飞机结构（2）更换三轴加速度计"
+ Remark="空速大于100Km/h，法向过载小于0.2，持续时间1秒">
+    <ParameterCondition ParameterKey="46_-1" condition="小于" value="0.2"/>
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="100"/>    
+  </Fault>
+
+  <Fault title="法向过载超限" duratioin="1" EventLevel="2"
+      EventHandling="（1）查看空中其它状态时数据（2）提醒飞行人员（3）更换三轴加速度计"
+       Remark="空速大于100Km/h，法向过载小于-1大于7">
+    <ParameterCondition ParameterKey="46_-1" condition="范围" value="-1" value2="7" top="true" bottom="true" nop="true"/>
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="100"/>
+  </Fault>
+  
+  <Fault title="俯仰角超限" duratioin="1" EventLevel="1"
+ EventHandling="（1）了解飞行科目（2）查看空中其它状态时数据（3）更换惯导设备"
+ Remark="空速大于150Km/h，俯仰角大于25°，持续时间1秒">
+    <ParameterCondition ParameterKey="60_-1" condition="大于" value="25"/>
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="150"/>    
+  </Fault>
+
+  <Fault title="横滚角超限" duratioin="1" EventLevel="1"
+ EventHandling="（1）了解飞行科目（2）查看空中其它状态时数据（3）更换惯导设备"
+ Remark="空速大于150Km/h，俯仰角大于65°，持续时间1秒">
+    <ParameterCondition ParameterKey="61_-1" condition="大于" value="65"/>
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="150"/>    
+  </Fault>
+  
+  <Fault title="左攻角机械故障" duratioin="1" EventLevel="3" 
+ EventHandling="检查左攻角传感器，检查是否短路、断线" Remark="左攻角机械故障为1，持续1秒">
+    <ParameterCondition ParameterKey="134_1" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="187_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右攻角机械故障" duratioin="1" EventLevel="3"
+ EventHandling="检查右攻角传感器，检查是否短路、断线" Remark="右攻角机械故障为1，持续1秒">
+    <ParameterCondition ParameterKey="134_0" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="188_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="左攻角电气故障" duratioin="1" EventLevel="1"
+ EventHandling="" Remark="左攻角电气故障为1，持续1秒">
+    <ParameterCondition ParameterKey="134_3" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="187_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右攻角电气故障" duratioin="1" EventLevel="1"
+ EventHandling="" Remark="右攻角电气故障为1，持续1秒">
+    <ParameterCondition ParameterKey="134_2" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="188_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="静压故障" duratioin="1" EventLevel="2"
+ EventHandling="检查静压管路畅通性" Remark="静压故障为1，持续1秒">
+    <ParameterCondition ParameterKey="134_4" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="186_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="动压故障" duratioin="1" EventLevel="1"
+EventHandling="检查动压管路畅通性" Remark="动压故障为1，持续1秒">
+    <ParameterCondition ParameterKey="134_5" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="185_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="侧向过载故障" duratioin="1" EventLevel="3"
+EventHandling="更换侧向过载传感器" Remark="侧向过载故障为1，持续1秒">
+    <ParameterCondition ParameterKey="134_6" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="47_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="法向过载故障" duratioin="1" EventLevel="3"
+EventHandling="更换法向过载传感器" Remark="法向过载故障为1，持续1秒">
+    <ParameterCondition ParameterKey="134_7" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="46_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="偏航速率故障" duratioin="1" EventLevel="2"
+EventHandling="检测磁航向机构" Remark="偏航速率故障为1，持续1秒">
+    <ParameterCondition ParameterKey="134_8" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="118_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="59_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="81_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="滚转速率故障" duratioin="1" EventLevel="2"
+EventHandling="检查惯性导航设备" Remark="滚转速率故障为1，持续1秒">
+    <ParameterCondition ParameterKey="134_9" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="61_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="80_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="俯仰速率故障" duratioin="1" EventLevel="2"
+EventHandling="检查惯性导航设备" Remark="俯仰速率故障为1，持续1秒">
+    <ParameterCondition ParameterKey="134_10" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="116_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="60_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="79_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="脚蹬位移故障" duratioin="1" EventLevel="1"
+EventHandling="外观检查脚蹬工作状态" Remark="脚蹬位移故障为1，持续1秒">
+    <ParameterCondition ParameterKey="134_11" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="39_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="115_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="侧向杆位移故障" duratioin="1" EventLevel="1"
+EventHandling="通电检查调整片和操纵杆协调及对应状况" Remark="侧向杆位移故障为1，持续1秒">
+    <ParameterCondition ParameterKey="134_12" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="27_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="36_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="114_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="纵向杆位移故障" duratioin="1" EventLevel="1"
+EventHandling="通电检查调整片和操纵杆协调及对应状况" Remark="纵向杆位移故障为1，持续1秒">
+    <ParameterCondition ParameterKey="134_13" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="26_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="35_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="113_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="数字计算机故障" duratioin="1" EventLevel="1"
+EventHandling="检查更换数字计算机" Remark="数字计算机故障为1，持续1秒">
+    <ParameterCondition ParameterKey="134_14" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="方向舵SOV接通故障" duratioin="1" EventLevel="1"
+EventHandling="检查方向舵SOV接通状况" Remark="方向舵SOV接通故障为1，持续1秒">
+    <ParameterCondition ParameterKey="138_0" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="107_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="方向舵模型故障" duratioin="1" EventLevel="2"
+EventHandling="检查方向舵工作状况" Remark="方向舵模型故障为1，持续1秒">
+    <ParameterCondition ParameterKey="138_1" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+    <ParameterCondition ParameterKey="32_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="99_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="100_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="107_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="左襟副翼SOV接通故障" duratioin="1" EventLevel="1"
+EventHandling="检查左襟副翼SOV接通状况" Remark="左襟副翼SOV接通故障为1，持续1秒">
+    <ParameterCondition ParameterKey="138_7" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="33_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="左襟副翼模型故障" duratioin="1" EventLevel="2"
+EventHandling="检查左襟副翼工作状况" Remark="左襟副翼模型故障为1，持续1秒">
+    <ParameterCondition ParameterKey="138_8" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+    <ParameterCondition ParameterKey="33_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="37_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="97_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="110_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右襟副翼SOV接通故障" duratioin="1" EventLevel="1"
+EventHandling="检查右襟副翼SOV接通状况" Remark="右襟副翼SOV接通故障为1，持续1秒">
+    <ParameterCondition ParameterKey="138_4" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="34_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右襟副翼模型故障" duratioin="1" EventLevel="2"
+EventHandling="检查右襟副翼工作状况" Remark="右襟副翼模型故障为1，持续1秒">
+    <ParameterCondition ParameterKey="138_5" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+    <ParameterCondition ParameterKey="34_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="38_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="98_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="110_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="左平尾模型故障" duratioin="1" EventLevel="2"
+EventHandling="检查左平尾工作状况" Remark="左平尾模型故障为1，持续1秒">
+    <ParameterCondition ParameterKey="138_14" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+    <ParameterCondition ParameterKey="44_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="95_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右平尾模型故障" duratioin="1" EventLevel="2"
+EventHandling="检查右平尾工作状况" Remark="右平尾模型故障为1，持续1秒">
+    <ParameterCondition ParameterKey="138_11" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+    <ParameterCondition ParameterKey="45_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="96_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="CPU组件故障" duratioin="1" EventLevel="1"
+EventHandling="检查CPU组件工作状况" Remark="CPU组件故障为1，持续1秒">
+    <ParameterCondition ParameterKey="156_2" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="A/D组件故障" duratioin="1" EventLevel="1"
+EventHandling="检查A/D组件工作状况" Remark="A/D组件故障为1，持续1秒">
+    <ParameterCondition ParameterKey="156_3" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="开关量组件故障" duratioin="1" EventLevel="1"
+EventHandling="检查开关量组件工作状况" Remark="开关量组件故障为1，持续1秒">
+    <ParameterCondition ParameterKey="156_4" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="429组件故障" duratioin="1" EventLevel="1"
+EventHandling="检查429组件工作状况" Remark="429组件故障为1，持续1秒">
+    <ParameterCondition ParameterKey="156_5" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="电源组件故障" duratioin="1" EventLevel="1"
+EventHandling="检查电源组件工作状况" Remark="电源组件故障为1，持续1秒">
+    <ParameterCondition ParameterKey="156_6" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="侧滑角传感器加温故障" duratioin="1" EventLevel="1"
+EventHandling="检查更换侧滑角传感器" Remark="侧滑角传感器加温故障为1，持续1秒">
+    <ParameterCondition ParameterKey="156_7" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="219_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="迎角传感器加温故障" duratioin="1" EventLevel="1"
+EventHandling="检查更换迎角传感器" Remark="迎角传感器加温故障为1，持续1秒">
+    <ParameterCondition ParameterKey="156_8" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="220_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="侧滑角传感器故障" duratioin="1" EventLevel="3"
+EventHandling="检查侧滑角工作状况" Remark="侧滑角传感器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="156_9" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="219_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="157_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="迎角传感器故障" duratioin="1" EventLevel="3"
+EventHandling="检查迎角工作状况" Remark="迎角传感器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="156_10" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="220_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="154_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="过载传感器故障" duratioin="1" EventLevel="3"
+EventHandling="检查过载传感器工作状况" Remark="过载传感器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="156_11" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="46_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="47_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="48_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="158_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="119_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="120_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="150_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="151_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="极限信号计算机故障" duratioin="1" EventLevel="1"
+EventHandling="检查极限信号计算机工作状况" Remark="极限信号计算机故障为1，持续1秒">
+    <ParameterCondition ParameterKey="156_12" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="总温传感器故障" duratioin="1" EventLevel="3"
+EventHandling="检查总温工作状况" Remark="总温传感器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="221_6" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="215_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="217_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="28_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="大气数据传感器1故障" duratioin="1" EventLevel="1"
+EventHandling="更换大气数据传感器" Remark="大气数据传感器1故障为1，持续1秒">
+    <ParameterCondition ParameterKey="221_9" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="大气数据传感器2故障" duratioin="1" EventLevel="1"
+EventHandling="更换大气数据传感器" Remark="大气数据传感器2故障为1，持续1秒">
+    <ParameterCondition ParameterKey="221_8" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="大气数据传感器3故障" duratioin="1" EventLevel="1"
+EventHandling="更换大气数据传感器" Remark="大气数据传感器3故障为1，持续1秒">
+    <ParameterCondition ParameterKey="221_7" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="大气数据计算机1故障" duratioin="1" EventLevel="1"
+EventHandling="更换大气数据计算器" Remark="大气数据计算机1故障为1，持续1秒">
+    <ParameterCondition ParameterKey="221_11" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="大气数据计算机2故障" duratioin="1" EventLevel="1"
+EventHandling="更换大气数据计算器" Remark="大气数据计算机2故障为1，持续1秒">
+    <ParameterCondition ParameterKey="221_10" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="大气数据分系统故障" duratioin="1" EventLevel="1"
+EventHandling="检查大气数据分系统" Remark="大气数据分系统故障为1，持续1秒">
+    <ParameterCondition ParameterKey="221_12" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="左发动机滑油中有金属屑" duratioin="1" EventLevel="1"
+EventHandling="对左发动机滑油进行化验" Remark="左发动机滑油中有金属屑为1，持续1秒">
+    <ParameterCondition ParameterKey="238_1" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="5_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右发动机滑油中有金属屑" duratioin="1" EventLevel="1"
+EventHandling="对右发动机滑油进行化验" Remark="右发动机滑油中有金属屑为1，持续1秒">
+    <ParameterCondition ParameterKey="238_2" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="6_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="左发进气压力转换活门未动作" duratioin="1" EventLevel="1"
+EventHandling="检查左发进气压力转换活门工作状况" Remark="左发进气压力转换活门未动作为1，持续1秒">
+    <ParameterCondition ParameterKey="238_2" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="7_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="9_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="12_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右发进气压力转换活门未动作" duratioin="1" EventLevel="1"
+EventHandling="检查右发进气压力转换活门工作状况" Remark="右发进气压力转换活门未动作为1，持续1秒">
+    <ParameterCondition ParameterKey="238_3" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="8_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="10_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="13_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="左温度传感器故障" duratioin="1" EventLevel="1"
+EventHandling="更换左温度传感器" Remark="左温度传感器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="238_4" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+    <ParameterCondition ParameterKey="1_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="11_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="223_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右温度传感器故障" duratioin="1" EventLevel="1"
+EventHandling="更换右温度传感器" Remark="右温度传感器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="238_5" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+    <ParameterCondition ParameterKey="2_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="225_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="左发超温" duratioin="1" EventLevel="1"
+EventHandling="更换左发动机" Remark="左发超温为1，持续1秒">
+    <ParameterCondition ParameterKey="238_10" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="1_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="42_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="222_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="223_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右发超温" duratioin="1" EventLevel="1"
+EventHandling="更换右发动机" Remark="右发超温为1，持续1秒">
+    <ParameterCondition ParameterKey="238_11" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="2_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="43_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="224_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="225_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="左发动机滑油温度过高" duratioin="1" EventLevel="1"
+EventHandling="检查左发动机工作状况" Remark="左发动机滑油温度过高为1，持续1秒">
+    <ParameterCondition ParameterKey="238_12" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="5_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="223_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="42_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右发动机滑油温度过高" duratioin="1" EventLevel="1"
+EventHandling="检查右发动机工作状况" Remark="右发动机滑油温度过高为1，持续1秒">
+    <ParameterCondition ParameterKey="238_13" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="6_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="225_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="43_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="左发低压压缩机导向调节器故障" duratioin="1" EventLevel="1"
+EventHandling="检查左发低压压缩机导向调节器工作状况" Remark="左发低压压缩机导向调节器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="239_0" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="右发低压压缩机导向调节器故障" duratioin="1" EventLevel="1"
+EventHandling="检查右发低压压缩机导向调节器工作状况" Remark="右发低压压缩机导向调节器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="239_1" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="左发综合调节器故障" duratioin="1" EventLevel="1"
+EventHandling="检查左发综合调节器工作状况" Remark="左发综合调节器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="239_2" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="右发综合调节器故障" duratioin="1" EventLevel="1"
+EventHandling="检查右发综合调节器工作状况" Remark="右发综合调节器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="239_3" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="左发燃油超温" duratioin="1" EventLevel="1"
+EventHandling="检查做发动机系统" Remark="左发燃油超温为1，持续1秒">
+    <ParameterCondition ParameterKey="239_4" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="右发燃油超温" duratioin="1" EventLevel="1"
+EventHandling="检查右发动机系统" Remark="右发燃油超温为1，持续1秒">
+    <ParameterCondition ParameterKey="239_5" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="左发降转" duratioin="1" EventLevel="1"
+ EventHandling="（1）向飞行员了解当时情况（2）检查左发动机调节装置"
+ Remark="空速大于100Km/h，左发降转为1，持续1秒">
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="100"/>
+    <ParameterCondition ParameterKey="239_6" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="1_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="42_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="223_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右发降转" duratioin="1" EventLevel="1"
+ EventHandling="（1）向飞行员了解当时情况（2）检查右发动机调节装置"
+ Remark="空速大于100Km/h，右发降转为1，持续1秒">
+    <ParameterCondition ParameterKey="214_-1" condition="大于" value="100"/>
+    <ParameterCondition ParameterKey="239_7" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="2_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="43_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="225_-1" condition="is" value="0"/>
+  </Fault>
+
+  <!--<Fault title="左发动机加力状态信号" duratioin="1" EventLevel="1"
+ EventHandling="观察三参数是否协调一致"
+ Remark="左发动机加力状态信号为1，持续1秒">
+    <ParameterCondition ParameterKey="239_8" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="29_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="42_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="223_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右发动机加力状态信号" duratioin="1" EventLevel="1"
+ EventHandling="观察三参数是否协调一致"
+ Remark="右发动机加力状态信号为1，持续1秒">
+    <ParameterCondition ParameterKey="239_13" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="30_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="43_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="225_-1" condition="is" value="0"/>
+  </Fault>-->
+
+  <Fault title="左发振动过大" duratioin="1" EventLevel="1"
+ EventHandling="（1）外部检查左发动机有无损伤（2）用专用检测仪器测量左发动机损伤状况"
+ Remark="左发振动过大为1，持续1秒">
+    <ParameterCondition ParameterKey="239_11" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="3_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="223_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="42_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右发振动过大" duratioin="1" EventLevel="1"
+ EventHandling="（1）外部检查左发动机有无损伤（2）用专用检测仪器测量左发动机损伤状况"
+ Remark="右发振动过大为1，持续1秒">
+    <ParameterCondition ParameterKey="239_12" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="4_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="225_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="43_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="左进气道自动故障" duratioin="1" EventLevel="1"
+ EventHandling="检查左进气道手动工作状态" Remark="左进气道自动故障为1，持续1秒">
+    <ParameterCondition ParameterKey="240_8" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+    <ParameterCondition ParameterKey="7_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="9_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="12_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右进气道自动故障" duratioin="1" EventLevel="1"
+ EventHandling="检查右进气道手动工作状态" Remark="右进气道自动故障为1，持续1秒">
+    <ParameterCondition ParameterKey="240_9" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+    <ParameterCondition ParameterKey="8_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="10_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="13_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="起落架告警" duratioin="1" EventLevel="1"
+ EventHandling="检查起落架系统" Remark="起落架告警为1，持续1秒">
+    <ParameterCondition ParameterKey="241_10" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="左交流发电机故障" duratioin="1" EventLevel="1"
+ EventHandling="更换左交流发电机" Remark="左交流发电机故障为1，持续1秒">
+    <ParameterCondition ParameterKey="242_2" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="14_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="21_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="54_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="24_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右交流发电机故障" duratioin="1" EventLevel="1"
+ EventHandling="更换右交流发电机" Remark="右交流发电机故障为1，持续1秒">
+    <ParameterCondition ParameterKey="242_3" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="15_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="22_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="55_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="25_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="1个整流装置故障" duratioin="1" EventLevel="1"
+ EventHandling="检查更换整流装置" Remark="1个整流装置故障为1，持续1秒">
+    <ParameterCondition ParameterKey="242_4" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="51_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="52_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="53_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="14_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="15_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="24_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="25_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="2个整流装置故障" duratioin="1" EventLevel="1"
+ EventHandling="检查更换整流装置" Remark="2个整流装置故障为1，持续1秒">
+    <ParameterCondition ParameterKey="242_5" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="51_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="52_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="53_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="14_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="15_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="24_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="25_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="3个整流装置故障" duratioin="1" EventLevel="1"
+ EventHandling="检查更换整流装置" Remark="3个整流装置故障为1，持续1秒">
+    <ParameterCondition ParameterKey="242_6" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="51_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="52_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="53_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="14_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="15_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="24_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="25_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="PCU故障" duratioin="1" EventLevel="1"
+ EventHandling="检查PCU状况" Remark="PCU故障为1，持续1秒">
+    <ParameterCondition ParameterKey="242_7" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="左交流发电通道故障" duratioin="1" EventLevel="1"
+ EventHandling="用兆欧表检查左发电通道系统" Remark="左交流发电通道故障为1，持续1秒">
+    <ParameterCondition ParameterKey="242_8" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+    <ParameterCondition ParameterKey="54_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="14_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="21_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="54_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="24_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="右交流发电通道故障" duratioin="1" EventLevel="1"
+ EventHandling="用兆欧表检查右发电通道系统" Remark="右交流发电通道故障为1，持续1秒">
+    <ParameterCondition ParameterKey="242_9" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+    <ParameterCondition ParameterKey="55_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="15_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="22_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="55_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="25_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="计算机三次故障" duratioin="1" EventLevel="1"
+ EventHandling="检查计算机状况" Remark="计算机三次故障为1，持续1秒">
+    <ParameterCondition ParameterKey="243_0" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="传动装置三次故障" duratioin="1" EventLevel="1"
+ EventHandling="检查传动装置状况" Remark="传动装置三次故障为1，持续1秒">
+    <ParameterCondition ParameterKey="243_1" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="动静压三次故障" duratioin="1" EventLevel="1"
+ EventHandling="检查动静压装置状况" Remark="动静压三次故障为1，持续1秒">
+    <ParameterCondition ParameterKey="243_2" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="186_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="185_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="倾斜阻尼器故障" duratioin="1" EventLevel="1"
+ EventHandling="检查倾斜阻尼器状况" Remark="倾斜阻尼器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="243_3" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+  </Fault>
+
+  <Fault title="航向阻尼器故障" duratioin="1" EventLevel="1"
+ EventHandling="检查倾斜阻尼器状况" Remark="航向阻尼器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="243_4" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+  </Fault>
+
+  <Fault title="襟翼自动故障" duratioin="1" EventLevel="1"
+ EventHandling="检查襟翼自动工作状况" Remark="襟翼自动故障为1，持续1秒">
+    <ParameterCondition ParameterKey="243_7" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="极限限制故障" duratioin="1" EventLevel="1"
+ EventHandling="检查极限限制工作状况" Remark="极限限制故障为1，持续1秒">
+    <ParameterCondition ParameterKey="243_8" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+  </Fault>
+
+  <Fault title="前襟自动故障" duratioin="1" EventLevel="1"
+ EventHandling="检查前襟自动工作状况" Remark="前襟自动故障为1，持续1秒">
+    <ParameterCondition ParameterKey="243_9" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="差动平尾故障" duratioin="1" EventLevel="1"
+ EventHandling="检查差动平尾工作状况" Remark="差动平尾故障为1，持续1秒">
+    <ParameterCondition ParameterKey="243_10" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="104_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="纵向传感器/伺服机构二次故障" duratioin="1" EventLevel="1"
+ EventHandling="检查纵向传感器/伺服机构工作状况" Remark="纵向传感器/伺服机构二次故障为1，持续1秒">
+    <ParameterCondition ParameterKey="243_11" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="纵向一次故障" duratioin="1" EventLevel="1"
+ EventHandling="检查纵向工作状况" Remark="纵向一次故障为1，持续1秒">
+    <ParameterCondition ParameterKey="243_13" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="第一液压系统油面低" duratioin="1" EventLevel="1"
+ EventHandling="检查第一液压系统工作状况" Remark="第一液压系统油面低为1，持续1秒">
+    <ParameterCondition ParameterKey="244_0" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="第二液压系统油面低" duratioin="1" EventLevel="1"
+ EventHandling="检查第二液压系统工作状况" Remark="第二液压系统油面低为1，持续1秒">
+    <ParameterCondition ParameterKey="244_1" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="第一液压系统故障" duratioin="1" EventLevel="1"
+ EventHandling="检查第一液压系统工作状况" Remark="第一液压系统故障为1，持续1秒">
+    <ParameterCondition ParameterKey="244_2" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+  </Fault>
+
+  <Fault title="第二液压系统故障" duratioin="1" EventLevel="1"
+ EventHandling="检查第二液压系统工作状况" Remark="第二液压系统故障为1，持续1秒">
+    <ParameterCondition ParameterKey="244_3" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+  </Fault>
+
+  <Fault title="发动机组合仪表故障" duratioin="1" EventLevel="1"
+ EventHandling="检查发动机组合仪表工作状况" Remark="发动机组合仪表故障为1，持续1秒">
+    <ParameterCondition ParameterKey="244_8" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="氧气系统故障" duratioin="1" EventLevel="1"
+ EventHandling="检查氧气系统工作状况" Remark="氧气系统故障为1，持续1秒">
+    <ParameterCondition ParameterKey="244_11" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="自动飞行控制系统故障" duratioin="1" EventLevel="1"
+ EventHandling="检查自动飞行控制系统工作状况" Remark="自动飞行控制系统故障为1，持续1秒">
+    <ParameterCondition ParameterKey="244_14" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="灯光告警计算机A机故障" duratioin="1" EventLevel="1"
+ EventHandling="检查灯光告警计算机A机工作状况" Remark="灯光告警计算机A机故障为1，持续1秒">
+    <ParameterCondition ParameterKey="245_0" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="灯光告警计算机B机故障" duratioin="1" EventLevel="1"
+ EventHandling="检查灯光告警计算机B机工作状况" Remark="灯光告警计算机B机故障为1，持续1秒">
+    <ParameterCondition ParameterKey="245_1" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="左发火警" duratioin="1" EventLevel="1"
+ EventHandling="检查左发动机" Remark="左发火警为1，持续1秒">
+    <ParameterCondition ParameterKey="245_4" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="右发火警" duratioin="1" EventLevel="1"
+ EventHandling="检查右发动机" Remark="右发火警为1，持续1秒">
+    <ParameterCondition ParameterKey="245_5" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="防冰信号器故障" duratioin="1" EventLevel="1"
+ EventHandling="检查防冰信号器工作状况" Remark="防冰信号器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="245_8" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="进气道结冰" duratioin="1" EventLevel="1"
+ EventHandling="检查进气道系统工作状况" Remark="进气道结冰为1，持续1秒">
+    <ParameterCondition ParameterKey="245_9" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="电传系统故障" duratioin="1" EventLevel="1"
+ EventHandling="检查电传系统工作状况" Remark="电传系统故障为1，持续1秒">
+    <ParameterCondition ParameterKey="246_0" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="液压系统故障" duratioin="1" EventLevel="1"
+ EventHandling="检查液压系统" Remark="液压系统故障为1，持续1秒">
+    <ParameterCondition ParameterKey="246_2" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="传感器组件故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查传感器组件工作状况" Remark="传感器组件故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="252_3" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="头盔瞄准具故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查头盔瞄准具工作状况" Remark="头盔瞄准具故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="252_6" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="光电雷达故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查光电雷达工作状况" Remark="光电雷达故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="252_9" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="PDR故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查PDR工作状况" Remark="PDR故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="252_12" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="DCMS故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查DCMS工作状况" Remark="DCMS故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="252_15" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="极限信号计算机故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查极限信号计算机工作状况" Remark="极限信号计算机故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="253_3" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="ADC（包括传感器）故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查ADC（包括传感器）工作状况" Remark="ADC（包括传感器）故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="253_6" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="武器系统故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查武器系统工作状况" Remark="武器系统故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="253_9" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="SMP故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查SMP工作状况" Remark="SMP故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="253_12" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="MC故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查MC工作状况" Remark="MC故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="253_15" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="短波电台故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查短波电台工作状况" Remark="短波电台故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="254_3" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="罗盘故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查罗盘工作状况" Remark="罗盘故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="254_6" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="AIRNE故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查AIRNE工作状况" Remark="AIRNE故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="254_9" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="无线电高度故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查无线电高度表工作状况" Remark="无线电高度故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="254_12" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="CCU故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查CCU工作状况" Remark="CCU故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="254_15" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="信标机故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查信标机工作状况" Remark="信标机故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="255_3" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="保密机故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查保密机工作状况" Remark="保密机故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="255_6" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="航管应答机故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查航管应答机工作状况" Remark="航管应答机故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="255_9" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="BPU故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查BPU工作状况" Remark="BPU故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="255_12" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="IFF故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查IFF工作状况" Remark="IFF故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="255_15" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="航姿系统故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查航姿系统工作状况" Remark="航姿系统故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="256_3" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="INS故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查INS工作状况" Remark="INS故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="256_6" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="MLS故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查MLS工作状况" Remark="MLS故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="256_9" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查超短波话音电台工作状况" Remark="超短波话音电台故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="256_12" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="超短波数传电台故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查超短波数传电台工作状况" Remark="超短波数传电台故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="256_15" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="导弹逼近告警分系统故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查导弹逼近告警分系统工作状况" Remark="导弹逼近告警分系统故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="257_3" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="无源干扰投放分系统故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查无源干扰投放分系统工作状况" Remark="无源干扰投放分系统故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="257_6" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="有源干扰分系统故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查有源干扰分系统工作状况" Remark="有源干扰分系统故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="257_9" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="电子支援子系统故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查电子支援子系统工作状况" Remark="电子支援子系统故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="257_12" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="控制管理分系统故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查控制管理分系统工作状况" Remark="控制管理分系统故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="257_15" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="JIDS故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查JIDS工作状况" Remark="JIDS故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="258_3" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="LIMC故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查LIMC工作状况" Remark="LIMC故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="258_6" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="DTE故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查DTE工作状况" Remark="DTE故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="258_9" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="AFCS故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查AFCS工作状况" Remark="AFCS故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="258_12" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="AFCS适配器故障状态" duratioin="1" EventLevel="1"
+ EventHandling="检查AFCS适配器工作状况" Remark="AFCS适配器故障状态为1，持续1秒">
+    <ParameterCondition ParameterKey="258_15" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="燃油压力调节器故障" duratioin="1" EventLevel="1"
+ EventHandling="检查燃油压力调节器工作状况" Remark="燃油压力调节器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="263_3" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="吊舱超压" duratioin="1" EventLevel="1"
+ EventHandling="检查吊舱工作状况" Remark="吊舱超压为1，持续1秒">
+    <ParameterCondition ParameterKey="263_12" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="吊舱过热" duratioin="1" EventLevel="1"
+ EventHandling="检查吊舱工作状况" Remark="吊舱过热为1，持续1秒">
+    <ParameterCondition ParameterKey="263_13" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="吊舱火警" duratioin="1" EventLevel="1"
+ EventHandling="检查吊舱工作状况" Remark="吊舱火警为1，持续1秒">
+    <ParameterCondition ParameterKey="263_14" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="单平尾失效" duratioin="1" EventLevel="1"
+ EventHandling="检查平尾工作状况" Remark="单平尾失效为1，持续1秒">
+    <ParameterCondition ParameterKey="264_3" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+  </Fault>
+
+  <Fault title="模拟故障" duratioin="1" EventLevel="1"
+ EventHandling="检查模拟工作状况" Remark="模拟故障为1，持续1秒">
+    <ParameterCondition ParameterKey="264_4" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="计算机失效" duratioin="1" EventLevel="1"
+ EventHandling="检查计算机工作状况" Remark="计算机失效为1，持续1秒">
+    <ParameterCondition ParameterKey="264_5" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="俯仰陀螺三次故障" duratioin="1" EventLevel="1"
+ EventHandling="检查俯仰陀螺工作状况" Remark="俯仰陀螺三次故障为1，持续1秒">
+    <ParameterCondition ParameterKey="264_6" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="横航向故障" duratioin="1" EventLevel="1"
+ EventHandling="检查横航向工作状况" Remark="横航向故障为1，持续1秒">
+    <ParameterCondition ParameterKey="264_7" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="襟副翼故障" duratioin="1" EventLevel="1"
+ EventHandling="检查襟副翼工作状况" Remark="襟副翼故障为1，持续1秒">
+    <ParameterCondition ParameterKey="264_8" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="214_-1" condition="范围" value="10" value2="2500" top="true" bottom="true" nop="false"/>
+  </Fault>
+
+  <Fault title="动静压失效" duratioin="1" EventLevel="1"
+ EventHandling="检查动静压工作状况" Remark="动静压失效为1，持续1秒">
+    <ParameterCondition ParameterKey="264_9" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="185_-1" condition="is" value="0"/>
+    <ParameterCondition ParameterKey="186_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="侧向过载传感器故障" duratioin="1" EventLevel="1"
+ EventHandling="检查侧向过载传感器工作状况" Remark="侧向过载传感器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="266_0" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="47_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="法向过载传感器故障" duratioin="1" EventLevel="1"
+ EventHandling="检查法向过载传感器工作状况" Remark="法向过载传感器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="266_1" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="46_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="纵向过载传感器故障" duratioin="1" EventLevel="1"
+ EventHandling="检查纵向过载传感器工作状况" Remark="纵向过载传感器故障为1，持续1秒">
+    <ParameterCondition ParameterKey="266_2" condition="等于" value="1"/>
+    <ParameterCondition ParameterKey="48_-1" condition="is" value="0"/>
+  </Fault>
+
+  <Fault title="氧分压低" duratioin="1" EventLevel="1"
+ EventHandling="检查氧分压工作状况" Remark="氧分压低为1，持续1秒">
+    <ParameterCondition ParameterKey="266_3" condition="等于" value="1"/>
+  </Fault>
+
+  <Fault title="氧气系统自检故障" duratioin="1" EventLevel="1"
+ EventHandling="检查氧气系统工作状况" Remark="氧气系统自检故障为1，持续1秒">
+    <ParameterCondition ParameterKey="266_4" condition="等于" value="1"/>
+  </Fault>
+
+</Faults>

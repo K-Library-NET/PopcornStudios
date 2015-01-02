@@ -21,6 +21,7 @@ namespace AircraftDataAnalysisWcfService.DALs
         public const string COLLECTION_FLIGHT_RECORD_LEVELTOP = "FlightRecordLevelTop";
         public const string COLLECTION_FLIGHT_RAWDATA_RELATION = "FlightRawDataRelation";
         public const string COLLECTION_FLIGHT_EXTREME = "FlightExtreme";
+        public const string COLLECTION_FLIGHT_GLOBE_DATA = "FlightGlobeDatas";
 
         public const string COLLECTION_FLIGHT_CONDITION_DECISION = "FlightConditionDecisions";
 

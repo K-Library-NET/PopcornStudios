@@ -1,0 +1,178 @@
+﻿@{
+    ViewBag.Title = "EditGoodsExit";
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="btn-toolbar" style="text-align:center">
+            <a href="@Url.Action("EditGoodsExit", "GoodsExit")" style="margin-right:50px;" class="btn blue" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="get" data-ajax="true">
+                <i class="icon-save"></i>保存
+            </a>
+            <a href="@Url.Action("EditGoodsExit", "GoodsExit")" class="btn" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="get" data-ajax="true">
+                返回
+            </a>
+            <div class="btn-group">
+            </div>
+        </div>
+        <div class="well">
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane active in" id="home">
+                    <form id="tab" style="text-align:center">
+                        <h3>边民互市贸易出口商品申报单</h3>
+                        <div style="float:left">
+                            <span>海关编号：</span>
+                            <input type="text" value="53927587362" style="border-color: #fafafa #fafafa #000000 #fafafa; background-color: #fafafa; border-width: 0px 0px 1px 0px;" />
+                        </div>
+                        <table class="table table-bordered table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label>姓名</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="你是谁" />
+                                    </td>
+                                    <td>
+                                        <label>证件名称</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="973737859573626" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>国籍</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="越南" />
+                                    </td>
+                                    <td>
+                                        <label>证件号码</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="786785" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>互市地点</label>
+                                    </td>
+                                    <td colspan="3">
+                                        <input type="text" value="12345" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <div>
+                                            <table class="table table-bordered table-condensed">
+                                                <tbody>
+
+                                                    <tr>
+                                                        <td>
+                                                            <label>品名</label>
+                                                        </td>
+                                                        <td>
+                                                            <label>原产地</label>
+                                                        </td>
+                                                        <td>
+                                                            <label>数(重)量</label>
+                                                        </td>
+                                                        <td>
+                                                            <label>金额(人民币)</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <select style="width:160px;">
+                                                                <option>马铃薯</option>
+                                                                <option>土豆</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" style="width:160px;" value="12345" />
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" style="width:160px;" value="12345" />
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" style="width:160px;" value="12345" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <select style="width:160px;">
+                                                                <option>马铃薯</option>
+                                                                <option>土豆</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" style="width:160px;" value="67356" />
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" style="width:160px;" value="45234524" />
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" style="width:160px;" value="789678" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <label>以上物品属本人互市出口，兹申明以上申报无讹，并承担法律责任。</label>
+                                        <div style="text-align:right;">
+                                            <span>申报人(签名)：</span><input type="text" value="申报人" style="border-color: #fafafa #fafafa #000000 #fafafa; background-color: #fafafa; border-width: 0px 0px 1px 0px;" /><br />
+                                            <span>日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期：</span><input type="text" value="2014/12/12" style="border-color: #fafafa #fafafa #000000 #fafafa; background-color: #fafafa; border-width: 0px 0px 1px 0px;" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <div class="textareadiv">
+                                            <label>海关审核、查验情况批注：</label>
+                                            <textarea class="input-xlarge custextarea">不知道 不明了 不想要</textarea><br />
+                                        </div>
+                                        <div style="text-align:right;">
+                                            <span>经办人员：</span><input type="text" value="经办人" style="border-color: #fafafa #fafafa #000000 #fafafa; background-color: #fafafa; border-width: 0px 0px 1px 0px;" /><br />
+                                            <span>海关盖章：</span><br />
+                                            <span>日&nbsp;&nbsp;&nbsp;&nbsp;期：</span><input type="text" value="2014/12/12" style="border-color: #fafafa #fafafa #000000 #fafafa; background-color: #fafafa; border-width: 0px 0px 1px 0px;" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    ×
+                </button>
+                <h3 id="myModalLabel">
+                    删除确认
+                </h3>
+            </div>
+            <div class="modal-body">
+                <p class="error-text">
+                    <i class="icon-warning-sign modal-icon"></i>你确认要删除吗?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">
+                    取消
+                </button>
+                <button class="btn btn-danger" data-dismiss="modal">
+                    删除
+                </button>
+            </div>
+        </div>
+        <footer>
+            <hr>
+        </footer>
+
+    </div>
+</div>

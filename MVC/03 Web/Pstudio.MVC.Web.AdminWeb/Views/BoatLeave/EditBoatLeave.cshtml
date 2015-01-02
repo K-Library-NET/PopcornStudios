@@ -1,0 +1,217 @@
+﻿@{
+    ViewBag.Title = "EditBoatLeave";
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="btn-toolbar" style="text-align:center">
+            <a href="@Url.Action("BoatLeaveList", "BoatLeave")" style="margin-right:50px;" class="btn blue" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="get" data-ajax="true">
+                <i class="icon-save"></i>保存
+            </a>
+            <a href="@Url.Action("BoatLeaveList", "BoatLeave")" class="btn" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="get" data-ajax="true">
+                返回
+            </a>
+            <div class="btn-group">
+            </div>
+        </div>
+        <div class="well">
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane active in" id="home">
+                    <form id="tab" style="text-align:center">
+                        <h3>边民互市贸易船舶出境申报单 </h3>
+                        <table class="table table-bordered table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label>船名</label>
+                                    </td>
+                                    <td>
+                                        <label>船号</label>
+                                    </td>
+                                    <td>
+                                        <label>船舶备案编号</label>
+                                    </td>
+                                    <td>
+                                        <label>船长姓名</label>
+                                    </td>
+                                    <td>
+                                        <label>船舶国籍</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text" value="阳光号" style="width:160px;" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="BBQ 098443" style="width:160px;" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="YYH93736855" style="width:160px;" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="路飞" style="width:160px;" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="越南" style="width:160px;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>进出境互市点</label>
+                                    </td>
+                                    <td>
+                                        <label>进境时间</label>
+                                    </td>
+                                    <td>
+                                        <label>出境时间</label>
+                                    </td>
+                                    <td>
+                                        <label>船主姓名</label>
+                                    </td>
+                                    <td>
+                                        <label>联系电话</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text" value="越南" style="width:160px;" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="2014/12/12" style="width:160px;" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="2014/12/12" style="width:160px;" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="张三" style="width:160px;" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="13898373612" style="width:160px;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5">
+                                        <div class="textareadiv">
+                                            <label>船舶停放位置摘要：</label>
+                                            <textarea class="input-xlarge custextarea">不知道 不明了 不想要</textarea>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5">
+                                        <table class="table table-bordered table-condensed">
+                                            <tr>
+                                                <th>
+                                                    <label>货物品名</label>
+                                                </th>
+                                                <th>
+                                                    <label>原产地</label>
+                                                </th>
+                                                <th>
+                                                    <label>数量</label>
+                                                </th>
+                                                <th>
+                                                    <label>货主或经营企业签名或盖章及联系电话</label>
+                                                </th>
+                                                <th>
+                                                    <label>货主身份证号或经营企业营业执照编号</label>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <select style="width:160px;">
+                                                        <option>马铃薯</option>
+                                                        <option>土豆</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" style="width:160px;" value="越南" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" style="width:160px;" value="139" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" style="width:160px;" value="136923948234" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" style="width:160px;" value="BBQ 239173" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <select style="width:160px;">
+                                                        <option>土豆</option>
+                                                        <option>马铃薯</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" style="width:160px;" value="越南" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" style="width:160px;" value="139" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" style="width:160px;" value="136923948234" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" style="width:160px;" value="BBQ 239173" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5">
+                                        <div style="text-align:right;">
+                                            <span>运输工具负责人签名：</span><input type="text" value="负责人" style="border-color: #fafafa #fafafa #000000 #fafafa; background-color: #fafafa; border-width: 0px 0px 1px 0px;" /><br />
+                                            <span>日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期：</span><input type="text" value="2014/12/12" style="border-color: #fafafa #fafafa #000000 #fafafa; background-color: #fafafa; border-width: 0px 0px 1px 0px;" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5">
+                                        <div class="textareadiv">
+                                            <label>检查机关签注：</label>
+                                            <textarea class="input-xlarge custextarea">不知道 不明了 不想要</textarea><br />
+                                        </div>
+                                        <div style="float:right">
+                                            <span>关员签名：</span><input type="text" value="经办人" style="border-color: #fafafa #fafafa #000000 #fafafa; background-color: #fafafa; border-width: 0px 0px 1px 0px;" /><br />
+                                            <span>日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期：</span><input type="text" value="2014/12/12" style="border-color: #fafafa #fafafa #000000 #fafafa; background-color: #fafafa; border-width: 0px 0px 1px 0px;" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    ×
+                </button>
+                <h3 id="myModalLabel">
+                    删除确认
+                </h3>
+            </div>
+            <div class="modal-body">
+                <p class="error-text">
+                    <i class="icon-warning-sign modal-icon"></i>你确认要删除吗?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">
+                    取消
+                </button>
+                <button class="btn btn-danger" data-dismiss="modal">
+                    删除
+                </button>
+            </div>
+        </div>
+        <footer>
+            <hr>
+        </footer>
+
+    </div>
+</div>
+

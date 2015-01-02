@@ -1,0 +1,169 @@
+﻿@{
+    ViewBag.Title = "EditSuperviseGoodsUpDown";
+}
+<div class="row-fluid">
+    <div class="span12" id="navigation">
+        @*@Html.Partial("_Theme")*@
+        <h3 class="page-title">
+            <span>编辑货物准卸监装</span>　@*<small>介绍</small>*@
+        </h3>
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <span>首页</span>
+                <i class="icon-angle-right"></i>
+            </li>
+            <li>
+                <span>菜单组</span>
+                <i class="icon-angle-right"></i>
+            </li>
+            <li><span>菜单</span></li>
+        </ul>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="btn-toolbar" style="text-align:center">
+            <a href="@Url.Action("SuperviseGoodsUpDownList", "CustomsTask")" style="margin-right:50px;" class="btn blue" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="get" data-ajax="true">
+                <i class="icon-save"></i>保存
+            </a>
+            <a href="@Url.Action("SuperviseGoodsUpDownList", "CustomsTask")" class="btn" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="get" data-ajax="true">
+                返回
+            </a>
+            <div class="btn-group">
+            </div>
+        </div>
+        <div class="well">
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane active in" id="home">
+                    <form id="tab">
+                        <table class="table table-bordered table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td rowspan="3">运输工具信息</td>
+                                    <td>
+                                        <label>车牌号码/船号</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>车辆/船舶备案编号</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>停靠位置/卸货地点</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="12345" class="input-xlarge" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="100">监装监卸货物信息</td>
+                                    <td>
+                                        <label>监装、卸开始时间</label>
+                                    </td>
+                                    <td>
+                                        @Html.TextBox("startDate", null, new { @class = "m-wrap small" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>监装、卸结束时间</label>
+                                    </td>
+                                    <td>
+                                        @Html.TextBox("endDate", null, new { @class = "m-wrap small" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>商品</label>
+                                    </td>
+                                    <td>
+                                        <label>数量</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>土豆</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="9" class="input-xlarge" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>马铃薯</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="8" class="input-xlarge" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            监装、卸货物情况
+                                        </label>
+                                    </td>
+                                    <td colspan="2">
+                                        <textarea class="input-xlarge" cols="3">不知道 不明了 不想要</textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>
+                                            海关批注栏
+                                        </label>
+                                    </td>
+                                    <td colspan="2">
+                                        <div>
+                                            <textarea class="input-xlarge" cols="3">不知道 不明了 不想要</textarea>
+                                            <div style="margin-right:10px; margin-left:auto;">
+                                                <span>经办人员：</span><input type="text" value="54321" class="input-xlarge" /><br />
+                                                <span>日期：</span><input type="text" value="54321" class="input-xlarge" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    ×
+                </button>
+                <h3 id="myModalLabel">
+                    删除确认
+                </h3>
+            </div>
+            <div class="modal-body">
+                <p class="error-text">
+                    <i class="icon-warning-sign modal-icon"></i>你确认要删除吗?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">
+                    取消
+                </button>
+                <button class="btn btn-danger" data-dismiss="modal">
+                    删除
+                </button>
+            </div>
+        </div>
+        <footer>
+            <hr>
+        </footer>
+
+    </div>
+</div>
+

@@ -1,0 +1,319 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <style type="text/css">
+        #wizard {
+            border: 5px solid #789;
+            font-size: 12px;
+            height: 500px;
+            margin: 20px auto;
+            width: 800px;
+            overflow: hidden;
+            position: relative;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+        }
+
+            #wizard .items {
+                width: 20000px;
+                clear: both;
+                position: absolute;
+            }
+
+            #wizard .right {
+                float: right;
+            }
+
+            #wizard #status {
+                height: 35px;
+                background: #123;
+                padding-left: 25px !important;
+            }
+
+        #status li {
+            float: left;
+            color: #fff;
+            padding: 10px 30px;
+        }
+
+            #status li.active {
+                background-color: #369;
+                font-weight: normal;
+            }
+
+        .input {
+            width: 240px;
+            height: 18px;
+            margin: 10px auto;
+            line-height: 20px;
+            border: 1px solid #d3d3d3;
+            padding: 2px;
+        }
+
+        .page {
+            padding: 20px 30px;
+            width: 730px;
+            float: left;
+        }
+
+            .page h3 {
+                height: 42px;
+                font-size: 16px;
+                border-bottom: 1px dotted #ccc;
+                margin-bottom: 20px;
+                padding-bottom: 5px;
+            }
+
+                .page h3 em {
+                    font-size: 12px;
+                    font-weight: 500;
+                    font-style: normal;
+                }
+
+            .page p {
+                line-height: 24px;
+            }
+
+                .page p label {
+                    font-size: 14px;
+                    display: block;
+                }
+
+        .btn_nav {
+            height: 36px;
+            line-height: 36px;
+            margin: 20px auto;
+        }
+
+        /*.prev, .next {
+            width: 100px;
+            height: 32px;
+            line-height: 32px;
+            background: url(btn_bg.gif) repeat-x bottom;
+            border: 1px solid #d3d3d3;
+            cursor: pointer;
+        }*/
+
+        .prev, .next {
+            background-color: #44c767;
+            -moz-border-radius: 28px;
+            -webkit-border-radius: 28px;
+            border-radius: 28px;
+            border: 1px solid #18ab29;
+            display: inline-block;
+            cursor: pointer;
+            color: #ffffff;
+            font-family: arial;
+            font-weight: bold;
+            text-decoration: none;
+            text-shadow: 0px 1px 0px #2f6627;
+
+            width: 100px;
+            height: 32px;
+            line-height: 32px;
+            cursor: pointer;
+        }
+
+        .myButton {
+            background-color: #44c767;
+            -moz-border-radius: 28px;
+            -webkit-border-radius: 28px;
+            border-radius: 28px;
+            border: 1px solid #18ab29;
+            display: inline-block;
+            cursor: pointer;
+            color: #ffffff;
+            font-family: arial;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 10px 40px;
+            text-decoration: none;
+            text-shadow: 0px 1px 0px #2f6627;
+        }
+
+            .myButton:hover {
+                background-color: #5cbf2a;
+            }
+
+            .myButton:active {
+                position: relative;
+                top: 1px;
+            }
+
+    </style>
+
+
+</head>
+<body style="background-color: darkblue; font-family: 'Microsoft YaHei'; color:white; ">
+    <script src="@Url.StaticFile("/Scripts/jquery-1.10.2.min.js")"></script>
+    <script src="@Url.StaticFile("/Scripts/Plugin/scrollable.js")"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#wizard").scrollable({
+                onSeek: function (event, i) {
+                    $("#status li").removeClass("active").eq(i).addClass("active");
+                },
+                onBeforeSeek: function (event, i) {
+                    if (i == 1) {
+                        var user = $("#user").val();
+                        if (user == "") {
+                            alert("请输入用户名！");
+                            return false;
+                        }
+                        var pass = $("#pass").val();
+                        var pass1 = $("#pass1").val();
+                        if (pass == "") {
+                            alert("请输入密码！");
+                            return false;
+                        }
+                        if (pass1 != pass) {
+                            alert("两次密码不一致！");
+                            return false;
+                        }
+                    }
+                }
+            });
+            $("#sub").click(function () {
+                var data = $("form").serialize();
+                alert(data);
+            });
+        });
+    </script>
+
+
+    <div>
+        <h2 class="top_title" style="text-align:center">车辆注册登记</h2>
+        <form action="#" method="post">
+            <div id="wizard">
+                <ul id="status">
+                    <li class="active">账户信息</li>
+                    <li>身份信息</li>
+                    <li>车辆信息</li>
+                    <li>申请完成</li>
+                </ul>
+
+                <div class="items" style="background-color:blue; ">
+                    <div class="page">
+                        <h3>创建一个账户<br /><em>请填写您的注册账户信息，用于登录。</em></h3>
+                        <p><label>用户名：</label><input type="text" class="input" id="user" name="username" /></p>
+                        <p><label>密码：</label><input type="password" class="input" id="pass" name="password" /></p>
+                        <p><label>确认密码：</label><input type="password" class="input" id="pass1" name="password1" /></p>
+                        <br />
+                        <br />
+                        <div class="btn_nav">
+                            <input type="button" class="next right" value="下一步&raquo;" />
+                            @*<input type="button" class="myButton" value="下一步&raquo;" />*@
+                        </div>
+                    </div>
+                    <div class="page">
+                        <h3>填写身份信息<br /><em>请填写个人相关信息，为了保证审批的通过，请务必保证个人信息的正确性。</em></h3>
+                        <table>
+                            <tr>
+                                <td><label>姓名：</label></td>
+                                <td><input type="text" class="input" name="email" /></td>
+                                <td><label>性别：</label></td>
+                                <td><input type="text" class="input" name="email" /></td>
+                            </tr>
+                            <tr>
+                                <td><label>身份证：</label></td>
+                                <td><input type="text" class="input" name="email" /></td>
+                                <td><label>居住地址：</label></td>
+                                <td><input type="text" class="input" name="email" /></td>
+                            </tr>
+                            <tr>
+                                <td><label>手机号码：</label></td>
+                                <td><input type="text" class="input" name="email" /></td>
+                                <td><label>电子邮箱：</label></td>
+                                <td><input type="text" class="input" name="email" /></td>
+                            </tr>
+                        </table>
+
+                        @*<p><label>姓名：</label><input type="text" class="input" name="email" />
+                            <label>性别：</label><input type="text" class="input" name="email" />
+                            <label>身份证：</label><input type="text" class="input" name="email" />
+                            <label>居住地址：</label><input type="text" class="input" name="qq" />
+                            <label>手机号码：</label><input type="text" class="input" name="mobile" />
+                            <label>电子邮箱：</label><input type="text" class="input" name="mobile" /></p>*@
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <div class="btn_nav">
+                            <input type="button" class="prev" style="float:left" value="&laquo;上一步" />
+                            <input type="button" class="next right" value="下一步&raquo;" />
+                        </div>
+                    </div>
+                    <div class="page">
+                        <h3>填写车辆信息<br /><em>请填写车辆相关信息，为了保证审批的通过，请务必保证车辆信息的正确性。</em></h3>
+                        <table>
+                            <tr>
+                                <td><label>车牌号：</label></td>
+                                <td><input type="text" class="input" name="email" /></td>
+                                <td><label>发动机号：</label></td>
+                                <td><input type="text" class="input" name="email" /></td>
+                            </tr>
+                            <tr>
+                                <td><label>车辆牌名：</label></td>
+                                <td><input type="text" class="input" name="email" /></td>
+                                <td><label>车身号码：</label></td>
+                                <td><input type="text" class="input" name="email" /></td>
+                            </tr>
+                            <tr>
+                                <td><label>车辆类型：</label></td>
+                                <td><input type="text" class="input" name="email" /></td>
+                                <td><label>车辆吨位（吨）：</label></td>
+                                <td><input type="text" class="input" name="email" /></td>
+                            </tr>
+                        </table>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <div class="btn_nav">
+                            <input type="button" class="prev" style="float:left" value="&laquo;上一步" />
+                            <input type="button" class="next right" value="下一步&raquo;" />
+                        </div>
+                    </div>
+                    <div class="page">
+                        <h3>完成注册<br /><em>最后完成注册并打印回执。</em></h3>
+                        <p>
+                            <label>恭喜注册成功，最后请打印回执，凭打印回执、身份证、车辆行驶证、车辆相片于柜台提交相关资料并领取IC卡</label>
+                        </p>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <div class="btn_nav">
+                            <input type="button" class="prev" style="float:left" value="&laquo;上一步" />
+                            <input type="button" class="next right" id="sub" value="打印回执" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

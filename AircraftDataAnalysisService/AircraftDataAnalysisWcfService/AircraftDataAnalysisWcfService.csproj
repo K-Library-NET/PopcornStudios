@@ -7,7 +7,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F8E6ED2E-6371-4AB2-B4BB-88FCFA164015}</ProjectGuid>
+    <ProjectGuid>{8F235995-5621-4A33-8178-3000DA73E64D}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -15,7 +15,7 @@
     <AssemblyName>AircraftDataAnalysisWcfService</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -43,8 +43,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MongoDB.Bson, Version=1.8.3.9, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
@@ -55,7 +56,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\mongocsharpdriver.1.8.3\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -76,8 +76,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AircraftService.svc" />
-    <Content Include="FlightParameters.xml" />
     <Content Include="DataInputService.svc" />
+    <Content Include="FlightParameters.xml" />
+    <Content Include="Service1.svc" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -87,12 +88,16 @@
     <Compile Include="AircraftServiceBll.cs" />
     <Compile Include="DALs\AircraftMongoDb.cs" />
     <Compile Include="DALs\AircraftMongoDbDal.cs" />
-    <Compile Include="DataInputServiceBll.cs" />
-    <Compile Include="IAircraftService.cs" />
     <Compile Include="DataInputService.svc.cs">
       <DependentUpon>DataInputService.svc</DependentUpon>
     </Compile>
+    <Compile Include="DataInputServiceBll.cs" />
     <Compile Include="IAircraftDataInput.cs" />
+    <Compile Include="IAircraftService.cs" />
+    <Compile Include="Service1.svc.cs">
+      <DependentUpon>Service1.svc</DependentUpon>
+    </Compile>
+    <Compile Include="IService1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -110,7 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlightDataEntities\FlightDataEntities.csproj">
-      <Project>{784707c6-ec3e-42ea-96a6-849c7fc79e4e}</Project>
+      <Project>{ebdce0b9-bcbe-404d-8769-c877050df55b}</Project>
       <Name>FlightDataEntities</Name>
     </ProjectReference>
   </ItemGroup>
@@ -125,11 +130,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
-          <DevelopmentServerPort>45240</DevelopmentServerPort>
+          <DevelopmentServerPort>65214</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/AircraftDataAnalysisWcfService</IISUrl>
+          <IISUrl>http://localhost:65214/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

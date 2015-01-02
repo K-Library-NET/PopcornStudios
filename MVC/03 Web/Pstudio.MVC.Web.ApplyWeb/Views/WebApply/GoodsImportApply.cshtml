@@ -1,0 +1,289 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <style type="text/css">
+        #wizard {
+            border: 5px solid #789;
+            font-size: 12px;
+            height: 500px;
+            margin: 20px auto;
+            width: 800px;
+            overflow: hidden;
+            position: relative;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+        }
+
+            #wizard .items {
+                width: 20000px;
+                clear: both;
+                position: absolute;
+            }
+
+            #wizard .right {
+                float: right;
+            }
+
+            #wizard #status {
+                height: 35px;
+                background: #123;
+                padding-left: 25px !important;
+            }
+
+        #status li {
+            float: left;
+            color: #fff;
+            padding: 10px 30px;
+        }
+
+            #status li.active {
+                background-color: #369;
+                font-weight: normal;
+            }
+
+        .input {
+            width: 240px;
+            height: 18px;
+            margin: 10px auto;
+            line-height: 20px;
+            border: 1px solid #d3d3d3;
+            padding: 2px;
+        }
+
+        .page {
+            padding: 20px 30px;
+            width: 730px;
+            float: left;
+        }
+
+            .page h3 {
+                height: 42px;
+                font-size: 16px;
+                border-bottom: 1px dotted #ccc;
+                margin-bottom: 20px;
+                padding-bottom: 5px;
+            }
+
+                .page h3 em {
+                    font-size: 12px;
+                    font-weight: 500;
+                    font-style: normal;
+                }
+
+            .page p {
+                line-height: 24px;
+            }
+
+                .page p label {
+                    font-size: 14px;
+                    display: block;
+                }
+
+        .btn_nav {
+            height: 36px;
+            line-height: 36px;
+            margin: 20px auto;
+        }
+
+        .prev, .next {
+            background-color: #44c767;
+            -moz-border-radius: 28px;
+            -webkit-border-radius: 28px;
+            border-radius: 28px;
+            border: 1px solid #18ab29;
+            display: inline-block;
+            cursor: pointer;
+            color: #ffffff;
+            font-family: arial;
+            font-weight: bold;
+            text-decoration: none;
+            text-shadow: 0px 1px 0px #2f6627;
+            width: 100px;
+            height: 32px;
+            line-height: 32px;
+            cursor: pointer;
+        }
+    </style>
+
+
+</head>
+<body style="background-color: darkblue; font-family: 'Microsoft YaHei'; color:white; ">
+    <script src="@Url.StaticFile("/Scripts/jquery-1.10.2.min.js")"></script>
+    <script src="@Url.StaticFile("/Scripts/Plugin/scrollable.js")"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#wizard").scrollable({
+                onSeek: function (event, i) {
+                    $("#status li").removeClass("active").eq(i).addClass("active");
+                },
+                onBeforeSeek: function (event, i) {
+                    if (i == 1) {
+                        var user = $("#user").val();
+                        //if (user == "") {
+                        //    alert("请输入用户名！");
+                        //    return false;
+                        //}
+                        var pass = $("#pass").val();
+                        var pass1 = $("#pass1").val();
+                        //if (pass == "") {
+                        //    alert("请输入密码！");
+                        //    return false;
+                        //}
+                        //if (pass1 != pass) {
+                        //    alert("两次密码不一致！");
+                        //    return false;
+                        //}
+                    }
+                }
+            });
+            $("#sub").click(function () {
+                var data = $("form").serialize();
+                alert(data);
+            });
+        });
+    </script>
+
+
+    <div>
+        <h2 class="top_title" style="text-align:center">商品申报</h2>
+
+        <form action="#" method="post">
+            <div id="wizard">
+                <ul id="status">
+                    <li class="active">用户信息确认</li>
+                    <li>车辆信息确认</li>
+                    <li>货品内容申报</li>
+                    <li>申报提交完成</li>
+                </ul>
+
+                <div class="items">
+                    <div class="page">
+                        <h3>用户信息<br /><em>根据您的IC卡或指纹检验，本次办理的用户信息如下，如果信息内容不对，请刷新提交或窗口办理资料变更手续。</em></h3>
+                        <p><label>用户名：</label><input type="text" class="input" id="user123" name="username" value="张三"></input></p>
+                        <p><label>身份证：</label><input type="text" class="input" id="pass123" name="password" value="4401" /></p>
+                        <input type="button" value="刷新" />
+
+                        <div class="btn_nav">
+                            <input type="button" class="next right" value="下一步&raquo;" />
+                        </div>
+                    </div>
+                    <div class="page">
+                        <h3>用户信息<br /><em>根据您的IC卡或指纹检验，本次办理的用户信息如下，如果信息内容不对，请刷新提交或窗口办理资料变更手续。</em></h3>
+                        <p><label>车辆：</label><input type="text" class="input" id="user123" name="username" value="奥迪"></input></p>
+                        <p><label>车主：</label><input type="text" class="input" id="pass123" name="password" value="李四" /></p>
+                        <p><label>毛重：</label><input type="text" class="input" id="pass123" name="password" value="2.5吨" /></p>
+                        
+                        <input type="button" value="刷新" />
+
+                        @*<h3>用户确认<br /><em>请确认以下信息是否正确，如果正确，请继续下一步，如果错误，请清除用户并刷新页面重新登录。</em></h3>
+                        <p>
+                            <label>包括用户车辆、身份信息</label>
+                        </p>
+                        <p>
+                            <input type="button" value="清除用户" />
+                        </p>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />*@
+                        <div class="btn_nav">
+                            <input type="button" class="prev" style="float:left" value="&laquo;上一步" />
+                            <input type="button" class="next right" value="下一步&raquo;" />
+                        </div>
+                    </div>
+                    <div class="page">
+                        <h3>商品申报<br /><em>请商品申报信息。</em></h3>
+                        <table>
+                            <tr>
+                                <th>
+                                    <label>序号</label>
+                                </th>
+                                <th>
+                                    <label>商品名称</label>
+                                </th>
+                                <th>
+                                    <label>原产地</label>
+                                </th>
+                                <th>
+                                    <label>数(重)量</label>
+                                </th>
+                                <th>
+                                    <label>金额(人民币)</label>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td><label>1</label></td>
+                                <td><input type="text" name="email" /></td>
+                                <td><input type="text" name="email" /></td>
+                                <td><input type="text" name="email" /></td>
+                                <td><input type="text" name="email" /></td>
+                            </tr>
+                            <tr>
+                                <td><label>2</label></td>
+                                <td><input type="text" name="email" /></td>
+                                <td><input type="text" name="email" /></td>
+                                <td><input type="text" name="email" /></td>
+                                <td><input type="text" name="email" /></td>
+                            </tr>
+                            <tr>
+                                <td><label>3</label></td>
+                                <td><input type="text" name="email" /></td>
+                                <td><input type="text" name="email" /></td>
+                                <td><input type="text" name="email" /></td>
+                                <td><input type="text" name="email" /></td>
+                            </tr>
+                            <tr>
+                                <td><label>4</label></td>
+                                <td><input type="text" name="email" /></td>
+                                <td><input type="text" name="email" /></td>
+                                <td><input type="text" name="email" /></td>
+                                <td><input type="text" name="email" /></td>
+                            </tr>
+                        </table>
+                        <input type="button" value="添加记录" />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <div class="btn_nav">
+                            <input type="button" class="prev" style="float:left" value="&laquo;上一步" />
+                            <input type="button" class="next right" value="下一步&raquo;" />
+                        </div>
+                    </div>
+                    <div class="page">
+                        <h3>申请完成<br /><em>最后完成申请并打印回执。</em></h3>
+                        <p>
+                            <label>商品申请成功，最后请打印回执。</label>
+                        </p>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <div class="btn_nav">
+                            <input type="button" class="prev" style="float:left" value="&laquo;上一步" />
+                            <input type="button" class="next right" id="sub" value="打印回执" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

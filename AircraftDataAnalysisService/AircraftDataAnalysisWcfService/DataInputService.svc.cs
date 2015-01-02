@@ -43,6 +43,21 @@ namespace AircraftDataAnalysisWcfService
             }
         }
 
+        public string DeleteFlight(FlightDataEntities.Flight flight)
+        {
+            try
+            {
+                LogHelper.Info("DataInputService.DeleteFlight Requested.", null);
+                DataInputServiceBll bll = new DataInputServiceBll();
+                return bll.DeleteFlight(flight);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error("DeleteFlight", ex);
+                return ex.Message;
+            } 
+        }
+
         public string AddDecisionRecordsBatch(FlightDataEntities.Flight flight, FlightDataEntities.Decisions.DecisionRecord[] records)
         {
             try
@@ -133,6 +148,66 @@ namespace AircraftDataAnalysisWcfService
             catch (Exception ex)
             {
                 LogHelper.Error("AddFlightConditionDecisionRecordsBatch", ex);
+                return ex.Message;
+            }
+        }
+
+        public string AddOrReplaceFlightGlobeDataBatch(string flightId, AircraftModel model,
+            int startIndex, int endIndex, FlightDataEntities.GlobeData[] globedatas)
+        {
+            try
+            {
+                LogHelper.Info("DataInputService.AddOrReplaceFlightGlobeDataBatch Requested.", null);
+                DataInputServiceBll bll = new DataInputServiceBll();
+                return bll.AddOrReplaceFlightGlobeDataBatch(flightId, model, startIndex, endIndex, globedatas);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error("AddOrReplaceFlightGlobeDataBatch", ex);
+                return ex.Message;
+            }
+        }
+
+        public string AddOrReplaceAircraftInstance(AircraftInstance instance)
+        {
+            try
+            {
+                LogHelper.Info("DataInputService.AddOrReplaceAircraftInstance Requested.", null);
+                if (instance == null || instance.AircraftModel == null
+                    || string.IsNullOrEmpty(instance.AircraftModel.ModelName)
+                    || string.IsNullOrEmpty(instance.AircraftNumber))
+                {
+                    return "AddOrReplaceAircraftInstance: 参数为空。";
+                }
+
+                DataInputServiceBll bll = new DataInputServiceBll();
+                return bll.AddOrReplaceAircraftInstance(instance);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error("AddOrReplaceAircraftInstance", ex);
+                return ex.Message;
+            }
+        }
+
+        public string DeleteAircraftInstance(AircraftInstance instance)
+        {
+            try
+            {
+                LogHelper.Info("DataInputService.DeleteAircraftInstance Requested.", null);
+                if (instance == null || instance.AircraftModel == null
+                    || string.IsNullOrEmpty(instance.AircraftModel.ModelName)
+                    || string.IsNullOrEmpty(instance.AircraftNumber))
+                {
+                    return "DeleteAircraftInstance: 参数为空。";
+                }
+
+                DataInputServiceBll bll = new DataInputServiceBll();
+                return bll.DeleteAircraftInstance(instance);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error("DeleteAircraftInstance", ex);
                 return ex.Message;
             }
         }

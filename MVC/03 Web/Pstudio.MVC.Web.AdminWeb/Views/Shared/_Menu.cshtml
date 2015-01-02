@@ -1,0 +1,112 @@
+﻿<div class="page-sidebar nav-collapse collapse">
+    <ul id="ulMenu">
+        <li>
+            <div class="sidebar-toggler hidden-phone"><h3 style="margin-left:-160px; line-height:23px;  color:#666; ">功能菜单</h3></div>
+        </li>
+        @*@foreach (var group in adminMenuConfig.AdminMenuGroups)
+            {
+                if (!string.IsNullOrEmpty(group.Permission) && !permissions.Contains(group.Permission))
+                {
+                    continue;
+                }
+
+                var menus = group.AdminMenuArray.Where(m => string.IsNullOrEmpty(m.Permission) || permissions.Contains(m.Permission));
+                var hasSub = menus.Count() > 0;
+
+                if (!hasSub && string.IsNullOrEmpty(group.Url))
+                {
+                    continue;
+                }
+
+                <li class="@(hasSub?"has-sub":string.Empty)">
+                    <a href="@(hasSub ? "javascript:;" : group.Url)" title="@group.Info">
+                    <i class="@group.Icon"></i>
+                    <span class="title">@group.Name</span>
+                    @if (hasSub)
+                    {
+                        <span class='arrow'></span>
+                    }
+                    </a>
+                    @if (hasSub)
+                    {
+                        <ul class="sub">
+                        @foreach (var menu in menus)
+                        {
+                            <li ><a href="@menu.Url" title="@menu.Info">@menu.Name</a></li>
+                        }
+                        </ul>
+                    }
+                </li>
+            }*@
+
+
+        <li class="start ">
+            <a href="Index">
+                <i class="icon-home"></i>
+                <span class="title">首页</span>
+            </a>
+        </li>
+        <li class="has-sub ">
+            <a href="javascript:;">
+                <i class="icon-bookmark-empty"></i>
+                <span class="title">日常办公</span>
+                <span class="arrow "></span>
+            </a>
+            <ul class="sub">
+                <li onclick="menuSlect(this)">@Ajax.ActionLink("车辆登记", "CarRegisterList", "CarRegister", new AjaxOptions() { UpdateTargetId = "mainContent", HttpMethod = "Get", InsertionMode = InsertionMode.Replace })</li>
+                <li onclick="menuSlect(this)">@Ajax.ActionLink("边民登记", "PeopleRegisterList", "PeopleRegister", new AjaxOptions() { UpdateTargetId = "mainContent", HttpMethod = "Get", InsertionMode = InsertionMode.Replace })</li>
+                <li onclick="menuSlect(this)">@Ajax.ActionLink("进口商品申报", "GoodsImportList", "GoodsImport", new AjaxOptions() { UpdateTargetId = "mainContent", HttpMethod = "Get", InsertionMode = InsertionMode.Replace })</li>
+                <li onclick="menuSlect(this)">@Ajax.ActionLink("出口商品申报", "GoodsExitList", "GoodsExit", new AjaxOptions() { UpdateTargetId = "mainContent", HttpMethod = "Get", InsertionMode = InsertionMode.Replace })</li>
+                <li onclick="menuSlect(this)">@Ajax.ActionLink("车辆进境登记", "CarEnterList", "CarEnter", new AjaxOptions() { UpdateTargetId = "mainContent", HttpMethod = "Get", InsertionMode = InsertionMode.Replace })</li>
+                <li onclick="menuSlect(this)">@Ajax.ActionLink("车辆出境登记", "CarLeaveList", "CarLeave", new AjaxOptions() { UpdateTargetId = "mainContent", HttpMethod = "Get", InsertionMode = InsertionMode.Replace })</li>
+                <li onclick="menuSlect(this)">@Ajax.ActionLink("船舶进境登记", "BoatEnterList", "BoatEnter", new AjaxOptions() { UpdateTargetId = "mainContent", HttpMethod = "Get", InsertionMode = InsertionMode.Replace })</li>
+                <li onclick="menuSlect(this)">@Ajax.ActionLink("船舶出境登记", "BoatLeaveList", "BoatLeave", new AjaxOptions() { UpdateTargetId = "mainContent", HttpMethod = "Get", InsertionMode = InsertionMode.Replace })</li>
+            </ul>
+        </li>
+        <li class="has-sub ">
+            <a href="javascript:;">
+                <i class="icon-table"></i>
+                <span class="title">商品管理</span>
+                <span class="arrow "></span>
+            </a>
+            <ul class="sub">
+                <li onclick="menuSlect(this)">@Ajax.ActionLink("商品管理", "GoodsManageList", "GoodsManage", new AjaxOptions() { UpdateTargetId = "mainContent", HttpMethod = "Get", InsertionMode = InsertionMode.Replace })</li>
+            </ul>
+        </li>
+
+        <li class="has-sub ">
+            <a href="javascript:;">
+                <i class="icon-th-list"></i>
+                <span class="title">系统管理</span>
+                <span class="arrow "></span>
+            </a>
+            <ul class="sub">
+                <li onclick="menuSlect(this)"><a href="javascript:;">系统配置</a></li>
+                <li onclick="menuSlect(this)"><a href="javascript:;">对碰规则</a></li>
+            </ul>
+        </li>
+        <li class="has-sub ">
+            <a href="javascript:;">
+                <i class="icon-th-list"></i>
+                <span class="title">查询统计</span>
+                <span class="arrow "></span>
+            </a>
+            <ul class="sub">
+                <li onclick="menuSlect(this)"><a href="javascript:;">进出口贸易商品查询</a></li>
+                <li onclick="menuSlect(this)"><a href="javascript:;">运输工具查询</a></li>
+                <li onclick="menuSlect(this)"><a href="javascript:;">进出情况统计</a></li>
+                <li onclick="menuSlect(this)"><a href="javascript:;">第三国产品进出情况统计</a></li>
+            </ul>
+        </li>
+        <li class="has-sub ">
+            <a href="javascript:;">
+                <i class="icon-th-list"></i>
+                <span class="title">信用库</span>
+                <span class="arrow "></span>
+            </a>
+            <ul class="sub">
+                <li onclick="menuSlect(this)"><a href="javascript:;">黑名单记录</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>

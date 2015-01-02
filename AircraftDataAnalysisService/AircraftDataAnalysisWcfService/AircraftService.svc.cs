@@ -233,5 +233,82 @@ namespace AircraftDataAnalysisWcfService
                 return null;
             }
         }
+
+        public GlobeData[] GetGlobeDatas(string flightID, AircraftModel model, int startIndex, int endIndex)
+        {
+            try
+            {
+                LogHelper.Info("AircraftService.GetGlobeDatas Requested.", null);
+                AircraftServiceBll bll = new AircraftServiceBll();
+                return bll.GetGlobeDatas(flightID, model, startIndex, endIndex);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("AircraftService.GetGlobeDatas", e);
+                return null;
+            }
+        }
+
+        public AircraftInstance[] GetAllAircrafts(AircraftModel model)
+        {
+            try
+            {
+                LogHelper.Info("AircraftService.GetAllAircrafts Requested.", null);
+                AircraftServiceBll bll = new AircraftServiceBll();
+                return bll.GetAllAircrafts(model);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("AircraftService.GetAllAircrafts", e);
+                return null;
+            }
+        }
+
+        public int GetEarliestYear(AircraftModel model)
+        {
+            try
+            {
+                LogHelper.Info("AircraftService.GetEarliestYear Requested.", null);
+                AircraftServiceBll bll = new AircraftServiceBll();
+                return bll.GetEarliestYear(model);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("AircraftService.GetEarliestYear", e);
+                return DateTime.Now.Year;
+            }
+        }
+
+        public FlightDataEntities.Decisions.DecisionRecord[] GetFlightConditionDecisionRecords(AircraftModel model,
+             DateTime startYearMonth, DateTime endYearMonth, string[] aircraftNumbers)
+        {
+            try
+            {
+                LogHelper.Info("AircraftService.GetFlightConditionDecisionRecords Requested.", null);
+                AircraftServiceBll bll = new AircraftServiceBll();
+                return bll.GetFlightConditionDecisionRecords(model,
+                    startYearMonth, endYearMonth, aircraftNumbers);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("AircraftService.GetFlightConditionDecisionRecords", e);
+                return new FlightDataEntities.Decisions.DecisionRecord[] { };
+            }
+        }
+
+        public string GetAppConfigValue(string appKey)
+        {
+            try
+            {
+                LogHelper.Info("AircraftService.GetAppConfigValue Requested.", null);
+                AircraftServiceBll bll = new AircraftServiceBll();
+                return bll.GetAppConfigValue(appKey);
+            }
+            catch (Exception e)
+            {
+                LogHelper.Error("AircraftService.GetAppConfigValue", e);
+                return e.Message;
+            }
+        }
     }
 }

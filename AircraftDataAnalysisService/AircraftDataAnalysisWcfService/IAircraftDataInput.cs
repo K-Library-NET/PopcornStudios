@@ -25,6 +25,10 @@ namespace AircraftDataAnalysisWcfService
         string DeleteExistsData(
             FlightDataEntities.Flight flight);
 
+        [OperationContract]
+        string DeleteFlight(
+            FlightDataEntities.Flight flight);
+
         /// <summary>
         /// 写入判据记录（批量）
         /// 没法单个UpdateOrAdd，只能之前先删掉
@@ -56,5 +60,15 @@ namespace AircraftDataAnalysisWcfService
         [OperationContract]
         string AddFlightConditionDecisionRecordsBatch(FlightDataEntities.Flight flight,
             FlightDataEntities.Decisions.DecisionRecord[] records);
+
+        [OperationContract]
+        string AddOrReplaceFlightGlobeDataBatch(string flightId, FlightDataEntities.AircraftModel model,
+            int startIndex, int endIndex, FlightDataEntities.GlobeData[] globedatas);
+
+        [OperationContract]
+        string AddOrReplaceAircraftInstance(FlightDataEntities.AircraftInstance instance);
+
+        [OperationContract]
+        string DeleteAircraftInstance(FlightDataEntities.AircraftInstance instance);
     }
 }

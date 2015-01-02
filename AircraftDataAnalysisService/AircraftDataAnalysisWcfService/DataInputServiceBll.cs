@@ -73,6 +73,8 @@ namespace AircraftDataAnalysisWcfService
                         value.Aircraft = flight.Aircraft;
                         value.EndSecond = flight.EndSecond;
                         value.StartSecond = flight.StartSecond;
+                        value.FlightDate = flight.FlightDate;
+
                         modelCollection.Save(value);
 
                         flightResult = value;
@@ -136,6 +138,34 @@ namespace AircraftDataAnalysisWcfService
             return string.Empty;
         }
 
+        internal string DeleteFlight(Flight flight)
+        {
+            using (AircraftMongoDbDal dal = new AircraftMongoDbDal())
+            {
+                MongoServer mongoServer = dal.GetMongoServer();
+                //不用判断是否为空，必须不能为空才能继续，否则内部要抛异常
+                try
+                {
+                    MongoDatabase database = mongoServer.GetDatabase(AircraftMongoDb.DATABASE_COMMON);
+                    if (database != null)
+                    {
+                        MongoCollection<Flight> modelCollection
+                            = database.GetCollection<Flight>(AircraftMongoDb.COLLECTION_FLIGHT);
+                        ////删除架次
+                        IMongoQuery q1 = Query.EQ("FlightID", new MongoDB.Bson.BsonString(flight.FlightID));
+                        var writeResult = modelCollection.Remove(q1);
+                    }
+                }
+                catch (Exception e)
+                {
+                    LogHelper.Error("DeleteFlight", e);
+                    return e.Message;
+                }
+            }
+
+            return string.Empty;
+        }
+
         /// <summary>
         /// 删除一个架次相关记录，这是记录，需要重新定位数据库和Collection
         /// </summary>
@@ -177,7 +207,12 @@ namespace AircraftDataAnalysisWcfService
                     //删除FlightRawDataRelationPoint记录
                     MongoCollection<FlightDataEntities.ExtremumPointInfo> modelCollection5
                         = dal.GetFlightExtremeMongoCollectionByFlight(database, flight);
-                    modelCollection4.Remove(flightIdQuery);
+                    modelCollection5.Remove(flightIdQuery);
+
+                    //删除FlightExtreme记录
+                    MongoCollection<FlightDataEntities.ExtremumPointInfo> modelCollection6
+                        = dal.GetFlightExtremeMongoCollectionByFlight(database, flight);
+                    modelCollection6.Remove(flightIdQuery);
                 }
             }
             catch (Exception e)
@@ -375,6 +410,130 @@ namespace AircraftDataAnalysisWcfService
                 catch (Exception e)
                 {
                     LogHelper.Error("AddFlightConditionDecisionRecordsBatch", e);
+                    return e.Message;
+                }
+            }
+            return string.Empty;
+        }
+
+        internal string AddOrReplaceFlightGlobeDataBatch(string flightId, AircraftModel model,
+            int startIndex, int endIndex, FlightDataEntities.GlobeData[] globedatas)
+        {
+            using (AircraftMongoDbDal dal = new AircraftMongoDbDal())
+            {
+                MongoServer mongoServer = dal.GetMongoServer();
+                //不用判断是否为空，必须不能为空才能继续，否则内部要抛异常
+                try
+                {//此方法操作的记录为跟架次密切相关，但肯定LevelTopRecord需要包含趋势分析等信息，
+                    //建议不要分表，存放在Common里面
+                    MongoDatabase database = dal.GetMongoDatabaseByAircraftModel(mongoServer, model);
+                    if (database != null)
+                    {
+                        MongoCollection<FlightDataEntities.GlobeData> modelCollection1
+                            = dal.GetFlightGlobeDataMongoCollectionByFlight(database, flightId);
+
+                        IMongoQuery q1 = Query.EQ("FlightID", new MongoDB.Bson.BsonString(flightId));
+                        IMongoQuery q2 = Query.GTE("Index", new MongoDB.Bson.BsonInt32(startIndex));
+                        IMongoQuery q3 = Query.LTE("Index", new MongoDB.Bson.BsonInt32(endIndex));
+                        IMongoQuery q4 = Query.EQ("AircraftModelName", new MongoDB.Bson.BsonString(model.ModelName));
+                        IMongoQuery query = Query.And(q1, q2, q3, q4);
+                        modelCollection1.Remove(query);
+
+                        modelCollection1.InsertBatch(globedatas);
+                    }
+                }
+                catch (Exception e)
+                {
+                    LogHelper.Error("AddOrReplaceFlightGlobeDataBatch", e);
+                    return e.Message;
+                }
+            }
+            return string.Empty;
+        }
+
+        internal string AddOrReplaceAircraftInstance(AircraftInstance instance)
+        {
+            using (AircraftMongoDbDal dal = new AircraftMongoDbDal())
+            {
+                MongoServer mongoServer = dal.GetMongoServer();
+                //不用判断是否为空，必须不能为空才能继续，否则内部要抛异常
+                try
+                {//此方法操作的记录为跟架次密切相关，但肯定LevelTopRecord需要包含趋势分析等信息，
+                    //建议不要分表，存放在Common里面
+                    MongoDatabase database = dal.GetMongoDatabaseByAircraftModel(mongoServer, instance.AircraftModel);
+                    if (database != null)
+                    {
+                        MongoCollection<FlightDataEntities.AircraftInstance> modelCollection
+                            = dal.GetAircraftInstanceCollection(database);
+
+                        IMongoQuery q1 = Query.EQ("AircraftNumber", new MongoDB.Bson.BsonString(instance.AircraftNumber));
+
+                        MongoCursor<AircraftInstance> cursor = modelCollection.Find(q1);
+
+                        if (cursor != null && cursor.Count() > 0)
+                        {
+                            foreach (var value in cursor.AsEnumerable())
+                            {
+                                value.LastUsed = instance.LastUsed;
+                                value.AircraftModel = value.AircraftModel;
+                                modelCollection.Save(value);
+                            }
+                        }
+                        else
+                        {//如果INSERT，就必须插入之后才有ObjectId，需要返回带有ObjectId的对象（不单单只考虑WCF返回没带有ObjectId的情况）
+                            modelCollection.Insert(instance);
+
+                            var cursor2 = modelCollection.Find(q1);
+                            if (cursor2 != null && cursor2.Count() > 0)
+                            {
+                                instance = cursor2.First();
+                            }
+                            else instance = null;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    LogHelper.Error("AddOrReplaceAircraftInstance", e);
+                    return e.Message;
+                }
+            }
+            return string.Empty;
+        }
+
+        internal string DeleteAircraftInstance(AircraftInstance instance)
+        {
+            using (AircraftMongoDbDal dal = new AircraftMongoDbDal())
+            {
+                MongoServer mongoServer = dal.GetMongoServer();
+                //不用判断是否为空，必须不能为空才能继续，否则内部要抛异常
+                try
+                {//此方法操作的记录为跟架次密切相关，但肯定LevelTopRecord需要包含趋势分析等信息，
+                    //建议不要分表，存放在Common里面
+                    MongoDatabase database = dal.GetMongoDatabaseByAircraftModel(mongoServer, instance.AircraftModel);
+                    if (database != null)
+                    {
+                        MongoCollection<FlightDataEntities.AircraftInstance> modelCollection
+                            = dal.GetAircraftInstanceCollection(database);
+
+                        IMongoQuery q1 = Query.EQ("AircraftNumber", new MongoDB.Bson.BsonString(instance.AircraftNumber));
+
+                        MongoCursor<AircraftInstance> cursor = modelCollection.Find(q1);
+
+                        if (cursor != null && cursor.Count() > 0)
+                        {
+                            //foreach (var value in cursor.AsEnumerable())
+                            //{
+                            //    value.LastUsed = instance.LastUsed;
+                            //    value.AircraftModel = value.AircraftModel;
+                            //}//.Save(value);
+                        }
+                        modelCollection.Remove(q1);
+                    }
+                }
+                catch (Exception e)
+                {
+                    LogHelper.Error("DeleteAircraftInstance", e);
                     return e.Message;
                 }
             }

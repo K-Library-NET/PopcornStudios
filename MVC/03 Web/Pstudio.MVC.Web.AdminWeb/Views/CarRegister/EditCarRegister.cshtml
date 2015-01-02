@@ -1,0 +1,219 @@
+﻿@{
+    ViewBag.Title = "EditCarRegister";
+}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="btn-toolbar" style="text-align:center">
+            <a href="@Url.Action("EditCarRegister", "CarRegister")" style="margin-right:50px;" class="btn blue" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="get" data-ajax="true">
+                <i class="icon-save"></i>保存
+            </a>
+            <a href="@Url.Action("CarRegisterList", "CarRegister")" class="btn" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="get" data-ajax="true">
+                返回
+            </a>
+            <div class="btn-group">
+            </div>
+        </div>
+        <div class="well">
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane active in" id="home">
+                    <form id="tab" style="text-align:center">
+
+                        @if (Request["action"] == "create")
+                        {
+                            <h3>边民互市贸易车辆注册登记申请表</h3>
+                            <table class="table table-bordered table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td><label>车牌号</label></td>
+                                        <td><input type="text" value="12345" /></td>
+                                        <td><label>发动机号</label></td>
+                                        <td><input type="text" value="54321" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>车辆牌名</label></td>
+                                        <td><input type="text" value="12345" /></td>
+                                        <td><label>车身号码</label></td>
+                                        <td><input type="text" value="54321" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>车辆类型</label></td>
+                                        <td><input type="text" value="12345" /></td>
+                                        <td><label>车辆吨位</label></td>
+                                        <td><input type="text" value="54321" /><span>吨</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>车身颜色</label></td>
+                                        <td><input type="text" value="12345" /></td>
+                                        <td><label>车辆自重</label></td>
+                                        <td><input type="text" value="54321" /><span>吨</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label>行驶范围</label></td>
+                                        <td colspan="3">
+                                            <div class="textareadiv">
+                                                <textarea class="input-xlarge custextarea">十一万五千八百里。。。。</textarea><br />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <p>本人保证以上填写内容真实无讹，并愿加强对该车辆的管理，按海关核定的路线和范围从事承运海关监管货物运输业务。</p><br />
+                                            <div style="text-align:right;">
+                                                <span>签&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</span><input type="text" value="海关人员" style="border-color: #fafafa #fafafa #000000 #fafafa; background-color: #fafafa; border-width: 0px 0px 1px 0px;" /><br />
+                                                <span>申请日期：</span><input type="text" value="2014/12/12" style="border-color: #fafafa #fafafa #000000 #fafafa; background-color: #fafafa; border-width: 0px 0px 1px 0px;" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <h3>边民互市贸易车辆注册登记表</h3>
+                            <table class="table table-bordered table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td rowspan="6">运输工具信 息</td>
+                                        <td>国内车牌</td>
+                                        <td>
+                                            <input type="text" value="12345" />
+                                        </td>
+                                        <td>发动机号</td>
+                                        <td>
+                                            <input type="text" value="12345" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>外籍车牌</td>
+                                        <td>
+                                            <input type="text" value="" />
+                                        </td>
+                                        <td>车架号</td>
+                                        <td>
+                                            <input type="text" value="12345" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>国籍</td>
+                                        <td>
+                                            <input type="text" value="越" />
+                                        </td>
+                                        <td> 车辆类型</td>
+                                        <td>
+                                            <input type="text" value="12345" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            厂牌型号
+                                        </td>
+                                        <td>
+                                            <input type="text" value="越B 123456" />
+                                        </td>
+                                        <td>
+                                            车身颜色
+                                        </td>
+                                        <td>
+                                            <input type="text" value="红色" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>身份证件号码</td>
+                                        <td>
+                                            <input type="text" value="211111111111333" />
+                                        </td>
+                                        <td>联系电话</td>
+                                        <td>
+                                            <input type="text" value="12345" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>车辆自重</td>
+                                        <td>
+                                            <input type="text" value="120" />
+                                        </td>
+                                        <td>核定载重</td>
+                                        <td>
+                                            <input type="text" value="160" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>随附单证栏</td>
+                                        <td colspan="4">
+                                            1、运输工具营运主管部门（交通或海事部门）签发的批准营运证书；<br />
+                                            2、车辆行驶证；<br />
+                                            3、车辆负责人身份证件<br />
+                                            4、海关所需的其他随附单证
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan="3">海关批注栏</td>
+                                        <td colspan="4">
+                                            <div class="textareadiv">
+                                                <label>备案意见：</label>
+                                                <textarea class="input-xlarge custextarea">同意！！！！！！！！！！！！！！！！</textarea><br />
+                                            </div>
+                                            <div style="text-align:right">
+                                                <span>经办关员签名：</span><input type="text" value="54321" style="border-color: #fafafa #fafafa #000000 #fafafa; background-color: #fafafa; border-width:0px 0px 1px 0px;" /><br />
+                                                <span>申请日期：</span><input type="text" value="54321" style="border-color: #fafafa #fafafa #000000 #fafafa; background-color: #fafafa; border-width: 0px 0px 1px 0px;" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <div class="textareadiv">
+                                                <label>复核意见：</label>
+                                                <textarea class="input-xlarge custextarea">同意！！！！！！！！！！！！！！！！</textarea><br />
+                                            </div>
+                                            <div style="text-align:right">
+                                                <span>科长签名：</span><input type="text" value="54321" style="border-color: #fafafa #fafafa #000000 #fafafa; background-color: #fafafa; border-width: 0px 0px 1px 0px;" /><br />
+                                                <span>申请日期：</span><input type="text" value="54321" style="border-color: #fafafa #fafafa #000000 #fafafa; background-color: #fafafa; border-width: 0px 0px 1px 0px;" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <div class="textareadiv">
+                                                <label>备注</label>
+                                                <textarea class="input-xlarge custextarea">同意！！！！！！！！！！！！！！！！</textarea><br />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        }
+
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    ×
+                </button>
+                <h3 id="myModalLabel">
+                    删除确认
+                </h3>
+            </div>
+            <div class="modal-body">
+                <p class="error-text">
+                    <i class="icon-warning-sign modal-icon"></i>你确认要删除吗?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">
+                    取消
+                </button>
+                <button class="btn btn-danger" data-dismiss="modal">
+                    删除
+                </button>
+            </div>
+        </div>
+        <footer>
+            <hr>
+        </footer>
+
+    </div>
+</div>
+
